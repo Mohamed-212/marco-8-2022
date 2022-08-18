@@ -1858,9 +1858,9 @@ class Cproduct extends MX_Controller {
         $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
         $voucher_date      = date('Y-m-d H:i:s');
         $store_id = "SDMQ4TIBSH6LAJ1";
-        $cogs_price = 0;
         if ($datacount > 1) {
             for ($i = 1; $i < $datacount; $i++) {
+                $cogs_price = 0;
                 $price_types_list = [];
                 $filter_list = [];
                 $brand_id = $sheetdata[$i][0];
