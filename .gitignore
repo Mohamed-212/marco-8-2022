@@ -1,0 +1,5 @@
+/.idea
+/application/config/database.php
+/application/logs
+/application/cache
+/my-assets/js/admin_js/json/product.json
