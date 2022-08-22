@@ -64,6 +64,15 @@
                                             </select>
                                         </div>
 
+                                        <div class="form-group">
+                                            <label class="sr-only" for="lang_prefix"> lang</label>
+                                            <select name="lang_prefix" id="lang_prefix" class="form-control">
+                                                <option value="ar">ar</option>
+                                                <option value="en">en</option>
+                                                <option value="fr">fr</option>
+                                            </select>
+                                        </div>
+
                                         <button type="submit" class="btn btn-primary">Save</button>
                                         <?php echo form_close(); ?>
                                     </td>

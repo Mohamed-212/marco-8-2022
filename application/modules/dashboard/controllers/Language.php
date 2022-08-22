@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class Language extends MX_Controller
 {
@@ -86,12 +87,13 @@ class Language extends MX_Controller
 
     public function addLanguage()
     {
+       
         $this->permission->check_label('language')->create()->redirect();
 
         $language = preg_replace('/[^a-zA-Z0-9_]/', '', $this->input->post('language', true));
         $language = strtolower($language);
         $direction = $this->input->post('direction', TRUE);
-
+        $lang_prefix = $this->input->post('lang_prefix', TRUE);
         if (!empty($language)) {
             if (!$this->db->field_exists($language, $this->table)) {
                 $this->dbforge->add_column($this->table, [
@@ -99,11 +101,21 @@ class Language extends MX_Controller
                         'type' => 'TEXT'
                     ]
                 ]);
-
             $this->set_language_config($language, $direction);
+          
 
-            $this->session->set_flashdata('message', 'Language added successfully');
-            redirect('dashboard/language');
+        $tr = new GoogleTranslate(); // Translates to 'en' from auto-detected language by default
+
+        $phrases=$this->db->select('id,phrase')->from('language')->get()->result();
+ 
+        foreach($phrases as $phrase){
+        $ph=str_replace("_"," ",$phrase->phrase);
+        $value=$tr->setSource('en')->setTarget($lang_prefix)->translate($ph);
+        $this->db->where('id', $phrase->id)->update('language', [$language=>$value]);
+                }
+        
+        $this->session->set_flashdata('message', 'Language added successfully');
+        redirect('dashboard/language');
             }
         } else {
             $this->session->set_flashdata('exception', 'Please try again');

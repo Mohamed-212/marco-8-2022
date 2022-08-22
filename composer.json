@@ -4,6 +4,7 @@
     "phenx/php-font-lib" : "0.*",
     "dompdf/dompdf":"*",
 	"league/csv": "^9.7",
-		"phpoffice/phpspreadsheet": "^1.18"
+		"phpoffice/phpspreadsheet": "^1.18",
+		"stichoza/google-translate-php": "^4.1"
   }
 }
