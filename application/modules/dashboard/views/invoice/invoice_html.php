@@ -116,7 +116,7 @@
                                     line-height: .5rem !important;
                                 }
 
-                                #toTop, footer, .btn.back-top {
+                                #toTop, footer, .btn.back-top, .hide-me {
                                     display: none;
                                 }
 
@@ -301,8 +301,7 @@
                                     <img class="show" src="<?=base_url()?>/assets/img/header.png" style="width: 100%;height: auto;" />
                                 </div>
                             </div>
-                            <div style="padding: 0 25px;"><pre>
-                            </pre>
+                            <div style="padding: 0 25px;page-break-after: always;page-break-inside: auto;">
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <h3>Invoice to : <?php echo html_escape($customer_name); ?></h3>
@@ -344,27 +343,28 @@
                                         <thead class="thead">
                                             <tr>
                                                 <th><?php echo display('sl') ?></th>
-                                                <th><?php echo display('item_code') ?></th>
-                                                <th><?php echo display('item_picture') ?></th>
+                                                <th class="hide-me"><?php echo display('item_code') ?></th>
+                                                <th class="hide-me"><?php echo display('item_picture') ?></th>
                                                 <th><?php echo display('product_name') ?></th>
-                                                <th><?php echo display('variant') ?></th>
-                                                <th><?php echo display('unit') ?></th>
+                                                <th class="hide-me"><?php echo display('variant') ?></th>
+                                                <th class="hide-me"><?php echo display('unit') ?></th>
                                                 <!--                                        <th>--><?php //echo display('batch_no') 
                                                                                                     ?>
                                                 <!--</th>-->
+                                                <th><?php echo display('price') ?></th>
                                                 <th><?php echo display('quantity') ?></th>
                                                 <?php
                                                 if ($isTaxed == 1) {
-                                                    echo "<th>" . display('unit_price_before_VAT') . "</th>";
+                                                    echo "<th class='hide-me'>" . display('unit_price_before_VAT') . "</th>";
                                                 } else {
-                                                    echo "<th>" . display('rate') . "</th>";
+                                                    echo "<th class='hide-me'>" . display('rate') . "</th>";
                                                 }
                                                 ?>
-                                                <th><?php echo display('discount') ?></th>
+                                                <th class='hide-me'><?php echo display('discount') ?></th>
                                                 <?php
                                                 if ($isTaxed == 1) {
-                                                    echo "<th>" . display('vat_rate') . "</th>";
-                                                    echo "<th>" . display('vat_value') . "</th>";
+                                                    echo "<th class='hide-me'>" . display('vat_rate') . "</th>";
+                                                    echo "<th class='hide-me'>" . display('vat_value') . "</th>";
                                                 }
                                                 ?>
                                                 <th><?php echo display('total_value') ?></th>
@@ -373,7 +373,7 @@
                                         <tbody>
                                             <?php if (!empty($invoice_all_data)) {
                                                 $total_quantity = $total_return_amount = $i_grand_discount = $i_total_discount_price_amount = $i_total_discount_price = $i_grand_amount = 0;
-                                                for ($i = 0; $i < 5; $i++) {
+                                                for ($i = 0; $i < 9; $i++) {
                                                     $invoice_all_data[] = $invoice_all_data[0];
                                                 }
 
@@ -381,8 +381,8 @@
                                             ?>
                                                     <tr>
                                                         <td><?php echo html_escape($invoice['sl']); ?></td>
-                                                        <td><?php echo html_escape($invoice['product_id']); ?></td>
-                                                        <td>
+                                                        <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td>
+                                                        <td class='hide-me'>
                                                             <img src="<?php echo base_url() . (!empty(html_escape($invoice['image_thumb'])) ? html_escape($invoice['image_thumb']) : 'assets/img/icons/default.jpg') ?>" width="50" height="50">
                                                         </td>
                                                         <td>
@@ -397,7 +397,7 @@
 
                                                             ?>
                                                         </td>
-                                                        <td><?php echo html_escape($invoice['variant_name']);
+                                                        <td class='hide-me'><?php echo html_escape($invoice['variant_name']);
                                                             if (!empty($invoice['variant_color'])) {
                                                                 $cvarinfo = $this->db->select('variant_name')->from('variant')->where('variant_id', $invoice['variant_color'])->get()->row();
                                                                 if (!empty($cvarinfo)) {
@@ -406,14 +406,15 @@
                                                             }
                                                             ?>
                                                         </td>
-                                                        <td><?php echo html_escape($invoice['unit_short_name']); ?></td>
+                                                        <td class='hide-me'><?php echo html_escape($invoice['unit_short_name']); ?></td>
                                                         <!--                                                <td>--><?php //echo html_escape($invoice['batch_no']); 
                                                                                                                     ?>
                                                         <!--</td>-->
+                                                        <td><?php echo html_escape($invoice['product_price']); ?></td>
                                                         <td><?php echo html_escape($invoice['quantity']); ?></td>
-                                                        <td><?php echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) ?>
+                                                        <td class='hide-me'><?php echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) ?>
                                                         </td>
-                                                        <td><?php echo (($position == 0) ? $currency . " " . $invoice['discount'] : $invoice['discount'] . " " . $currency) ?>
+                                                        <td class='hide-me'><?php echo (($position == 0) ? $currency . " " . $invoice['discount'] : $invoice['discount'] . " " . $currency) ?>
                                                         </td>
                                                         <?php if ($isTaxed == 1) { ?>
 
@@ -422,13 +423,13 @@
                                                             ?>
 
 
-                                                            <td><?php if (!empty($item_tax)) {
+                                                            <td class='hide-me'><?php if (!empty($item_tax)) {
                                                                     echo $item_tax->tax_percentage . '%';
                                                                 } else {
                                                                     echo '0%';
                                                                 } ?></td>
 
-                                                            <td>
+                                                            <td class='hide-me'>
                                                                 <?php
                                                                 if (!empty($item_tax)) {
                                                                     echo (($position == 0) ? $currency . " " . ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100) : ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100) . " " . $currency);
@@ -661,9 +662,10 @@
                                         </table>
                                     </div>
                                 </div>
+                                
                             </div>
-
-                            <div class="row" style="margin-top: -30px;">
+                            
+                            <div class="row position-relative" style="margin-top: -30px;">
                                 <div class="col-xs-12 divFooter" style="background-image: url();">
                                     <img class="show" src="<?=base_url()?>/assets/img/footer.png" style="width: 100%;height: auto;" />
                                 </div>

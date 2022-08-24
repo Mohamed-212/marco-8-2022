@@ -193,6 +193,7 @@ class Linvoice {
 		$CI->load->library('dashboard/occational');
 		$CI->load->model('dashboard/Shipping_methods');
 		$CI->load->model('hrm/Hrm_model');
+		$CI->load->model('dashboard/Products');
 		
 		$invoice_detail = $CI->Invoices->retrieve_invoice_html_data($invoice_id);
 		$order_no=$CI->db->select('b.order as order_no')->from('invoice a')->where('a.order_id',$invoice_detail[0]['order_id'])->join('order b','a.order_id = b.order_id','left')->get()->result();
@@ -213,9 +214,14 @@ class Linvoice {
 				$subTotal_quantity=$subTotal_quantity+$invoice_detail[$k]['quantity'];
 			}
 			$i=0;
+			$products = [];
 			foreach($invoice_detail as $k=>$v){
 				$i++;
 			    $invoice_detail[$k]['sl']=$i;
+				$invoice_detail[$k]['product_price'] = ($CI->Products->get_product_model([
+					'product_model' => $invoice_detail[0]['product_model'],
+					'product_name' => $invoice_detail[0]['product_name'],
+				]))->price;
 			}
 		}
 
@@ -272,9 +278,18 @@ class Linvoice {
 				$emp_id = $emp->id;
 			}
 		}
+
+// 		$product = $CI->Products->get_product_model([
+// 			'product_model' => $invoice_detail[0]['product_model'],
+// 			'product_name' => $invoice_detail[0]['product_name'],
+// 		]);
+// echo "<pre>";
+// 		var_dump($product);
+// 		exit;
 		
 		$data['emp_name'] = $emp_name;
-		$data['emp_id'] = $emp_id;		
+		$data['emp_id'] = $emp_id;
+		
 		$chapterList = $CI->parser->parse('dashboard/invoice/invoice_html',$data,true);
 		return $chapterList;
 	}

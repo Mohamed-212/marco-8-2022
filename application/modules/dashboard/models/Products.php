@@ -441,4 +441,16 @@ class Products extends CI_Model {
         return false;
     }
 
+    public function get_product_model($data) {
+        $this->db->select('*');
+        $this->db->from('product_information');
+        $this->db->where('product_model', $data['product_model']);
+        $this->db->where('product_name', $data['product_name']);
+        $query = $this->db->get();
+        if ($query->num_rows() <= 0) {
+            return null;
+        }
+
+        return $query->row();
+    }
 }
