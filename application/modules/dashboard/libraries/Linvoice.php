@@ -1,6 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Linvoice {
-	
 	//Invoice add form
 	public function invoice_add_form()
 	{
@@ -193,6 +192,8 @@ class Linvoice {
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
 		$CI->load->model('dashboard/Shipping_methods');
+		$CI->load->model('hrm/Hrm_model');
+		
 		$invoice_detail = $CI->Invoices->retrieve_invoice_html_data($invoice_id);
 		$order_no=$CI->db->select('b.order as order_no')->from('invoice a')->where('a.order_id',$invoice_detail[0]['order_id'])->join('order b','a.order_id = b.order_id','left')->get()->result();
 		$quotation_no = $CI->db->select('q.quotation as quotation_no')->from('invoice a')->where('a.quotation_id',$invoice_detail[0]['quotation_id'])->join('quotation q','q.quotation_id = a.quotation_id','left')->get()->result();
@@ -261,9 +262,19 @@ class Linvoice {
             'ship_customer_mobile'=>$invoice_detail[0]['ship_customer_mobile'],
             'ship_customer_email'=>$invoice_detail[0]['ship_customer_email'],
             'cardpayments'	     =>$cardpayments,
-
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
+		$emp_name = $emp_id = null;
+		if (!empty($invoice_detail) && isset($invoice_detail[0]['employee_id'])) {
+			$emp = $CI->Hrm_model->single_employee_data($invoice_detail[0]['employee_id']);
+			if (null !== $emp) {
+				$emp_name = $emp->first_name . ' ' . $emp->last_name;
+				$emp_id = $emp->id;
+			}
+		}
+		
+		$data['emp_name'] = $emp_name;
+		$data['emp_id'] = $emp_id;		
 		$chapterList = $CI->parser->parse('dashboard/invoice/invoice_html',$data,true);
 		return $chapterList;
 	}

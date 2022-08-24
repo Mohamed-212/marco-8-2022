@@ -115,17 +115,24 @@
                                 .line-height {
                                     line-height: .5rem !important;
                                 }
-                                #toTop {
+
+                                #toTop, footer, .btn.back-top {
                                     display: none;
+                                }
+
+                                div.divFooter {
+                                    position: fixed;
+                                    bottom: 0;
                                 }
                             }
 
                             .thead tr,
-                            
+
                             .borderd {
                                 border: 2px solid orange !important;
                                 color: orange !important;
                             }
+
                             .thead tr th {
                                 color: orange !important;
                             }
@@ -291,10 +298,11 @@
                                     <?php } ?>
                                 </div> -->
                                 <div class="col-xs-12" style="background-image: url();">
-                                    <img class="show" src="/assets/img/header.png" style="width: 100%;height: auto;" />
+                                    <img class="show" src="<?=base_url()?>/assets/img/header.png" style="width: 100%;height: auto;" />
                                 </div>
                             </div>
-                            <div style="padding: 0 25px;">
+                            <div style="padding: 0 25px;"><pre>
+                            </pre>
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <h3>Invoice to : <?php echo html_escape($customer_name); ?></h3>
@@ -320,11 +328,12 @@
                                             </p>
                                         </div>
                                         <div class="line-height" style="margin-top:20px">
+                                        
                                             <p>
-                                                REP. Name :
+                                                REP. Name : <?=$emp_name?>
                                             </p>
                                             <p>
-                                                REP. No. :
+                                                REP. No. : <?=$emp_id?>
                                             </p>
                                         </div>
                                     </div>
@@ -364,10 +373,10 @@
                                         <tbody>
                                             <?php if (!empty($invoice_all_data)) {
                                                 $total_quantity = $total_return_amount = $i_grand_discount = $i_total_discount_price_amount = $i_total_discount_price = $i_grand_amount = 0;
-                                                for($i = 0; $i < 5; $i++) {
+                                                for ($i = 0; $i < 5; $i++) {
                                                     $invoice_all_data[] = $invoice_all_data[0];
                                                 }
-                                                
+
                                                 foreach ($invoice_all_data as $invoice) {
                                             ?>
                                                     <tr>
@@ -655,8 +664,8 @@
                             </div>
 
                             <div class="row" style="margin-top: -30px;">
-                                <div class="col-xs-12" style="background-image: url();">
-                                    <img class="show" src="/assets/img/footer.png" style="width: 100%;height: auto;" />
+                                <div class="col-xs-12 divFooter" style="background-image: url();">
+                                    <img class="show" src="<?=base_url()?>/assets/img/footer.png" style="width: 100%;height: auto;" />
                                 </div>
                             </div>
                         </div>
