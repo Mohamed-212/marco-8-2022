@@ -14,7 +14,7 @@ class Expense extends MX_Controller
     {
         parent::__construct();
         $this->auth->check_user_auth();
-        $this->load->model(array('expense_model'));
+        $this->load->model(array('expense_model', 'dashboard/Settings'));
     }
 
 
@@ -91,6 +91,7 @@ class Expense extends MX_Controller
     {
         $data['title'] = display('add_expense');
         $data['expense_item'] = $this->expense_model->expense_item_list();
+        $data['bank_list'] = $this->Settings->get_bank_list();
 //        $data['module'] = "hrm";
 //        $data['page'] = "expense/expense_form";
 //        echo Modules::run('template/layout', $data);

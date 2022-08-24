@@ -1,5 +1,22 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Manage Customer Start -->
+<script>
+    $(document).ready(function() {
+        $('body').on('change', '#paytype', function() {
+            const val = $(this).val();
+            const bankDiv = $('#bank_div');
+            const bankSelect = $('#bank_id');
+            if (val == 2) {
+                bankDiv.css('display', 'block');
+                bankSelect.attr('required', true);
+                $('span.select2').css('width', '100%');
+            } else {
+                bankDiv.css('display', 'none');
+                bankSelect.attr('required', false);
+            }
+        });
+    });
+</script>
 <div class="content-wrapper">
     <section class="content-header">
         <div class="header-icon">
@@ -20,22 +37,19 @@
 
         <?php if (!empty($this->session->flashdata('message'))) { ?>
             <div class="alert alert-success alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?php echo $this->session->flashdata('message') ?>
             </div>
         <?php } ?>
         <?php if (!empty($this->session->flashdata('exception'))) { ?>
             <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?php echo $this->session->flashdata('exception') ?>
             </div>
         <?php } ?>
         <?php if (!empty(validation_errors())) { ?>
             <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?php echo validation_errors() ?>
             </div>
         <?php } ?>
@@ -61,8 +75,7 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" name="dtpDate" id="dtpDate" class="form-control datepicker"
-                                               value="<?php echo date('Y-m-d'); ?>">
+                                        <input type="text" name="dtpDate" id="dtpDate" class="form-control datepicker" value="<?php echo date('Y-m-d'); ?>">
 
                                     </div>
                                 </div>
@@ -70,8 +83,8 @@
                             <div class="col-sm-12" id="payment_from_1">
                                 <div class="form-group row">
                                     <label for="expense_type" class="col-sm-4 col-form-label"><?php
-                                        echo display('expense_type');
-                                        ?> <i class="text-danger">*</i></label>
+                                                                                                echo display('expense_type');
+                                                                                                ?> <i class="text-danger">*</i></label>
                                     <div class="col-sm-8">
                                         <select name="expense_type" class="form-control" required="">
                                             <option value="">Select Expense Type</option>
@@ -86,11 +99,10 @@
                             <div class="col-sm-12" id="payment_from_1">
                                 <div class="form-group row">
                                     <label for="payment_type" class="col-sm-4 col-form-label"><?php
-                                        echo display('payment_type');
-                                        ?> <i class="text-danger">*</i></label>
+                                                                                                echo display('payment_type');
+                                                                                                ?> <i class="text-danger">*</i></label>
                                     <div class="col-sm-8">
-                                        <select name="paytype" class="form-control" required="" id="paytype"
-                                                onchange="bank_paymetExpense(this.value)" required="">
+                                        <select name="paytype" class="form-control" required="" id="paytype" required="">
                                             <option value="">Select Payment Option</option>
                                             <option value="1">Cash Payment</option>
                                             <option value="2">Bank Payment</option>
@@ -99,11 +111,11 @@
 
                                 </div>
                             </div>
-                            <div class="col-sm-12" id="bank_div">
+                            <div class="col-sm-12" id="bank_div" style="display: none;">
                                 <div class="form-group row">
                                     <label for="payment_type" class="col-sm-4 col-form-label"><?php
-                                        echo display('bank_name');
-                                        ?> <i class="text-danger">*</i></label>
+                                                                                                echo display('bank_name');
+                                                                                                ?> <i class="text-danger">*</i></label>
                                     <div class="col-sm-8">
                                         <select name="bank_id" class="form-control bankpayment" id="bank_id">
                                             <option value="">Select Payment Option</option>
@@ -118,8 +130,7 @@
                             </div>
                             <div class="col-sm-12" id="payment_from_1">
                                 <div class="form-group row">
-                                    <label for="date" class="col-sm-4 col-form-label"><?php echo display('amount') ?><i
-                                                class="text-danger">*</i></label>
+                                    <label for="date" class="col-sm-4 col-form-label"><?php echo display('amount') ?><i class="text-danger">*</i></label>
                                     <div class="col-sm-8">
                                         <input type="text" name="amount" id="amount" class="form-control" required="">
 
@@ -131,8 +142,7 @@
 
                                 <div class="col-sm-12 text-center">
 
-                                    <input type="submit" id="add_receive" class="btn btn-success btn-large" name="save"
-                                           value="<?php echo display('save') ?>" tabindex="9"/>
+                                    <input type="submit" id="add_receive" class="btn btn-success btn-large" name="save" value="<?php echo display('save') ?>" tabindex="9" />
 
                                 </div>
                             </div>
