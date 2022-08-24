@@ -243,6 +243,7 @@ class Cinvoice extends MX_Controller {
             'title' => display('invoice_details'),
             'invoice_id' => $invoice_detail[0]['invoice_id'],
             'invoice_no' => $invoice_detail[0]['invoice'],
+            'customer_id' => $invoice_detail[0]['customer_id'],
             'customer_name' => $invoice_detail[0]['customer_name'],
             'customer_mobile' => $invoice_detail[0]['customer_mobile'],
             'customer_email' => $invoice_detail[0]['customer_email'],
@@ -306,10 +307,12 @@ class Cinvoice extends MX_Controller {
         }
         $currency_details = $CI->Soft_settings->retrieve_currency_info();
         $company_info = $CI->Invoices->retrieve_company();
+
         $data = array(
             'title' => display('invoice_details'),
             'invoice_id' => $invoice_detail[0]['invoice_id'],
             'invoice_no' => $invoice_detail[0]['invoice'],
+            'customer_id' => $invoice_detail[0]['customer_id'],
             'customer_name' => $invoice_detail[0]['customer_name'],
             'customer_mobile' => $invoice_detail[0]['customer_mobile'],
             'customer_email' => $invoice_detail[0]['customer_email'],
@@ -1529,19 +1532,6 @@ class Cinvoice extends MX_Controller {
         $rate = $this->Invoices->get_pri_type_rate($product_id, $pri_type_id);
         $result[1] = $rate; //stock
         echo json_encode($result);
-    }
-
-    //purchase search by model
-    public function product_search_all_products(){
-        $product_name = $this->input->post('product_name', TRUE);
-        $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%')");
-        $product_info = $query->result_array();
-        $json_product = [];
-        foreach ($product_info as $value) {
-            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
-            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
-        }
-        echo json_encode($json_product);
     }
 
 }
