@@ -76,6 +76,8 @@ function active_customer(status) {
                 '<input type="hidden" id="all_discount_' + count + '" class="total_discount"/><button class="btn btn-danger text-right" type="button" value="'+display('delete')+'" onclick="deleteRow(this)">'+display('delete')+'</button></td></tr>';
             document.getElementById(divName).appendChild(newdiv);
             document.getElementById(tabin).focus();
+            stock_by_product_variant_id(count-1);
+            stock_by_product_variant_color(count-1);
             count++;
 
             $("select.form-control:not(.dont-select-me)").select2({
@@ -165,7 +167,129 @@ function active_customer(status) {
         });
     });
 
-
+    function stock_by_product_variant_color(sl) {
+        // var sl = $(this).parent().parent().parent().find(".sl").val();
+        var product_id = $(".product_id_" + sl).val();
+        var avl_qntt = $("#avl_qntt_" + sl).val();
+        var store_id = $("#store_id").val();
+        var variant_id = $("#variant_id_" + sl).val();
+        var variant_color = $("#variant_color_id_" + sl).val();
+        var assembly = $("#assembly" + sl).val();
+    
+        if (store_id == 0) {
+            alert(display("please_select_store"));
+            return false;
+        }
+    
+        $.ajax({
+            type: "post",
+            async: false,
+            url: base_url + "dashboard/Cpurchase/check_admin_2d_variant_info",
+            data: {
+                csrf_test_name: csrf_test_name,
+                product_id: product_id,
+                variant_id: variant_id,
+                store_id: store_id,
+                variant_color: variant_color,
+                assembly: assembly,
+            },
+            success: function (result) {
+                var res = JSON.parse(result);
+                if (res[0] == "yes") {
+                    $("#avl_qntt_" + sl).val(res[1]);
+                    $("#discount_" + sl).val(res[3]);
+                    $("#price_item_" + sl)
+                            .val(res[2])
+                            .change();
+                    $("#batch_no_" + sl).html(res[4]);
+                } else {
+                    $("#avl_qntt_" + sl).val("0");
+                    $("#total_qntt_" + sl).val("0");
+                    alert(display("product_is_not_available_in_this_store"));
+                    return false;
+                }
+            },
+            error: function () {
+                alert("Request Failed, Please try again!");
+            },
+        });
+    }
+    function stock_by_product_variant_id(sl) {
+        //  var sl = $(this).parent().parent().parent().find(".sl").val();
+        var product_id = $(".product_id_" + sl).val();
+        var avl_qntt = $("#avl_qntt_" + sl).val();
+        var store_id = $("#store_id").val();
+        var variant_id = $("#variant_id_" + sl).val();
+        var variant_color = $("#variant_color_id_" + sl).val();
+        var assembly = $("#assembly" + sl).val();
+    
+        if (store_id == 0) {
+            alert(display("please_select_store"));
+            return false;
+        }
+        $.ajax({
+            type: "post",
+            async: false,
+            url: base_url + "dashboard/Cpurchase/check_admin_2d_variant_info",
+            data: {
+                csrf_test_name: csrf_test_name,
+                product_id: product_id,
+                variant_id: variant_id,
+                store_id: store_id,
+                variant_color: variant_color,
+                assembly:assembly,
+            },
+            success: function (result) {
+                var res = JSON.parse(result);
+                if (res[0] == "yes") {
+                    $("#avl_qntt_" + sl).val(res[1]);
+                    $("#discount_" + sl).val(res[3]);
+                    $("#price_item_" + sl)
+                            .val(res[2])
+                            .change();
+                    $("#batch_no_" + sl).html(res[4]);
+                    $("#batch_no_" + sl).on("change", function () {
+                        var batch_no = $(this).val();
+                        $.ajax({
+                            type: "post",
+                            async: false,
+                            url:
+                                    base_url +
+                                    "dashboard/Cpurchase/check_admin_batch_wise_stock_info",
+                            data: {
+                                csrf_test_name: csrf_test_name,
+                                product_id: product_id,
+                                variant_id: variant_id,
+                                store_id: store_id,
+                                variant_color: variant_color,
+                                batch_no: batch_no,
+                            },
+                            success: function (result) {
+                                var res = JSON.parse(result);
+                                if (res[0] == "yes") {
+                                    $("#avl_qntt_" + sl).val(res[1]);
+                                } else {
+                                    $("#avl_qntt_" + sl).val("0");
+                                    $("#total_qntt_" + sl).val("0");
+    
+                                    alert(display("product_is_not_available_in_this_store"));
+                                    return false;
+                                }
+                            },
+                        });
+                    });
+                } else {
+                    $("#avl_qntt_" + sl).val("0");
+                    $("#total_qntt_" + sl).val("0");
+                    alert(display("product_is_not_available_in_this_store"));
+                    return false;
+                }
+            },
+            error: function () {
+                alert("Request Failed, Please try again!");
+            },
+        });
+    }
     //========================================================================================
     //after select variant check  limit to order limit
     $('#total_qntt_1').on('change', function () {

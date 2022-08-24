@@ -3,7 +3,7 @@
         'name' => 'dompdf/codeigniter',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '8f19b295c7186d0cbc6c6853ca648623b573c974',
+        'reference' => 'e4f6c5a7058fa34d754467478a36e7e54c2143d6',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'dompdf/codeigniter' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '8f19b295c7186d0cbc6c6853ca648623b573c974',
+            'reference' => 'e4f6c5a7058fa34d754467478a36e7e54c2143d6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -27,7 +27,7 @@
 
     <section class="content">
         <!-- Alert Message -->
-        <?php
+        <?php 
         $message = $this->session->userdata('message');
         if (isset($message)) {
             ?>
