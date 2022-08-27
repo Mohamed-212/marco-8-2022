@@ -60,7 +60,7 @@
                                 <h4><?php echo display('quotation_update') ?></h4>
                             </div>
                         </div>
-                        <?php echo form_open('dashboard/Cquotation/quotation_update', array('class' => 'form-vertical', 'id' => 'normalinvoice')) ?>
+                        <?php echo form_open('dashboard/Cquotation/quotation_update'.$quotation_id, array('class' => 'form-vertical', 'id' => 'normalinvoice')) ?>
                         <div class="panel-body">
 
                             <div class="row">

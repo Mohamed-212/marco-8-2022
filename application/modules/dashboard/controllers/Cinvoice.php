@@ -1533,10 +1533,11 @@ class Cinvoice extends MX_Controller {
         $result[1] = $rate; //stock
         echo json_encode($result);
     }
+
   //purchase search by model
   public function product_search_all_products(){
     $product_name = $this->input->post('product_name', TRUE);
-    $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%')");
+    $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%' OR `product_id` = '". $product_name ."')");
     $product_info = $query->result_array();
     $json_product = [];
     foreach ($product_info as $value) {

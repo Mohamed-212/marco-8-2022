@@ -10,11 +10,13 @@ class Quotations extends CI_Model
 		$this->load->model('Customers');
 		$this->auth->check_user_auth();
 	}
+
 	//Count quotation
 	public function count_quotation()
 	{
 		return $this->db->count_all("quotation");
 	}
+
 	//quotation List
 	public function quotation_list()
 	{
@@ -107,6 +109,7 @@ class Quotations extends CI_Model
 			return false;
 		}
 	}
+
 	//POS customer setup
 	public function pos_customer_setup()
 	{
@@ -120,6 +123,7 @@ class Quotations extends CI_Model
 			return false;
 		}
 	}
+
 	//POS customer list
 	public function customer_list()
 	{
@@ -134,6 +138,7 @@ class Quotations extends CI_Model
 			return false;
 		}
 	}
+
 	//Customer entry
 	public function customer_entry($data)
 	{
@@ -160,350 +165,712 @@ class Quotations extends CI_Model
 		}
 	}
 
-	//Quotation entry
-	public function quotation_entry()
-	{
-		//Quotation entry info
-		$quotation_id 		= $this->auth->generator(15);
-		$quantity 			= $this->input->post('product_quantity', TRUE);
-		$available_quantity = $this->input->post('available_quantity', TRUE);
-		$product_id 		= $this->input->post('product_id', TRUE);
-		$expire_date        = $this->input->post('expire_date', true);
-		$batch              = $this->input->post('batch_no', true);
-		$customer_id        = $this->input->post('customer_id', TRUE);
+    //update_quotation
+    public function update_quotation_old()
+    {
 
-		//Stock availability check
-		$result = array();
-		foreach ($available_quantity as $k => $v) {
-			if ($v < $quantity[$k]) {
-				$this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
-				redirect('dashboard/Cquotation');
-			}
-		}
-		//Product existing check
-		if ($product_id == null) {
-			$this->session->set_userdata(array('error_message' => display('please_select_product')));
-			redirect('dashboard/Cquotation');
-		}
-		//Customer existing check
-		if (($this->input->post('customer_name_others', TRUE) == null) && ($customer_id == null)) {
-			$this->session->set_userdata(array('error_message' => display('please_select_customer')));
-			redirect('dashboard/Cquotation');
-		}
-		//Customer data Existence Check.
-		if ($customer_id == "") {
-			$customer_id = $this->auth->generator(15);
-			//Customer  basic information adding.
-			$data = array(
-				'customer_id' 	    => $customer_id,
-				'customer_name'     => $this->input->post('customer_name_others', TRUE),
-				'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
-				'customer_mobile' 	=> $this->input->post('customer_mobile_no', TRUE),
-				'customer_email' 	=> "NONE",
-				'status' 			=> 1
-			);
-			$this->Customers->customer_entry($data);
-			//Previous balance adding -> Sending to customer model to adjust the data.
-			$this->Customers->previous_balance_add(0, $customer_id);
-		} else {
-			$customer_id = $this->input->post('customer_id', TRUE);
-		}
-		//Data inserting into quotation table
-		$invoice_discount = $this->input->post('invoice_discount', TRUE);
-		$total_discount   = $this->input->post('total_discount', TRUE);
-		$data = array(
-			'quotation_id'		=> $quotation_id,
-			'customer_id'		=> $customer_id,
-			'date'				=> $this->input->post('invoice_date', TRUE),
-			'expire_date'		=> $expire_date,
-			'total_amount'		=> $this->input->post('grand_total_price', TRUE),
-			'quotation'			=> 'Quot-' . $this->number_generator(),
-			'details'			=> $this->input->post('details', true),
-			'total_discount' 	=> $this->input->post('total_discount', TRUE),
-			'quotation_discount' => (!empty($invoice_discount) ? $invoice_discount : 0) + (!empty($total_discount) ? $total_discount : 0),
-			'service_charge'	=> $this->input->post('service_charge', TRUE),
-			'user_id'			=> $this->session->userdata('user_id'),
-			'store_id'			=> $this->input->post('store_id', TRUE),
-			'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
-            'employee_id' => $this->input->post('employee_id', true),
-			'status'			=> 1
-		);
-		$this->db->insert('quotation', $data);
-		// Information for quotation details
-		$rate 		   = $this->input->post('product_rate', TRUE);
-		$p_id 		   = $this->input->post('product_id', TRUE);
-		$total_amount  = $this->input->post('total_price', TRUE);
-		$discount 	   = $this->input->post('discount', TRUE);
-		$variants 	   = $this->input->post('variant_id', TRUE);
-		$color_variants = $this->input->post('color_variant', TRUE);
+        //Quotation and customer info
+        $quotation_id  = $this->input->post('quotation_id', TRUE);
+        $customer_id   = $this->input->post('customer_id', TRUE);
+        $invoice_discount  = $this->input->post('invoice_discount', TRUE);
+        $total_discount   = $this->input->post('total_discount', TRUE);
+
+        $quotation_discount = $invoice_discount + $total_discount;
+
+        if (!empty($quotation_id)) {
+            //Data update into quotation table
+            $data = array(
+                'customer_id'		=>	$customer_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+                'expire_date'		=>	$this->input->post('expire_date', TRUE),
+                'total_amount'		=>	$this->input->post('grand_total_price', TRUE),
+                'quotation'			=>	$this->input->post('quotation', TRUE),
+                'total_discount' 	=> 	$this->input->post('total_discount', TRUE),
+                'details' 			=> 	$this->input->post('details', TRUE),
+                'quotation_discount' => (!empty($quotation_discount) ? $quotation_discount : 0),
+                'service_charge'	=> 	$this->input->post('service_charge', TRUE),
+                'user_id'			=>	$this->session->userdata('user_id'),
+                'store_id'			=>	$this->input->post('store_id', TRUE),
+                'paid_amount'		=>	$this->input->post('paid_amount', TRUE),
+                'due_amount'		=>	$this->input->post('due_amount', TRUE),
+                'status'			=>	$this->input->post('status', TRUE),
+                'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
+                'employee_id' => $this->input->post('employee_id', true),
+            );
+
+            $this->db->update('quotation', $data, array('quotation_id' => $quotation_id));
+        }
+
+
+
+        //Quotation details info
+        $rate 			= $this->input->post('product_rate', TRUE);
+        $p_id 			= $this->input->post('product_id', TRUE);
+        $total_amount	= $this->input->post('total_price', TRUE);
+        $discount 		= $this->input->post('discount', TRUE);
+        $variants 		= $this->input->post('variant_id', TRUE);
+        $color_variants = $this->input->post('color_variant', TRUE);
         $color = $this->input->post('colorv', TRUE);
         $size = $this->input->post('sizev', TRUE);
-		//Entry for Quotation Details
-		for ($i = 0, $n = count($quantity); $i < $n; $i++) {
-			$product_quantity = $quantity[$i];
-			$product_rate 	  = $rate[$i];
-			$product_id 	  = $p_id[$i];
-			$batch_no         = $batch[$i];
-			$discount_rate 	  = $discount[$i];
-			$total_price      = $total_amount[$i];
+        $quotation_d_id = $this->input->post('quotation_details_id', TRUE);
+        $quantity 		= $this->input->post('product_quantity', TRUE);
+
+        //invoice details for invoice
+        if (!empty($p_id)) {
+
+            //Delete old quotation details info
+            if (!empty($quotation_id)) {
+                $this->db->where('quotation_id', $quotation_id);
+                $this->db->delete('quotation_details');
+            }
+
+            for ($i = 0, $n = count($p_id); $i < $n; $i++) {
+                $product_quantity = $quantity[$i];
+                $product_rate 	  = $rate[$i];
+                $product_id 	  = $p_id[$i];
+                $discount_rate 	  = $discount[$i];
+                $total_price 	  = $total_amount[$i];
+                //$variant_id		  = $variants[$i];
+                //$variant_color	  = (!empty($color_variants) ? @$color_variants[$i] : null);
+                $variant_id = $size[$i];
+                $variant_color = $color[$i];
+                $supplier_rate    = $this->supplier_rate($product_id);
+
+                $quotation_details = array(
+                    'quotation_details_id'	=>	$this->auth->generator(15),
+                    'quotation_id'			=>	$quotation_id,
+                    'product_id'			=>	$product_id,
+                    'variant_id'			=>	$variant_id,
+                    'variant_color'			=>	$variant_color,
+                    'quantity'				=>	$product_quantity,
+                    'rate'					=>	$product_rate,
+                    'store_id'				=>	$this->input->post('store_id', TRUE),
+                    'supplier_rate'         =>	$supplier_rate[0]['supplier_price'],
+                    'total_price'           =>	$total_price,
+                    'discount'           	=>	$discount_rate,
+                    'status'				=>	1
+                );
+
+                if (!empty($p_id)) {
+                    $this->db->select('*');
+                    $this->db->from('quotation_details');
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('product_id', $product_id);
+                    $this->db->where('variant_id', $variant_id);
+                    if (!empty($variant_color)) {
+                        $this->db->where('variant_color', $variant_color);
+                    }
+                    $result = $this->db->get()->num_rows();
+
+                    if ($result > 0) {
+                        $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+                        $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('product_id', $product_id);
+                        $this->db->where('variant_id', $variant_id);
+                        if (!empty($variant_color)) {
+                            $this->db->where('variant_color', $variant_color);
+                        }
+                        $this->db->update('quotation_details');
+                    } else {
+                        $this->db->insert('quotation_details', $quotation_details);
+                    }
+                }
+            }
+        }
+
+
+        //Quotation tax collection summary
+        $cgst = $this->input->post('cgst', TRUE);
+        $sgst = $this->input->post('sgst', TRUE);
+        $igst = $this->input->post('igst', TRUE);
+        $cgst_id = $this->input->post('cgst_id', TRUE);
+        $sgst_id = $this->input->post('sgst_id', TRUE);
+        $igst_id = $this->input->post('igst_id', TRUE);
+        //Tax collection summary for three
+
+        //Delete all tax  from summary
+        $this->db->where('quotation_id', $quotation_id);
+        $this->db->delete('quotation_tax_col_summary');
+
+        //CGST Tax Summary
+        if (!empty($cgst)) {
+            for ($i = 0, $n = count($cgst); $i < $n; $i++) {
+                $cgst_tax = $cgst[$i];
+                $cgst_tax_id = $cgst_id[$i];
+                $cgst_summary = array(
+                    'quot_tax_col_id'	=>	$this->auth->generator(15),
+                    'quotation_id'		=>	$quotation_id,
+                    'tax_amount' 		=> 	$cgst_tax,
+                    'tax_id' 			=> 	$cgst_tax_id,
+                    'date'				=>	$this->input->post('invoice_date', TRUE),
+                );
+                if (!empty($cgst[$i])) {
+                    $result = $this->db->select('*')
+                        ->from('quotation_tax_col_summary')
+                        ->where('quotation_id', $quotation_id)
+                        ->where('tax_id', $cgst_tax_id)
+                        ->get()
+                        ->num_rows();
+                    if ($result > 0) {
+                        $this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('tax_id', $cgst_tax_id);
+                        $this->db->update('quotation_tax_col_summary');
+                    } else {
+                        $this->db->insert('quotation_tax_col_summary', $cgst_summary);
+                    }
+                }
+            }
+        }
+
+        //SGST Tax Summary
+        if (!empty($sgst)) {
+            for ($i = 0, $n = count($sgst); $i < $n; $i++) {
+                $sgst_tax 	 = $sgst[$i];
+                $sgst_tax_id = $sgst_id[$i];
+
+                $sgst_summary = array(
+                    'quot_tax_col_id'	=>	$this->auth->generator(15),
+                    'quotation_id'		=>	$quotation_id,
+                    'tax_amount' 		=> 	$sgst_tax,
+                    'tax_id' 			=> 	$sgst_tax_id,
+                    'date'				=>	$this->input->post('invoice_date', TRUE),
+                );
+                if (!empty($sgst[$i])) {
+                    $result = $this->db->select('*')
+                        ->from('quotation_tax_col_summary')
+                        ->where('quotation_id', $quotation_id)
+                        ->where('tax_id', $sgst_tax_id)
+                        ->get()
+                        ->num_rows();
+                    if ($result > 0) {
+                        $this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('tax_id', $sgst_tax_id);
+                        $this->db->update('quotation_tax_col_summary');
+                    } else {
+                        $this->db->insert('quotation_tax_col_summary', $sgst_summary);
+                    }
+                }
+            }
+        }
+
+        //IGST Tax Summary
+        if (!empty($igst)) {
+            for ($i = 0, $n = count($igst); $i < $n; $i++) {
+                $igst_tax = $igst[$i];
+                $igst_tax_id = $igst_id[$i];
+
+                $igst_summary = array(
+                    'quot_tax_col_id'	=>	$this->auth->generator(15),
+                    'quotation_id'		=>	$quotation_id,
+                    'tax_amount' 		=> 	$igst_tax,
+                    'tax_id' 			=> 	$igst_tax_id,
+                    'date'				=>	$this->input->post('invoice_date', TRUE),
+                );
+                if (!empty($igst[$i])) {
+                    $result = $this->db->select('*')
+                        ->from('quotation_tax_col_summary')
+                        ->where('quotation_id', $quotation_id)
+                        ->where('tax_id', $igst_tax_id)
+                        ->get()
+                        ->num_rows();
+
+                    if ($result > 0) {
+                        $this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('tax_id', $igst_tax_id);
+                        $this->db->update('quotation_tax_col_summary');
+                    } else {
+                        $this->db->insert('quotation_tax_col_summary', $igst_summary);
+                    }
+                }
+            }
+        }
+        //Tax collection summary for three
+
+        //Delete all tax  from summary
+        $this->db->where('quotation_id', $quotation_id);
+        $this->db->delete('quotation_tax_col_details');
+
+        //Tax collection details for three
+        //CGST Tax Details
+        if (!empty($cgst)) {
+            for ($i = 0, $n = count($cgst); $i < $n; $i++) {
+                $cgst_tax 	 = $cgst[$i];
+                $cgst_tax_id = $cgst_id[$i];
+                $product_id  = $p_id[$i];
+                $variant_id  = $variants[$i];
+                $cgst_details = array(
+                    'quot_tax_col_de_id'	=>	$this->auth->generator(15),
+                    'quotation_id'		=>	$quotation_id,
+                    'amount' 			=> 	$cgst_tax,
+                    'product_id' 		=> 	$product_id,
+                    'tax_id' 			=> 	$cgst_tax_id,
+                    'variant_id' 		=> 	$variant_id,
+                    'date'				=>	$this->input->post('invoice_date', TRUE),
+                );
+                if (!empty($cgst[$i])) {
+                    $result = $this->db->select('*')
+                        ->from('quotation_tax_col_details')
+                        ->where('quotation_id', $quotation_id)
+                        ->where('tax_id', $cgst_tax_id)
+                        ->where('product_id', $product_id)
+                        ->where('variant_id', $variant_id)
+                        ->get()
+                        ->num_rows();
+                    if ($result > 0) {
+                        $this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('tax_id', $cgst_tax_id);
+                        $this->db->where('variant_id', $variant_id);
+                        $this->db->update('quotation_tax_col_details');
+                    } else {
+                        $this->db->insert('quotation_tax_col_details', $cgst_details);
+                    }
+                }
+            }
+        }
+
+        //SGST Tax Details
+        if (!empty($sgst)) {
+            for ($i = 0, $n = count($sgst); $i < $n; $i++) {
+                $sgst_tax 	 = $sgst[$i];
+                $sgst_tax_id = $sgst_id[$i];
+                $product_id  = $p_id[$i];
+                $variant_id  = $variants[$i];
+                $sgst_summary = array(
+                    'quot_tax_col_de_id'	=>	$this->auth->generator(15),
+                    'quotation_id'		=>	$quotation_id,
+                    'amount' 			=> 	$sgst_tax,
+                    'product_id' 		=> 	$product_id,
+                    'tax_id' 			=> 	$sgst_tax_id,
+                    'variant_id' 		=> 	$variant_id,
+                    'date'				=>	$this->input->post('invoice_date', TRUE),
+                );
+                if (!empty($sgst[$i])) {
+                    $result = $this->db->select('*')
+                        ->from('quotation_tax_col_details')
+                        ->where('quotation_id', $quotation_id)
+                        ->where('tax_id', $sgst_tax_id)
+                        ->where('product_id', $product_id)
+                        ->where('variant_id', $variant_id)
+                        ->get()
+                        ->num_rows();
+                    if ($result > 0) {
+                        $this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('tax_id', $sgst_tax_id);
+                        $this->db->where('variant_id', $variant_id);
+                        $this->db->update('quotation_tax_col_details');
+                    } else {
+                        $this->db->insert('quotation_tax_col_details', $sgst_summary);
+                    }
+                }
+            }
+        }
+
+        //IGST Tax Details
+        if (!empty($igst)) {
+            for ($i = 0, $n = count($igst); $i < $n; $i++) {
+                $igst_tax = $igst[$i];
+                $igst_tax_id = $igst_id[$i];
+                $product_id = $p_id[$i];
+
+                if (!empty($igst[$i])) {
+                    $this->db->set('amount', $igst_tax, FALSE);
+                    $this->db->where('product_id', $product_id);
+                    $this->db->where('tax_id', $igst_tax_id);
+                    $this->db->update('quotation_tax_col_details');
+                }
+            }
+        }
+
+        if (!empty($igst)) {
+            for ($i = 0, $n = count($igst); $i < $n; $i++) {
+                $igst_tax 	 = $igst[$i];
+                $igst_tax_id = $igst_id[$i];
+                $product_id  = $p_id[$i];
+                $variant_id  = $variants[$i];
+                $igst_summary = array(
+                    'quot_tax_col_de_id'	=>	$this->auth->generator(15),
+                    'quotation_id'		=>	$quotation_id,
+                    'amount' 			=> 	$igst_tax,
+                    'product_id' 		=> 	$product_id,
+                    'tax_id' 			=> 	$igst_tax_id,
+                    'variant_id' 		=> 	$variant_id,
+                    'date'				=>	$this->input->post('invoice_date', TRUE),
+                );
+                if (!empty($igst[$i])) {
+                    $result = $this->db->select('*')
+                        ->from('quotation_tax_col_details')
+                        ->where('quotation_id', $quotation_id)
+                        ->where('tax_id', $igst_tax_id)
+                        ->where('product_id', $product_id)
+                        ->where('variant_id', $variant_id)
+                        ->get()
+                        ->num_rows();
+                    if ($result > 0) {
+                        $this->db->set('amount', 'amount+' . $igst_tax, FALSE);
+                        $this->db->where('quotation_id', $quotation_id);
+                        $this->db->where('tax_id', $igst_tax_id);
+                        $this->db->where('variant_id', $variant_id);
+                        $this->db->update('quotation_tax_col_details');
+                    } else {
+                        $this->db->insert('quotation_tax_col_details', $igst_summary);
+                    }
+                }
+            }
+        }
+        //End tax details
+        return $quotation_id;
+    }
+
+    //Quotation entry
+    public function quotation_entry()
+    {
+        //Quotation entry info
+        $quotation_id 		= $this->auth->generator(15);
+        $quantity 			= $this->input->post('product_quantity', TRUE);
+        $available_quantity = $this->input->post('available_quantity', TRUE);
+        $product_id 		= $this->input->post('product_id', TRUE);
+        $expire_date        = $this->input->post('expire_date', true);
+        $batch              = $this->input->post('batch_no', true);
+        $customer_id        = $this->input->post('customer_id', TRUE);
+
+        //Stock availability check
+        $result = array();
+        foreach ($available_quantity as $k => $v) {
+            if ($v < $quantity[$k]) {
+                $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
+                redirect('dashboard/Cquotation');
+            }
+        }
+        //Product existing check
+        if ($product_id == null) {
+            $this->session->set_userdata(array('error_message' => display('please_select_product')));
+            redirect('dashboard/Cquotation');
+        }
+        //Customer existing check
+        if (($this->input->post('customer_name_others', TRUE) == null) && ($customer_id == null)) {
+            $this->session->set_userdata(array('error_message' => display('please_select_customer')));
+            redirect('dashboard/Cquotation');
+        }
+        //Customer data Existence Check.
+        if ($customer_id == "") {
+            $customer_id = $this->auth->generator(15);
+            //Customer  basic information adding.
+            $data = array(
+                'customer_id' 	    => $customer_id,
+                'customer_name'     => $this->input->post('customer_name_others', TRUE),
+                'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
+                'customer_mobile' 	=> $this->input->post('customer_mobile_no', TRUE),
+                'customer_email' 	=> "NONE",
+                'status' 			=> 1
+            );
+            $this->Customers->customer_entry($data);
+            //Previous balance adding -> Sending to customer model to adjust the data.
+            $this->Customers->previous_balance_add(0, $customer_id);
+        } else {
+            $customer_id = $this->input->post('customer_id', TRUE);
+        }
+        //Data inserting into quotation table
+        $invoice_discount = $this->input->post('invoice_discount', TRUE);
+        $total_discount   = $this->input->post('total_discount', TRUE);
+        $data = array(
+            'quotation_id'		=> $quotation_id,
+            'customer_id'		=> $customer_id,
+            'date'				=> $this->input->post('invoice_date', TRUE),
+            'expire_date'		=> $expire_date,
+            'total_amount'		=> $this->input->post('grand_total_price', TRUE),
+            'quotation'			=> 'Quot-' . $this->number_generator(),
+            'details'			=> $this->input->post('details', true),
+            'total_discount' 	=> $this->input->post('total_discount', TRUE),
+            'quotation_discount' => (!empty($invoice_discount) ? $invoice_discount : 0) + (!empty($total_discount) ? $total_discount : 0),
+            'service_charge'	=> $this->input->post('service_charge', TRUE),
+            'user_id'			=> $this->session->userdata('user_id'),
+            'store_id'			=> $this->input->post('store_id', TRUE),
+            'is_quotation'		=> ($this->input->post('is_quotation', True))?$this->input->post('is_quotation', True):0,
+            'employee_id' => $this->input->post('employee_id', true),
+            'status'			=> 1
+        );
+        $this->db->insert('quotation', $data);
+        // Information for quotation details
+        $rate 		   = $this->input->post('product_rate', TRUE);
+        $p_id 		   = $this->input->post('product_id', TRUE);
+        $total_amount  = $this->input->post('total_price', TRUE);
+        $discount 	   = $this->input->post('discount', TRUE);
+        $variants 	   = $this->input->post('variant_id', TRUE);
+        $color_variants = $this->input->post('color_variant', TRUE);
+        $color = $this->input->post('colorv', TRUE);
+        $size = $this->input->post('sizev', TRUE);
+        //Entry for Quotation Details
+        for ($i = 0, $n = count($quantity); $i < $n; $i++) {
+            $product_quantity = $quantity[$i];
+            $product_rate 	  = $rate[$i];
+            $product_id 	  = $p_id[$i];
+            $batch_no         = $batch[$i];
+            $discount_rate 	  = $discount[$i];
+            $total_price      = $total_amount[$i];
 //			$variant_id		  = $variants[$i];
 //			$color_variant	  = (!empty($color_variants) ? @$color_variants[$i] : null);
             $variant_id = $size[$i];
             $color_variant = $color[$i];
-			$supplier_rate 	  = $this->supplier_rate($product_id);
+            $supplier_rate 	  = $this->supplier_rate($product_id);
 
-			$quotation_details = array(
-				'quotation_details_id' => $this->auth->generator(15),
-				'quotation_id'		  => $quotation_id,
-				'product_id'		  => $product_id,
-				'batch_no'		      => $batch_no,
-				'variant_id'		  => $variant_id,
-				'variant_color'		  => $color_variant,
-				'store_id'			  => $this->input->post('store_id', TRUE),
-				'quantity'			  => $product_quantity,
-				'rate'				  => $product_rate,
-				'supplier_rate'       => $supplier_rate[0]['supplier_price'],
-				'total_price'         => $total_price,
-				'discount'            => $discount_rate,
-				'status'			  => 1
-			);
-			if (!empty($quantity)) {
-				$this->db->select('*');
-				$this->db->from('quotation_details');
-				$this->db->where('quotation_id', $quotation_id);
-				$this->db->where('product_id', $product_id);
-				$this->db->where('variant_id', $variant_id);
-				if (!empty($color_variant)) {
-					$this->db->where('variant_color', $color_variant);
-				}
-				$result = $this->db->get()->num_rows();
-				if ($result > 0) {
-					$this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
-					$this->db->set('total_price', 'total_price+' . $total_price, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('product_id', $product_id);
-					$this->db->where('variant_id', $variant_id);
-					if (!empty($color_variant)) {
-						$this->db->where('variant_color', $color_variant);
-					}
-					$this->db->update('quotation_details');
-				} else {
-					$this->db->insert('quotation_details', $quotation_details);
-				}
-			}
-		}
+            $quotation_details = array(
+                'quotation_details_id' => $this->auth->generator(15),
+                'quotation_id'		  => $quotation_id,
+                'product_id'		  => $product_id,
+                'batch_no'		      => $batch_no,
+                'variant_id'		  => $variant_id,
+                'variant_color'		  => $color_variant,
+                'store_id'			  => $this->input->post('store_id', TRUE),
+                'quantity'			  => $product_quantity,
+                'rate'				  => $product_rate,
+                'supplier_rate'       => $supplier_rate[0]['supplier_price'],
+                'total_price'         => $total_price,
+                'discount'            => $discount_rate,
+                'status'			  => 1
+            );
+            if (!empty($quantity)) {
+                $this->db->select('*');
+                $this->db->from('quotation_details');
+                $this->db->where('quotation_id', $quotation_id);
+                $this->db->where('product_id', $product_id);
+                $this->db->where('variant_id', $variant_id);
+                if (!empty($color_variant)) {
+                    $this->db->where('variant_color', $color_variant);
+                }
+                $result = $this->db->get()->num_rows();
+                if ($result > 0) {
+                    $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+                    $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('product_id', $product_id);
+                    $this->db->where('variant_id', $variant_id);
+                    if (!empty($color_variant)) {
+                        $this->db->where('variant_color', $color_variant);
+                    }
+                    $this->db->update('quotation_details');
+                } else {
+                    $this->db->insert('quotation_details', $quotation_details);
+                }
+            }
+        }
 
-		//Tax information
-		$cgst = $this->input->post('cgst', TRUE);
-		$sgst = $this->input->post('sgst', TRUE);
-		$igst = $this->input->post('igst', TRUE);
-		$cgst_id = $this->input->post('cgst_id', TRUE);
-		$sgst_id = $this->input->post('sgst_id', TRUE);
-		$igst_id = $this->input->post('igst_id', TRUE);
+        //Tax information
+        $cgst = $this->input->post('cgst', TRUE);
+        $sgst = $this->input->post('sgst', TRUE);
+        $igst = $this->input->post('igst', TRUE);
+        $cgst_id = $this->input->post('cgst_id', TRUE);
+        $sgst_id = $this->input->post('sgst_id', TRUE);
+        $igst_id = $this->input->post('igst_id', TRUE);
 
-		//Tax collection summary for three start
-		//CGST Tax Summary
-		for ($i = 0, $n = count($cgst); $i < $n; $i++) {
-			$cgst_tax = $cgst[$i];
-			$cgst_tax_id = $cgst_id[$i];
-			$cgst_summary = array(
-				'quot_tax_col_id'	=>	$this->auth->generator(15),
-				'quotation_id'		=>	$quotation_id,
-				'tax_amount' 		=> 	$cgst_tax,
-				'tax_id' 			=> 	$cgst_tax_id,
-				'date'				=>	$this->input->post('invoice_date', TRUE),
-			);
-			if (!empty($cgst[$i])) {
-				$result = $this->db->select('*')
-					->from('quotation_tax_col_summary')
-					->where('quotation_id', $quotation_id)
-					->where('tax_id', $cgst_tax_id)
-					->get()
-					->num_rows();
-				if ($result > 0) {
-					$this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('tax_id', $cgst_tax_id);
-					$this->db->update('quotation_tax_col_summary');
-				} else {
-					$this->db->insert('quotation_tax_col_summary', $cgst_summary);
-				}
-			}
-		}
+        //Tax collection summary for three start
+        //CGST Tax Summary
+        for ($i = 0, $n = count($cgst); $i < $n; $i++) {
+            $cgst_tax = $cgst[$i];
+            $cgst_tax_id = $cgst_id[$i];
+            $cgst_summary = array(
+                'quot_tax_col_id'	=>	$this->auth->generator(15),
+                'quotation_id'		=>	$quotation_id,
+                'tax_amount' 		=> 	$cgst_tax,
+                'tax_id' 			=> 	$cgst_tax_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+            );
+            if (!empty($cgst[$i])) {
+                $result = $this->db->select('*')
+                    ->from('quotation_tax_col_summary')
+                    ->where('quotation_id', $quotation_id)
+                    ->where('tax_id', $cgst_tax_id)
+                    ->get()
+                    ->num_rows();
+                if ($result > 0) {
+                    $this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('tax_id', $cgst_tax_id);
+                    $this->db->update('quotation_tax_col_summary');
+                } else {
+                    $this->db->insert('quotation_tax_col_summary', $cgst_summary);
+                }
+            }
+        }
 
-		//SGST Tax Summary
-		for ($i = 0, $n = count($sgst); $i < $n; $i++) {
-			$sgst_tax = $sgst[$i];
-			$sgst_tax_id = $sgst_id[$i];
+        //SGST Tax Summary
+        for ($i = 0, $n = count($sgst); $i < $n; $i++) {
+            $sgst_tax = $sgst[$i];
+            $sgst_tax_id = $sgst_id[$i];
 
-			$sgst_summary = array(
-				'quot_tax_col_id'	=>	$this->auth->generator(15),
-				'quotation_id'		=>	$quotation_id,
-				'tax_amount' 		=> 	$sgst_tax,
-				'tax_id' 			=> 	$sgst_tax_id,
-				'date'				=>	$this->input->post('invoice_date', TRUE),
-			);
-			if (!empty($sgst[$i])) {
-				$result = $this->db->select('*')
-					->from('quotation_tax_col_summary')
-					->where('quotation_id', $quotation_id)
-					->where('tax_id', $sgst_tax_id)
-					->get()
-					->num_rows();
-				if ($result > 0) {
-					$this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('tax_id', $sgst_tax_id);
-					$this->db->update('quotation_tax_col_summary');
-				} else {
-					$this->db->insert('quotation_tax_col_summary', $sgst_summary);
-				}
-			}
-		}
+            $sgst_summary = array(
+                'quot_tax_col_id'	=>	$this->auth->generator(15),
+                'quotation_id'		=>	$quotation_id,
+                'tax_amount' 		=> 	$sgst_tax,
+                'tax_id' 			=> 	$sgst_tax_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+            );
+            if (!empty($sgst[$i])) {
+                $result = $this->db->select('*')
+                    ->from('quotation_tax_col_summary')
+                    ->where('quotation_id', $quotation_id)
+                    ->where('tax_id', $sgst_tax_id)
+                    ->get()
+                    ->num_rows();
+                if ($result > 0) {
+                    $this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('tax_id', $sgst_tax_id);
+                    $this->db->update('quotation_tax_col_summary');
+                } else {
+                    $this->db->insert('quotation_tax_col_summary', $sgst_summary);
+                }
+            }
+        }
 
-		//IGST Tax Summary
-		for ($i = 0, $n = count($igst); $i < $n; $i++) {
-			$igst_tax = $igst[$i];
-			$igst_tax_id = $igst_id[$i];
+        //IGST Tax Summary
+        for ($i = 0, $n = count($igst); $i < $n; $i++) {
+            $igst_tax = $igst[$i];
+            $igst_tax_id = $igst_id[$i];
 
-			$igst_summary = array(
-				'quot_tax_col_id'	=>	$this->auth->generator(15),
-				'quotation_id'		=>	$quotation_id,
-				'tax_amount' 		=> 	$igst_tax,
-				'tax_id' 			=> 	$igst_tax_id,
-				'date'				=>	$this->input->post('invoice_date', TRUE),
-			);
-			if (!empty($igst[$i])) {
-				$result = $this->db->select('*')
-					->from('quotation_tax_col_summary')
-					->where('quotation_id', $quotation_id)
-					->where('tax_id', $igst_tax_id)
-					->get()
-					->num_rows();
+            $igst_summary = array(
+                'quot_tax_col_id'	=>	$this->auth->generator(15),
+                'quotation_id'		=>	$quotation_id,
+                'tax_amount' 		=> 	$igst_tax,
+                'tax_id' 			=> 	$igst_tax_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+            );
+            if (!empty($igst[$i])) {
+                $result = $this->db->select('*')
+                    ->from('quotation_tax_col_summary')
+                    ->where('quotation_id', $quotation_id)
+                    ->where('tax_id', $igst_tax_id)
+                    ->get()
+                    ->num_rows();
 
-				if ($result > 0) {
-					$this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('tax_id', $igst_tax_id);
-					$this->db->update('quotation_tax_col_summary');
-				} else {
-					$this->db->insert('quotation_tax_col_summary', $igst_summary);
-				}
-			}
-		}
-		//Tax collection summary for three end
+                if ($result > 0) {
+                    $this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('tax_id', $igst_tax_id);
+                    $this->db->update('quotation_tax_col_summary');
+                } else {
+                    $this->db->insert('quotation_tax_col_summary', $igst_summary);
+                }
+            }
+        }
+        //Tax collection summary for three end
 
-		//Tax collection details for three
-		//CGST Tax Details
-		for ($i = 0, $n = count($cgst); $i < $n; $i++) {
-			$cgst_tax 	 = $cgst[$i];
-			$cgst_tax_id = $cgst_id[$i];
-			$product_id  = $p_id[$i];
-			$variant_id  = $variants[$i];
-			$cgst_details = array(
-				'quot_tax_col_de_id' =>	$this->auth->generator(15),
-				'quotation_id'		=>	$quotation_id,
-				'amount' 			=> 	$cgst_tax,
-				'product_id' 		=> 	$product_id,
-				'tax_id' 			=> 	$cgst_tax_id,
-				'variant_id' 		=> 	$variant_id,
-				'date'				=>	$this->input->post('invoice_date', TRUE),
-			);
-			if (!empty($cgst[$i])) {
+        //Tax collection details for three
+        //CGST Tax Details
+        for ($i = 0, $n = count($cgst); $i < $n; $i++) {
+            $cgst_tax 	 = $cgst[$i];
+            $cgst_tax_id = $cgst_id[$i];
+            $product_id  = $p_id[$i];
+            $variant_id  = $variants[$i];
+            $cgst_details = array(
+                'quot_tax_col_de_id' =>	$this->auth->generator(15),
+                'quotation_id'		=>	$quotation_id,
+                'amount' 			=> 	$cgst_tax,
+                'product_id' 		=> 	$product_id,
+                'tax_id' 			=> 	$cgst_tax_id,
+                'variant_id' 		=> 	$variant_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+            );
+            if (!empty($cgst[$i])) {
 
-				$result = $this->db->select('*')
-					->from('quotation_tax_col_details')
-					->where('quotation_id', $quotation_id)
-					->where('tax_id', $cgst_tax_id)
-					->where('product_id', $product_id)
-					->where('variant_id', $variant_id)
-					->get()
-					->num_rows();
-				if ($result > 0) {
-					$this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('tax_id', $cgst_tax_id);
-					$this->db->where('variant_id', $variant_id);
-					$this->db->update('quotation_tax_col_details');
-				} else {
-					$this->db->insert('quotation_tax_col_details', $cgst_details);
-				}
-			}
-		}
+                $result = $this->db->select('*')
+                    ->from('quotation_tax_col_details')
+                    ->where('quotation_id', $quotation_id)
+                    ->where('tax_id', $cgst_tax_id)
+                    ->where('product_id', $product_id)
+                    ->where('variant_id', $variant_id)
+                    ->get()
+                    ->num_rows();
+                if ($result > 0) {
+                    $this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('tax_id', $cgst_tax_id);
+                    $this->db->where('variant_id', $variant_id);
+                    $this->db->update('quotation_tax_col_details');
+                } else {
+                    $this->db->insert('quotation_tax_col_details', $cgst_details);
+                }
+            }
+        }
 
-		//SGST Tax Details
-		for ($i = 0, $n = count($sgst); $i < $n; $i++) {
-			$sgst_tax 	 = $sgst[$i];
-			$sgst_tax_id = $sgst_id[$i];
-			$product_id  = $p_id[$i];
-			$variant_id  = $variants[$i];
-			$sgst_summary = array(
-				'quot_tax_col_de_id'	=>	$this->auth->generator(15),
-				'quotation_id'		=>	$quotation_id,
-				'amount' 			=> 	$sgst_tax,
-				'product_id' 		=> 	$product_id,
-				'tax_id' 			=> 	$sgst_tax_id,
-				'variant_id' 		=> 	$variant_id,
-				'date'				=>	$this->input->post('invoice_date', TRUE),
-			);
-			if (!empty($sgst[$i])) {
-				$result = $this->db->select('*')
-					->from('quotation_tax_col_details')
-					->where('quotation_id', $quotation_id)
-					->where('tax_id', $sgst_tax_id)
-					->where('product_id', $product_id)
-					->where('variant_id', $variant_id)
-					->get()
-					->num_rows();
-				if ($result > 0) {
-					$this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('tax_id', $sgst_tax_id);
-					$this->db->where('variant_id', $variant_id);
-					$this->db->update('quotation_tax_col_details');
-				} else {
-					$this->db->insert('quotation_tax_col_details', $sgst_summary);
-				}
-			}
-		}
-		//IGST Tax Details
-		for ($i = 0, $n = count($igst); $i < $n; $i++) {
-			$igst_tax 	 = $igst[$i];
-			$igst_tax_id = $igst_id[$i];
-			$product_id  = $p_id[$i];
-			$variant_id  = $variants[$i];
-			$igst_summary = array(
-				'quot_tax_col_de_id' =>	$this->auth->generator(15),
-				'quotation_id'		=>	$quotation_id,
-				'amount' 			=> 	$igst_tax,
-				'product_id' 		=> 	$product_id,
-				'tax_id' 			=> 	$igst_tax_id,
-				'variant_id' 		=> 	$variant_id,
-				'date'				=>	$this->input->post('invoice_date', TRUE),
-			);
-			if (!empty($igst[$i])) {
-				$result = $this->db->select('*')
-					->from('quotation_tax_col_details')
-					->where('quotation_id', $quotation_id)
-					->where('tax_id', $igst_tax_id)
-					->where('product_id', $product_id)
-					->where('variant_id', $variant_id)
-					->get()
-					->num_rows();
-				if ($result > 0) {
-					$this->db->set('amount', 'amount+' . $igst_tax, FALSE);
-					$this->db->where('quotation_id', $quotation_id);
-					$this->db->where('tax_id', $igst_tax_id);
-					$this->db->where('variant_id', $variant_id);
-					$this->db->update('quotation_tax_col_details');
-				} else {
-					$this->db->insert('quotation_tax_col_details', $igst_summary);
-				}
-			}
-		}
-		//Tax collection details for three
-		return $quotation_id;
-	}
+        //SGST Tax Details
+        for ($i = 0, $n = count($sgst); $i < $n; $i++) {
+            $sgst_tax 	 = $sgst[$i];
+            $sgst_tax_id = $sgst_id[$i];
+            $product_id  = $p_id[$i];
+            $variant_id  = $variants[$i];
+            $sgst_summary = array(
+                'quot_tax_col_de_id'	=>	$this->auth->generator(15),
+                'quotation_id'		=>	$quotation_id,
+                'amount' 			=> 	$sgst_tax,
+                'product_id' 		=> 	$product_id,
+                'tax_id' 			=> 	$sgst_tax_id,
+                'variant_id' 		=> 	$variant_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+            );
+            if (!empty($sgst[$i])) {
+                $result = $this->db->select('*')
+                    ->from('quotation_tax_col_details')
+                    ->where('quotation_id', $quotation_id)
+                    ->where('tax_id', $sgst_tax_id)
+                    ->where('product_id', $product_id)
+                    ->where('variant_id', $variant_id)
+                    ->get()
+                    ->num_rows();
+                if ($result > 0) {
+                    $this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('tax_id', $sgst_tax_id);
+                    $this->db->where('variant_id', $variant_id);
+                    $this->db->update('quotation_tax_col_details');
+                } else {
+                    $this->db->insert('quotation_tax_col_details', $sgst_summary);
+                }
+            }
+        }
+        //IGST Tax Details
+        for ($i = 0, $n = count($igst); $i < $n; $i++) {
+            $igst_tax 	 = $igst[$i];
+            $igst_tax_id = $igst_id[$i];
+            $product_id  = $p_id[$i];
+            $variant_id  = $variants[$i];
+            $igst_summary = array(
+                'quot_tax_col_de_id' =>	$this->auth->generator(15),
+                'quotation_id'		=>	$quotation_id,
+                'amount' 			=> 	$igst_tax,
+                'product_id' 		=> 	$product_id,
+                'tax_id' 			=> 	$igst_tax_id,
+                'variant_id' 		=> 	$variant_id,
+                'date'				=>	$this->input->post('invoice_date', TRUE),
+            );
+            if (!empty($igst[$i])) {
+                $result = $this->db->select('*')
+                    ->from('quotation_tax_col_details')
+                    ->where('quotation_id', $quotation_id)
+                    ->where('tax_id', $igst_tax_id)
+                    ->where('product_id', $product_id)
+                    ->where('variant_id', $variant_id)
+                    ->get()
+                    ->num_rows();
+                if ($result > 0) {
+                    $this->db->set('amount', 'amount+' . $igst_tax, FALSE);
+                    $this->db->where('quotation_id', $quotation_id);
+                    $this->db->where('tax_id', $igst_tax_id);
+                    $this->db->where('variant_id', $variant_id);
+                    $this->db->update('quotation_tax_col_details');
+                } else {
+                    $this->db->insert('quotation_tax_col_details', $igst_summary);
+                }
+            }
+        }
+        //Tax collection details for three
+        return $quotation_id;
+    }
 
 	//update_quotation
 	public function update_quotation()
@@ -826,6 +1193,7 @@ class Quotations extends CI_Model
 				}
 			}
 		}
+
 		if (!empty($igst)) {
 			for ($i = 0, $n = count($igst); $i < $n; $i++) {
 				$igst_tax 	 = $igst[$i];
@@ -865,25 +1233,7 @@ class Quotations extends CI_Model
 		//End tax details
 		return $quotation_id;
 	}
-	public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
-	{
-		$this->db->select('stock_id,quantity');
-		$this->db->from('invoice_stock_tbl');
-		if (!empty($store_id)) {
-			$this->db->where('store_id', $store_id);
-		}
-		if (!empty($product_id)) {
-			$this->db->where('product_id', $product_id);
-		}
-		if (!empty($variant)) {
-			$this->db->where('variant_id', $variant);
-		}
-		if (!empty($variant_color)) {
-			$this->db->where('variant_color', $variant_color);
-		}
-		$query = $this->db->get();
-		return $query->row();
-	}
+
 	//Quotation paid to invoice
 	public function quot_paid_data($quotation_id)
 	{
@@ -1326,6 +1676,27 @@ class Quotations extends CI_Model
 			return true;
 		}
 	}
+
+    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
+    {
+        $this->db->select('stock_id,quantity');
+        $this->db->from('invoice_stock_tbl');
+        if (!empty($store_id)) {
+            $this->db->where('store_id', $store_id);
+        }
+        if (!empty($product_id)) {
+            $this->db->where('product_id', $product_id);
+        }
+        if (!empty($variant)) {
+            $this->db->where('variant_id', $variant);
+        }
+        if (!empty($variant_color)) {
+            $this->db->where('variant_color', $variant_color);
+        }
+        $query = $this->db->get();
+        return $query->row();
+    }
+
 	//Store List
 	public function store_list()
 	{
@@ -1351,6 +1722,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	//Get Supplier rate of a product
 	public function supplier_rate($product_id)
 	{
@@ -1360,6 +1732,7 @@ class Quotations extends CI_Model
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+
 	//Retrieve quotation Edit Data
 	public function retrieve_quotation_editdata($quotation_id)
 	{
@@ -1416,6 +1789,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	// Delete quotation Item
 	public function retrieve_product_data($product_id)
 	{
@@ -1431,6 +1805,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	//Retrieve company Edit Data
 	public function retrieve_company()
 	{
@@ -1443,6 +1818,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	// Delete quotation Item
 	public function delete_quotation($quotation_id)
 	{
@@ -1460,6 +1836,7 @@ class Quotations extends CI_Model
 		$this->db->delete('quotation_tax_col_details');
 		return true;
 	}
+
 	public function quotation_search_list($cat_id, $company_id)
 	{
 		$this->db->select('a.*,b.sub_category_name,c.category_name');
@@ -1474,6 +1851,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	// GET TOTAL PURCHASE PRODUCT
 	public function get_total_purchase_item($product_id)
 	{
@@ -1486,6 +1864,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	// GET TOTAL SALES PRODUCT
 	public function get_total_sales_item($product_id)
 	{
@@ -1592,6 +1971,7 @@ class Quotations extends CI_Model
 		}
 		return $con;
 	}
+
 	//QUOTATION NUMBER GENERATOR
 	public function number_generator()
 	{
@@ -1625,6 +2005,7 @@ class Quotations extends CI_Model
 		}
 		return $quotation_no;
 	}
+
 	//Product List
 	public function product_list()
 	{
@@ -1646,6 +2027,7 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
 	//Category List
 	public function category_list()
 	{

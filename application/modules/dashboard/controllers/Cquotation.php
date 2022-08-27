@@ -103,6 +103,7 @@ class Cquotation extends MX_Controller {
             }
         }
 	}
+
 	//Search Inovoice Item
 	public function search_inovoice_item()
 	{
@@ -114,13 +115,13 @@ class Cquotation extends MX_Controller {
 		$this->template_lib->full_admin_html_view($content);
 	}
 	
-	
 	//quotation Update Form
 	public function quotation_update_form($quotation_id)
 	{	
 		$content = $this->lquotation->quotation_edit_data($quotation_id);
 		$this->template_lib->full_admin_html_view($content);
 	}
+
 	//POS quotation page load
 	public function pos_quotation(){
 		$CI =& get_instance();
@@ -128,8 +129,9 @@ class Cquotation extends MX_Controller {
 		$content = $CI->lquotation->pos_quotation_add_form();
 		$this->template_lib->full_admin_html_view($content);
 	}
+
 	// Quotation Update
-	public function quotation_update()
+	public function quotation_update($quotation_id)
 	{
         $this->load->library('form_validation');
         $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
@@ -160,6 +162,7 @@ class Cquotation extends MX_Controller {
 //		$this->session->set_userdata(array('message'=>display('successfully_updated')));
 //		redirect('dashboard/Cquotation/quotation_details_data/'.$quotation_id);
 	}
+
 	// Quotation paid data
 	public function quot_paid_data($quotation_id){
 
@@ -180,12 +183,14 @@ class Cquotation extends MX_Controller {
 		}
 
 	}
+
 	//Retrive right now inserted data to cretae html
 	public function quotation_inserted_data($quotation_id)
 	{	
 		$content = $this->lquotation->quotation_html_data($quotation_id);
 		$this->template_lib->full_admin_html_view($content);
 	}
+
 	//Retrive right now inserted data to cretae html
 	public function quotation_details_data($quotation_id)
 	{	
@@ -248,6 +253,7 @@ class Cquotation extends MX_Controller {
         force_download($file_path, NULL);
         redirect('dashboard/Cquotation');
     }
+
 	//Retrive right now inserted data to cretae html
 	public function pos_quotation_inserted_data($quotation_id)
 	{	
@@ -256,6 +262,7 @@ class Cquotation extends MX_Controller {
 		$content = $CI->lquotation->pos_quotation_html_data($quotation_id);		
 		$this->template_lib->full_admin_html_view($content);
 	}
+
 	// retrieve_product_data
 	public function retrieve_product_data()
 	{	
@@ -265,6 +272,7 @@ class Cquotation extends MX_Controller {
 		$product_info = $CI->Quotations->get_total_product($product_id);
 		echo json_encode($product_info);
 	}
+
 	// product_delete
 	public function quotation_delete($quotation_id)
 	{	
@@ -278,6 +286,7 @@ class Cquotation extends MX_Controller {
 		}	
 		redirect('dashboard/Cquotation');
 	}
+
 	//AJAX quotation STOCKs
 	public function product_stock_check($product_id)
 	{
@@ -302,6 +311,7 @@ class Cquotation extends MX_Controller {
 		$final_total = ($total_purchase - $total_sales);
 		return $final_total ;
 	}
+
 
 	//Search product by product name and category
 	public function search_product(){
