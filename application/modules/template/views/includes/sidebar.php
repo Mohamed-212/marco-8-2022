@@ -704,9 +704,9 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>
             </a>
-
+            <?php foreach ($moduleData as $groupLabel => $label) { ?>
             <ul class="treeview-menu">
-                <?php foreach ($moduleData as $groupLabel => $label) { ?>
+
                 <?php
                                         if ($groupLabel != 'icon')
                                             if ((isset($label['controller']) && $label['controller'] != null) && ($label['method'] != null)) {
@@ -753,9 +753,9 @@
 
                 <!-- endif -->
                 <?php } ?>
-                <!-- endforeach -->
-                <?php } ?>
             </ul>
+                <!-- endforeach -->
+            <?php } ?>
         </li>
         <!-- end if -->
         <!-- end foreach -->

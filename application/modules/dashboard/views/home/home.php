@@ -115,7 +115,7 @@
         <hr>
         <!-- Second Counter -->
         <div class="row">
-            <?php if ($this->session->userdata('isAdmin')) { ?>
+<!--            --><?php //if ($this->session->userdata('isAdmin')) { ?>
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
                 <div class="panel panel-bd bg-1">
                     <div class="panel-body">
@@ -181,9 +181,9 @@
                     </div>
                 </div>
             </div>
-            <?php } ?>
+            <?php //} ?>
         </div>
-         <?php if ($this->session->userdata('user_type') == 1) { ?>
+<!--         --><?php //if ($this->session->userdata('user_type') == 1) { ?>
             <!-- Third Counter -->
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
@@ -509,7 +509,7 @@
                 </div>
 
             </div>
-         <?php } ?>
+         <?php //} ?>
     </section> 
 </div> 
 <!-- Admin Home end -->
