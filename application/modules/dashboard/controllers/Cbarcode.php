@@ -30,6 +30,23 @@ class Cbarcode extends MX_Controller
         $company_info = $this->Invoices->retrieve_company();
         $currency_details = $this->Soft_settings->retrieve_currency_info();
 
+        // get current stock for this product
+        $totalPurchase = 0;
+        $purchaseData = $this->Products->product_purchase_info($product_id);
+        if (!empty($purchaseData)) {
+            foreach ($purchaseData as $k => $v) {
+                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+            }
+        }
+        $totalSales = 0;
+        $salesData = $this->Products->invoice_data($product_id);
+        if (!empty($salesData)) {
+            foreach ($salesData as $k => $v) {
+                $totalSales = ($totalSales + $salesData[$k]['t_qty']);               
+            }
+        }
+        $stock = ($totalPurchase + $product_info[0]['open_quantity']) - $totalSales;
+       
         $data = array(
             'title' => display('print_barcode'),
             'product_id' => $product_id,
@@ -41,7 +58,10 @@ class Cbarcode extends MX_Controller
             'product_details' => $product_info[0]['product_details'],
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
+            'open_quantity' => $product_info[0]['open_quantity'],
+            'stock' => $stock,
         );
+
 
         $data['setting'] = $this->Template_model->setting();
         $data['module'] = "dashboard";

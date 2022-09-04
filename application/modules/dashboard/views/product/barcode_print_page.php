@@ -54,7 +54,9 @@
 									<table  id="" class="table table-bordered bcollapse">
 									<?php
 									$counter = 0;
-									for ($i=0; $i < 60 ; $i++) { 
+									// for ($i=0; $i < 60 ; $i++) { 
+									// for ($i=0; $i < $open_quantity ; $i++) { 
+									for ($i=0; $i < $stock ; $i++) { 
 									?>
 									<?php if($counter == 5) { ?>
 									<tr> 
