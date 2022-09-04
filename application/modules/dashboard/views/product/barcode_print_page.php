@@ -75,7 +75,7 @@
 												<img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/'.$product_id .'/'. $year )?>" class="img-responsive center-block pbarimag" alt="">
 												<div class="product-name-details pname_details">{product_name}</div>
 												<div class="price price_text"><?php echo (($position==0)?"$currency {price}":"{price} $currency")?>
-													<small class="excl_vat"><?php echo display('excl_vat')?></small>
+													<small class="excl_vat"><?php echo display('size')?>: <?=$size?></small>
 												</div>
 											</div>
 											

@@ -10,6 +10,7 @@ class Cbarcode extends MX_Controller
         $this->auth->check_user_auth();
         $this->load->model('dashboard/Products');
         $this->load->model('dashboard/Invoices');
+        $this->load->model('dashboard/Variants');
         $this->load->model('dashboard/Soft_settings');
         $this->load->model('template/Template_model');
         
@@ -27,6 +28,7 @@ class Cbarcode extends MX_Controller
         }
 
         $product_info = $this->Products->retrieve_product_editdata($product_id);
+        $product_all_data = $this->Invoices->get_total_product($product_id);
         $company_info = $this->Invoices->retrieve_company();
         $currency_details = $this->Soft_settings->retrieve_currency_info();
 
@@ -46,6 +48,15 @@ class Cbarcode extends MX_Controller
             }
         }
         $stock = ($totalPurchase + $product_info[0]['open_quantity']) - $totalSales;
+
+        // get product size varient
+        $sizeId = $product_all_data['size'];
+        $size = $this->Variants->variant_search_item($sizeId);
+        if (!is_array($size)) {
+            $size = null;
+        } else {
+            $size = $size[0]['variant_name'];
+        }
        
         $data = array(
             'title' => display('print_barcode'),
@@ -60,6 +71,7 @@ class Cbarcode extends MX_Controller
             'position' => $currency_details[0]['currency_position'],
             'open_quantity' => $product_info[0]['open_quantity'],
             'stock' => $stock,
+            'size' => $size,
         );
 
 
