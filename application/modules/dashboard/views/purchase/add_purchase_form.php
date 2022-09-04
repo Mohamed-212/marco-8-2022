@@ -570,10 +570,6 @@
         </div>
     </section>
 </div>
-<script>
-    $(document).ready(function() {
-        $('input,select,textarea').removeAttr('required');
-    });
-</script>
+
 <!-- Add New Purchase End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_purchase_form.js'; ?>"></script>
