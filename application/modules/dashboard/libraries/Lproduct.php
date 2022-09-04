@@ -225,7 +225,9 @@ class Lproduct {
             }
         }
 
-        $stock = ($totalPurchase - $totalSales);
+        $openQuantity = $details_info[0]['open_quantity'];
+        $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        // $stock = ($totalPurchase - $totalSales);
 
         $currency_details = $CI->Soft_settings->retrieve_currency_info();
         $data = array(
@@ -280,7 +282,9 @@ class Lproduct {
                 $totaSalesAmt = ($totaSalesAmt + $salesData[$k]['total_amount']);
             }
         }
-        $stock = ($totalPurchase - $totalSales);
+        $openQuantity = $details_info[0]['open_quantity'];
+        $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        // $stock = ($totalPurchase - $totalSales);
         $currency_details = $CI->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_report'),
