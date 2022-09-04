@@ -11,7 +11,7 @@ var APchange = function(event, ui){
 	$(this).data("autocomplete").menu.activeMenu.children(":first-child").trigger("click");
 }
     function producstList() {
-      
+        var byCategory = $('#by_category_name').val();
         $( ".productSelection" ).autocomplete(
 		{
             //source: productList,
@@ -22,6 +22,8 @@ var APchange = function(event, ui){
                     dataType: "json",
                     data: {
                         csrf_test_name: csrf_test_name,
+                        product_name: request.term,
+                        by_category: byCategory,
                     },
                     success: function (data) {
                         response(data);

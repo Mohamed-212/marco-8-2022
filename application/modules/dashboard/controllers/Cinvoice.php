@@ -1537,6 +1537,8 @@ class Cinvoice extends MX_Controller {
   //purchase search by model
   public function product_search_all_products(){
     $product_name = $this->input->post('product_name', TRUE);
+    $searchByCategoryName = (bool)$this->input->post('by_category', TRUE);
+
     $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%' OR `product_id` = '". $product_name ."')");
     $product_info = $query->result_array();
     $json_product = [];
@@ -1544,6 +1546,17 @@ class Cinvoice extends MX_Controller {
         //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
         $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
     }
+
+    // select with category name also
+    if ($searchByCategoryName) {
+        $query = $this->db->query("SELECT * FROM `product_category` WHERE (`category_name` LIKE '%" . $product_name . "%' OR `category_id` = '". $product_name ."')");
+        $product_info = $query->result_array();
+        foreach ($product_info as $value) {
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_product[] = array('label' => $value['category_name'], 'value' => $value['category_id']);
+        }
+    }
+
     echo json_encode($json_product);
 }
 }

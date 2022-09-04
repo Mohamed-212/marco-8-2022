@@ -79,12 +79,12 @@
                         <?php echo form_open('dashboard/Creport', array('class' => 'form-inline',)); ?>
                         <?php date_default_timezone_set(DEF_TIMEZONE);
 						$today = date('Y-m-d'); ?>
-                        <label class="select"><?php echo display('search_by_product') ?>:</label>
+                        <label class="select"><?php echo display(strpos(current_url(), 'stock_report_product_wise') > -1 ? 'search_by_product_or_category' : 'search_by_product') ?>:</label>
                         <input name="product_name" onclick="producstList();" class="form-control productSelection"
-                            placeholder="<?php echo display('product_name') ?>" id="product_name" required=""
+                            placeholder="<?php echo display(strpos(current_url(), 'stock_report_product_wise') > -1 ? 'product_or_category_name' : 'product_name') ?>" id="product_name" required=""
                             aria-required="true" type="text">
                         <input class="autocomplete_hidden_value" name="product_id" id="SchoolHiddenId" type="hidden">
-
+                        <input id="by_category_name" type="hidden" hidden value="<?=strpos(current_url(), 'stock_report_product_wise') > -1 ? 1 : 0 ?>" />
 
 
                         <button type="submit" class="btn btn-primary"><?php echo display('search') ?></button>

@@ -143,10 +143,13 @@ class Reports extends CI_Model
         if (empty($product_id)) {
             $this->db->where(array('a.status' => 1));
         }else{
-            $this->db->where('a.product_id ='.$product_id);
+            $this->db->where("( a.product_id ='".$product_id . "' OR a.category_id ='" . $product_id . "' )");
         }
 
         $query = $this->db->get();
+        if ($query == false) {
+           return 0;
+        }
         return $query->num_rows();
     }
     //Stock Report by date
@@ -176,11 +179,14 @@ class Reports extends CI_Model
         if (empty($product_id)) {
             $this->db->where(array('a.status' => 1));
         }else{
-            $this->db->where('a.product_id ='.$product_id);
+            $this->db->where("( a.product_id ='".$product_id . "' OR a.category_id ='" . $product_id . "' )");
         }
 
         $this->db->limit($per_page, $page);
         $query = $this->db->get();
+        if (!$query) {
+            return false;
+        }
         if($query->num_rows()<=0){
             return false;
         }else{

@@ -142,6 +142,7 @@ class Creport extends MX_Controller
         $config['first_tagl_close'] = "</li>";
         $config['last_tag_open']   = "<li>";
         $config['last_tagl_close'] = "</li>";
+        
         /* ends of bootstrap */
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
