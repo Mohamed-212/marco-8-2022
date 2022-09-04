@@ -121,6 +121,7 @@ class Purchases extends CI_Model {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
+
                 //Generator purchase id
                 $purchase_id = $this->auth->generator(15);
                 $p_id = $this->input->post('product_id', TRUE);
@@ -136,7 +137,7 @@ class Purchases extends CI_Model {
                 $vat = $this->input->post('vat', TRUE);
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
-                $cat_id = $this->input->post('category_id', TRUE);
+                $cat_id = $this->input->post('category_id', TRUE);                
                 //start for total discount
                 //إجمالي الخصم على مستوى الفاتورة
                 $total_discount = floatval($this->input->post('total_purchase_dis', TRUE));
@@ -189,6 +190,7 @@ class Purchases extends CI_Model {
                     );
                     $this->db->insert('proof_of_purchase_expese', $sun_vat);
                 }
+
                 //
                 //
                 // Supplier & product id relation ship checker.
@@ -229,6 +231,25 @@ class Purchases extends CI_Model {
                     }
                 }
 
+                // upload attachment file
+                // load upload library for file uploading
+                $config['upload_path']          = './my-assets/attachments/';
+                $config['allowed_types']        = '*';
+                $config['encrypt_name'] = true;
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+                $upload_data = ['file' => null];
+
+                if ( ! $this->upload->do_upload('file'))
+                {
+                        $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
+                        redirect(base_url('dashboard/Cpurchase'));
+                }
+                else
+                {
+                        $upload_data = array('file' => $this->upload->data());
+                }
+
                 //Add Product To Purchase Table
                 $data = array(
                     'purchase_id' => $purchase_id,
@@ -252,7 +273,8 @@ class Purchases extends CI_Model {
                     'purchase_expences' => $this->input->post('purchase_expences', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s')
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'file' => isset($upload_data['file']) && isset($upload_data['file']['file_name']) ? 'my-assets/attachments/' . $upload_data['file']['file_name'] : null,
                 );
                 $this->db->insert('product_purchase', $data);
                 $datac4 = array(

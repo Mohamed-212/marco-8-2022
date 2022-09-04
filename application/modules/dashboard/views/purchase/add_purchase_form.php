@@ -549,6 +549,12 @@
                             </table>
                         </div>
                         <div class="form-group row">
+                            <div class="col-sm-6 offset-sm-6">
+                                <label for="attachment_file"><?=display('attach_file')?></label>
+                                <input type="file" id="attachment_file" name="file" required />
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <div class="col-sm-6">
                                 <input type="submit" id="add-purchase" class="btn btn-primary btn-large"
                                        name="add-purchase" value="<?php echo display('submit') ?>" />
@@ -564,5 +570,10 @@
         </div>
     </section>
 </div>
+<script>
+    $(document).ready(function() {
+        $('input,select,textarea').removeAttr('required');
+    });
+</script>
 <!-- Add New Purchase End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_purchase_form.js'; ?>"></script>
