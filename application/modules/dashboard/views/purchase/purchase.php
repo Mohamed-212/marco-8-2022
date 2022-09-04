@@ -119,6 +119,12 @@
                                                 <td>
                                         <center>
                                             <?php echo form_open() ?>
+                                            <?php if (isset($purchase['file']) && null !== $purchase['file']) : ?>
+                                                <a target="_blank" href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_download_attachment/' . $purchase['purchase_id'] . '?file=' . $purchase['file']; ?>"
+                                            class="btn btn-success btn-sm" data-toggle="tooltip"
+                                            data-placement="left" title="<?php echo display('download_attachment') ?>"><i
+                                                class="fa fa-download" aria-hidden="true"></i></a>
+                                            <?php endif; ?>
                                             <a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_inserted_data/' . $purchase['purchase_id']; ?>"
                                                class="btn btn-success btn-sm" data-toggle="tooltip"
                                                data-placement="left" title="<?php echo display('invoice') ?>"><i

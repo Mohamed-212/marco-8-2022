@@ -1010,4 +1010,15 @@ class Cpurchase extends MX_Controller {
         echo $html;
     }
 
+    public function purchase_download_attachment($purchase_id = null)
+    {
+        $file_name = $this->input->get('file');
+        if (!$purchase_id || !$file_name) {
+            return;
+        }
+        $this->load->helper('download');
+
+        force_download($file_name, null);
+    }
+
 }
