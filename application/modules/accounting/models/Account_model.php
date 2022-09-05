@@ -1269,7 +1269,7 @@ class Account_model extends CI_Model {
     ->result_array();
   }
   // Insert journal voucher 
-  public function insert_journalvoucher(){
+  public function insert_journalvoucher($returnData = false){
     $voucher_no = addslashes(trim($this->input->post('txtVNo',TRUE)));
     $Vtype     = "JV";
     $dAID      = $this->input->post('cmbDebit',TRUE);
@@ -1302,6 +1302,9 @@ class Account_model extends CI_Model {
         'IsAppove'  =>0
       );    
       $this->db->insert('acc_transaction',$contrainsert);
+    }
+    if ($returnData) {
+      return compact('voucher_no', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
     }
     return true;
   }

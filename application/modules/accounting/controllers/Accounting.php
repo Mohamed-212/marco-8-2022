@@ -552,6 +552,7 @@ class Accounting extends MX_Controller
     $data['title']      = display('journal_voucher');
     $data['acc']        = $this->account_model->TransaccJ();
     $data['voucher_no'] = $this->account_model->journal();
+    $data['print_only'] = false;
     $data['page']       = "journal_voucher";
     $content = $this->parser->parse('accounting/journal_voucher', $data, true);
     $this->template_lib->full_admin_html_view($content);
@@ -559,7 +560,10 @@ class Accounting extends MX_Controller
   //Create Journal Voucher
   public function bdtask_create_journal_voucher()
   {
+    $print_after_save = $this->input->post('print_me', true);
+
     $this->form_validation->set_rules('cmbDebit', display('cmbDebit'), 'max_length[100]');
+
     if ($this->form_validation->run()) {
 
       $dtpDate = $this->input->post('dtpDate', TRUE);
@@ -569,12 +573,37 @@ class Accounting extends MX_Controller
         redirect('accounting/accounting/journal_voucher');
       }
 
-      if ($this->account_model->insert_journalvoucher()) {
+      $inserted = $this->account_model->insert_journalvoucher(true);
+      if ($inserted) {
         $this->session->set_flashdata('message', display('save_successfully'));
+        if ($print_after_save) {
+          // echo "<pre>";
+
+          $accounts = [];
+          foreach ($inserted['cAID'] as $acId) {
+            $debitvcode = $this->db->select('*')
+              ->from('acc_coa')
+              ->where('HeadCode', $acId)
+              ->get()
+              ->row();
+            $accounts[] = $debitvcode->HeadName;
+          }
+          $inserted['accounts'] = $accounts;
+          // print_r($inserted);
+          $data['title']      = display('journal_voucher');
+          $data['acc']        = $this->account_model->TransaccJ();
+          $data['voucher_no'] = $inserted['voucher_no'];
+          $data['page']       = "journal_voucher";
+          $data['print_only'] = true;
+          $data['data'] = $inserted;
+          $content = $this->parser->parse('accounting/journal_voucher', $data, true);
+          return $this->template_lib->full_admin_html_view($content);
+        }
         redirect('accounting/accounting/journal_voucher');
       } else {
         $this->session->set_flashdata('exception',  display('please_try_again'));
       }
+
       redirect("accounting/accounting/journal_voucher");
     } else {
       $this->session->set_flashdata('exception',  validation_errors());
