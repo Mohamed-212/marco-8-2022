@@ -145,6 +145,28 @@
                             </div>
                         </div>
 
+                        <div class="contact-info-conatiner">
+                        <div class="row form-group">
+                            <div class="col-sm-12">
+                            <h3 class="card-title">
+                                    Contact Info
+                                </h3>
+                            </div>
+                        </div>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <div id="contact_info"></div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-xs-12">
+                                <button type="button" class="btn btn-info" id="add-contact">
+                                    Add Contact Info
+                                </button>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="form-group text-right">
                             <button type="reset" class="btn btn-primary w-md m-b-5"><?php echo display('reset') ?></button>
@@ -158,3 +180,35 @@
         </div>
     </section>
 </div>
+<i id="counter" data-val="0"></i>
+<script>
+    $(document).ready(function() {
+        $('#contact_info').append(getInputs());
+        $('#counter').attr('data-val', parseInt($('#counter').attr('data-val'), 10) + 1);
+
+        $(document).on('click', '#add-contact', function() {
+            $('#contact_info').append(getInputs());
+            $('#counter').attr('data-val', parseInt($('#counter').attr('data-val'), 10) + 1);
+        });
+
+        function getCount()
+        {
+            return parseInt($('#counter').attr('data-val'), 10);
+        }
+
+        function randInt()
+        {
+            return Math.round(Math.random()  * 1000000);
+        }
+
+        function getInputs()
+        {
+            var rand1 = randInt();
+            var rand2 = randInt();
+            var rand3 = randInt();
+            return '<div class="form-group row" style="padding-top: 20px;"><label for="contact'+rand1+ '" class="col-sm-2 col-form-div"><?php echo display('name') ?></label><div class="col-sm-4"><input name="contact_info['+getCount()+'][name]" class="form-control" type="text" placeholder="<?php echo display('name') ?>" id="contact'+rand1+ '"></div><label for="contact'+rand2+ '" class="col-sm-2 col-form-div"><?php echo display('phone') ?></label><div class="col-sm-4"><input name="contact_info['+getCount()+'][phone]" class="form-control" type="text" placeholder="<?php echo display('phone') ?>" value="<?php echo $employee->zip?>" id="contact'+rand2+ '"></div></div><div class="form-group row " style="padding-bottom: 20px;border-bottom: 1px solid #ababab;"><label for="contact'+rand3+ '" class="col-sm-2 col-form-div"><?php echo display('customer_address') ?></label><div class="col-sm-10"><input name="contact_info['+getCount()+'][address]" class="form-control" type="text" placeholder="<?php echo display('customer_address') ?>" id="contact'+rand3+ '" value="<?php echo $employee->city?>"></div>';
+        }
+
+        $('input,select,textarea').removeAttr('required');
+    });
+</script>

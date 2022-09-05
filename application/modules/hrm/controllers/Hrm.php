@@ -91,6 +91,9 @@ class Hrm extends MX_Controller
     /*employee part start*/
     public function bdtask_employee_form($id = null)
     {
+        // echo "<pre>";
+        // print_r($_POST);
+        // exit;
         $data['title'] = display('add_employee');
         $this->form_validation->set_rules('first_name', display('first_name'), 'required|max_length[100]');
         $this->form_validation->set_rules('last_name', display('last_name'), 'required|max_length[100]');
