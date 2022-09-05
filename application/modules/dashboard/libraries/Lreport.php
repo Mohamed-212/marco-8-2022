@@ -553,13 +553,14 @@ class Lreport
     }
 
     // Retrieve datewise sales report
-    public function retrieve_dateWise_SalesReports($start_date = false, $end_date = false)
+    public function retrieve_dateWise_SalesReports($start_date = false, $end_date = false, $employee_id = false, $city = false)
     {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Web_settings');
         $CI->load->library('dashboard/occational');
-        $sales_report = $CI->Reports->retrieve_dateWise_SalesReports($start_date, $end_date);
+        
+        $sales_report = $CI->Reports->retrieve_dateWise_SalesReports($start_date, $end_date, $employee_id, $city);
 
         $sales_amount = 0;
         if (!empty($sales_report)) {

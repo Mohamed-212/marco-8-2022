@@ -387,7 +387,9 @@ class Admin_dashboard extends MX_Controller
         $this->load->library('dashboard/lreport');
         $from_date = $this->input->post('from_date',TRUE);
         $to_date = $this->input->post('to_date',TRUE);
-        $content = $this->lreport->retrieve_dateWise_SalesReports($from_date, $to_date);
+        $employee_id = $this->input->post('employee_id',TRUE);
+        $city_name = $this->input->post('city_name',TRUE);
+        $content = $this->lreport->retrieve_dateWise_SalesReports($from_date, $to_date, $employee_id, $city_name);
         $this->template_lib->full_admin_html_view($content);
     }
 

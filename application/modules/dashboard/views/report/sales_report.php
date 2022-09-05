@@ -22,9 +22,8 @@
             <div class="col-sm-12">
                 <div class="column">
                     <?php if ($this->permission->check_label('purchase_report')->read()->access()) { ?>
-                    <a href="<?php echo base_url('dashboard/Admin_dashboard/todays_purchase_report') ?>"
-                        class="btn btn-success m-b-5 m-r-2"><i class="ti-align-justify"> </i>
-                        <?php echo display('purchase_report') ?> </a>
+                        <a href="<?php echo base_url('dashboard/Admin_dashboard/todays_purchase_report') ?>" class="btn btn-success m-b-5 m-r-2"><i class="ti-align-justify"> </i>
+                            <?php echo display('purchase_report') ?> </a>
                     <?php } ?>
                 </div>
             </div>
@@ -37,26 +36,45 @@
                     <div class="panel-body">
                         <?php echo form_open('dashboard/Admin_dashboard/retrieve_dateWise_SalesReports', array('class' => 'form-inline')) ?>
                         <?php
-						date_default_timezone_set(DEF_TIMEZONE);
-						$today = date('Y-m-d');
-						?>
-                        <div class="form-group">
-                            <label class="" for="from_date"><?php echo display('start_date') ?></label>
-                            <input type="text" name="from_date" class="form-control datepicker" id="from_date"
-                                placeholder="<?php echo display('start_date') ?>" autocomplete="off" required>
-                        </div>
+                        date_default_timezone_set(DEF_TIMEZONE);
+                        $today = date('Y-m-d');
+                        ?>
+                        <!-- <div class="col-sm-6"> -->
+                                <div class="form-group">
+                                    <label class="" for="from_date"><?php echo display('start_date') ?></label>
+                                    <input type="text" name="from_date" class="form-control datepicker" id="from_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off">
+                                <!-- </div> -->
+                                <!-- <div class="col-sm-6"> -->
+                                    <div class="form-group">
+                                        <label class="" for="to_date"><?php echo display('end_date') ?></label>
+                                        <input type="text" name="to_date" class="form-control datepicker" id="to_date" placeholder="<?php echo display('end_date') ?>" value="<?php echo $today ?>" autocomplete="off">
+                                    </div>
+                                </div>
+                            <!-- </div> -->
+                        <div class="row mt-2" style="margin-top: 7px;margin-bottom: 7px;">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="" for="employee_name"><?php echo display('employee_name') ?></label>
+                                    <input type="text" name="employee_name" class="form-control employeeSelection" id="city" placeholder="<?php echo display('employee_name') ?>" onclick="employeeList();" value="" autocomplete="off">
 
-                        <div class="form-group">
-                            <label class="" for="to_date"><?php echo display('end_date') ?></label>
-                            <input type="text" name="to_date" class="form-control datepicker" id="to_date"
-                                placeholder="<?php echo display('end_date') ?>" value="<?php echo $today ?>"
-                                autocomplete="off" required>
+                                </div>
+                                <input hidden type="hidden" class="employee_hidden_value" name="employee_id" />
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="" for="city"><?php echo display('city') ?></label>
+                                    <input type="text" name="city_name_input" class="form-control citySelection" id="city" placeholder="<?php echo display('city_name') ?>" onclick="cityList();" value="" autocomplete="off">
+                                </div>
+                                <input hidden type="hidden" class="city_hidden_value" name="city_name" />
+                            </div>
                         </div>
-
-                        <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-                        <a class="btn btn-warning" href="#"
-                            onclick="printDiv('purchase_div')"><?php echo display('print') ?></a>
-                        <?php echo form_close() ?>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+                                <a class="btn btn-warning" href="#" onclick="printDiv('purchase_div')"><?php echo display('print') ?></a>
+                                <?php echo form_close() ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,7 +110,8 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" class="text-right">
-                                                <b><?php echo display('total_seles') ?></b></td>
+                                                <b><?php echo display('total_seles') ?></b>
+                                            </td>
                                             <td class="text-right">
                                                 <b><?php echo (($position == 0) ? "$currency {sales_amount}" : "{sales_amount} $currency") ?></b>
                                             </td>
@@ -100,29 +119,26 @@
                                     </tfoot>
                                     <tbody>
                                         <?php
-										if ($sales_report) {
-										?>
-                                        {sales_report}
-                                        <tr>
-                                            <td>{sales_date}</td>
-                                            <td>
-                                                <a
-                                                    href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/{invoice_id}'; ?>">
-                                                    {invoice} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
-                                                </a>
-                                            </td>
-                                            <td><a
-                                                    href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/{customer_id}'; ?>">
-                                                    {customer_name} <i class="fa fa-user pull-right"
-                                                        aria-hidden="true"></i></a></td>
-                                            <td class="text-right">
-                                                <?php echo (($position == 0) ? "$currency {total_amount}" : "{total_amount} $currency") ?>
-                                            </td>
-                                        </tr>
-                                        {/sales_report}
+                                        if ($sales_report) {
+                                        ?>
+                                            {sales_report}
+                                            <tr>
+                                                <td>{sales_date}</td>
+                                                <td>
+                                                    <a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/{invoice_id}'; ?>">
+                                                        {invoice} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+                                                    </a>
+                                                </td>
+                                                <td><a href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/{customer_id}'; ?>">
+                                                        {customer_name} <i class="fa fa-user pull-right" aria-hidden="true"></i></a></td>
+                                                <td class="text-right">
+                                                    <?php echo (($position == 0) ? "$currency {total_amount}" : "{total_amount} $currency") ?>
+                                                </td>
+                                            </tr>
+                                            {/sales_report}
                                         <?php
-										}
-										?>
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -135,3 +151,84 @@
     </section>
 </div>
 <!-- Sales Report End -->
+<script>
+    var csrf_test_name = $("#CSRF_TOKEN").val();
+
+    function employeeList() {
+        $(".employeeSelection").autocomplete({
+            //source: productList,
+            source: function(request, response) {
+                $.ajax({
+                    url: base_url + "dashboard/Creport/search_all_employees",
+                    method: "post",
+                    dataType: "json",
+                    data: {
+                        csrf_test_name: csrf_test_name,
+                        name: request.term,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        response(data);
+                    },
+                });
+            },
+            delay: 300,
+            focus: function(event, ui) {
+                $(".employee_hidden_value").val(ui.item.value);
+                $(this).val(ui.item.label);
+                return false;
+            },
+            select: function(event, ui) {
+                $(".employee_hidden_value").val(ui.item.value);
+                $(this).val(ui.item.label);
+                $(this).unbind("change");
+                return false;
+            }
+        });
+        var APchange = function(event, ui) {
+            $(this).data("autocomplete").menu.activeMenu.children(":first-child").trigger("click");
+        }
+        $(".employeeSelection").focus(function() {
+            $(this).change(APchange);
+        });
+    }
+
+    function cityList() {
+        $(".citySelection").autocomplete({
+            //source: productList,
+            source: function(request, response) {
+                $.ajax({
+                    url: base_url + "dashboard/Creport/search_all_cities",
+                    method: "post",
+                    dataType: "json",
+                    data: {
+                        csrf_test_name: csrf_test_name,
+                        name: request.term,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        response(data);
+                    },
+                });
+            },
+            delay: 300,
+            focus: function(event, ui) {
+                $(".city_hidden_value").val(ui.item.value);
+                $(this).val(ui.item.value);
+                return false;
+            },
+            select: function(event, ui) {
+                $(".city_hidden_value").val(ui.item.value);
+                $(this).val(ui.item.value);
+                $(this).unbind("change");
+                return false;
+            }
+        });
+        var APchange = function(event, ui) {
+            $(this).data("autocomplete").menu.activeMenu.children(":first-child").trigger("click");
+        }
+        $(".citySelection").focus(function() {
+            $(this).change(APchange);
+        });
+    }
+</script>

@@ -396,9 +396,9 @@
                                                             <tbody>
                                                                 <?php if (!empty($invoice_all_data)) {
                                                                     $total_quantity = $total_return_amount = $i_grand_discount = $i_total_discount_price_amount = $i_total_discount_price = $i_grand_amount = 0;
-                                                                    for ($i = 0; $i < 17; $i++) {
-                                                                        $invoice_all_data[] = $invoice_all_data[0];
-                                                                    }
+                                                                    // for ($i = 0; $i < 17; $i++) {
+                                                                    //     $invoice_all_data[] = $invoice_all_data[0];
+                                                                    // }
 
                                                                     foreach ($invoice_all_data as $invoice) {
                                                                 ?>

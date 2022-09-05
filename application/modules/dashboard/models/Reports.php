@@ -18,7 +18,6 @@ class Reports extends CI_Model
         $this->db->group_by('a.product_id');
         $query = $this->db->get();
         return $query->num_rows();
-
     }
 
     //Stock report
@@ -116,7 +115,7 @@ class Reports extends CI_Model
     }
 
     //Count Stock Report by date
-    public function count_stock_report_bydate($product_id=null)
+    public function count_stock_report_bydate($product_id = null)
     {
 
         $this->db->select("
@@ -142,18 +141,18 @@ class Reports extends CI_Model
         $this->db->order_by('a.product_name', 'asc');
         if (empty($product_id)) {
             $this->db->where(array('a.status' => 1));
-        }else{
-            $this->db->where("( a.product_id ='".$product_id . "' OR a.category_id ='" . $product_id . "' )");
+        } else {
+            $this->db->where("( a.product_id ='" . $product_id . "' OR a.category_id ='" . $product_id . "' )");
         }
 
         $query = $this->db->get();
         if ($query == false) {
-           return 0;
+            return 0;
         }
         return $query->num_rows();
     }
     //Stock Report by date
-    public function stock_report_bydate($product_id=null, $date=null, $per_page, $page)
+    public function stock_report_bydate($product_id = null, $date = null, $per_page, $page)
     {
         $this->db->select("
             a.product_name,
@@ -178,8 +177,8 @@ class Reports extends CI_Model
 
         if (empty($product_id)) {
             $this->db->where(array('a.status' => 1));
-        }else{
-            $this->db->where("( a.product_id ='".$product_id . "' OR a.category_id ='" . $product_id . "' )");
+        } else {
+            $this->db->where("( a.product_id ='" . $product_id . "' OR a.category_id ='" . $product_id . "' )");
         }
 
         $this->db->limit($per_page, $page);
@@ -187,9 +186,9 @@ class Reports extends CI_Model
         if (!$query) {
             return false;
         }
-        if($query->num_rows()<=0){
+        if ($query->num_rows() <= 0) {
             return false;
-        }else{
+        } else {
             return $query->result_array();
         }
     }
@@ -270,7 +269,7 @@ class Reports extends CI_Model
                     'a.product_id' => $product_id
                 )
             );
-            $this->db->where("STR_TO_DATE(e.purchase_date, '%m-%d-%Y') BETWEEN DATE('".$from_date."') AND DATE('".$to_date."')");
+            $this->db->where("STR_TO_DATE(e.purchase_date, '%m-%d-%Y') BETWEEN DATE('" . $from_date . "') AND DATE('" . $to_date . "')");
         }
         $query = $this->db->get();
         return $query->result_array();
@@ -313,7 +312,7 @@ class Reports extends CI_Model
                     'a.product_id' => $product_id
                 )
             );
-            $this->db->where("STR_TO_DATE(e.purchase_date, '%m-%d-%Y') BETWEEN DATE('".$from_date."') AND DATE('".$to_date."')");
+            $this->db->where("STR_TO_DATE(e.purchase_date, '%m-%d-%Y') BETWEEN DATE('" . $from_date . "') AND DATE('" . $to_date . "')");
         }
         $query = $this->db->get();
         return $query->num_rows();
@@ -389,8 +388,8 @@ class Reports extends CI_Model
         $query = $this->db->get();
         return $query->num_rows();
     }
-    
-    public function stock_receive_report_by_store($from_date, $to_date, $store_id= false, $per_page, $page, $product_id = false)
+
+    public function stock_receive_report_by_store($from_date, $to_date, $store_id = false, $per_page, $page, $product_id = false)
     {
         $this->db->select("a.product_name,
                            a.unit,
@@ -408,7 +407,7 @@ class Reports extends CI_Model
                            h.store_name,
                            h.store_id
                             ");
-        $wh = "date_format( str_to_date( b.date_time, '%m-%d-%Y') , '%m-%d-%Y' ) Between '" . date("m-d-Y",strtotime($from_date)) . "' AND'" . date("m-d-Y",strtotime($to_date)) . "'";
+        $wh = "date_format( str_to_date( b.date_time, '%m-%d-%Y') , '%m-%d-%Y' ) Between '" . date("m-d-Y", strtotime($from_date)) . "' AND'" . date("m-d-Y", strtotime($to_date)) . "'";
         $this->db->from('transfer b');
         $this->db->join('product_information a', 'a.product_id = b.product_id', 'left');
         $this->db->join('product_purchase e', 'b.store_id = e.store_id', 'left');
@@ -425,9 +424,9 @@ class Reports extends CI_Model
 
         $this->db->where('a.status', 1);
         $this->db->where('b.store_id', $store_id);
-        if(!empty($product_id)){
+        if (!empty($product_id)) {
             $this->db->where('a.product_id', $product_id);
-        }elseif(!empty($product_array)){
+        } elseif (!empty($product_array)) {
             $this->db->where_in('a.product_id', $product_array);
         }
         $this->db->where($wh);
@@ -439,14 +438,14 @@ class Reports extends CI_Model
         return $query->result_array();
     }
 
-//get stock report store wise
-    public function stock_report_by_store($from_date, $to_date, $store_id= false, $perpage, $page, $product_id = false)
+    //get stock report store wise
+    public function stock_report_by_store($from_date, $to_date, $store_id = false, $perpage, $page, $product_id = false)
     {
-        $sore_product = $this->db->select('product_id')->from('product_purchase_details')->where('store_id',$store_id)->get()->result_array();
-        $product_array = array_column($sore_product,'product_id');
-        $check_color =0;
+        $sore_product = $this->db->select('product_id')->from('product_purchase_details')->where('store_id', $store_id)->get()->result_array();
+        $product_array = array_column($sore_product, 'product_id');
+        $check_color = 0;
         if (!empty($product_array)) {
-            $check_color = $this->db->select('var_color_id')->from('product_variants')->where_in('product_id',$product_array)->get()->num_rows();
+            $check_color = $this->db->select('var_color_id')->from('product_variants')->where_in('product_id', $product_array)->get()->num_rows();
         }
         $this->db->select("a.product_name,
                            a.unit,
@@ -475,16 +474,16 @@ class Reports extends CI_Model
         $this->db->group_by('a.product_id');
         $this->db->group_by('g.variant_id');
         $this->db->group_by('h.store_id');
-        if ($check_color>0) {
+        if ($check_color > 0) {
             $this->db->group_by('ga.variant_id');
         }
         $this->db->order_by('a.product_name', 'asc');
 
         $this->db->where('a.status', 1);
         $this->db->where('b.store_id', $store_id);
-        if(!empty($product_id)){
+        if (!empty($product_id)) {
             $this->db->where('a.product_id', $product_id);
-        }elseif(!empty($product_array)){
+        } elseif (!empty($product_array)) {
             $this->db->where_in('a.product_id', $product_array);
         }
         $this->db->where($wh);
@@ -538,7 +537,7 @@ class Reports extends CI_Model
     }
 
     //Counter of unique product histor which has been affected
-    public function stock_report_variant_bydate_count($from_date= false, $to_date= false, $store_id= false, $product_id = false)
+    public function stock_report_variant_bydate_count($from_date = false, $to_date = false, $store_id = false, $product_id = false)
     {
 
         $this->db->select("
@@ -568,7 +567,7 @@ class Reports extends CI_Model
         $this->db->order_by('a.product_name', 'asc');
         $this->db->where('a.status', 1);
         $this->db->where('b.store_id', $store_id);
-        if(!empty($product_id)){
+        if (!empty($product_id)) {
             $this->db->where('a.product_id', $product_id);
         }
         $this->db->where($wh);
@@ -577,7 +576,7 @@ class Reports extends CI_Model
         return $query->num_rows();
     }
 
-// ====================STORE WISE STOCK REPORT =======================
+    // ====================STORE WISE STOCK REPORT =======================
     public function store_wise_product($per_page = NULL, $page = NULL)
     {
 
@@ -619,8 +618,6 @@ class Reports extends CI_Model
             return $test;
         }
         return false;
-
-
     }
 
     // ====================INDIVIDUAL STORE WISE STOCK REPORT =======================
@@ -668,15 +665,13 @@ class Reports extends CI_Model
             return $test;
         }
         return false;
-
-
     }
 
-//=============sales report store wise=================
+    //=============sales report store wise=================
 
     public function retrieve_sales_report_store_wise($store_id, $start_date = null, $end_date = null)
     {
-         $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
         $this->db->select("a.*,b.store_name");
         $this->db->from('invoice a');
         $this->db->join('store_set b', 'a.store_id = b.store_id');
@@ -787,7 +782,7 @@ class Reports extends CI_Model
         }
 
         if (!empty($from_date) && !empty($to_date)) {
-             $dateRange = "STR_TO_DATE(a.date_time, '%m-%d-%Y') BETWEEN DATE('$from_date') AND DATE('$to_date')";
+            $dateRange = "STR_TO_DATE(a.date_time, '%m-%d-%Y') BETWEEN DATE('$from_date') AND DATE('$to_date')";
         }
 
         $this->db->where('a.status', 1);
@@ -945,9 +940,9 @@ class Reports extends CI_Model
     }
 
     //Tax report product wise
-    public function tax_report_product_wise($from_date=null, $to_date=null)
+    public function tax_report_product_wise($from_date = null, $to_date = null)
     {
-        
+
         $today = date("m-d-Y");
         $this->db->select("
 			a.amount,
@@ -971,7 +966,7 @@ class Reports extends CI_Model
     }
 
     //Tax report product wise
-    public function tax_report_invoice_wise($from_date=false, $to_date=false)
+    public function tax_report_invoice_wise($from_date = false, $to_date = false)
     {
 
         $today = date("m-d-Y");
@@ -1030,14 +1025,41 @@ class Reports extends CI_Model
     }
 
     //Retrieve all Report
-    public function retrieve_dateWise_SalesReports($start_date = false, $end_date=false)
+    public function retrieve_dateWise_SalesReports($start_date = false, $end_date = false, $empId = false, $city = false)
     {
         $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
 
+        $ids = [];
+        if ($city) {
+            $this->db->select('id');
+            $this->db->from('employee_history');
+            $this->db->where('city', $city);
+            $query = $this->db->get();
+            $ids = $query->result_array();
+            // $this->db->where('city', $city);
+        }
+
+        $this->db->reset_query();
         $this->db->select("a.*,b.customer_id,b.customer_name");
         $this->db->from('invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
-        $this->db->where($dateRange, NULL, FALSE);
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+
+        if ($empId) {
+            $this->db->where('employee_id', $empId);
+        }
+
+        if ($city && $ids) {
+            // var_dump($ids);
+            $arr = [];
+            foreach ($ids as $id) {
+                $arr[] = $id['id'];
+            }
+            $this->db->where_in('employee_id', $arr);
+        }
+
         $this->db->order_by('a.date', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
@@ -1176,7 +1198,7 @@ class Reports extends CI_Model
         ];
         //====================================
 
-        foreach ($product_info['variants'] as $variant):
+        foreach ($product_info['variants'] as $variant) :
 
             $this->db->select("a.variant_id, a.variant_name, sum(b.quantity) as totalPurchaseQnty, 
         (select sum(c.quantity) from invoice_details c where c.product_id=b.product_id and c.variant_id=b.variant_id) as totalSalesQty,
@@ -1198,7 +1220,5 @@ class Reports extends CI_Model
         ];
 
         return $data;
-
     }
-
 }

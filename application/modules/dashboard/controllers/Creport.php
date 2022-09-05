@@ -142,7 +142,7 @@ class Creport extends MX_Controller
         $config['first_tagl_close'] = "</li>";
         $config['last_tag_open']   = "<li>";
         $config['last_tagl_close'] = "</li>";
-        
+
         /* ends of bootstrap */
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
@@ -342,5 +342,33 @@ class Creport extends MX_Controller
 
         $content = $this->parser->parse('report/stock_report_by_variant', $data, true);
         $this->template_lib->full_admin_html_view($content);
+    }
+
+    public function search_all_employees()
+    {
+        $name = $this->input->post('name', TRUE);
+
+        $query = $this->db->query("SELECT * FROM `employee_history` WHERE (`first_name` LIKE '%" . $name . "%' OR `last_name` LIKE '%" . $name . "%' OR `id` = '" . $name . "')");
+        $product_info = $query->result_array();
+        $json_product = [];
+        foreach ($product_info as $value) {
+            $json_product[] = array('label' => $value['first_name'] . ' ' . $value['last_name'], 'value' => $value['id']);
+        }
+
+        echo json_encode($json_product);
+    }
+
+    public function search_all_cities()
+    {
+        $name = $this->input->post('name', TRUE);
+
+        $query = $this->db->query("SELECT * FROM `employee_history` WHERE (`city` LIKE '%" . $name . "%' )");
+        $product_info = $query->result_array();
+        $json_product = [];
+        foreach ($product_info as $value) {
+            $json_product[] = array('label' => $value['city'], 'value' => $value['city']);
+        }
+
+        echo json_encode($json_product);
     }
 }
