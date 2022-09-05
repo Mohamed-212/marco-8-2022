@@ -80,7 +80,7 @@ class Hrm_model extends CI_Model {
              'CreateDate'       => $createdate,
         ];
         $this->db->insert('acc_coa',$employee_coa);
-        return true;
+        return $id;
      }
 
         public function headcode(){

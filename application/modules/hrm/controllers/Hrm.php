@@ -14,7 +14,7 @@ class Hrm extends MX_Controller
     {
         parent::__construct();
         $this->auth->check_user_auth();
-        $this->load->model(array('hrm_model', 'country_model'));
+        $this->load->model(array('hrm_model', 'country_model', 'employee_contact_info'));
     }
 
 
@@ -91,15 +91,14 @@ class Hrm extends MX_Controller
     /*employee part start*/
     public function bdtask_employee_form($id = null)
     {
-        // echo "<pre>";
-        // print_r($_POST);
-        // exit;
+       
         $data['title'] = display('add_employee');
         $this->form_validation->set_rules('first_name', display('first_name'), 'required|max_length[100]');
         $this->form_validation->set_rules('last_name', display('last_name'), 'required|max_length[100]');
         $this->form_validation->set_rules('designation', display('designation'), 'required|max_length[100]');
         $this->form_validation->set_rules('phone', display('phone'), 'max_length[20]');
         $this->form_validation->set_rules('hrate', display('salary'), 'max_length[20]');
+        $contactInfo = $this->input->post('contact_info');
         $this->load->library('fileupload');
         $img = $this->fileupload->do_upload(
             './my-assets/image/employee/',
@@ -130,7 +129,9 @@ class Hrm extends MX_Controller
         if ($this->form_validation->run()) {
 
             if (empty($id)) {
-                if ($this->hrm_model->create_employee($postData)) {
+                $empId = $this->hrm_model->create_employee($postData);
+                if ($empId) {
+                    $this->employee_contact_info->insert($empId, $contactInfo);
                     $this->session->set_flashdata('message', display('save_successfully'));
                     redirect("hrm/hrm/bdtask_employee_list");
                 } else {
@@ -151,6 +152,7 @@ class Hrm extends MX_Controller
                     );
                     $this->db->where('HeadName', $old_head);
                     $this->db->update('acc_coa', $coa_inf);
+                    $this->employee_contact_info->update($this->input->post('id', true), $contactInfo);
                     $this->session->set_flashdata('message', display('update_successfully'));
                 } else {
                     $this->session->set_flashdata('exception', display('please_try_again'));
@@ -163,6 +165,7 @@ class Hrm extends MX_Controller
         } else {
             if (!empty($id)) {
                 $data['employee'] = $this->hrm_model->single_employee_data($id);
+                $data['contact_info'] = $this->employee_contact_info->allInfos($id);
                 $data['title'] = display('edit_employee');
             }
             $data['country_list'] = $this->country_model->country();
