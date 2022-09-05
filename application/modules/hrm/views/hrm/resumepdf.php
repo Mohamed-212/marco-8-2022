@@ -146,6 +146,36 @@
 
                            </table>
 
+                           <table class="table table-hover" width="100%">
+                            <caption  class="resumehead"><?php echo display('contact_info')?></caption>
+                            <tr>
+                            <th>
+                            <?php echo display('name') ?>
+                            </th>
+                            <th>
+                            <?php echo display('phone') ?>
+                            </th>
+                            <th>
+                            <?php echo display('customer_address') ?>
+                            </th>
+                            </tr>
+                            <tbody>
+                                <?php foreach ($contact_info as $c) :?>
+                                    <tr>
+                                        <td>
+                                            <?=$c->name?>
+                                        </td>
+                                        <td>
+                                            <?=$c->phone?>
+                                        </td>
+                                        <td>
+                                            <?=$c->address?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                           </table>
+
                        </div>
 
 

@@ -196,6 +196,7 @@ class Hrm extends MX_Controller
 
         $data['title'] = display('employee_profile');
         $data['row'] = $this->hrm_model->employee_details($id);
+        $data['contact_info'] = $this->employee_contact_info->allInfos($id);
 //        $data['module'] = "hrm";
 //        $data['page'] = "hrm/resumepdf";
 //        echo modules::run('template/layout', $data);

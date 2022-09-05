@@ -148,7 +148,7 @@
                             <div class="row form-group">
                                 <div class="col-sm-12">
                                     <h3 class="card-title">
-                                        Contact Info
+                                    <?php echo display('contact_info')?>
                                     </h3>
                                 </div>
                             </div>
