@@ -257,8 +257,8 @@ class Corder extends MX_Controller
         $company_info = $this->Orders->retrieve_company();
         $data = array(
             'title' => display('order_details'),
-            'order_id' => $order_detail[0]['order_id'],
-            'order_no' => $order_detail[0]['order'],
+            'order_id' => $order_detail[0]['invoice_id'],
+            'order_no' => $order_detail[0]['invoice'],
             'customer_address' => $order_detail[0]['customer_short_address'],
             'customer_name' => $order_detail[0]['customer_name'],
             'customer_mobile' => $order_detail[0]['customer_mobile'],

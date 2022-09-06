@@ -301,18 +301,18 @@
                                                             <?php echo form_open() ?>
                                                             <?php if ($invoice['status'] == 1) { ?>
                                                                 <?php if ($this->permission->check_label('new_sale')->create()->access()) { ?>
-                                                                    <a href="<?php echo base_url() . 'dashboard/Corder/create_invoice_form/' . $invoice['order_id']; ?>" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="left" title="Invoice-2"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                                                    <a href="<?php echo base_url() . 'dashboard/Corder/create_invoice_form/' . $invoice['invoice_id']; ?>" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="left" title="Invoice-2"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                                                                 <?php }
                                                             } else { ?>
                                                                 <a href="javascript:void(0)" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('invoiced') ?>"><i class="fa fa-check" aria-hidden="true"></i></a>
                                                             <?php } ?>
-                                                            <a href="<?php echo base_url('dashboard/Corder/order_details_pdf/' . $invoice['order_id']) ?>" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('download') ?>"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                            <a href="<?php echo base_url('dashboard/Corder/order_details_pdf/' . $invoice['invoice_id']) ?>" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('download') ?>"><i class="fa fa-download" aria-hidden="true"></i></a>
                                                             <?php if ($invoice['status'] == 1) { ?>
                                                                 <?php if ($this->permission->check_label('manage_order')->update()->access()) { ?>
-                                                                    <a href="<?php echo base_url() . 'dashboard/Corder/order_update_form/' . $invoice['order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('update') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                                    <a href="<?php echo base_url() . 'dashboard/Corder/order_update_form/' . $invoice['invoice_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('update') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                                                 <?php }
                                                                 if ($this->permission->check_label('manage_order')->delete()->access()) { ?>
-                                                                    <a href="<?php echo base_url('dashboard/Corder/order_delete/' . $invoice['order_id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('<?php echo display('are_you_sure_want_to_delete') ?>');" data-toggle="tooltip" data-placement="right" title="" data-original-title="<?php echo display('delete') ?> "><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                                                    <a href="<?php echo base_url('dashboard/Corder/order_delete/' . $invoice['invoice_id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('<?php echo display('are_you_sure_want_to_delete') ?>');" data-toggle="tooltip" data-placement="right" title="" data-original-title="<?php echo display('delete') ?> "><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                                                 <?php } ?>
                                                             <?php } ?>
                                                             <?php echo form_close() ?>
