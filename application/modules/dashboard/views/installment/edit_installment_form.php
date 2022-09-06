@@ -311,7 +311,7 @@
         $(document).on('click', '.prin-row', function() {
             $('#due_amount').text($(this).attr('data-due-amount'));
             $('#paid_amountt').text($(this).attr('data-paid-amount'));
-            $('#due_date').text($(this).attr('data-due-amount'));
+            $('#due_date').text($(this).attr('data-due-date'));
             $('#payment_date').text($(this).attr('data-payment-date'));
             $('#payment-type').text($(this).attr('data-payment-type'));
             $('#payment-method').text($(this).attr('data-payment-method'));
