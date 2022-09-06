@@ -11,12 +11,12 @@
             <i class="pe-7s-note2"></i>
         </div>
         <div class="header-title">
-            <h1><?php echo display('invoice_details') ?></h1>
-            <small><?php echo display('invoice_details') ?></small>
+            <h1><?php echo display(isset($is_order) ? 'order_details' : 'invoice_details') ?></h1>
+            <small><?php echo display(isset($is_order) ? 'order_details' : 'invoice_details') ?></small>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
-                <li><a href="#"><?php echo display('invoice') ?></a></li>
-                <li class="active"><?php echo display('invoice_details') ?></li>
+                <li><a href="#"><?php echo display(isset($is_order) ? 'order' : 'invoice') ?></a></li>
+                <li class="active"><?php echo display(isset($is_order) ? 'order_details' : 'invoice_details') ?></li>
             </ol>
         </div>
     </section>
@@ -730,7 +730,7 @@
 
                     <div class="panel-footer text-left">
                         <?php if ($this->permission->check_label('manage_sale')->read()->access()) { ?>
-                            <a class="btn btn-danger" href="<?php echo base_url('dashboard/Cinvoice/manage_invoice'); ?>"><?php echo display('back') ?></a>
+                            <a class="btn btn-danger" href="<?php echo base_url(isset($is_order) ? 'dashboard/Corder/manage_order' : 'dashboard/Cinvoice/manage_invoice'); ?>"><?php echo display('back') ?></a>
                         <?php } ?>
                         <a class="btn btn-info" href="<?php echo current_url(); ?>" onclick="printPageDiv('printableArea')"><span class="fa fa-print"></span>
                         </a>

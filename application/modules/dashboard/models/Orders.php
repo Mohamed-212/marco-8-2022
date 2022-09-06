@@ -2833,6 +2833,7 @@ class Orders extends CI_Model
 			g.zip as ship_zip,
 			g.company as ship_company
 			');
+        // $this->db->from('order a');
         $this->db->from('order_invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
         $this->db->join('shipping_info g', 'g.customer_id = a.customer_id');
@@ -2840,8 +2841,10 @@ class Orders extends CI_Model
         $this->db->join('product_information d', 'd.product_id = c.product_id');
         $this->db->join('unit e', 'e.unit_id = d.unit', 'left');
         $this->db->join('variant f', 'f.variant_id = c.variant_id', 'left');
+        // $this->db->where('a.order_id', $order_id);
         $this->db->where('a.invoice_id', $order_id);
         if ($details_page == 'order_details_data') {
+            // $this->db->where('g.order_id', $order_id);
             $this->db->where('g.invoice_id', $order_id);
         }
         $this->db->group_by('c.product_id, c.invoice_details_id');
