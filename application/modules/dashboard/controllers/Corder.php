@@ -16,9 +16,13 @@ class Corder extends MX_Controller
             'dashboard/Soft_settings',
             'dashboard/Reports',
             'template/Template_model',
+            'dashboard/Invoices'
         ));
+        $this->load->library('dashboard/linvoice');
+        // $this->load->library('dashboard/occational');
         $this->load->library('dashboard/occational');
         $this->load->library('dashboard/lorder');
+        // $this->load->library('dashboard/linvoice');
         $this->load->library('pdfgenerator');
     }
     public function index()
@@ -28,81 +32,190 @@ class Corder extends MX_Controller
         $content = $this->lorder->order_add_form();
         $this->template_lib->full_admin_html_view($content);
     }
-    public function new_order()
+    
+    public function new_order_old()
     {
         $this->permission->check_label('new_order')->create()->redirect();
 
         $content = $this->lorder->order_add_form();
+        // $content = $this->linvoice->invoice_add_form();
         $this->template_lib->full_admin_html_view($content);
     }
-    //Insert product and upload
-    public function insert_order()
+
+    public function new_order()
     {
-        $this->permission->check_label('new_order')->create()->redirect();
-
-        $customer_id = $this->input->post('customer_id',TRUE);
-        $customer = $this->db->select('*')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
-
-        $order_id = $this->Orders->order_entry();
-
-        $this->session->set_userdata(array('message' => display('successfully_added')));
-        $this->order_inserted_data($order_id);
-        $customer_id = $this->session->userdata('customerId');
-
-        $ship_short_address = $this->input->post('customer_name_others_address',TRUE);
-        if ($this->input->post('customer_name_others',TRUE)) {
-            $shipping = array(
-                'customer_id' => $customer_id,
-                'order_id' => $order_id,
-                'customer_name' => $this->input->post('customer_name_others',TRUE),
-                'first_name' => '',
-                'last_name' => '',
-                'customer_short_address' => $ship_short_address,
-                'customer_address_1' => '',
-                'customer_address_2' => '',
-                'city' => '',
-                'state' => '',
-                'country' => '',
-                'zip' => '',
-                'company' => '',
-                'customer_mobile' => '',
-                'customer_email' => '',
-            );
+        $this->permission->check_label('new_sale')->create()->redirect();
+        if (check_module_status('accounting') == 1) {
+            $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+            if (!empty($find_active_fiscal_year)) {
+                $this->load->model(array(
+                    'dashboard/Stores',
+                    'dashboard/Variants',
+                    'dashboard/Customers',
+                    'dashboard/Shipping_methods'
+                ));
+                $store_list = $this->Stores->store_list();
+                $variant_list = $this->Variants->variant_list();
+                $shipping_methods = $this->Shipping_methods->shipping_method_list();
+                $customer = $this->Customers->customer_list();
+                $bank_list = $this->Invoices->bank_list();
+                $payment_info = $this->Invoices->payment_info();
+                $all_pri_type = $this->Invoices->select_all_pri_type();
+                $data = array(
+                    'title' => display('new_order'),
+                    'store_list' => $store_list,
+                    'variant_list' => $variant_list,
+                    'customer' => $customer[0],
+                    'shipping_methods' => $shipping_methods,
+                    'bank_list' => $bank_list,
+                    'payment_info' => $payment_info,
+                    'employee' => $this->empdropdown(),
+                    'all_pri_type' => $all_pri_type,
+                    'order' => true,
+                );
+                $data['module'] = "dashboard";
+                $data['page'] = "invoice/add_invoice_form";
+                echo Modules::run('template/layout', $data);
+            } else {
+                $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
+                redirect(base_url('Admin_dashboard'));
+            }
         } else {
-            $customer = $this->db->select('*')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
-
-            $shipping = array(
-                'customer_id' => $customer_id,
-                'order_id' => $order_id,
-                'customer_name' => $customer->customer_name,
-                'first_name' => ($customer->first_name) ? $customer->first_name : '',
-                'last_name' => ($customer->last_name) ? $customer->last_name : '',
-                'customer_short_address' => ($customer->customer_short_address) ? $customer->customer_short_address : '',
-                'customer_address_1' => ($customer->customer_address_1) ? $customer->customer_address_1 : '',
-                'customer_address_2' => ($customer->customer_address_2) ? $customer->customer_address_2 : '',
-                'city' => ($customer->city) ? $customer->city : '',
-                'state' => ($customer->state) ? $customer->state : '',
-                'country' => ($customer->country) ? $customer->state : '',
-                'zip' => ($customer->zip) ? $customer->zip : '',
-                'company' => ($customer->company) ? $customer->company : '',
-                'customer_mobile' => ($customer->customer_mobile) ? $customer->customer_mobile : '',
-                'customer_email' => ($customer->customer_email) ? $customer->customer_email : '',
+            $this->load->model(array(
+                'dashboard/Stores',
+                'dashboard/Variants',
+                'dashboard/Customers',
+                'dashboard/Shipping_methods'
+            ));
+            $store_list = $this->Stores->store_list();
+            $variant_list = $this->Variants->variant_list();
+            $shipping_methods = $this->Shipping_methods->shipping_method_list();
+            $customer = $this->Customers->customer_list();
+            $bank_list = $this->Invoices->bank_list();
+            $data = array(
+                'title' => display('new_order'),
+                'store_list' => $store_list,
+                'variant_list' => $variant_list,
+                'customer' => $customer[0],
+                'shipping_methods' => $shipping_methods,
+                'bank_list' => $bank_list,
+                'order' => true,
             );
-
-        }
-        //Shipping information entry for existing customer
-
-        $this->Homes->shipping_entry($shipping);
-        $sms_status = $this->db->select('sms_service')->from('soft_setting')->get()->result_array();
-        if ($sms_status[0]['sms_service'] == 1) {
-            $this->Homes->send_sms($order_id, $customer_id, 'Order');
-        }
-        if (isset($_POST['add-order'])) {
-            redirect(base_url('dashboard/Corder/manage_order'));
-        } elseif (isset($_POST['add-order-another'])) {
-            redirect(base_url('dashboard/Corder'));
+            $data['module'] = "dashboard";
+            $data['page'] = "invoice/add_invoice_form";
+            echo Modules::run('template/layout', $data);
         }
     }
+
+    public function empdropdown()
+    {
+        $this->db->select('*');
+        $this->db->from('employee_history');
+        $query = $this->db->get();
+        $data = $query->result();
+
+        $list = array('' => 'Select One...');
+        if (!empty($data)) {
+            foreach ($data as $value) {
+                $list[$value->id] = $value->first_name . " " . $value->last_name;
+            }
+        }
+        return $list;
+    }
+    //Insert product and upload
+    // public function insert_order_old()
+    // {
+    //     $this->permission->check_label('new_order')->create()->redirect();
+
+    //     $customer_id = $this->input->post('customer_id', TRUE);
+    //     $customer = $this->db->select('*')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+
+    //     $order_id = $this->Orders->order_entry();
+
+    //     $this->session->set_userdata(array('message' => display('successfully_added')));
+    //     $this->order_inserted_data($order_id);
+    //     $customer_id = $this->session->userdata('customerId');
+
+    //     $ship_short_address = $this->input->post('customer_name_others_address', TRUE);
+    //     if ($this->input->post('customer_name_others', TRUE)) {
+    //         $shipping = array(
+    //             'customer_id' => $customer_id,
+    //             'order_id' => $order_id,
+    //             'customer_name' => $this->input->post('customer_name_others', TRUE),
+    //             'first_name' => '',
+    //             'last_name' => '',
+    //             'customer_short_address' => $ship_short_address,
+    //             'customer_address_1' => '',
+    //             'customer_address_2' => '',
+    //             'city' => '',
+    //             'state' => '',
+    //             'country' => '',
+    //             'zip' => '',
+    //             'company' => '',
+    //             'customer_mobile' => '',
+    //             'customer_email' => '',
+    //         );
+    //     } else {
+    //         $customer = $this->db->select('*')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+
+    //         $shipping = array(
+    //             'customer_id' => $customer_id,
+    //             'order_id' => $order_id,
+    //             'customer_name' => $customer->customer_name,
+    //             'first_name' => ($customer->first_name) ? $customer->first_name : '',
+    //             'last_name' => ($customer->last_name) ? $customer->last_name : '',
+    //             'customer_short_address' => ($customer->customer_short_address) ? $customer->customer_short_address : '',
+    //             'customer_address_1' => ($customer->customer_address_1) ? $customer->customer_address_1 : '',
+    //             'customer_address_2' => ($customer->customer_address_2) ? $customer->customer_address_2 : '',
+    //             'city' => ($customer->city) ? $customer->city : '',
+    //             'state' => ($customer->state) ? $customer->state : '',
+    //             'country' => ($customer->country) ? $customer->state : '',
+    //             'zip' => ($customer->zip) ? $customer->zip : '',
+    //             'company' => ($customer->company) ? $customer->company : '',
+    //             'customer_mobile' => ($customer->customer_mobile) ? $customer->customer_mobile : '',
+    //             'customer_email' => ($customer->customer_email) ? $customer->customer_email : '',
+    //         );
+    //     }
+    //     //Shipping information entry for existing customer
+
+    //     $this->Homes->shipping_entry($shipping);
+    //     $sms_status = $this->db->select('sms_service')->from('soft_setting')->get()->result_array();
+    //     if ($sms_status[0]['sms_service'] == 1) {
+    //         $this->Homes->send_sms($order_id, $customer_id, 'Order');
+    //     }
+    //     if (isset($_POST['add-order'])) {
+    //         redirect(base_url('dashboard/Corder/manage_order'));
+    //     } elseif (isset($_POST['add-order-another'])) {
+    //         redirect(base_url('dashboard/Corder'));
+    //     }
+    // }
+
+    //Insert new invoice
+    public function insert_order() {
+        if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
+            $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
+            $this->index();
+        } else {
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+           // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+            // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+            $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+            if ($this->form_validation->run() == false) {
+                $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+                $this->index();
+            } else {
+                $order_id = $this->Orders->order_entry();
+                $this->session->set_userdata(array('message' => display('successfully_added')));
+                if ($this->input->post('pos', TRUE) === 'pos') {
+                    redirect('dashboard/Corder/pos_order_inserted_data_redirect/' . $order_id . '?place=pos');
+                } else {
+                    redirect('dashboard/Corder/order_inserted_data/' . $order_id);
+                }
+            }
+        }
+    }
+    
     //Retrive right now inserted data to cretae html
     public function order_inserted_data($order_id)
     {
@@ -114,8 +227,8 @@ class Corder extends MX_Controller
     {
         $this->permission->check_label('manage_order')->read()->redirect();
 
-        $CI =& get_instance();
-        $content = $CI->lorder->order_details_data($order_id);  
+        $CI = &get_instance();
+        $content = $CI->lorder->order_details_data($order_id);
         $this->template_lib->full_admin_html_view($content);
     }
     //Retrive order PDF Page
@@ -163,7 +276,7 @@ class Corder extends MX_Controller
             'position' => $currency_details[0]['currency_position'],
             'payinfo' => $payinfo
         );
-        $pdfhtml = $this->parser->parse('dashboard/order/order_pdf',$data,true);
+        $pdfhtml = $this->parser->parse('dashboard/order/order_pdf', $data, true);
         $file_path = $this->pdfgenerator->generate_order($order_id, $pdfhtml);
         $this->load->helper('download');
         force_download($file_path, NULL);
@@ -174,32 +287,32 @@ class Corder extends MX_Controller
     {
         $this->permission->check_label('manage_order')->read()->redirect();
         $filter = array(
-            'order_no'       =>$this->input->get('order_no', TRUE),
-            'customer_name'  =>$this->input->get('customer_name', TRUE),
-            'order_date'     =>$this->input->get('date', TRUE),
-            'invoice_status' =>$this->input->get('invoice_status', TRUE)
+            'order_no'       => $this->input->get('order_no', TRUE),
+            'customer_name'  => $this->input->get('customer_name', TRUE),
+            'order_date'     => $this->input->get('date', TRUE),
+            'invoice_status' => $this->input->get('invoice_status', TRUE)
         );
-        $config["base_url"]   =base_url('dashboard/Corder/manage_order');
-        $config["total_rows"] =$this->Orders->count_order_list($filter);
+        $config["base_url"]   = base_url('dashboard/Corder/manage_order');
+        $config["total_rows"] = $this->Orders->count_order_list($filter);
 
-        $config["per_page"]    =20;
-        $config["uri_segment"] =4;
-        $config["num_links"]   =5;
+        $config["per_page"]    = 20;
+        $config["uri_segment"] = 4;
+        $config["num_links"]   = 5;
         /* This Application Must Be Used With BootStrap 3 * */
-        $config['full_tag_open']    ="<ul class='pagination'>";
-        $config['full_tag_close']   ="</ul>";
-        $config['num_tag_open']     ='<li>';
-        $config['num_tag_close']    ='</li>';
-        $config['cur_tag_open']     ="<li class='disabled'><li class='active'><a href='#'>";
-        $config['cur_tag_close']    ="<span class='sr-only'></span></a></li>";
-        $config['next_tag_open']    ="<li>";
-        $config['next_tag_close']   ="</li>";
-        $config['prev_tag_open']    ="<li>";
-        $config['prev_tagl_close']  ="</li>";
-        $config['first_tag_open']   ="<li>";
-        $config['first_tagl_close'] ="</li>";
-        $config['last_tag_open']    ="<li>";
-        $config['last_tagl_close']  ="</li>";
+        $config['full_tag_open']    = "<ul class='pagination'>";
+        $config['full_tag_close']   = "</ul>";
+        $config['num_tag_open']     = '<li>';
+        $config['num_tag_close']    = '</li>';
+        $config['cur_tag_open']     = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close']    = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open']    = "<li>";
+        $config['next_tag_close']   = "</li>";
+        $config['prev_tag_open']    = "<li>";
+        $config['prev_tagl_close']  = "</li>";
+        $config['first_tag_open']   = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open']    = "<li>";
+        $config['last_tagl_close']  = "</li>";
         /* ends of bootstrap */
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
@@ -246,27 +359,27 @@ class Corder extends MX_Controller
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $company_info = $this->Orders->retrieve_company();
         $data = array(
-            'title'            =>display('order_details'),
-            'order_id'         =>$order_detail[0]['order_id'],
-            'order_no'         =>$order_detail[0]['order'],
-            'customer_address' =>$order_detail[0]['customer_short_address'],
-            'customer_name'    =>$order_detail[0]['customer_name'],
-            'customer_mobile'  =>$order_detail[0]['customer_mobile'],
-            'customer_email'   =>$order_detail[0]['customer_email'],
-            'final_date'       =>$order_detail[0]['final_date'],
-            'total_amount'     =>$order_detail[0]['total_amount'],
-            'order_discount'   =>$order_detail[0]['order_discount'],
-            'service_charge'   =>$order_detail[0]['service_charge'],
-            'paid_amount'      =>$order_detail[0]['paid_amount'],
-            'due_amount'       =>$order_detail[0]['due_amount'],
-            'details'          =>$order_detail[0]['details'],
-            'subTotal_quantity'=>$subTotal_quantity,
-            'order_all_data'   =>$order_detail,
-            'company_info'     =>$company_info,
-            'currency'         =>$currency_details[0]['currency_icon'],
-            'position'         =>$currency_details[0]['currency_position'],
+            'title'            => display('order_details'),
+            'order_id'         => $order_detail[0]['order_id'],
+            'order_no'         => $order_detail[0]['order'],
+            'customer_address' => $order_detail[0]['customer_short_address'],
+            'customer_name'    => $order_detail[0]['customer_name'],
+            'customer_mobile'  => $order_detail[0]['customer_mobile'],
+            'customer_email'   => $order_detail[0]['customer_email'],
+            'final_date'       => $order_detail[0]['final_date'],
+            'total_amount'     => $order_detail[0]['total_amount'],
+            'order_discount'   => $order_detail[0]['order_discount'],
+            'service_charge'   => $order_detail[0]['service_charge'],
+            'paid_amount'      => $order_detail[0]['paid_amount'],
+            'due_amount'       => $order_detail[0]['due_amount'],
+            'details'          => $order_detail[0]['details'],
+            'subTotal_quantity' => $subTotal_quantity,
+            'order_all_data'   => $order_detail,
+            'company_info'     => $company_info,
+            'currency'         => $currency_details[0]['currency_icon'],
+            'position'         => $currency_details[0]['currency_position'],
         );
-        $chapterList = $this->parser->parse('order/order_pdf',$data,true);
+        $chapterList = $this->parser->parse('order/order_pdf', $data, true);
 
         $this->load->library('pdfgenerator');
         $file_path = $this->pdfgenerator->generate_order($order_id, $chapterList);
@@ -280,29 +393,29 @@ class Corder extends MX_Controller
         $this->session->set_userdata(array('message' => display('successfully_updated')));
         redirect('dashboard/Corder/manage_order');
     }
-    
+
     //Search Inovoice Item
     public function search_inovoice_item()
     {
-        $customer_id=$this->input->post('customer_id',TRUE);
-        $content    =$this->lorder->search_inovoice_item($customer_id);
+        $customer_id = $this->input->post('customer_id', TRUE);
+        $content    = $this->lorder->search_inovoice_item($customer_id);
         $this->template_lib->full_admin_html_view($content);
     }
 
     // insert into invoice
     public function order_to_invoice($order_id)
     {
-        if(check_module_status('accounting') == 1){
-            $find_active_fiscal_year=$this->db->select('*')->from('acc_fiscal_year')->where('status',1)->get()->row();
+        if (check_module_status('accounting') == 1) {
+            $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
                 $order_id = $this->Orders->order_to_invoice_data($order_id);
                 $this->session->set_userdata(array('message' => display('successfully_added')));
                 redirect('dashboard/Corder/manage_order');
-            }else{
-                $this->session->set_userdata(array('error_message'=>display('no_active_fiscal_year_found')));
+            } else {
+                $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
             }
-        }else{
+        } else {
             $order_id = $this->Orders->order_to_invoice_data($order_id);
             $this->session->set_userdata(array('message' => display('successfully_added')));
             redirect('dashboard/Corder/manage_order');
@@ -312,7 +425,7 @@ class Corder extends MX_Controller
     // retrieve_product_data
     public function retrieve_product_data()
     {
-        $product_id = $this->input->post('product_id',TRUE);
+        $product_id = $this->input->post('product_id', TRUE);
         $product_info = $this->Orders->get_total_product($product_id);
         echo json_encode($product_info);
     }
@@ -325,7 +438,7 @@ class Corder extends MX_Controller
         $result = $this->Orders->delete_order($order_id);
         if ($result) {
             $this->session->set_userdata(array('message' => display('successfully_delete')));
-        }else{
+        } else {
             $this->session->set_userdata(array('error_message' => display('failed_try_again')));
         }
         redirect('dashboard/Corder/manage_order');
@@ -356,11 +469,11 @@ class Corder extends MX_Controller
     //Search product by product name and category
     public function search_product()
     {
-        $product_name = $this->input->post('product_name',TRUE);
-        $category_id = $this->input->post('category_id',TRUE);
+        $product_name = $this->input->post('product_name', TRUE);
+        $category_id = $this->input->post('category_id', TRUE);
         $product_search = $this->Orders->product_search($product_name, $category_id);
         if ($product_search) {
-            foreach($product_search as $product){
+            foreach ($product_search as $product) {
                 echo "<div class=\"col-xs-6 col-sm-4 col-md-2 col-p-3\">";
                 echo "<div class=\"panel panel-bd product-panel select_product\">";
                 echo "<div class=\"panel-body\">";
@@ -371,7 +484,7 @@ class Corder extends MX_Controller
                 echo "</div>";
                 echo "</div>";
             }
-        }else{
+        } else {
             echo "420";
         }
     }
@@ -382,11 +495,11 @@ class Corder extends MX_Controller
         $customer_id = generator(15);
         //Customer  basic information adding.
         $data = array(
-            'customer_id'    =>$customer_id,
-            'customer_name'  =>$this->input->post('customer_name',TRUE),
-            'customer_mobile'=>$this->input->post('mobile',TRUE),
-            'customer_email' =>$this->input->post('email',TRUE),
-            'status'         =>1
+            'customer_id'    => $customer_id,
+            'customer_name'  => $this->input->post('customer_name', TRUE),
+            'customer_mobile' => $this->input->post('mobile', TRUE),
+            'customer_email' => $this->input->post('email', TRUE),
+            'status'         => 1
         );
         $result = $this->Orders->customer_entry($data);
         if ($result == TRUE) {
@@ -401,12 +514,12 @@ class Corder extends MX_Controller
     public function generator($lenth)
     {
         $number = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
-        for ($i = 0; $i < $lenth; $i++){
+        for ($i = 0; $i < $lenth; $i++) {
             $rand_value = rand(0, 8);
             $rand_number = $number["$rand_value"];
             if (empty($con)) {
                 $con = $rand_number;
-            }else{
+            } else {
                 $con = "$con" . "$rand_number";
             }
         }
@@ -414,16 +527,16 @@ class Corder extends MX_Controller
     }
     public function create_invoice_form($order_id)
     {
-        if(check_module_status('accounting') == 1){
-            $find_active_fiscal_year=$this->db->select('*')->from('acc_fiscal_year')->where('status',1)->get()->row();
+        if (check_module_status('accounting') == 1) {
+            $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
                 $content = $this->lorder->create_invoice_data($order_id);
                 $this->template_lib->full_admin_html_view($content);
-            }else{
-                $this->session->set_userdata(array('error_message'=>display('no_active_fiscal_year_found')));
+            } else {
+                $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
             }
-        }else{
+        } else {
             $content = $this->lorder->create_invoice_data($order_id);
             $this->template_lib->full_admin_html_view($content);
         }

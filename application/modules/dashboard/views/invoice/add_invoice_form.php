@@ -16,12 +16,12 @@
             <i class="pe-7s-note2"></i>
         </div>
         <div class="header-title">
-            <h1><?php echo display('new_invoice') ?></h1>
-            <small><?php echo display('add_new_invoice') ?></small>
+            <h1><?php echo display(isset($order) ? 'new_order' : 'new_invoice') ?></h1>
+            <small><?php echo display(isset($order) ? 'add_new_order' : 'add_new_invoice') ?></small>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
-                <li><a href="#"><?php echo display('invoice') ?></a></li>
-                <li class="active"><?php echo display('new_invoice') ?></li>
+                <li><a href="#"><?php echo display(isset($order) ? 'order' : 'invoice') ?></a></li>
+                <li class="active"><?php echo display(isset($order) ? 'new_order' : 'new_invoice') ?></li>
             </ol>
         </div>
     </section>
@@ -75,10 +75,10 @@
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4><?php echo display('new_invoice') ?></h4>
+                            <h4><?php echo display(isset($order) ? 'new_order' : 'new_invoice') ?></h4>
                         </div>
                     </div>
-                    <?php echo form_open_multipart('dashboard/Cinvoice/insert_invoice', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_invoice')) ?>
+                    <?php echo form_open_multipart(isset($order) ? 'dashboard/Corder/insert_order' : 'dashboard/Cinvoice/insert_invoice', array('class' => 'form-vertical', 'id' => 'validate', 'name' => isset($order) ? 'insert_order' : 'insert_invoice')) ?>
                     <div class="panel-body">
 
                         <div class="row">
@@ -529,10 +529,10 @@
 
                                     <td colspan="4" rowspan="4">
                                         <label for="invoice_details"
-                                               class=""><?php echo display('invoice_details') ?></label>
+                                               class=""><?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?></label>
                                         <textarea class="form-control" name="invoice_details" id="invoice_details"
                                                   rows="6"
-                                                  placeholder="<?php echo display('invoice_details') ?>"></textarea>
+                                                  placeholder="<?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?>"></textarea>
                                     </td>
 
                                     <td class="text-right" colspan="2">
@@ -546,7 +546,7 @@
                                 </tr>
                                 <tr>
                                     <td class="text-right" colspan="2">
-                                        <b><?php echo display('invoice_discount') ?>:</b>
+                                        <b><?php echo display(isset($order) ? 'order_discount' : 'invoice_discount') ?>:</b>
                                     </td>
                                     <td class="text-right" colspan="2">
                                         <input type="text" id="invoice_discount" class="form-control text-right"
@@ -599,10 +599,12 @@
                                         <input class="btn btn-warning" id="full"
                                                value="<?php echo display('full_paid') ?>"
                                                tabindex="15" onclick="full_paid();" type="button">
+                                        
                                         <input type="hidden" name="is_installment" id="is_installment" value="0">
                                         <input class="btn btn-primary" id="installment_id"
                                                value="<?php echo display('installment') ?>"
                                                tabindex="15" onclick="installment();" type="button">
+                                       
                                     </td>
                                     <td class="text-right" colspan="5"><b><?php echo display('paid_ammount') ?>
                                             :</b></td>
@@ -613,9 +615,10 @@
                                 </tr>
                                 <tr>
                                     <td align="center" class="width_220">
+                                       
                                         <input type="button" id="add-invoice" class="btn btn-primary payment_button"
                                                value="<?php echo display('payment') ?>"/>
-
+                                       
                                         <input type="button" id="add-invoice_btn" class="btn btn-success"
                                                name="add-invoice" onclick="submit_form();"
                                                value="<?php echo display('submit') ?>"/>

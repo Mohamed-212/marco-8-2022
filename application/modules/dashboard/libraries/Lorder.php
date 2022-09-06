@@ -2,26 +2,65 @@
 class Lorder {
 
     //Order Add Form
-    public function order_add_form()
+    public function order_add_form_old()
     {
         $CI =& get_instance();
         $CI->load->model('dashboard/Orders');
         $CI->load->model('dashboard/Stores');
         $CI->load->model('dashboard/Variants');
 
+        $CI->load->model('dashboard/Customers');
+        $CI->load->model('dashboard/Shipping_methods');
+
         $store_list 		= $CI->Stores->store_list();
         $variant_list 		= $CI->Variants->variant_list();
         $terminal_list    	= $CI->Orders->terminal_list();
+
+        $customer =$CI->Customers->customer_list();
+        $shipping_methods 	= $CI->Shipping_methods->shipping_method_list();
+        
 
         $data = array(
             'title' 		=> display('new_order'),
             'store_list' 	=> $store_list,
             'variant_list' 	=> $variant_list,
             'terminal_list' => $terminal_list,
+            'customer' 		=> $customer[0],
+            'shipping_methods'=>$shipping_methods
         );
+        $invoiceForm = $CI->parser->parse('dashboard/invoice/add_invoice_form',$data,true);
+		// return $invoiceForm;
         $orderForm = $CI->parser->parse('dashboard/order/add_order_form',$data,true);
         return $orderForm;
     }
+
+    // order add form
+	public function order_add_form()
+	{
+		$CI =& get_instance();
+		$CI->load->model('dashboard/Invoices');
+		$CI->load->model('dashboard/Stores');
+		$CI->load->model('dashboard/Variants');
+		$CI->load->model('dashboard/Customers');
+		$CI->load->model('dashboard/Shipping_methods');
+
+		$store_list 	    = $CI->Stores->store_list();
+		$variant_list 	    = $CI->Variants->variant_list();
+		$shipping_methods 	= $CI->Shipping_methods->shipping_method_list();
+		// $bank_lists 	    = $CI->Invoices->bank_lists();
+
+		$customer =$CI->Customers->customer_list();
+	
+		$data = array(
+			'title' 		=> display('new_order'),
+			'store_list' 	=> $store_list,
+			'variant_list' 	=> $variant_list,
+			'customer' 		=> $customer[0],
+            'shipping_methods'=>$shipping_methods
+			);
+		$invoiceForm = $CI->parser->parse('dashboard/invoice/add_invoice_form',$data,true);
+		return $invoiceForm;
+	}
 
     //Retrieve  order List
     public function order_list($filter=[], $page, $per_page, $links = false)
