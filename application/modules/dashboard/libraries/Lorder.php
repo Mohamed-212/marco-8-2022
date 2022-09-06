@@ -555,12 +555,12 @@ class Lorder {
         }
         $data=array(
             'title'             =>  display('create_invoice'),
-            'order_id'          =>  $order_detail[0]['order_id'],
+            'order_id'          =>  $order_detail[0]['invoice_id'],
             'customer_id'       =>  $order_detail[0]['customer_id'],
             'store_id'          =>  $order_detail[0]['store_id'],
             'customer_name'     =>  $order_detail[0]['customer_name'],
             'date'              =>  $order_detail[0]['date'],
-            'order'             =>  $order_detail[0]['order'],
+            'order'             =>  $order_detail[0]['invoice'],
             'order_all_data'    =>  $order_detail,
             'store_list'        =>  $store_list,
             'store_list_selected'=> $store_list_selected,

@@ -76,8 +76,9 @@ class Orders extends CI_Model
     public function get_order_list($filter, $start, $limit)
     {
         // $this->db->select('a.*,b.*,c.order');
-        $this->db->select('a.*,b.*');
+        $this->db->select('a.*, a.status as order_status,b.*');
         $this->db->from('order_invoice a');
+        // $this->db->from('order a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
         // $this->db->join('invoice c', 'c.order_id = a.order_id', 'left');
         if (!empty($filter['invoice_no'] != '')) {
@@ -93,13 +94,14 @@ class Orders extends CI_Model
             $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
         }
         if ($filter['invoice_status'] != '') {
-            $this->db->where('a.invoice_status', $filter['invoice_status']);
+            $this->db->where('a.status', $filter['invoice_status']);
         }
         $this->db->order_by('a.invoice', 'desc');
         $this->db->limit($limit, $start);
         $query = $this->db->get();
 
-        // var_dump($query);
+        // echo "<pre>";
+        // print_r($query->result_array());
         // exit;
 
         if ($query->num_rows() > 0) {
@@ -3411,17 +3413,19 @@ class Orders extends CI_Model
         $query = $this->db->get();
         return $query->row();
     }
+
     public function order_to_invoice_data($order_id)
     {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+
             if (!empty($find_active_fiscal_year)) {
-
-
                 $invoice_id = $this->auth->generator(15);
+                $invoiceNo = 'Inv-' . $this->number_generator();
                 $result = $this->db->select('*')
-                    ->from('order')
-                    ->where('order_id', $order_id)
+                    // ->from('order')
+                    ->from('order_invoice')
+                    ->where('invoice_id', $order_id)
                     ->get()
                     ->row();
                 if ($result) {
@@ -3440,18 +3444,30 @@ class Orders extends CI_Model
                     // create customer head END
                     $data = array(
                         'invoice_id'    => $invoice_id,
-                        'order_id'      => $result->order_id,
+                        // 'order_id'      => $result->order_id,
+                        'order_id'      => $result->invoice_id,
+                        'quotation_id' => $result->quotation_id,
                         'customer_id'   => $result->customer_id,
                         'store_id'      => $result->store_id,
                         'user_id'       => $result->user_id,
                         'date'          => $result->date,
                         'total_amount'  => $result->total_amount,
-                        'invoice'       => $this->number_generator(),
+                        'invoice'       => $invoiceNo,
                         'total_discount' => $result->total_discount,
-                        'invoice_discount' => $result->order_discount,
+                        'invoice_discount' => $result->invoice_discount,
+                        'total_vat' => $result->total_vat,
+                        // 'invoice_discount' => $result->order_discount,
                         'service_charge' => $result->service_charge,
+                        'shipping_charge' => $result->shipping_charge,
+                        'shipping_method' => $result->shipping_method,
                         'paid_amount'   => $result->paid_amount,
                         'due_amount'    => $result->due_amount,
+                        'invoice_details' => $result->invoice_details,
+                        'is_quotation' => $result->is_quotation,
+                        'is_installment' => $result->is_installment,
+                        'month_no' => $result->month_no,
+                        'due_day' => $result->due_day,
+                        'employee_id' => $result->employee_id,
                         'status'        => $result->status,
                     );
                     $this->db->insert('invoice', $data);
@@ -3460,7 +3476,8 @@ class Orders extends CI_Model
                         'transaction_id' => $this->auth->generator(15),
                         'customer_id'   => $result->customer_id,
                         'invoice_no'    => $invoice_id,
-                        'order_no'      => $result->order_id,
+                        // 'order_no'      => $result->order_id,
+                        'order_no'      => $result->invoice_id,
                         'date'          => $result->date,
                         'amount'        => $result->total_amount,
                         'status'        => 1
@@ -3470,8 +3487,9 @@ class Orders extends CI_Model
                 if ($ledger) {
                     //order update
                     $this->db->set('status', '2');
-                    $this->db->where('order_id', $order_id);
-                    $order = $this->db->update('order');
+                    $this->db->set('invoice_no', $invoiceNo);
+                    $this->db->where('invoice_id', $order_id);
+                    $order = $this->db->update('order_invoice');
                     $store_id      = $this->input->post('store_id', TRUE);
                     $products      = $this->input->post('product_id', TRUE);
                     $variant_ids   = $this->input->post('variant_id', TRUE);
@@ -3548,14 +3566,14 @@ class Orders extends CI_Model
                 }
                 //Tax summary entry start
                 $this->db->select('*');
-                $this->db->from('order_tax_col_summary');
-                $this->db->where('order_id', $order_id);
+                $this->db->from('order_tax_collection_summary');
+                $this->db->where('invoice_id', $order_id);
                 $query = $this->db->get();
                 $tax_summary = $query->result();
                 if ($tax_summary) {
                     foreach ($tax_summary as $summary) {
                         $tax_col_summary = array(
-                            'tax_collection_id' => $summary->order_tax_col_id,
+                            'tax_collection_id' => $summary->tax_collection_id,
                             'invoice_id'        => $invoice_id,
                             'tax_id'            => $summary->tax_id,
                             'tax_amount'        => $summary->tax_amount,
@@ -3588,7 +3606,7 @@ class Orders extends CI_Model
                 //1st customer debit
                 $customer_debit = array(
                     'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => 'Inv-' . $invoice_id,
+                    'VNo'       => $invoice_id,
                     'Vtype'     => 'Sales',
                     'VDate'     => $date,
                     'COAID'     => $customer_head->HeadCode,
@@ -3691,14 +3709,14 @@ class Orders extends CI_Model
 
                 //Tax details entry start
                 $this->db->select('*');
-                $this->db->from('order_tax_col_details');
-                $this->db->where('order_id', $order_id);
+                $this->db->from('order_tax_collection_details');
+                $this->db->where('invoice_id', $order_id);
                 $query = $this->db->get();
                 $tax_details = $query->result();
                 if ($tax_details) {
                     foreach ($tax_details as $details) {
                         $tax_col_details = array(
-                            'tax_col_de_id'     => $details->order_tax_col_de_id,
+                            'tax_col_de_id'     => $details->tax_col_de_id,
                             'invoice_id'        => $invoice_id,
                             'product_id'        => $details->product_id,
                             'variant_id'        => $details->variant_id,
@@ -3710,6 +3728,33 @@ class Orders extends CI_Model
                     }
                 }
                 //Tax details entry end
+
+                // installment entry start
+                $this->db->select('*');
+                $this->db->from('order_invoice_installment');
+                $this->db->where('invoice_id', $order_id);
+                $query = $this->db->get();
+                $order_installment = $query->result();
+                if ($order_installment) {
+                    foreach ($order_installment as $details) {
+                        $invoice_installment_details = array(
+                            'invoice_id'        => $invoice_id,
+                            'amount'        => $details->amount,
+                            'due_date'        => $details->due_date,
+                            'payment_date'            => $details->payment_date,
+                            'payment_amount'            => $details->payment_amount,
+                            'status'              => $details->status,
+                            'payment_type'              => $details->payment_type,
+                            'account'              => $details->account,
+                            'check_no'              => $details->check_no,
+                            'employee_id'              => $details->employee_id,
+                            'expiry_date'              => $details->expiry_date,
+                        );
+                        $this->db->insert('invoice_installment', $invoice_installment_details);
+                    }
+                }
+                // installment entry end
+
                 return true;
             } else {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
@@ -3717,9 +3762,10 @@ class Orders extends CI_Model
             }
         } else {
             $invoice_id = $this->auth->generator(15);
+            $invoiceNo = 'Inv-' . $this->number_generator();
             $result = $this->db->select('*')
-                ->from('order')
-                ->where('order_id', $order_id)
+                ->from('order_invoice')
+                ->where('invoice_id', $order_id)
                 ->get()
                 ->row();
             if ($result) {
@@ -3738,18 +3784,30 @@ class Orders extends CI_Model
                 // create customer head END
                 $data = array(
                     'invoice_id'    => $invoice_id,
-                    'order_id'      => $result->order_id,
+                    // 'order_id'      => $result->order_id,
+                    'order_id'      => $result->invoice_id,
+                    'quotation_id' => $result->quotation_id,
                     'customer_id'   => $result->customer_id,
                     'store_id'      => $result->store_id,
                     'user_id'       => $result->user_id,
                     'date'          => $result->date,
                     'total_amount'  => $result->total_amount,
-                    'invoice'       => $this->number_generator(),
+                    'invoice'       => $invoiceNo,
                     'total_discount' => $result->total_discount,
-                    'invoice_discount' => $result->order_discount,
+                    'invoice_discount' => $result->invoice_discount,
+                    'total_vat' => $result->total_vat,
+                    // 'invoice_discount' => $result->order_discount,
                     'service_charge' => $result->service_charge,
+                    'shipping_charge' => $result->shipping_charge,
+                    'shipping_method' => $result->shipping_method,
                     'paid_amount'   => $result->paid_amount,
                     'due_amount'    => $result->due_amount,
+                    'invoice_details' => $result->invoice_details,
+                    'is_quotation' => $result->is_quotation,
+                    'is_installment' => $result->is_installment,
+                    'month_no' => $result->month_no,
+                    'due_day' => $result->due_day,
+                    'employee_id' => $result->employee_id,
                     'status'        => $result->status,
                 );
                 $this->db->insert('invoice', $data);
@@ -3758,7 +3816,7 @@ class Orders extends CI_Model
                     'transaction_id' => $this->auth->generator(15),
                     'customer_id'   => $result->customer_id,
                     'invoice_no'    => $invoice_id,
-                    'order_no'      => $result->order_id,
+                    'order_no'      => $result->invoice_id,
                     'date'          => $result->date,
                     'amount'        => $result->total_amount,
                     'status'        => 1
@@ -3768,8 +3826,9 @@ class Orders extends CI_Model
             if ($ledger) {
                 //order update
                 $this->db->set('status', '2');
-                $this->db->where('order_id', $order_id);
-                $order = $this->db->update('order');
+                $this->db->set('invoice_no', $invoiceNo);
+                $this->db->where('invoice_id', $order_id);
+                $order = $this->db->update('order_invoice');
                 $store_id      = $this->input->post('store_id', TRUE);
                 $products      = $this->input->post('product_id', TRUE);
                 $variant_ids   = $this->input->post('variant_id', TRUE);
@@ -3846,14 +3905,14 @@ class Orders extends CI_Model
             }
             //Tax summary entry start
             $this->db->select('*');
-            $this->db->from('order_tax_col_summary');
-            $this->db->where('order_id', $order_id);
+            $this->db->from('order_tax_collection_summary');
+            $this->db->where('invoice_id', $order_id);
             $query = $this->db->get();
             $tax_summary = $query->result();
             if ($tax_summary) {
                 foreach ($tax_summary as $summary) {
                     $tax_col_summary = array(
-                        'tax_collection_id' => $summary->order_tax_col_id,
+                        'tax_collection_id' => $summary->tax_collection_id,
                         'invoice_id'        => $invoice_id,
                         'tax_id'            => $summary->tax_id,
                         'tax_amount'        => $summary->tax_amount,
@@ -3866,14 +3925,14 @@ class Orders extends CI_Model
 
             //Tax details entry start
             $this->db->select('*');
-            $this->db->from('order_tax_col_details');
-            $this->db->where('order_id', $order_id);
+            $this->db->from('order_tax_collection_details');
+            $this->db->where('invoice_id', $order_id);
             $query = $this->db->get();
             $tax_details = $query->result();
             if ($tax_details) {
                 foreach ($tax_details as $details) {
                     $tax_col_details = array(
-                        'tax_col_de_id'     => $details->order_tax_col_de_id,
+                        'tax_col_de_id'     => $details->tax_col_de_id,
                         'invoice_id'        => $invoice_id,
                         'product_id'        => $details->product_id,
                         'variant_id'        => $details->variant_id,
@@ -3885,9 +3944,37 @@ class Orders extends CI_Model
                 }
             }
             //Tax details entry end
+
+            // installment entry start
+            $this->db->select('*');
+            $this->db->from('order_invoice_installment');
+            $this->db->where('invoice_id', $order_id);
+            $query = $this->db->get();
+            $order_installment = $query->result();
+            if ($order_installment) {
+                foreach ($order_installment as $details) {
+                    $invoice_installment_details = array(
+                        'invoice_id'        => $invoice_id,
+                        'amount'        => $details->amount,
+                        'due_date'        => $details->due_date,
+                        'payment_date'            => $details->payment_date,
+                        'payment_amount'            => $details->payment_amount,
+                        'status'              => $details->status,
+                        'payment_type'              => $details->payment_type,
+                        'account'              => $details->account,
+                        'check_no'              => $details->check_no,
+                        'employee_id'              => $details->employee_id,
+                        'expiry_date'              => $details->expiry_date,
+                    );
+                    $this->db->insert('invoice_installment', $invoice_installment_details);
+                }
+            }
+            // installment entry end
+
             return true;
         }
     }
+
     //Store List
     public function store_list()
     {
@@ -3940,6 +4027,7 @@ class Orders extends CI_Model
         // $this->db->join('order_details c', 'c.order_id = a.order_id');
         $this->db->join('order_invoice_details c', 'c.invoice_id = a.invoice_id');
         $this->db->join('product_information d', 'd.product_id = c.product_id');
+        // $this->db->where('a.order_id', $order_id);
         $this->db->where('a.invoice_id', $order_id);
         $query = $this->db->get();
 
@@ -4032,7 +4120,7 @@ class Orders extends CI_Model
     {
 
         $invoice = $this->db->select('invoice_id')->where('order_id', $order_id)->from('invoice')->get()->row();
-        $invoice_id = @$invoice->invoice_id;
+        $invoice_id = 'Inv-' . @$invoice->invoice_id;
 
         //Delete order table
         $this->db->where('order_id', $order_id);
@@ -4071,7 +4159,8 @@ class Orders extends CI_Model
     }
 
     // Delete invoice Item
-    public function delete_order($order_id) {
+    public function delete_order($order_id)
+    {
         //find previous invoice history and REDUCE the stock
         $order_history = $this->db->select('*')->from('order_invoice_details')->where('invoice_id', $order_id)->get()->result_array();
         if (count($order_history) > 0) {
