@@ -4028,7 +4028,7 @@ class Orders extends CI_Model
         return false;
     }
     // Delete order Item
-    public function delete_order($order_id)
+    public function delete_order_old($order_id)
     {
 
         $invoice = $this->db->select('invoice_id')->where('order_id', $order_id)->from('invoice')->get()->row();
@@ -4069,6 +4069,62 @@ class Orders extends CI_Model
         }
         return true;
     }
+
+    // Delete invoice Item
+    public function delete_order($order_id) {
+        //find previous invoice history and REDUCE the stock
+        $order_history = $this->db->select('*')->from('order_invoice_details')->where('invoice_id', $order_id)->get()->result_array();
+        if (count($order_history) > 0) {
+            foreach ($order_history as $order_item) {
+                //update
+                $check_stock = $this->check_stock($order_item['store_id'], $order_item['product_id'], $order_item['variant_id'], $order_item['variant_color']);
+                $stock = array(
+                    'quantity' => $check_stock->quantity - $order_item['quantity']
+                );
+                if (!empty($order_item['store_id'])) {
+                    $this->db->where('store_id', $order_item['store_id']);
+                }
+                if (!empty($order_item['product_id'])) {
+                    $this->db->where('product_id', $order_item['product_id']);
+                }
+                if (!empty($order_item['variant_id'])) {
+                    $this->db->where('variant_id', $order_item['variant_id']);
+                }
+                if (!empty($order_item['variant_color'])) {
+                    $this->db->where('variant_color', $order_item['variant_color']);
+                }
+                $this->db->update('order_invoice_stock_tbl', $stock);
+                //update
+            }
+        }
+        //find previous invoice history and REDUCE the stock
+        //Delete Invoice table
+        $this->db->where('invoice_id', $order_id);
+        $this->db->delete('order_invoice');
+
+        //Delete invoice_details table
+        $this->db->where('invoice_id', $order_id);
+        $this->db->delete('order_invoice_details');
+
+        //Delete invoice_tax smmary table
+        $this->db->where('invoice_id', $order_id);
+        $this->db->delete('order_tax_collection_summary');
+
+        //Delete invoice_tax details table
+        $this->db->where('invoice_id', $order_id);
+        $this->db->delete('order_tax_collection_details');
+
+        // Delete Invoice from customer ledger
+        $this->db->where('invoice_no', $order_id);
+        $this->db->delete('order_customer_ledger');
+
+        //remove invoice transection
+        $this->db->where('VNo', 'Inv-' . $order_id);
+        $this->db->delete('order_acc_transaction');
+
+        return true;
+    }
+
     public function order_search_list($cat_id, $company_id)
     {
         $this->db->select('a.*,b.sub_category_name,c.category_name');
