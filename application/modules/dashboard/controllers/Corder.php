@@ -194,7 +194,7 @@ class Corder extends MX_Controller
     public function insert_order() {
         if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
             $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
-            $this->index();
+            $this->new_order();
         } else {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
@@ -203,7 +203,7 @@ class Corder extends MX_Controller
             $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
             if ($this->form_validation->run() == false) {
                 $this->session->set_userdata(array('error_message' => display('failed_try_again')));
-                $this->index();
+                $this->new_order();
             } else {
                 $order_id = $this->Orders->order_entry();
                 $this->session->set_userdata(array('message' => display('successfully_added')));
