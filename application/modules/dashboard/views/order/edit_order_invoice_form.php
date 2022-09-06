@@ -33,7 +33,7 @@
                             <h4><?php echo display(isset($is_order) ? 'order_edit' : 'invoice_edit') ?></h4>
                         </div>
                     </div>
-                    <?php echo form_open('dashboard/Cinvoice/invoice_update', array('class' => 'form-vertical', 'id' => 'validate')) ?>
+                    <?php echo form_open(isset($is_order) ? 'dashboard/Corder/order_update' : 'dashboard/Cinvoice/invoice_update', array('class' => 'form-vertical', 'id' => 'validate')) ?>
                     <div class="panel-body">
 
                         <div class="row">
@@ -133,7 +133,7 @@
                                             $igst_tax_amount = 0;
 
                                             $cgst_value = $this->db->select('tcd.tax_id, tcd.amount, tcd.product_id, t.tax_name')
-                                                    ->from('tax_collection_details AS tcd')
+                                                    ->from('order_tax_collection_details AS tcd')
                                                     ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                     ->where('tcd.product_id', $value['product_id'])
                                                     ->where('tcd.invoice_id', $value['invoice_id'])
@@ -143,7 +143,7 @@
                                                     ->row();
 
                                             $sgst_value = $this->db->select('tcd.tax_id, tcd.amount, tcd.product_id, t.tax_name')
-                                                    ->from('tax_collection_details AS tcd')
+                                                    ->from('order_tax_collection_details AS tcd')
                                                     ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                     ->where('tcd.product_id', $value['product_id'])
                                                     ->where('tcd.invoice_id', $value['invoice_id'])
@@ -153,7 +153,7 @@
                                                     ->row();
 
                                             $igst_value = $this->db->select('tcd.tax_id, tcd.amount, tcd.product_id, t.tax_name')
-                                                    ->from('tax_collection_details AS tcd')
+                                                    ->from('order_tax_collection_details AS tcd')
                                                     ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                     ->where('tcd.product_id', $value['product_id'])
                                                     ->where('tcd.invoice_id', $value['invoice_id'])
@@ -170,7 +170,7 @@
                                             $igst_id = (!empty($igst_value->tax_id) ? $igst_value->tax_id : null);
 
                                             $cgst_tax = $this->db->select('tcd.tax_id, tcd.tax_amount, t.tax_name')
-                                                    ->from('tax_collection_summary AS tcd')
+                                                    ->from('order_tax_collection_summary AS tcd')
                                                     ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                     ->where('tcd.invoice_id', $value['invoice_id'])
                                                     ->where('t.tax_id', '52C2SKCKGQY6Q9J')
@@ -178,7 +178,7 @@
                                                     ->row();
 
                                             $sgst_tax = $this->db->select('tcd.tax_id, tcd.tax_amount, t.tax_name')
-                                                    ->from('tax_collection_summary AS tcd')
+                                                    ->from('order_tax_collection_summary AS tcd')
                                                     ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                     ->where('tcd.invoice_id', $value['invoice_id'])
                                                     ->where('t.tax_id', 'H5MQN4NXJBSDX4L')
@@ -186,7 +186,7 @@
                                                     ->row();
 
                                             $igst_tax = $this->db->select('tcd.tax_id, tcd.tax_amount, t.tax_name')
-                                                    ->from('tax_collection_summary AS tcd')
+                                                    ->from('order_tax_collection_summary AS tcd')
                                                     ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                     ->where('tcd.invoice_id', $value['invoice_id'])
                                                     ->where('t.tax_id', '5SN9PRWPN131T4V')
@@ -239,7 +239,7 @@
 
                                             //Stock available check from invoice
                                             $this->db->select('SUM(b.quantity) as total_sale');
-                                            $this->db->from('invoice_details b');
+                                            $this->db->from('order_invoice_details b');
                                             $this->db->where('b.product_id', $value['product_id']);
                                             $this->db->where('b.variant_id', $value['variant_id']);
                                             $this->db->where('b.store_id', $value['store_id']);
@@ -247,7 +247,7 @@
                                             $total_sale = $this->db->get()->row();
 
                                             $this->db->select('a.batch_no, b.expiry_date');
-                                            $this->db->from('invoice_details a');
+                                            $this->db->from('order_invoice_details a');
                                             $this->db->where('a.product_id', $value['product_id']);
                                             $this->db->join('product_purchase_details b', 'b.batch_no = a.batch_no', 'left');
                                             $batches = $this->db->get()->result_array();

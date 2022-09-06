@@ -101,7 +101,7 @@ class Lorder {
         return true;
     }
     //order Edit Data
-    public function order_edit_data($order_id)
+    public function order_edit_data_old($order_id)
     {
         $CI =& get_instance();
         $CI->load->model('dashboard/Orders');
@@ -142,6 +142,57 @@ class Lorder {
         $chapterList = $CI->parser->parse('dashboard/order/edit_order_form',$data,true);
         return $chapterList;
     }
+
+    //Order Edit Data
+	public function order_edit_data($order_id)
+	{
+		$CI =& get_instance();
+		$CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Orders');
+		$CI->load->model('dashboard/Stores');
+		$CI->load->model('dashboard/Shipping_methods');
+
+		$invoice_detail = $CI->Orders->retrieve_order_editdata($order_id);
+        $shipping_methods = $CI->Shipping_methods->shipping_method_list();
+        $store_id = $invoice_detail[0]['store_id'];
+        $store_list = $CI->Stores->store_list();
+        $store_list_selected = $CI->Stores->store_list_selected($store_id);
+
+        $i = 0;
+        foreach ($invoice_detail as $k => $v) {
+            $i++;
+            $invoice_detail[$k]['sl'] = $i;
+        }
+
+        $data = array(
+            'title' => display('invoice_edit'),
+            'invoice_id' => $invoice_detail[0]['invoice_id'],
+            'customer_id' => $invoice_detail[0]['customer_id'],
+            'store_id' => $invoice_detail[0]['store_id'],
+            'invoice' => $invoice_detail[0]['invoice'],
+            'customer_name' => $invoice_detail[0]['customer_name'],
+            'date' => $invoice_detail[0]['date'],
+            'total_amount' => $invoice_detail[0]['total_amount'],
+            'paid_amount' => $invoice_detail[0]['paid_amount'],
+            'due_amount' => $invoice_detail[0]['due_amount'],
+            'total_discount' => $invoice_detail[0]['total_discount'],
+            'invoice_discount' => $invoice_detail[0]['invoice_discount'],
+            'service_charge' => $invoice_detail[0]['service_charge'],
+            'shipping_charge' => $invoice_detail[0]['shipping_charge'],
+            'shipping_method_id' => $invoice_detail[0]['shipping_method'],
+            'invoice_details' => $invoice_detail[0]['invoice_details'],
+            'invoice_status' => $invoice_detail[0]['invoice_status'],
+            'invoice_all_data' => $invoice_detail,
+            'store_list' => $store_list,
+            'store_list_selected' => $store_list_selected,
+            'shipping_methods' => $shipping_methods,
+            'is_order' => true,
+        );
+
+		$chapterList = $CI->parser->parse('dashboard/order/edit_order_invoice_form',$data,true);
+		return $chapterList;
+	}
+
     //Order Html Data
     public function order_html_data_old($order_id)
     {

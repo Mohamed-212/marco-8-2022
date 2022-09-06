@@ -399,7 +399,7 @@ class Corder extends MX_Controller
 
 
     // order Update
-    public function order_update()
+    public function order_update_old()
     {
         $this->permission->check_label('manage_order')->update()->redirect();
 
@@ -458,6 +458,15 @@ class Corder extends MX_Controller
 
         $this->session->set_userdata(array('message' => display('successfully_updated')));
         redirect('dashboard/Corder/manage_order');
+    }
+
+    // Order Update
+    public function order_update() {
+        $this->permission->check_label('manage_sale')->update()->redirect();
+
+        $order_id = $this->Orders->update_order();
+        $this->session->set_userdata(array('message' => display('successfully_updated')));
+        redirect('dashboard/Corder/order_inserted_data/' . $order_id);
     }
 
     //Search Inovoice Item
