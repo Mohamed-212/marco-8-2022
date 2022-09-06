@@ -1,4 +1,8 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+
+use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
+
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 class Orders extends CI_Model
 {
     public function __construct()
@@ -14,7 +18,7 @@ class Orders extends CI_Model
         return $this->db->count_all("order");
     }
     // Count order list
-    public function count_order_list($filter = [])
+    public function count_order_list_old($filter = [])
     {
         $this->db->select('a.order_id');
         $this->db->from('order a');
@@ -42,6 +46,67 @@ class Orders extends CI_Model
 
         $query = $this->db->get();
         return $query->num_rows();
+    }
+
+    //Order List count
+    public function count_order_list($filter = [])
+    {
+        $this->db->select('a.invoice_id');
+        $this->db->from('order_invoice a');
+        if (!empty($filter['invoice_no'])) {
+            $this->db->where('a.invoice', $filter['invoice_no']);
+        }
+        if (!empty($filter['customer_id'])) {
+            $this->db->where('a.customer_id', $filter['customer_id']);
+        }
+        if (!empty($filter['employee_id'])) {
+            $this->db->where('a.employee_id', $filter['employee_id']);
+        }
+        if (!empty($filter['date'])) {
+            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+        }
+        if (!empty($filter['invoice_status'])) {
+            $this->db->where('a.invoice_status', $filter['invoice_status']);
+        }
+        $query = $this->db->count_all_results();
+        return $query;
+    }
+
+    //Order List
+    public function get_order_list($filter, $start, $limit)
+    {
+        // $this->db->select('a.*,b.*,c.order');
+        $this->db->select('a.*,b.*');
+        $this->db->from('order_invoice a');
+        $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
+        // $this->db->join('invoice c', 'c.order_id = a.order_id', 'left');
+        if (!empty($filter['invoice_no'] != '')) {
+            $this->db->where('a.invoice', $filter['invoice_no']);
+        }
+        if ($filter['customer_id'] != '') {
+            $this->db->where('a.customer_id', $filter['customer_id']);
+        }
+        if ($filter['from_date'] != '') {
+            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')>=DATE('" . $filter['date'] . "')");
+        }
+        if ($filter['to_date'] != '') {
+            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
+        }
+        if ($filter['invoice_status'] != '') {
+            $this->db->where('a.invoice_status', $filter['invoice_status']);
+        }
+        $this->db->order_by('a.invoice', 'desc');
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+
+        // var_dump($query);
+        // exit;
+
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+
+        return false;
     }
 
     //order List
@@ -690,7 +755,7 @@ class Orders extends CI_Model
                     'customer_id' => $customer_id,
                     'date' => $this->input->post('invoice_date', TRUE),
                     'total_amount' => $this->input->post('grand_total_price', TRUE),
-                    'invoice' => 'Inv-' . $this->number_generator(),
+                    'invoice' => $this->number_generator(),
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
                     'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
@@ -1020,7 +1085,7 @@ class Orders extends CI_Model
                 //1st customer debit total_with_vat
                 $customer_debit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $invoice_id,
+                    'VNo' => $invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $date,
                     'COAID' => $customer_head->HeadCode,
@@ -1038,7 +1103,7 @@ class Orders extends CI_Model
                 //2nd Allowed Discount Debit
                 $allowed_discount_debit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $invoice_id,
+                    'VNo' => $invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $date,
                     'COAID' => 4114,
@@ -1054,7 +1119,7 @@ class Orders extends CI_Model
                 //3rd Showroom Sales credit
                 $showroom_sales_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $invoice_id,
+                    'VNo' => $invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $date,
                     'COAID' => 5111, // account payable game 11
@@ -1070,7 +1135,7 @@ class Orders extends CI_Model
                 //4th VAT on Sales
                 $vat_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $invoice_id,
+                    'VNo' => $invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $date,
                     'COAID' => 2114, // account payable game 11
@@ -1087,7 +1152,7 @@ class Orders extends CI_Model
                 //5th cost of goods sold debit
                 $cogs_debit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $invoice_id,
+                    'VNo' => $invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $date,
                     'COAID' => 4111,
@@ -1103,7 +1168,7 @@ class Orders extends CI_Model
                 //6th cost of goods sold Main warehouse Credit
                 $cogs_main_warehouse_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $invoice_id,
+                    'VNo' => $invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $date,
                     'COAID' => 1141,
@@ -1121,7 +1186,7 @@ class Orders extends CI_Model
                     $paid_amount = $this->input->post('paid_amount', TRUE);
                     $customer_credit = array(
                         'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'Inv-' . $invoice_id,
+                        'VNo' => $invoice_id,
                         'Vtype' => 'Sales',
                         'VDate' => $date,
                         'COAID' => $customer_head->HeadCode,
@@ -1139,7 +1204,7 @@ class Orders extends CI_Model
                         $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
                         $bank_debit = array(
                             'fy_id' => $find_active_fiscal_year->id,
-                            'VNo' => 'Inv-' . $invoice_id,
+                            'VNo' => $invoice_id,
                             'Vtype' => 'Sales',
                             'VDate' => $date,
                             'COAID' => $payment_head->HeadCode,
@@ -1484,7 +1549,7 @@ class Orders extends CI_Model
                 'customer_id' => $customer_id,
                 'date' => $this->input->post('invoice_date', TRUE),
                 'total_amount' => $this->input->post('grand_total_price', TRUE),
-                'invoice' => 'Inv-' . $this->number_generator(),
+                'invoice' => $this->number_generator(),
                 'total_discount' => $this->input->post('total_discount', TRUE),
                 'invoice_discount' => $this->input->post('invoice_discount', TRUE),
                 'user_id' => $this->session->userdata('user_id'),

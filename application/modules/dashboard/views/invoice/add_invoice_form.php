@@ -54,6 +54,14 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="column">
+                    <?php if (isset($order)) : ?>
+                        <?php if ($this->permission->check_label('manage_order')->read()->access()) { ?>
+                        <a href="<?php echo base_url('dashboard/Corder/manage_order') ?>"
+                           class="btn btn-primary color4 color5 m-b-5 m-r-2"><i class="ti-align-justify"> </i>
+                            <?php echo display('manage_order') ?></a>
+                        <?php
+                    }?>
+                    <?php else : ?>
                     <?php if ($this->permission->check_label('manage_sale')->read()->access()) { ?>
                         <a href="<?php echo base_url('dashboard/' . ($this->auth->is_store() ? 'Store_invoice' : 'Cinvoice') . '/manage_invoice') ?>"
                            class="btn btn-primary color4 color5 m-b-5 m-r-2"><i class="ti-align-justify"> </i>
@@ -66,6 +74,7 @@
                            class="btn btn-primary m-b-5 m-r-2"><i class="ti-align-justify"> </i>
                         <?php echo display('pos_invoice') ?></a>-->
                     <?php } ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
