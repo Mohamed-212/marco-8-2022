@@ -165,7 +165,10 @@
                                         <th><?php echo display('customer_name') ?></th>
                                         <th><?php echo display('date') ?></th>
                                         <th><?php echo display('total_amount') ?></th>
-                                        <th class="width_25p"><?php echo display('status') ?></th>
+                                        <?php if (isset($is_order)) :?>
+                                        <th><?php echo display('invoice_no') ?></th>
+                                        <?php endif ?>
+                                        <th><?php echo display('status') ?></th>
                                         <th><?php echo display('action') ?></th>
                                     </tr>
                                 </thead>
@@ -193,6 +196,11 @@
                                                 <td class="text-right">
                                                     <?php echo (($position == 0) ? $currency . ' ' . $invoice['total_amount'] : $invoice['total_amount'] . ' ' . $currency) ?>
                                                 </td>
+                                                <?php if (isset($is_order)) :?>
+                                                <td>
+                                                <?php echo html_escape($invoice['invoice_no']) ?>
+                                                </td>
+                                                <?php endif ?>
                                                 <td class="text-center">
                                                     <?php if ($is_order) : ?>
                                                         <label class='label label-warning'>
@@ -287,6 +295,7 @@
                                                     <?php endif ?>
                                                 </td>
                                                 <?php if (isset($is_order)) : ?>
+                                                   
                                                     <td>
                                                         <center>
                                                             <?php echo form_open() ?>
