@@ -27,6 +27,17 @@ class Category extends MX_Controller
     //Single category product
     public function category_product($cat_id, $brand = null)
     {
+        // $res = $this->db
+        //     // ->select('DISTINCT model_no', false)
+        //     ->select('model_no, id')
+        //     ->from('product_information')
+        //     ->where('category_id', '8R2IU8QPOMXHP6P')
+        //     ->group_by('model_no')
+        //     ->limit(30)->get()->result();
+        // echo "<pre>";
+        // var_dump($res);
+        // exit;
+
         if (is_numeric($brand)){
             $brand = '';
         }

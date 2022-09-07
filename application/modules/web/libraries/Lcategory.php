@@ -57,10 +57,25 @@ class Lcategory
             $total = count($category_product);
         }
         $filter_types = $CI->cfiltration_model->category_wise_filter_types($cat_id);
+
+        // $products = [];
+        // $nums = [];
+        // foreach ($category_product as $product) {
+        //     $modelNo = trim(preg_replace("/- C.*/i", "", $product->product_model));
+        //     if (!isset($products[$modelNo])) {
+        //         $products[$modelNo] = $product;
+        //         $nums[] = $modelNo;
+        //     }
+        // }
+
+        // echo "<pre>";
+        // var_dump($nums);
+        // exit;
         
         $data = array(
             'title' => $category[0]['category_name'],
             'category_product' => $category_product,
+            // 'category_product' => $products,
             'pro_category_list' => $pro_category_list,
             'category_id' => $cat_id,
             'total' => $total,
