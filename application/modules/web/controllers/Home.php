@@ -93,6 +93,7 @@ class Home extends MX_Controller
 
         $igst = 0;
         $igst_id = 0;
+        
 
         if ($product_id) {
             $product_details = $this->Homes->product_details($product_id);
@@ -135,12 +136,13 @@ class Home extends MX_Controller
             $flag = TRUE;
             $dataTmp = $this->cart->contents();
             
+            
             $t_item_quantity = array_sum(array_column($dataTmp,'qty'));
 
             foreach ($dataTmp as $item) {
-                
-                $stock  = $this->Products_model->check_quantity_wise_stock($qnty, $product_details->product_id, $variant, $variant_color = false);
+                $stock  = $this->Products_model->check_quantity_wise_stock($qnty, $product_details->product_id, $variant, $variant_color);
                 if ($t_item_quantity<=$stock) {
+                    
                     if(!empty($variant_color)){
                     if (($item['product_id'] == $product_id) && ($item['variant'] == $variant) && ($item['variant_color'] == $variant_color)) {
                             $data = array(
@@ -166,6 +168,8 @@ class Home extends MX_Controller
                    return false;
                 }
             }
+
+            
 
             if ($flag) {
                 $data = array(

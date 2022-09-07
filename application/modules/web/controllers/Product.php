@@ -26,7 +26,7 @@ class Product extends MX_Controller
         ->from('product_information')
         ->like('product_name',$search_item, 'both')
         ->where('status', 1)
-        ->limit(10)
+             ->limit(10)
         ->get()->result();
 
         $searchitems = [];
@@ -55,6 +55,7 @@ class Product extends MX_Controller
         $product_id = $this->input->post('product_id',TRUE);
         $variant_id = $this->input->post('variant_id',TRUE);
         $variant_color = $this->input->post('variant_color',TRUE);
+
         $stock = $this->Products_model->check_variant_wise_stock($variant_id, $product_id, $variant_color);
         
         if ($stock > 0) {
@@ -64,6 +65,7 @@ class Product extends MX_Controller
             $result[1] = get_amount($price['price']);
             $result[2] = get_amount($price['regular_price']);
             $result[3] = (($price['regular_price']>$price['price'])?ceil((($price['regular_price']-$price['price'])/$price['regular_price'])*100):0);
+            $result[4] = $stock;
 
         } else {
             $result[0] = 'no';

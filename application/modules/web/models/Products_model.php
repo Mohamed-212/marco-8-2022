@@ -191,6 +191,12 @@ class Products_model extends CI_Model {
         ->where('default_status','1')
         ->get()
         ->row();
+
+        $this->db->select('open_quantity')
+            ->from('product_information')
+            ->where('product_id',$product_id);
+            // ->where('variants LIKE ',"%$variant_id%");
+        $openQuantity = $this->db->get()->row()->open_quantity;
         
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
@@ -211,7 +217,7 @@ class Products_model extends CI_Model {
         }
         $this->db->where('store_id',$result->store_id);
         $sales = $this->db->get()->row();
-        $stock = ($purchase->totalPurchaseQnty - $sales->totalSalesQnty);
+        $stock = (($purchase->totalPurchaseQnty + (int)$openQuantity) - $sales->totalSalesQnty);
         return $stock;
     }   
     public function get_product_cart_quantity($product_id, $variant, $variant_color=false)
@@ -277,6 +283,13 @@ class Products_model extends CI_Model {
         ->where('default_status','1')
         ->get()
         ->row();
+
+        $this->db->select('open_quantity')
+            ->from('product_information')
+            ->where('product_id',$product_id);
+            // ->where('variants LIKE ',"%$variant_id%");
+        $openQuantity = $this->db->get()->row()->open_quantity;
+
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
         $this->db->where('product_id',$product_id);
@@ -295,8 +308,10 @@ class Products_model extends CI_Model {
             $this->db->where('variant_color', $variant_color);
         }
         $order = $this->db->get()->row();
-        $cart_qnty = $quantity;
-        $result = ($purchase->totalPurchaseQnty - ($order->totalSalesQnty + $cart_qnty));
+        // $cart_qnty = $quantity;
+        $cart_qnty = $this->get_product_cart_quantity($product_id, $variant);
+        
+        $result = (($purchase->totalPurchaseQnty + (int)$openQuantity) - ($order->totalSalesQnty + $cart_qnty));
         return $result;
     }   
     //Category wise related product

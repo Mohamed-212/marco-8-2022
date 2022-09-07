@@ -50,7 +50,7 @@ $(".product_colors").on("change", function () {
 });
 
 //Check product quantity in stock
-$("#sst,.reduced,.increase").on("change click", function () {
+$("#sst,.reduced,.increase").on("change", function () {
   var product_quantity = $("#sst").val();
 
   var product_id = $("#product_id").val();
@@ -134,9 +134,16 @@ function select_variant(product_id, variant_id) {
 // Select stock via color variant
 function select_color_variant(product_id, variant_color, default_variant) {
   var variant_id = $('[name="select_size1"]:checked').val();
+  var sst = parseInt($('#sst').val(), 10);
   if (!variant_id) {
     variant_id = default_variant;
   }
+  // show current varient product image
+  var slickIndex = $('figure#product-' + product_id).attr('data-slick-index');
+  if (slickIndex) {
+    $('.main-img-slider').slick('slickGoTo', slickIndex);
+  }
+
   $.ajax({
     type: "post",
     async: true,
@@ -149,8 +156,18 @@ function select_color_variant(product_id, variant_color, default_variant) {
     },
     success: function (res) {
       var result = JSON.parse(res);
+      
+      // set current product id
+      $('.add-wishlist.wishlist').attr('name', product_id);
+      $('.compare-btn').attr('onclick', "comparison_btn(" + product_id + ")");
+      $('.cart-btn').attr('onclick', "cart_btn(" + product_id + ")");
+      $('#product_id').val(product_id);
+      $('#variant_id').val(variant_id);
+      $('#color_variant_id').val(default_variant);
+
       if (result[0] == "yes") {
         $(".var_amount").html(result[1]);
+        $('#product_max_quantity').val(result[4]);
         if (parseInt(result[3]) > 0) {
           $(".regular_price").html(result[2]);
           $(".save_perct").html(result[3]);
@@ -158,12 +175,20 @@ function select_color_variant(product_id, variant_color, default_variant) {
         } else {
           $(".price_discount").hide();
         }
+
+        // check if user selected quantity is larger than avaliable quantity
+        // if (sst > result[4]) {
+        //   // $('#sst').val('1');
+        //   // do nothing
+        // }
+
         return true;
       } else {
         Swal({
           type: "warning",
           title: display("variant_not_available"),
         });
+        $('#product_max_quantity').val(0);
         return false;
       }
     },

@@ -13,6 +13,7 @@ class Lproduct
         $CI->load->model('dashboard/Soft_settings');
         $CI->load->model('dashboard/Blocks');
         $CI->load->model('dashboard/themes');
+        $CI->load->model('dashboard/Variants');
         $theme = $CI->themes->get_theme();
 
         $pro_category_list    = $CI->Homes->category_list();
@@ -89,6 +90,34 @@ class Lproduct
             $brand_name = (!empty($translated_brand->trans_name)?$translated_brand->trans_name:$product_info->brand_name);
         }
         // translation part end
+        $productModelOnly = trim(preg_replace("/- C.*$/i", '', $product_info->product_model));
+        $varients = $CI->db->select('*')->from('product_information')->where('product_name !=', $product_info->product_name)->where('product_model LIKE', "%$productModelOnly%")->get()->result_array();
+
+        $varientsArray = [];
+        foreach ($varients as $product) {
+            $productVarients = explode(',', $product['variants']);
+            
+            // check if only size was added
+            if (!is_array($productVarients) && !isset($productVarients[1])) continue;
+            
+
+            // get color varient information
+            $colorVarient = $CI->Variants->variant_search_item($productVarients[1]);
+
+            // var_dump($colorVarient);
+            // if varient is not valied
+            if (!$colorVarient || !isset($colorVarient[0])) continue;
+
+            $product['color'] = $colorVarient[0];
+            
+            $varientsArray[] = $product;
+        }
+
+        // echo "<pre>";
+        // print_r($varientsArray);
+        // exit;
+
+       
 
 
         $data = array(
@@ -98,7 +127,7 @@ class Lproduct
             'block_list'      => $block_list,
             'best_sales'      => $best_sales,
             'footer_block'    => $footer_block,
-            'product_name'    => $product_name,
+            'product_name'    => trim(preg_replace("/- C.*/i", "", $product_name)),
             'brand_name'      => $brand_name,
             'brand_id'        => $product_info->brand_id,
             'product_id'      => $product_info->product_id,
@@ -138,6 +167,7 @@ class Lproduct
             'is_affiliate'       => $is_affiliate,
             'is_assembly'        => $is_assembly,
             'affiliate_url'      => $affiliate_url,
+            'varients' => $varientsArray,
         );
 
         if($is_assembly==1){

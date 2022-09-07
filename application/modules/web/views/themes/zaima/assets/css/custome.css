@@ -44,3 +44,10 @@
   height: 60px;
   width: 100px;
 }
+.product-color label {
+  width: 25px;
+  height: 25px;
+}
+.product-color input[type="radio"]:checked + label .color_code {
+  border: 8px solid rgba(0,0,0,.4);
+}
