@@ -681,23 +681,25 @@ class Orders extends CI_Model
                 }
 
                 //Customer data Existence Check.
-                if ($this->input->post('customer_id', TRUE)) {
-                    $customer_id = $this->input->post('customer_id', TRUE);
-                } else {
-                    $customer_id = generator(15);
-                    //Customer  basic information adding.
-                    $data = array(
-                        'customer_id' => $customer_id,
-                        'customer_name' => $this->input->post('customer_name_others', TRUE),
-                        'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
-                        'customer_mobile' => $this->input->post('customer_mobile_no', TRUE),
-                        'customer_email' => "NONE",
-                        'status' => 1
-                    );
-                    $this->Customers->customer_entry($data);
-                    //Previous balance adding -> Sending to customer model to adjust the data.
-                    $this->Customers->previous_balance_add(0, $customer_id);
-                }
+                $customer_id = $this->input->post('customer_id', TRUE);
+                // if ($this->input->post('customer_id', TRUE)) {
+                //     $customer_id = $this->input->post('customer_id', TRUE);
+                // } 
+                // else {
+                //     $customer_id = generator(15);
+                //     //Customer  basic information adding.
+                //     $data = array(
+                //         'customer_id' => $customer_id,
+                //         'customer_name' => $this->input->post('customer_name_others', TRUE),
+                //         'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
+                //         'customer_mobile' => $this->input->post('customer_mobile_no', TRUE),
+                //         'customer_email' => "NONE",
+                //         'status' => 1
+                //     );
+                //     $this->Customers->customer_entry($data);
+                //     //Previous balance adding -> Sending to customer model to adjust the data.
+                //     $this->Customers->previous_balance_add(0, $customer_id);
+                // }
 
                 // create customer head start
                 if (check_module_status('accounting') == 1) {
@@ -780,18 +782,18 @@ class Orders extends CI_Model
                 $this->db->insert('order_invoice', $data);
 
                 // insert installment
-                if ($this->input->post('is_installment', true) == 1) {
-                    $installment_amount = $this->input->post('amount', TRUE);
-                    $installment_due_date = $this->input->post('due_date', TRUE);
-                    for ($i = 0; $i < $installment_month_no; $i++) {
-                        $installment_data = array(
-                            'invoice_id' => $invoice_id,
-                            'amount' => $installment_amount[$i],
-                            'due_date' => $installment_due_date[$i],
-                        );
-                        $this->db->insert('order_invoice_installment', $installment_data);
-                    }
-                }
+                // if ($this->input->post('is_installment', true) == 1) {
+                //     $installment_amount = $this->input->post('amount', TRUE);
+                //     $installment_due_date = $this->input->post('due_date', TRUE);
+                //     for ($i = 0; $i < $installment_month_no; $i++) {
+                //         $installment_data = array(
+                //             'invoice_id' => $invoice_id,
+                //             'amount' => $installment_amount[$i],
+                //             'due_date' => $installment_due_date[$i],
+                //         );
+                //         $this->db->insert('order_invoice_installment', $installment_data);
+                //     }
+                // }
 
                 //Invoice details info
                 $rate = $this->input->post('product_rate', TRUE);
@@ -1056,18 +1058,18 @@ class Orders extends CI_Model
 
                 // SALES/INVOICE TRANSECTIONS ENTRY
                 $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
-                if (empty($customer_head)) {
-                    $this->load->model('accounting/account_model');
-                    $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
-                    if ($customer_name) {
-                        $customer_data = $data = array(
-                            'customer_id' => $result->customer_id,
-                            'customer_name' => $customer_name->customer_name,
-                        );
-                        $this->account_model->insert_customer_head($customer_data);
-                    }
-                    $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
-                }
+                // if (empty($customer_head)) {
+                //     $this->load->model('accounting/account_model');
+                //     $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
+                //     if ($customer_name) {
+                //         $customer_data = $data = array(
+                //             'customer_id' => $result->customer_id,
+                //             'customer_name' => $customer_name->customer_name,
+                //         );
+                //         $this->account_model->insert_customer_head($customer_data);
+                //     }
+                //     $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
+                // }
                 $createdate = date('Y-m-d H:i:s');
                 $receive_by = $this->session->userdata('user_id');
                 $date = $createdate;
@@ -1085,148 +1087,148 @@ class Orders extends CI_Model
                 $account_no = $this->input->post('account_no', TRUE);
 
                 //1st customer debit total_with_vat
-                $customer_debit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => $invoice_id,
-                    'Vtype' => 'Sales',
-                    'VDate' => $date,
-                    'COAID' => $customer_head->HeadCode,
-                    'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_with_vat,
-                    'Credit' => 0,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('order_acc_transaction', $customer_debit);
+                // $customer_debit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => $invoice_id,
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $date,
+                //     'COAID' => $customer_head->HeadCode,
+                //     'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => $total_with_vat,
+                //     'Credit' => 0,
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                // $this->db->insert('order_acc_transaction', $customer_debit);
 
-                //2nd Allowed Discount Debit
-                $allowed_discount_debit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => $invoice_id,
-                    'Vtype' => 'Sales',
-                    'VDate' => $date,
-                    'COAID' => 4114,
-                    'Narration' => 'Sales "total discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_discount,
-                    'Credit' => 0,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                //3rd Showroom Sales credit
-                $showroom_sales_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => $invoice_id,
-                    'Vtype' => 'Sales',
-                    'VDate' => $date,
-                    'COAID' => 5111, // account payable game 11
-                    'Narration' => 'Sales "total price before discount" store_credit credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $total_price_before_discount,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                //4th VAT on Sales
-                $vat_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => $invoice_id,
-                    'Vtype' => 'Sales',
-                    'VDate' => $date,
-                    'COAID' => 2114, // account payable game 11
-                    'Narration' => 'Sales "total vat" credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $tota_vat,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
+                // //2nd Allowed Discount Debit
+                // $allowed_discount_debit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => $invoice_id,
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $date,
+                //     'COAID' => 4114,
+                //     'Narration' => 'Sales "total discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => $total_discount,
+                //     'Credit' => 0,
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                // //3rd Showroom Sales credit
+                // $showroom_sales_credit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => $invoice_id,
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $date,
+                //     'COAID' => 5111, // account payable game 11
+                //     'Narration' => 'Sales "total price before discount" store_credit credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => 0,
+                //     'Credit' => $total_price_before_discount,
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                // //4th VAT on Sales
+                // $vat_credit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => $invoice_id,
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $date,
+                //     'COAID' => 2114, // account payable game 11
+                //     'Narration' => 'Sales "total vat" credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => 0,
+                //     'Credit' => $tota_vat,
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
 
-                //5th cost of goods sold debit
-                $cogs_debit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => $invoice_id,
-                    'Vtype' => 'Sales',
-                    'VDate' => $date,
-                    'COAID' => 4111,
-                    'Narration' => 'Sales "cost of goods sold" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $cogs_price,
-                    'Credit' => 0, //sales price asbe
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                //6th cost of goods sold Main warehouse Credit
-                $cogs_main_warehouse_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => $invoice_id,
-                    'Vtype' => 'Sales',
-                    'VDate' => $date,
-                    'COAID' => 1141,
-                    'Narration' => '"cost of goods sold" Main warehouse credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $cogs_price, //supplier price asbe
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                //7th paid_amount Credit
-                if ($this->input->post('paid_amount', TRUE) > 0) {
-                    $paid_amount = $this->input->post('paid_amount', TRUE);
-                    $customer_credit = array(
-                        'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => $invoice_id,
-                        'Vtype' => 'Sales',
-                        'VDate' => $date,
-                        'COAID' => $customer_head->HeadCode,
-                        'Narration' => 'Sales "paid_amount" Credit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                        'Debit' => 0,
-                        'Credit' => $paid_amount,
-                        'IsPosted' => 1,
-                        'CreateBy' => $receive_by,
-                        'CreateDate' => $createdate,
-                        //'IsAppove' => 0
-                        'IsAppove' => 1
-                    );
-                    $this->db->insert('order_acc_transaction', $customer_credit);
-                    if (!empty($payment_id)) {
-                        $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
-                        $bank_debit = array(
-                            'fy_id' => $find_active_fiscal_year->id,
-                            'VNo' => $invoice_id,
-                            'Vtype' => 'Sales',
-                            'VDate' => $date,
-                            'COAID' => $payment_head->HeadCode,
-                            'Narration' => 'Sales "paid_amount" debited by cash/bank id: ' . $payment_head->HeadName . '(' . $payment_id . ')',
-                            'Debit' => $paid_amount,
-                            'Credit' => 0,
-                            'IsPosted' => 1,
-                            'CreateBy' => $receive_by,
-                            'CreateDate' => $createdate,
-                            //'IsAppove' => 0
-                            'IsAppove' => 1
-                        );
-                        $this->db->insert('order_acc_transaction', $bank_debit);
-                    }
-                }
-                $this->db->insert('order_acc_transaction', $allowed_discount_debit);
-                $this->db->insert('order_acc_transaction', $showroom_sales_credit);
-                $this->db->insert('order_acc_transaction', $vat_credit);
-                $this->db->insert('order_acc_transaction', $cogs_debit);
-                $this->db->insert('order_acc_transaction', $cogs_main_warehouse_credit);
+                // //5th cost of goods sold debit
+                // $cogs_debit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => $invoice_id,
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $date,
+                //     'COAID' => 4111,
+                //     'Narration' => 'Sales "cost of goods sold" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => $cogs_price,
+                //     'Credit' => 0, //sales price asbe
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                // //6th cost of goods sold Main warehouse Credit
+                // $cogs_main_warehouse_credit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => $invoice_id,
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $date,
+                //     'COAID' => 1141,
+                //     'Narration' => '"cost of goods sold" Main warehouse credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => 0,
+                //     'Credit' => $cogs_price, //supplier price asbe
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                // //7th paid_amount Credit
+                // if ($this->input->post('paid_amount', TRUE) > 0) {
+                //     $paid_amount = $this->input->post('paid_amount', TRUE);
+                //     $customer_credit = array(
+                //         'fy_id' => $find_active_fiscal_year->id,
+                //         'VNo' => $invoice_id,
+                //         'Vtype' => 'Sales',
+                //         'VDate' => $date,
+                //         'COAID' => $customer_head->HeadCode,
+                //         'Narration' => 'Sales "paid_amount" Credit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //         'Debit' => 0,
+                //         'Credit' => $paid_amount,
+                //         'IsPosted' => 1,
+                //         'CreateBy' => $receive_by,
+                //         'CreateDate' => $createdate,
+                //         //'IsAppove' => 0
+                //         'IsAppove' => 1
+                //     );
+                //     $this->db->insert('order_acc_transaction', $customer_credit);
+                //     if (!empty($payment_id)) {
+                //         $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
+                //         $bank_debit = array(
+                //             'fy_id' => $find_active_fiscal_year->id,
+                //             'VNo' => $invoice_id,
+                //             'Vtype' => 'Sales',
+                //             'VDate' => $date,
+                //             'COAID' => $payment_head->HeadCode,
+                //             'Narration' => 'Sales "paid_amount" debited by cash/bank id: ' . $payment_head->HeadName . '(' . $payment_id . ')',
+                //             'Debit' => $paid_amount,
+                //             'Credit' => 0,
+                //             'IsPosted' => 1,
+                //             'CreateBy' => $receive_by,
+                //             'CreateDate' => $createdate,
+                //             //'IsAppove' => 0
+                //             'IsAppove' => 1
+                //         );
+                //         $this->db->insert('order_acc_transaction', $bank_debit);
+                //     }
+                // }
+                // $this->db->insert('order_acc_transaction', $allowed_discount_debit);
+                // $this->db->insert('order_acc_transaction', $showroom_sales_credit);
+                // $this->db->insert('order_acc_transaction', $vat_credit);
+                // $this->db->insert('order_acc_transaction', $cogs_debit);
+                // $this->db->insert('order_acc_transaction', $cogs_main_warehouse_credit);
                 // SALES/INVOICE TRANSECTIONS END
                 //Tax information
                 $cgst = $this->input->post('cgst', TRUE);
@@ -1483,67 +1485,68 @@ class Orders extends CI_Model
             //Customer data Existence Check.
             if ($this->input->post('customer_id', TRUE)) {
                 $customer_id = $this->input->post('customer_id', TRUE);
-            } else {
-                $customer_id = generator(15);
-                //Customer  basic information adding.
-                $data = array(
-                    'customer_id' => $customer_id,
-                    'customer_name' => $this->input->post('customer_name_others', TRUE),
-                    'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
-                    'customer_mobile' => $this->input->post('customer_mobile_no', TRUE),
-                    'customer_email' => "NONE",
-                    'status' => 1
-                );
-                $this->Customers->customer_entry($data);
-                //Previous balance adding -> Sending to customer model to adjust the data.
-                $this->Customers->previous_balance_add(0, $customer_id);
-            }
+            } 
+            // else {
+            //     $customer_id = generator(15);
+            //     //Customer  basic information adding.
+            //     $data = array(
+            //         'customer_id' => $customer_id,
+            //         'customer_name' => $this->input->post('customer_name_others', TRUE),
+            //         'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
+            //         'customer_mobile' => $this->input->post('customer_mobile_no', TRUE),
+            //         'customer_email' => "NONE",
+            //         'status' => 1
+            //     );
+            //     $this->Customers->customer_entry($data);
+            //     //Previous balance adding -> Sending to customer model to adjust the data.
+            //     $this->Customers->previous_balance_add(0, $customer_id);
+            // }
 
             // create customer head start
-            if (check_module_status('accounting') == 1) {
-                $this->load->model('accounting/account_model');
-                $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
-                if (!empty($check_customer)) {
-                    $customer_data = $data = array(
-                        'customer_id' => $customer_id,
-                        'customer_name' => $check_customer->customer_name,
-                    );
-                } else {
-                    $customer_data = $data = array(
-                        'customer_id' => $customer_id,
-                        'customer_name' => $this->input->post('customer_id', TRUE)
-                    );
-                }
-                $this->account_model->insert_customer_head($customer_data);
-            }
+            // if (check_module_status('accounting') == 1) {
+            //     $this->load->model('accounting/account_model');
+            //     $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+            //     if (!empty($check_customer)) {
+            //         $customer_data = $data = array(
+            //             'customer_id' => $customer_id,
+            //             'customer_name' => $check_customer->customer_name,
+            //         );
+            //     } else {
+            //         $customer_data = $data = array(
+            //             'customer_id' => $customer_id,
+            //             'customer_name' => $this->input->post('customer_id', TRUE)
+            //         );
+            //     }
+            //     $this->account_model->insert_customer_head($customer_data);
+            // }
             // create customer head END
             //Full or partial Payment record.
-            if ($this->input->post('paid_amount', TRUE) > 0) {
+            // if ($this->input->post('paid_amount', TRUE) > 0) {
                 //Insert to customer_ledger Table 
-                $data2 = array(
-                    'transaction_id' => generator(15),
-                    'customer_id' => $customer_id,
-                    'invoice_no' => $invoice_id,
-                    'receipt_no' => $this->auth->generator(15),
-                    'date' => $this->input->post('invoice_date', TRUE),
-                    'amount' => $this->input->post('paid_amount', TRUE),
-                    'payment_type' => 1,
-                    'description' => 'ITP',
-                    'status' => 1
-                );
-                $this->db->insert('order_customer_ledger', $data2);
-            }
+                // $data2 = array(
+                //     'transaction_id' => generator(15),
+                //     'customer_id' => $customer_id,
+                //     'invoice_no' => $invoice_id,
+                //     'receipt_no' => $this->auth->generator(15),
+                //     'date' => $this->input->post('invoice_date', TRUE),
+                //     'amount' => $this->input->post('paid_amount', TRUE),
+                //     'payment_type' => 1,
+                //     'description' => 'ITP',
+                //     'status' => 1
+                // );
+                // $this->db->insert('order_customer_ledger', $data2);
+            // }
 
             //Insert to customer ledger Table 
-            $data2 = array(
-                'transaction_id' => generator(15),
-                'customer_id' => $customer_id,
-                'invoice_no' => $invoice_id,
-                'date' => $this->input->post('invoice_date', TRUE),
-                'amount' => $this->input->post('grand_total_price', TRUE),
-                'status' => 1
-            );
-            $this->db->insert('order_customer_ledger', $data2);
+            // $data2 = array(
+            //     'transaction_id' => generator(15),
+            //     'customer_id' => $customer_id,
+            //     'invoice_no' => $invoice_id,
+            //     'date' => $this->input->post('invoice_date', TRUE),
+            //     'amount' => $this->input->post('grand_total_price', TRUE),
+            //     'status' => 1
+            // );
+            // $this->db->insert('order_customer_ledger', $data2);
 
             //Data inserting into invoice table
             $data = array(
@@ -1574,18 +1577,18 @@ class Orders extends CI_Model
             $account_no = $this->input->post('account_no', TRUE);
             $payment_amount = $this->input->post('grand_total_price', TRUE);
 
-            if (!empty($bank_id) && !empty($account_no)) {
-                $bank_paydata = array(
-                    'bank_payment_id' => generator(15),
-                    'terminal_id' => ($terminal ? $terminal : ''),
-                    'bank_id' => $bank_id,
-                    'account_no' => $account_no,
-                    'amount' => $payment_amount,
-                    'invoice_id' => $invoice_id,
-                    'date' => $this->input->post('invoice_date', TRUE),
-                );
-                $this->db->insert('order_bank_payment', $bank_paydata);
-            }
+            // if (!empty($bank_id) && !empty($account_no)) {
+            //     $bank_paydata = array(
+            //         'bank_payment_id' => generator(15),
+            //         'terminal_id' => ($terminal ? $terminal : ''),
+            //         'bank_id' => $bank_id,
+            //         'account_no' => $account_no,
+            //         'amount' => $payment_amount,
+            //         'invoice_id' => $invoice_id,
+            //         'date' => $this->input->post('invoice_date', TRUE),
+            //     );
+            //     $this->db->insert('order_bank_payment', $bank_paydata);
+            // }
 
             //Invoice details info
             $rate = $this->input->post('product_rate', TRUE);
