@@ -69,6 +69,35 @@ class Lreport
         return $reportList;
     }
 
+    public function unpaid_installments()
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Soft_settings');
+        $CI->load->library('dashboard/occational');
+
+        $unpaid_installments = $CI->Reports->unpaid_installments();
+       
+        if (!empty($unpaid_installments)) {
+            $i = 0;
+            foreach ($unpaid_installments as $k => $v) {
+                $i++;
+                $unpaid_installments[$k]['sl'] = $i;
+            }
+        }
+
+        $data = array(
+            'title' => display('out_of_stock'),
+            'unpaid_installments' => $unpaid_installments
+        );
+        // echo "<pre>";print_r($data['unpaid_installments']);exit;
+
+
+        $reportList = $CI->parser->parse('dashboard/report/unpaid_installment', $data, true);
+        return $reportList;
+    }
+
     // Retrieve Single Item Stock Stock Report
     public function stock_report_single_item($product_id = null, $date = null, $per_page = null, $page = null, $link = null)
     {

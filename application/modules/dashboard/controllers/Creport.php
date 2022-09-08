@@ -371,4 +371,11 @@ class Creport extends MX_Controller
 
         echo json_encode($json_product);
     }
+
+    public function unpaid_installment()
+    {
+        $this->load->library('lreport');
+        $content = $this->lreport->unpaid_installments();
+        $this->template_lib->full_admin_html_view($content);
+    }
 }

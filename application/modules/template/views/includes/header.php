@@ -99,6 +99,13 @@ if (!empty($this->session->userdata('language'))) {
                 </a>
             </li>
 
+            <li class="dropdown notifications-menu">
+                <a target="_blank" href="<?php echo base_url('dashboard/Creport/unpaid_installment') ?>">
+                    <i class="pe-7s-look" title="<?php echo display('go_to_unpaid_installment') ?>"></i>
+
+                </a>
+            </li>
+
             <!-- settings -->
             <li class="dropdown dropdown-user">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="pe-7s-settings"></i></a>

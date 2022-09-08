@@ -67,6 +67,24 @@ class Reports extends CI_Model
         return $query->result_array();
     }
 
+    public function unpaid_installments()
+    {
+        $today = date('Y-m-d');
+        $query = $this->db->select('i.*, c.*, a.*, i.id as installment_id')
+            ->from('invoice_installment i')
+            ->join('invoice c', 'i.invoice_id = c.invoice_id', 'left')
+            ->join('customer_information a', 'c.customer_id = a.customer_id', 'left')
+            ->where('due_date <=', $today)
+            ->where('payment_amount', null)
+            ->get();
+
+        if (!$query) {
+            return redirect(base_url());
+        }
+
+        return $query->result_array();
+    }
+
     //Out of stock count
     public function out_of_stock_count()
     {

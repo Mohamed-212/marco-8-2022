@@ -57,7 +57,7 @@ if (!empty($currency_new_id)) {
             <a class="topbar-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#loginModal">
                 <i data-feather="user" class="mr-2"></i><?php echo display('signin') ?></a>
             <?php } ?>
-
+asdasdasd
             <div class="topbar-text dropdown disable-autohide ml-3">
                 <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
                     <?php
