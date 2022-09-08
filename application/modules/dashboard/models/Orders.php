@@ -4052,6 +4052,7 @@ class Orders extends CI_Model
     public function retrieve_order_html_data($order_id)
     {
         $details_page =  $this->uri->segment(2);
+        $shipping_addon = '';
 
         $this->db->select('
 			a.*,
@@ -4065,24 +4066,26 @@ class Orders extends CI_Model
             d.unit,
 			e.unit_short_name,
 			f.variant_name,
-			g.customer_name as ship_customer_name,
-			g.first_name as ship_first_name, g.last_name as ship_last_name,
-			g.customer_short_address as ship_customer_short_address,
-			g.customer_address_1 as ship_customer_address_1,
-			g.customer_address_2 as ship_customer_address_2,
-			g.customer_mobile as ship_customer_mobile,
-			g.customer_email as ship_customer_email,
-			g.city as ship_city,
-			g.state as ship_state,
-			g.country as ship_country,
-			g.zip as ship_zip,
-			g.company as ship_company
+            g.customer_name as ship_customer_name,
+            g.first_name as ship_first_name, g.last_name as ship_last_name,
+            g.customer_short_address as ship_customer_short_address,
+            g.customer_address_1 as ship_customer_address_1,
+            g.customer_address_2 as ship_customer_address_2,
+            g.customer_mobile as ship_customer_mobile,
+            g.customer_email as ship_customer_email,
+            g.city as ship_city,
+            g.state as ship_state,
+            g.country as ship_country,
+            g.zip as ship_zip,
+            g.company as ship_company
 			');
         // $this->db->from('order a');
         $this->db->from('order_invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
-        $this->db->join('shipping_info g', 'g.customer_id = a.customer_id');
+        $this->db->join('shipping_info g', 'g.customer_id = a.customer_id', 'left');
         $this->db->join('order_invoice_details c', 'c.invoice_id = a.invoice_id');
+        // var_dump($this->db->get()->result());
+        // exit;
         $this->db->join('product_information d', 'd.product_id = c.product_id');
         $this->db->join('unit e', 'e.unit_id = d.unit', 'left');
         $this->db->join('variant f', 'f.variant_id = c.variant_id', 'left');
