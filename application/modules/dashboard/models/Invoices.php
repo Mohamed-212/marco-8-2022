@@ -310,6 +310,7 @@ class Invoices extends CI_Model {
                     'month_no' => $installment_month_no,
                     'due_day' => $this->input->post('due_day', true),
                     'invoice_discount' => $this->input->post('invoice_discount', TRUE),
+                    'percentage_discount' => $this->input->post('percentage_discount', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'store_id' => $this->input->post('store_id', TRUE),
                     'paid_amount' => $this->input->post('paid_amount', TRUE),
@@ -342,6 +343,10 @@ class Invoices extends CI_Model {
                 $p_id = $this->input->post('product_id', TRUE);
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
+                $total_inv_price=$this->input->post('grand_total_price', TRUE);
+                $inv_disc = $this->input->post('invoice_discount', TRUE);
+                $percentage_disc = $this->input->post('percentage_discount', TRUE);
+                $inv_disc_rate  = ((int)$inv_disc+(((int)$percentage_disc/100)*(int)$total_inv_price))/(int)$total_inv_price;
                 $variants = $this->input->post('variant_id', TRUE);
                 // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
@@ -383,6 +388,7 @@ class Invoices extends CI_Model {
                             'supplier_rate' => $supplier_rate[0]['supplier_price'],
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
+                            'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
                             'status' => 1
                         );
 
@@ -421,46 +427,46 @@ class Invoices extends CI_Model {
                         ///////////////////////////////////////////////////////////////////////////
                         if (!empty($product_list)) {
                             foreach ($product_list as $product) {
-//                                $invoice_details = array(
-//                                    'invoice_details_id' => generator(15),
-//                                    'invoice_id' => $invoice_id,
-//                                    'product_id' => $product->child_product_id,
-//                                    'variant_id' => $variant_id,
-//                                    //  'pricing_id' => $pricing_id,
-//                                    'variant_color' => $variant_color,
-//                                    'batch_no' => $batch,
-//                                    'store_id' => $this->input->post('store_id', TRUE),
-//                                    'quantity' => $product_quantity,
-//                                    'rate' => 0,
-//                                    'supplier_rate' => $product->supplier_price,
-//                                    'total_price' => 0,
-//                                    'discount' => 0,
-//                                    'status' => 1
-//                                );
+                                //                                $invoice_details = array(
+                                //                                    'invoice_details_id' => generator(15),
+                                //                                    'invoice_id' => $invoice_id,
+                                //                                    'product_id' => $product->child_product_id,
+                                //                                    'variant_id' => $variant_id,
+                                //                                    //  'pricing_id' => $pricing_id,
+                                //                                    'variant_color' => $variant_color,
+                                //                                    'batch_no' => $batch,
+                                //                                    'store_id' => $this->input->post('store_id', TRUE),
+                                //                                    'quantity' => $product_quantity,
+                                //                                    'rate' => 0,
+                                //                                    'supplier_rate' => $product->supplier_price,
+                                //                                    'total_price' => 0,
+                                //                                    'discount' => 0,
+                                //                                    'status' => 1
+                                //                                );
                                 if (!empty($quantity)) {
-//                                    $this->db->select('*');
-//                                    $this->db->from('invoice_details');
-//                                    $this->db->where('invoice_id', $invoice_id);
-//                                    $this->db->where('product_id', $product->child_product_id);
-//                                    $this->db->where('variant_id', $variant_id);
-//                                    if (!empty($variant_color)) {
-//                                        $this->db->where('variant_color', $variant_color);
-//                                    }
-//                                    $query = $this->db->get();
-//                                    $result = $query->num_rows();
-//                                    if ($result > 0) {
-//                                        $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
-//                                        $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
-//                                        $this->db->where('invoice_id', $invoice_id);
-//                                        $this->db->where('product_id', $product->child_product_id);
-//                                        $this->db->where('variant_id', $variant_id);
-//                                        if (!empty($variant_color)) {
-//                                            $this->db->where('variant_color', $variant_color);
-//                                        }
-//                                        $this->db->update('invoice_details');
-//                                    } else {
-//                                        $this->db->insert('invoice_details', $invoice_details);
-//                                    }
+                                //                                    $this->db->select('*');
+                                //                                    $this->db->from('invoice_details');
+                                //                                    $this->db->where('invoice_id', $invoice_id);
+                                //                                    $this->db->where('product_id', $product->child_product_id);
+                                //                                    $this->db->where('variant_id', $variant_id);
+                                //                                    if (!empty($variant_color)) {
+                                //                                        $this->db->where('variant_color', $variant_color);
+                                //                                    }
+                                //                                    $query = $this->db->get();
+                                //                                    $result = $query->num_rows();
+                                //                                    if ($result > 0) {
+                                //                                        $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+                                //                                        $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+                                //                                        $this->db->where('invoice_id', $invoice_id);
+                                //                                        $this->db->where('product_id', $product->child_product_id);
+                                //                                        $this->db->where('variant_id', $variant_id);
+                                //                                        if (!empty($variant_color)) {
+                                //                                            $this->db->where('variant_color', $variant_color);
+                                //                                        }
+                                //                                        $this->db->update('invoice_details');
+                                //                                    } else {
+                                //                                        $this->db->insert('invoice_details', $invoice_details);
+                                //                                    }
 
                                     // stock 
                                     $store_id = $this->input->post('store_id', TRUE);
@@ -530,6 +536,7 @@ class Invoices extends CI_Model {
                             'supplier_rate' => $supplier_rate[0]['supplier_price'],
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
+                            'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
                             'status' => 1
                         );
 
@@ -620,7 +627,8 @@ class Invoices extends CI_Model {
                 $tota_vat = $i_vat->total_vat;
                 $total_with_vat = $this->input->post('grand_total_price', TRUE);
                 $cogs_price = $cogs_price;
-                $total_discount = $this->input->post('total_discount', TRUE);
+                $percentage_discount=((int)$total_with_vat*((int)$this->input->post('percentage_discount', TRUE)/100));
+                $total_discount = (int)$this->input->post('total_discount', TRUE)+(int)$this->input->post('invoice_discount', TRUE)+(int)$percentage_discount;
                 $total_price_before_discount = ($total_with_vat - $tota_vat) + $total_discount;
                 $store_id = $this->input->post('store_id', TRUE);
                 $store_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
@@ -996,7 +1004,9 @@ class Invoices extends CI_Model {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
             }
-        } else {
+        } 
+        else 
+        {
             //Invoice entry info
             $invoice_id = generator(15);
             $quantity = $this->input->post('product_quantity', TRUE);
@@ -1098,6 +1108,7 @@ class Invoices extends CI_Model {
                 'invoice' => 'Inv-' . $this->number_generator(),
                 'total_discount' => $this->input->post('total_discount', TRUE),
                 'invoice_discount' => $this->input->post('invoice_discount', TRUE),
+                'percentage_discount' => $this->input->post('percentage_discount', TRUE),
                 'user_id' => $this->session->userdata('user_id'),
                 'store_id' => $this->input->post('store_id', TRUE),
                 'paid_amount' => $this->input->post('paid_amount', TRUE),
@@ -1572,6 +1583,7 @@ class Invoices extends CI_Model {
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
                     'invoice_discount' => $this->input->post('invoice_discount', TRUE),
+                    'percentage_discount' => $this->input->post('percentage_discount', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'store_id' => $this->input->post('store_id', TRUE),
                     'paid_amount' => $this->input->post('paid_amount', TRUE),
@@ -2769,42 +2781,42 @@ class Invoices extends CI_Model {
                 // Reverse invoice transections start
                 $previous_invoices = $this->db->select('*')->from('acc_transaction')->where('VNo', 'Inv-' . $invoice_id)->get()->result_array();
                 if (count($previous_invoices) > 0) {
-//                    $transection_reverse = array();
-//                    foreach ($previous_invoices as $key => $invoices) {
-//                        $ID = $invoices['ID'];
-//                        $fy_id = $invoices['fy_id'];
-//                        $VNo = $invoices['VNo'];
-//                        $Vtype = $invoices['Vtype'];
-//                        $VDate = $invoices['VDate'];
-//                        $COAID = $invoices['COAID'];
-//                        $Narration = $invoices['Narration'];
-//                        $Debit = $invoices['Debit'];
-//                        $Credit = $invoices['Credit'];
-//                        $IsPosted = $invoices['IsPosted'];
-//                        $is_opening = $invoices['is_opening'];
-//                        $store_id = $invoices['store_id'];
-//                        $CreateBy = $this->session->userdata('user_id');
-//                        $createdate = date('Y-m-d H:i:s');
-//                        $UpdateBy = $this->session->userdata('user_id');
-//                        $IsAppove = $invoices['IsAppove'];
-//
-//                        $transection_reverse[] = array(
-//                            'fy_id' => $fy_id,
-//                            'VNo' => $VNo,
-//                            'Vtype' => $Vtype,
-//                            'VDate' => $createdate,
-//                            'COAID' => $COAID,
-//                            'Narration' => 'Invoice reverse transection ' . $Narration,
-//                            'Debit' => $Credit,
-//                            'Credit' => $Debit,
-//                            'IsPosted' => $IsPosted,
-//                            'CreateBy' => $CreateBy,
-//                            'CreateDate' => $createdate,
-//                            'store_id' => $store_id,
-//                            'IsAppove' => 1
-//                        );
-//                    }
-//                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
+                //                    $transection_reverse = array();
+                //                    foreach ($previous_invoices as $key => $invoices) {
+                //                        $ID = $invoices['ID'];
+                //                        $fy_id = $invoices['fy_id'];
+                //                        $VNo = $invoices['VNo'];
+                //                        $Vtype = $invoices['Vtype'];
+                //                        $VDate = $invoices['VDate'];
+                //                        $COAID = $invoices['COAID'];
+                //                        $Narration = $invoices['Narration'];
+                //                        $Debit = $invoices['Debit'];
+                //                        $Credit = $invoices['Credit'];
+                //                        $IsPosted = $invoices['IsPosted'];
+                //                        $is_opening = $invoices['is_opening'];
+                //                        $store_id = $invoices['store_id'];
+                //                        $CreateBy = $this->session->userdata('user_id');
+                //                        $createdate = date('Y-m-d H:i:s');
+                //                        $UpdateBy = $this->session->userdata('user_id');
+                //                        $IsAppove = $invoices['IsAppove'];
+                //
+                //                        $transection_reverse[] = array(
+                //                            'fy_id' => $fy_id,
+                //                            'VNo' => $VNo,
+                //                            'Vtype' => $Vtype,
+                //                            'VDate' => $createdate,
+                //                            'COAID' => $COAID,
+                //                            'Narration' => 'Invoice reverse transection ' . $Narration,
+                //                            'Debit' => $Credit,
+                //                            'Credit' => $Debit,
+                //                            'IsPosted' => $IsPosted,
+                //                            'CreateBy' => $CreateBy,
+                //                            'CreateDate' => $createdate,
+                //                            'store_id' => $store_id,
+                //                            'IsAppove' => 1
+                //                        );
+                //                    }
+                //                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
 
                     $this->db->where('VNo', 'Inv-' . $invoice_id);
                     $this->db->delete('acc_transaction');

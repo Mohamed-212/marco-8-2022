@@ -554,6 +554,18 @@
                                                onchange="calculateSum();"/>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td class="text-right" colspan="2">
+                                        <b><?php echo display('percentage_discount') ?>:</b>
+                                    </td>
+                                    <td class="text-right" colspan="2">
+                                        <input type="text" id="percentage_discount" class="form-control text-right"
+                                               name="percentage_discount" placeholder="0.00" onkeyup="calculateSum();"
+                                               onchange="calculateSum();"/>
+                                    </td>
+                                </tr>
+
                                 <tr>
                                     <td class="text-right" colspan="2"><b><?php echo display('service_charge') ?>
                                             :</b></td>

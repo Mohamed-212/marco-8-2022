@@ -21,6 +21,13 @@
                 <span><?php echo display('dashboard') ?></span>
             </a>
         </li>
+
+        <li
+            class="treeview <?php echo (($this->uri->segment(3) == "home" || $this->uri->segment(3) == "home") ? "active" : null) ?>">
+            <a href="<?php echo base_url('dashboard/Crefund/new_refund') ?>"><i class="ti-home"></i>
+                <span><?php echo display('return') ?></span>
+            </a>
+        </li>
         <?php if ($this->session->userdata('user_type') == 1 || $this->session->userdata('user_type') == 2) { ?>
         <!-- Invoice menu start -->
         <?php if ($this->permission->module('sales')->access()) { ?>

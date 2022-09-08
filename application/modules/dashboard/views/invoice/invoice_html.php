@@ -54,8 +54,18 @@
                             * {
                                 font-family: 'Roboto', sans-serif;
                             }
-
+                     
                             @media print {
+                              
+                                .footer {
+                                    position: fixed !important;
+                                    bottom: 0 !important;
+                                    margin-top:2%;
+                                    right: 0 !important;
+                                }
+                                .content-block {page-break-inside:avoid; page-break-after:auto 
+                                    }
+                                /* .break{display:block !important;} */
                                 table tbody tr:nth-child(even) td {
                                     background-color: #f9f9f9 !important;
                                     -webkit-print-color-adjust: exact;
@@ -291,7 +301,7 @@
                                     <?php } ?>
                                 </div> -->
                                 <div class="col-xs-12" style="background-image: url();">
-                                    <img class="show" src="/assets/img/header.png" style="width: 100%;height: auto;" />
+                                    <img class="show" src="<?php echo base_url().'/assets/img/header.png';?>" style="width: 100%;height: auto;" />
                                 </div>
                             </div>
                             <div style="padding: 0 25px;">
@@ -363,13 +373,16 @@
                                         </thead>
                                         <tbody>
                                             <?php if (!empty($invoice_all_data)) {
+                                                $cline=0;
                                                 $total_quantity = $total_return_amount = $i_grand_discount = $i_total_discount_price_amount = $i_total_discount_price = $i_grand_amount = 0;
-                                                for($i = 0; $i < 5; $i++) {
+                                                for($i = 0; $i < 15; $i++) {
                                                     $invoice_all_data[] = $invoice_all_data[0];
                                                 }
                                                 
-                                                foreach ($invoice_all_data as $invoice) {
-                                            ?>
+                                                foreach ($invoice_all_data as $invoice) { 
+                                                    $cline++;
+                                                    
+                                                    ?>
                                                     <tr>
                                                         <td><?php echo html_escape($invoice['sl']); ?></td>
                                                         <td><?php echo html_escape($invoice['product_id']); ?></td>
@@ -444,7 +457,11 @@
                                                     $i_total_discount_price_amount += $i_total_discount_price;
                                                     $i_grand_amount += $i_total_price;
                                                     ?>
-                                            <?php }
+                                            <?php
+                                             if($cline%12==0){
+                                                echo '<tr class="break" style="height:70px!important;display:none;"> </tr>';
+                                            } 
+                                             }
                                             } ?>
                                         </tbody>
                                     </table>
@@ -654,11 +671,11 @@
                                 </div>
                             </div>
 
-                            <div class="row" style="margin-top: -30px;">
-                                <div class="col-xs-12" style="background-image: url();">
-                                    <img class="show" src="/assets/img/footer.png" style="width: 100%;height: auto;" />
-                                </div>
-                            </div>
+                            <!-- <div class="row" style="margin-top: -30px;"> -->
+                                <footer class="footer col-xs-12" style="background-image: url();">
+                                    <img class="show" src="<?php echo base_url().'/assets/img/footer.png';?>" style="width: 100%;height: auto;" />
+                                </footer>
+                            <!-- </div> -->
                         </div>
                     </div>
 
