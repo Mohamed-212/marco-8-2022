@@ -189,7 +189,7 @@
                             <div class="row form-group">
                                 <div class="col-xs-12">
                                     <button type="button" class="btn btn-info" id="add-contact">
-                                        Add Contact Info
+                                        <?=display('add_contact_info')?>
                                     </button>
                                 </div>
                             </div>
