@@ -1,7 +1,127 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
+<style type="text/css">
+    * {
+        font-family: 'Roboto', sans-serif;
+    }
 
+    @media print {
+        table tbody tr:nth-child(even) td {
+            /* background-color: #f9f9f9 !important;
+            -webkit-print-color-adjust: exact; */
+        }
+
+        .panel-body {
+            /* font-size: 10px; */
+        }
+
+        img:not(.show) {
+            display: none;
+        }
+
+        .content-header,
+        .logo,
+        .panel-footer,
+        .main-header,
+        .main-sidebar {
+            display: none;
+        }
+
+        .cominfo_div {
+            display: inline-block;
+            width: 30%;
+        }
+
+        .cus_div {
+            display: inline-block;
+            margin-left: 4%;
+            width: 25%;
+            margin-top: 6%
+        }
+
+        .qr_div {
+            display: width: 10%;
+        }
+
+        .width_30p {
+            width: 30%;
+        }
+
+        .width_70p {
+            width: 70%;
+        }
+
+        .thead tr,
+        .borderd {
+            border: 2px solid orange !important;
+            color: orange !important;
+        }
+
+        .colored>tbody>tr>th,
+        .colored>tbody>tr>td {
+            border-top: 1px solid orange;
+            border-color: orange !important;
+            color: orange !important;
+        }
+
+        .line-height {
+            line-height: .5rem !important;
+        }
+
+        #toTop,
+        footer,
+        .btn.back-top,
+        .hide-me,
+        .pace,
+        .pace-activity {
+            display: none;
+        }
+
+        div.divFooter {
+            position: fixed;
+            bottom: 0;
+        }
+
+        .empty-footer {
+            height: 100px
+        }
+
+        .footerr {
+            position: fixed;
+            height: 100px;
+        }
+
+        .footerr {
+            bottom: 35px;
+        }
+    }
+
+    .thead tr,
+    .borderd {
+        border: 2px solid orange !important;
+        color: orange !important;
+    }
+
+    .thead tr th {
+        color: orange !important;
+    }
+
+    .colored>tbody>tr>th,
+    .colored>tbody>tr>td {
+        border-top: 1px solid orange;
+        border-color: orange !important;
+        color: orange !important;
+    }
+
+    .thead tr th {
+        text-transform: uppercase;
+    }
+
+    .line-height {
+        line-height: 1rem;
+    }
+</style>
 <style>
     .payment_type+.select2,
     .account+.select2 {
@@ -33,22 +153,50 @@
             display: none;
         }
 
-        .hideme table, .hideme tr, .hideme td, .hideme th {
+        .hideme table,
+        .hideme tr,
+        .hideme td,
+        .hideme th {
             border: none !important;
         }
-        .hideme .table>tbody>tr>td, .hideme .table>tbody>tr>th, .hideme .table>tfoot>tr>td, .hideme .table>tfoot>tr>th, .hideme .table>thead>tr>td, .hideme .table>thead>tr>th {
-            padding: 0;
+
+        .hideme .table>tbody>tr>td,
+        .hideme .table>tbody>tr>th,
+        .hideme .table>tfoot>tr>td,
+        .hideme .table>tfoot>tr>th,
+        .hideme .table>thead>tr>td,
+        .hideme .table>thead>tr>th {
+            padding: 4px;
         }
+
         .hideme .form-group {
             margin-bottom: 5px;
         }
+
+        #paid_amountt, #total-still {
+            background-color: #811fdb47;
+            background-color: #811fdb47 !important;
+            -webkit-print-color-adjust: exact;
+            /* font-weight: bold; */
+            padding: 3px 5px;
+            border-radius: 6px;
+        }
     }
+    
 
     @media screen {
         .hideme {
-            /* display: none; */
+            display: none;
+        }
+
+        #paid_amountt, #total-still {
+            background-color: #811fdb47;
+            /* font-weight: bold; */
+            padding: 3px 5px;
+            border-radius: 6px;
         }
     }
+    
 </style>
 
 <!-- Edit Invoice Start -->
@@ -81,55 +229,76 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="2">
-                                <div class="form-group">
+                            <td colspan="2" style="padding: 0;">
+                                <div class="" style="width: 100%">
+                                    <img class="show" src="<?= base_url() ?>/assets/img/header.png" style="width: 100%;height: auto;" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding-left: 30px;padding-top: 100px;">
+                                <div class="">
                                     <?php echo display('customer_name') ?>:&nbsp;&nbsp; <?php echo html_escape($invoice['customer_name']); ?>
                                 </div>
                             </td>
-                            
+
                         </tr>
                         <tr>
-                        <td colspan="2">
-                                <div class="form-group">
+                            <td colspan="2" style="padding-left: 30px;">
+                                <div class="">
                                     <?php echo display('invoice_no') ?>:&nbsp;&nbsp; <?php echo html_escape($invoice['invoice']); ?>
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td class="">
-                                <div class="form-group">
+                            <td class="" style="padding-left: 30px;">
+                                <div class="">
                                     <?php echo display('due_amount') ?>:&nbsp;&nbsp; <span id="due_amount"></span>
                                 </div>
                             </td>
-                            <td class="">
-                                <div class="form-group">
+                            <td class="" style="padding-left: 30px;">
+                                <div class="">
                                     <?php echo display('paid_amountt') ?>:&nbsp;&nbsp; <span id="paid_amountt"></span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td class="">
-                                <div class="form-group">
+                            <td class="" style="padding-left: 30px;">
+                                <div class="">
                                     <?php echo display('due_date') ?>:&nbsp;&nbsp; <span id="due_date"></span>
                                 </div>
                             </td>
-                            <td class="">
-                                <div class="form-group">
+                            <td class="" style="padding-left: 30px;">
+                                <div class="">
                                     <?php echo display('payment_date') ?>:&nbsp;&nbsp; <span id="payment_date"></span>
                                 </div>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="2">
+                            <td colspan="2" style="padding-left: 30px;">
                                 <?php echo display('payment_type') ?>:&nbsp;&nbsp; <span id="payment-type"></span>
                             </td>
                         </tr>
-                        <tr><td colspan="2">
-                                <?= display('payment_method') ?>:&nbsp;&nbsp; <span id="payment-method"></span>
-                            </td></tr>
+                        <tr>
+                            <td colspan="2" style="padding-left: 30px;display:none;" id="check-no-td">
+                                <?= display('check_no') ?>:&nbsp;&nbsp; <span id="check-no"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding-left: 30px;display:none;" id="expiry-date-td">
+                                <?= display('expiry_date') ?>:&nbsp;&nbsp; <span id="expiry-date"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" style="padding-left: 30px;padding-top: 50px;" id="total-still-td">
+                                <?= display('remaining_amount') ?>:&nbsp;&nbsp; <span id="total-still"></span>
+                            </td>
+                        </tr>
                     </tbody>
+
                 </table>
-                <table style="width: 100%;margin-top: 70px;margin-bottom: 50px;">
+                <table style="width: 100%;margin-top: 70px;margin-bottom: 50px;table-layout: fixed;">
                     <thead>
                         <th></th>
                         <th></th>
@@ -138,22 +307,34 @@
                     <tbody>
                         <tr class="text-center" style="margin-bottom: 50px;">
                             <td>
-                                <div class=""><?php echo display('employee_name') ?></div>
+                                <div class=""><?php echo display('recipient') ?></div>
                                 <hr style="width: 80%;margin: 60px 0;margin-bottom: 0;border-color: transparent;background: transparent;" />
-                                <span style="margin-bottom" id="employee-name">...
+                                <span style="" id="employee-name">...
                                 </span>
                             </td>
                             <td>
-                                <div class=""><?php echo display('employee_name') ?></div>
+                                <div class=""><?php echo display('cashier') ?></div>
                                 <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
                             </td>
                             <td>
-                                <div class=""><?php echo display('employee_name') ?></div>
+                                <div class=""><?php echo display('depends') ?></div>
                                 <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                <div class="empty-footer"></div>
+                            </th>
+                        </tr>
+                    </tfoot>
                 </table>
+                <div class="footerr row position-relative">
+                    <div class="col-xs-12 divFoote" style="background-image: url();">
+                        <img class="show" src="<?= base_url() ?>/assets/img/footer.png" style="width: 100%;height: auto;" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -280,7 +461,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                         echo html_escape($payment_method->HeadName);
                                                                                                                                                                                                                                                                                                                                                                                                     }
                                                                                                                                                                                                                                                                                                                                                                                                 }
-                                                                                                                                                                                                                                                                                                                                                                                            } ?>" data-employee="<?= $value['employee_id'] ?>">
+                                                                                                                                                                                                                                                                                                                                                                                            } ?>" data-employee="<?= $value['employee_id'] ?>" data-check-no="<?php echo html_escape($value['check_no']) ?>" data-expiry-date="<?php echo html_escape($value['expiry_date']) ?>">
                                                             <i class="fa fas fa-print"></i>
                                                         </button>
                                                     <?php endif ?>
@@ -316,6 +497,32 @@
             $('#payment-type').text($(this).attr('data-payment-type'));
             $('#payment-method').text($(this).attr('data-payment-method'));
             $('#employee-name').text($('.form-control.employee_id.select2-hidden-accessible').find("option[selected]").text());
+
+            var checkNo = $(this).attr('data-check-no');
+            if (!checkNo || !checkNo.length || checkNo.length < 1) {
+                $('#check-no-td,#expiry-date-td').css({
+                    display: 'none'
+                });
+            } else {
+                $('#check-no-td,#expiry-date-td').css({
+                    display: 'block'
+                });
+            }
+            $('#check-no').text($(this).attr('data-check-no'));
+            $('#expiry-date').text($(this).attr('data-expiry-date'));
+
+            // calculate still pirce
+            var allPrice = 0;
+            var paidPrice = 0;
+            $('[name="amount[]"]').each(function(inx, el) {
+                var val = $(el).val();
+                allPrice += parseFloat(val.length ? val : '0.0');
+            });
+            $('[name="payment_amount[]"]').each(function(inx, el) {
+                var val = $(el).val();
+                paidPrice += parseFloat(val.length ? val : '0.0');
+            });
+            $('#total-still').text((allPrice - paidPrice).toFixed(2));
 
             window.print();
         });
