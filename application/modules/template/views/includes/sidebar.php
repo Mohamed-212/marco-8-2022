@@ -555,7 +555,7 @@
         <!-- Gallery menu end -->
         <!-- Tax menu start -->
         <?php if ($this->permission->module('tax')->access()) { ?>
-        <li class="treeview <?php if ($this->uri->segment(2) == ("Ctax")) {
+        <!-- <li class="treeview <?php if ($this->uri->segment(2) == ("Ctax")) {
                                         echo "active";
                                     } else {
                                         echo " ";
@@ -586,7 +586,7 @@
                 </li>
                 <?php } ?>
             </ul>
-        </li>
+        </li> -->
         <?php } ?>
         <!-- Tax menu end -->
 
