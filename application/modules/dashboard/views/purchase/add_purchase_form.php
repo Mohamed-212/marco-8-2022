@@ -551,7 +551,7 @@
                         <div class="form-group row">
                             <div class="col-sm-6 offset-sm-6">
                                 <label for="attachment_file"><?=display('attach_file')?></label>
-                                <input type="file" id="attachment_file" name="file" />
+                                <input type="file" id="attachment_file" name="file" required />
                             </div>
                         </div>
                         <div class="form-group row">
