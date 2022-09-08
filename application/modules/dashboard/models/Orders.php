@@ -3484,12 +3484,12 @@ class Orders extends CI_Model
                     );
                     $ledger = $this->db->insert('customer_ledger', $data2);
                 }
+                //order update
+                $this->db->set('status', '2');
+                $this->db->set('invoice_no', $invoiceNo);
+                $this->db->where('invoice_id', $order_id);
+                $order = $this->db->update('order_invoice');
                 if ($ledger) {
-                    //order update
-                    $this->db->set('status', '2');
-                    $this->db->set('invoice_no', $invoiceNo);
-                    $this->db->where('invoice_id', $order_id);
-                    $order = $this->db->update('order_invoice');
                     $store_id      = $this->input->post('store_id', TRUE);
                     $products      = $this->input->post('product_id', TRUE);
                     $variant_ids   = $this->input->post('variant_id', TRUE);
@@ -3604,107 +3604,117 @@ class Orders extends CI_Model
                 $total_price_before_discount = $total_rate;
 
                 //1st customer debit
-                $customer_debit = array(
-                    'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => $invoice_id,
-                    'Vtype'     => 'Sales',
-                    'VDate'     => $date,
-                    'COAID'     => $customer_head->HeadCode,
-                    'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
-                    'Debit'     => $total_with_vat,
-                    'Credit'    => 0,
-                    'IsPosted'  => 1,
-                    'CreateBy'  => $receive_by,
-                    'CreateDate' => $createdate,
-                    'store_id'  => $result->store_id,
-                    'IsAppove'  => 0
-                );
-                //2nd Allowed Discount Debit
-                $allowed_discount_debit = array(
-                    'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => 'Inv-' . $invoice_id,
-                    'Vtype'     => 'Sales',
-                    'VDate'     => $date,
-                    'COAID'     => 4114,
-                    'Narration' => 'Sales "total discount" debited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
-                    'Debit'     => $total_discount,
-                    'Credit'    => 0,
-                    'IsPosted'  => 1,
-                    'CreateBy'  => $receive_by,
-                    'CreateDate' => $createdate,
-                    'store_id'  => $result->store_id,
-                    'IsAppove'  => 0
-                );
-                //3rd Showroom Sales credit
-                $showroom_sales_credit = array(
-                    'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => 'Inv-' . $invoice_id,
-                    'Vtype'     => 'Sales',
-                    'VDate'     => $date,
-                    'COAID'     => 5111, // account payable game 11
-                    'Narration' => 'Sales "total price before discount" credited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
-                    'Debit'     => 0,
-                    'Credit'    => $total_price_before_discount,
-                    'IsPosted'  => 1,
-                    'CreateBy'  => $receive_by,
-                    'CreateDate' => $createdate,
-                    'store_id'  => $result->store_id,
-                    'IsAppove'  => 0
-                );
-                //4th VAT on Sales
-                $vat_credit = array(
-                    'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => 'Inv-' . $invoice_id,
-                    'Vtype'     => 'Sales',
-                    'VDate'     => $date,
-                    'COAID'     => 2114, // account payable game 11
-                    'Narration' => 'Sales "total_vat" credited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
-                    'Debit'     => 0,
-                    'Credit'    => $total_vat,
-                    'IsPosted'  => 1,
-                    'CreateBy'  => $receive_by,
-                    'CreateDate' => $createdate,
-                    'store_id'  => $result->store_id,
-                    'IsAppove'  => 0
-                );
-                //5th cost of goods sold debit
-                $cogs_debit = array(
-                    'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => 'Inv-' . $invoice_id,
-                    'Vtype'     => 'Sales',
-                    'VDate'     => $date,
-                    'COAID'     => 4111,
-                    'Narration' => 'Sales "COGS" debited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
-                    'Debit'     => $cogs_price,
-                    'Credit'    => 0, //sales price asbe
-                    'IsPosted'  => 1,
-                    'CreateBy'  => $receive_by,
-                    'CreateDate' => $createdate,
-                    'store_id'  => $result->store_id,
-                    'IsAppove'  => 0
-                );
-                //6th cost of goods sold inventory Credit
-                $inventory_credit = array(
-                    'fy_id'     => $find_active_fiscal_year->id,
-                    'VNo'       => 'Inv-' . $invoice_id,
-                    'Vtype'     => 'Sales',
-                    'VDate'     => $date,
-                    'COAID'     => 1141,
-                    'Narration' => 'Sales inventory "cogs_price" credited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
-                    'Debit'     => 0,
-                    'Credit'    => $cogs_price, //supplier price asbe
-                    'IsPosted'  => 1,
-                    'CreateBy'  => $receive_by,
-                    'CreateDate' => $createdate,
-                    'store_id'  => $result->store_id,
-                    'IsAppove'  => 0
-                );
-                $this->db->insert('acc_transaction', $customer_debit);
-                $this->db->insert('acc_transaction', $allowed_discount_debit);
-                $this->db->insert('acc_transaction', $showroom_sales_credit);
-                $this->db->insert('acc_transaction', $vat_credit);
-                $this->db->insert('acc_transaction', $cogs_debit);
-                $this->db->insert('acc_transaction', $inventory_credit);
+                // $customer_debit = array(
+                //     'fy_id'     => $find_active_fiscal_year->id,
+                //     'VNo'       => $invoice_id,
+                //     'Vtype'     => 'Sales',
+                //     'VDate'     => $date,
+                //     'COAID'     => $customer_head->HeadCode,
+                //     'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
+                //     'Debit'     => $total_with_vat,
+                //     'Credit'    => 0,
+                //     'IsPosted'  => 1,
+                //     'CreateBy'  => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     'store_id'  => $result->store_id,
+                //     'IsAppove'  => 0
+                // );
+                // //2nd Allowed Discount Debit
+                // $allowed_discount_debit = array(
+                //     'fy_id'     => $find_active_fiscal_year->id,
+                //     'VNo'       => 'Inv-' . $invoice_id,
+                //     'Vtype'     => 'Sales',
+                //     'VDate'     => $date,
+                //     'COAID'     => 4114,
+                //     'Narration' => 'Sales "total discount" debited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
+                //     'Debit'     => $total_discount,
+                //     'Credit'    => 0,
+                //     'IsPosted'  => 1,
+                //     'CreateBy'  => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     'store_id'  => $result->store_id,
+                //     'IsAppove'  => 0
+                // );
+                // //3rd Showroom Sales credit
+                // $showroom_sales_credit = array(
+                //     'fy_id'     => $find_active_fiscal_year->id,
+                //     'VNo'       => 'Inv-' . $invoice_id,
+                //     'Vtype'     => 'Sales',
+                //     'VDate'     => $date,
+                //     'COAID'     => 5111, // account payable game 11
+                //     'Narration' => 'Sales "total price before discount" credited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
+                //     'Debit'     => 0,
+                //     'Credit'    => $total_price_before_discount,
+                //     'IsPosted'  => 1,
+                //     'CreateBy'  => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     'store_id'  => $result->store_id,
+                //     'IsAppove'  => 0
+                // );
+                // //4th VAT on Sales
+                // $vat_credit = array(
+                //     'fy_id'     => $find_active_fiscal_year->id,
+                //     'VNo'       => 'Inv-' . $invoice_id,
+                //     'Vtype'     => 'Sales',
+                //     'VDate'     => $date,
+                //     'COAID'     => 2114, // account payable game 11
+                //     'Narration' => 'Sales "total_vat" credited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
+                //     'Debit'     => 0,
+                //     'Credit'    => $total_vat,
+                //     'IsPosted'  => 1,
+                //     'CreateBy'  => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     'store_id'  => $result->store_id,
+                //     'IsAppove'  => 0
+                // );
+                // //5th cost of goods sold debit
+                // $cogs_debit = array(
+                //     'fy_id'     => $find_active_fiscal_year->id,
+                //     'VNo'       => 'Inv-' . $invoice_id,
+                //     'Vtype'     => 'Sales',
+                //     'VDate'     => $date,
+                //     'COAID'     => 4111,
+                //     'Narration' => 'Sales "COGS" debited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
+                //     'Debit'     => $cogs_price,
+                //     'Credit'    => 0, //sales price asbe
+                //     'IsPosted'  => 1,
+                //     'CreateBy'  => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     'store_id'  => $result->store_id,
+                //     'IsAppove'  => 0
+                // );
+                // //6th cost of goods sold inventory Credit
+                // $inventory_credit = array(
+                //     'fy_id'     => $find_active_fiscal_year->id,
+                //     'VNo'       => 'Inv-' . $invoice_id,
+                //     'Vtype'     => 'Sales',
+                //     'VDate'     => $date,
+                //     'COAID'     => 1141,
+                //     'Narration' => 'Sales inventory "cogs_price" credited by customer id: ' . $customer_head->HeadName . '(' . $result->customer_id . ')',
+                //     'Debit'     => 0,
+                //     'Credit'    => $cogs_price, //supplier price asbe
+                //     'IsPosted'  => 1,
+                //     'CreateBy'  => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     'store_id'  => $result->store_id,
+                //     'IsAppove'  => 0
+                // );
+                // $this->db->insert('acc_transaction', $customer_debit);
+                // $this->db->insert('acc_transaction', $allowed_discount_debit);
+                // $this->db->insert('acc_transaction', $showroom_sales_credit);
+                // $this->db->insert('acc_transaction', $vat_credit);
+                // $this->db->insert('acc_transaction', $cogs_debit);
+                // $this->db->insert('acc_transaction', $inventory_credit);
+
+                $order_acc_trans = $this->db->select('*')
+                    ->from('order_acc_transaction')
+                    ->where('VNo', $order_id)
+                    ->get();
+                $order_acc_trans_result = $order_acc_trans ? $order_acc_trans->result_array() : [];
+                foreach ($order_acc_trans_result as $acc_trans) {
+                    $acc_trans['VNo'] = 'Inv-' . $invoice_id;
+                    $this->db->insert('acc_transaction', $acc_trans);
+                }
                 // end customer order to invoice sales transection
 
                 //Tax details entry start
@@ -3823,12 +3833,13 @@ class Orders extends CI_Model
                 );
                 $ledger = $this->db->insert('customer_ledger', $data2);
             }
+            //order update
+            $this->db->set('status', '2');
+            $this->db->set('invoice_no', $invoiceNo);
+            $this->db->where('invoice_id', $order_id);
+            $order = $this->db->update('order_invoice');
             if ($ledger) {
-                //order update
-                $this->db->set('status', '2');
-                $this->db->set('invoice_no', $invoiceNo);
-                $this->db->where('invoice_id', $order_id);
-                $order = $this->db->update('order_invoice');
+                
                 $store_id      = $this->input->post('store_id', TRUE);
                 $products      = $this->input->post('product_id', TRUE);
                 $variant_ids   = $this->input->post('variant_id', TRUE);

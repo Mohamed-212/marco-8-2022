@@ -144,7 +144,7 @@ class Purchases extends CI_Model {
                 //إجمالي الفاتورة بعد الخصم الخاص بكل منتج و قبل الضريبة
                 $sub_total = floatval($this->input->post('sub_total_price', TRUE));
                 // توزيع الخصم على إجمالي الفاتورة لمعرفة نسبة الخصم
-                $ratio = $total_discount / $sub_total;
+                $ratio = $sub_total > 0 ? $total_discount / $sub_total : 0;
                 //End for total discount
                 //
                 //
@@ -156,7 +156,7 @@ class Purchases extends CI_Model {
                 //إجمالي الفاتورة بدون  VAT
                 $grand_total_without_VAT = floatval($this->input->post('grand_total_price', TRUE) - $total_vat);
                 // توزيع المصاريف على إجمالي الفاتورة لمعرفة نسبة الخصم
-                $ratio_expence = ($total_expence + $total_vat) / $grand_total_without_VAT;
+                $ratio_expence = $grand_total_without_VAT > 0 ? ($total_expence + $total_vat) / $grand_total_without_VAT : 0;
                 //End for total Expense & VAT
                 //
                 ///// حساب ضريبة القيمة المضافة على النظارات الشمسية //////
@@ -177,7 +177,11 @@ class Purchases extends CI_Model {
                 ////////حساب قيمة الضريبة من إجمالي النظارات الشمسية
                 $value_vat_sunglasses = $total_sunglasses_price * ($sunglasses_VAT / 100);
                 ///// توزيع الضريبة على إجمالي النظارات لمعرفة نسبة الزيادة
-                $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
+                if ($total_sunglasses_price <= 0) {
+                    $ratio_sunglasses = 0;
+                } else {
+                    $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
+                }
                 //
                 //insert sun vat to expense table
                 //
@@ -358,9 +362,9 @@ class Purchases extends CI_Model {
                             'store_id' => $this->input->post('store_id', TRUE),
                             'quantity' => $product_quantity,
                             'rate' => $product_rate,
-                            'rate_after_discount' => $rate2,
-                            'rate_after_exp' => $rate3,
-                            'rate_after_sunvat' => $rate4,
+                            'rate_after_discount' => (float)$rate2,
+                            'rate_after_exp' => (float)$rate3,
+                            'rate_after_sunvat' => (float)$rate4,
                             'category_id' => $category_id,
                             'discount' => $product_discount,
                             'vat_rate' => $i_vat_rate,

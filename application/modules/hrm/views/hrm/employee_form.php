@@ -156,6 +156,12 @@
                                 <div class="col-sm-12">
                                     <div id="contact_info">
                                         <?php if ($employee) : ?>
+                                            <?php 
+                                                if (!is_array($contact_info) || !is_object($contact_info))
+                                                {
+                                                    $contact_info = [];
+                                                }
+                                            ?>
                                             <?php foreach($contact_info as $inx => $c) : ?>
                                                 <div class="form-group row" style="padding-top: 20px;">
                                                 <label for="contact<?=$inx?>" class="col-sm-2 col-form-div"><?php echo display('name') ?></label>
