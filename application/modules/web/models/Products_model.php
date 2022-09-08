@@ -177,7 +177,10 @@ class Products_model extends CI_Model {
             ->where('store_id',$result->store_id)
             ->get()
             ->row();
-            return $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+            $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $p_id)->get()->row();
+
+        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
         }else{
             return "none";
         }

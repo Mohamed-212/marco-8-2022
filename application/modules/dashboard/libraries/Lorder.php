@@ -101,7 +101,7 @@ class Lorder {
         return true;
     }
     //order Edit Data
-    public function order_edit_data_old($order_id)
+    public function order_edit_data_older($order_id)
     {
         $CI =& get_instance();
         $CI->load->model('dashboard/Orders');
@@ -144,7 +144,7 @@ class Lorder {
     }
 
     //Order Edit Data
-	public function order_edit_data($order_id)
+	public function order_edit_data_old($order_id)
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Invoices');
@@ -192,6 +192,72 @@ class Lorder {
 		$chapterList = $CI->parser->parse('dashboard/order/edit_order_invoice_form',$data,true);
 		return $chapterList;
 	}
+
+    //quotation Edit Data
+	public function order_edit_data($order_id)
+	{
+		$CI =& get_instance();
+		$CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Orders');
+		$CI->load->model('dashboard/Stores');
+		$CI->load->model('dashboard/Shipping_methods');
+		$order_detail = $CI->Orders->retrieve_order_editdata($order_id);
+		$store_list 	  = $CI->Stores->store_list();
+		$terminal_list    = $CI->Orders->terminal_list();
+        $employee_list = $this->employee_list();
+        $all_pri_type = $CI->Invoices->select_all_pri_type();
+        $bank_list = $CI->Invoices->bank_list();
+        $payment_info = $CI->Invoices->payment_info();
+
+		$i=0;
+		foreach($order_detail as $k=>$v){$i++;
+		   $order_detail[$k]['sl']=$i;
+		}
+
+        // $tax = 
+
+		$data=array(
+			'title'				=> 	display('order_update'),
+			'order_id'		=>	$order_detail[0]['invoice_id'],
+			'customer_id'		=>	$order_detail[0]['customer_id'],
+			'employee_id'		=>	$order_detail[0]['employee_id'],
+			'store_id'			=>	$order_detail[0]['store_id'],
+			'customer_name'		=>	$order_detail[0]['customer_name'],
+			'date'				=>	$order_detail[0]['date'],
+			'expire_date'		=>	$order_detail[0]['expire_date'],
+			'order'			=>	$order_detail[0]['invoice'],
+			'total_amount'		=>	$order_detail[0]['total_amount'],
+			'paid_amount'		=>	$order_detail[0]['paid_amount'],
+			'due_amount'		=>	$order_detail[0]['due_amount'],
+			'total_discount'	=>	$order_detail[0]['total_discount'],
+			'order_discount'=>	$order_detail[0]['invoice_discount'],
+			'service_charge'	=>	$order_detail[0]['service_charge'],
+			'details'			=>	$order_detail[0]['details'],
+			'status'			=>	$order_detail[0]['status'],
+			'is_quotation'		=>	$order_detail[0]['is_quotation'],
+			'order_all_data'=>	$order_detail,
+			'employee_list'		=>	$employee_list,
+			'store_list'		=>	$store_list,
+			'terminal_list'     =>	$terminal_list,
+			'all_pri_type'     =>	$all_pri_type,
+			'bank_list'        =>	$bank_list,
+			'payment_info'     =>	$payment_info,
+			);
+		$chapterList = $CI->parser->parse('dashboard/order/edit_order_form_updated',$data,true);
+		return $chapterList;
+	}
+
+    public function employee_list()
+    {
+        $CI =& get_instance();
+        $CI->db->select('*');
+        $CI->db->from('employee_history');
+        $query = $CI->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
 
     //Order Html Data
     public function order_html_data_old($order_id)
@@ -569,6 +635,11 @@ class Lorder {
 
         $chapterList = $CI->parser->parse('dashboard/order/create_invoice_form',$data,true);
         return $chapterList;
+    }
+
+    public function create_invoice_data_updated($order_id)
+    {
+
     }
 }
 ?>

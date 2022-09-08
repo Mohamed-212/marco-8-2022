@@ -96,6 +96,17 @@ class Lquotation {
 		   $quotation_detail[$k]['sl']=$i;
 		}
 
+		$tax_amount = 0;
+		// $taxes = $CI->db->select('*')->from('quotation_tax_col_summary')->where('quotation_id', $quotation_id)->get();
+		// if ($taxes) {
+		// 	$taxes = $taxes->result();
+		// 	if (is_array($taxes) || is_object($taxes)) {
+		// 		foreach ($taxes as $tax) {
+		// 			$tax_amount += $tax->tax_amount;
+		// 		}
+		// 	}
+		// }
+
 		$data=array(
 			'title'				=> 	display('quotation_update'),
 			'quotation_id'		=>	$quotation_detail[0]['quotation_id'],
@@ -122,6 +133,7 @@ class Lquotation {
 			'all_pri_type'     =>	$all_pri_type,
 			'bank_list'        =>	$bank_list,
 			'payment_info'     =>	$payment_info,
+			'tax_amount' 	   => $tax_amount,
 			);
 		$chapterList = $CI->parser->parse('dashboard/quotation/edit_quotation_form',$data,true);
 		return $chapterList;

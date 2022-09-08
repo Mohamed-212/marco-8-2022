@@ -602,18 +602,21 @@ class Corder extends MX_Controller
     }
     public function create_invoice_form($order_id)
     {
-        if (check_module_status('accounting') == 1) {
-            $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
-            if (!empty($find_active_fiscal_year)) {
-                $content = $this->lorder->create_invoice_data($order_id);
-                $this->template_lib->full_admin_html_view($content);
-            } else {
-                $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
-                redirect(base_url('Admin_dashboard'));
-            }
-        } else {
-            $content = $this->lorder->create_invoice_data($order_id);
-            $this->template_lib->full_admin_html_view($content);
-        }
+        // if (check_module_status('accounting') == 1) {
+        //     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+        //     if (!empty($find_active_fiscal_year)) {
+        //         $content = $this->lorder->create_invoice_data($order_id);
+        //         $this->template_lib->full_admin_html_view($content);
+        //     } else {
+        //         $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
+        //         redirect(base_url('Admin_dashboard'));
+        //     }
+        // } else {
+        //     $content = $this->lorder->create_invoice_data($order_id);
+        //     $this->template_lib->full_admin_html_view($content);
+        // }
+
+        $content = $this->lorder->order_edit_data($order_id);
+		$this->template_lib->full_admin_html_view($content);
     }
 }

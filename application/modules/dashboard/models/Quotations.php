@@ -558,23 +558,23 @@ class Quotations extends CI_Model
             redirect('dashboard/Cquotation');
         }
         //Customer data Existence Check.
-        if ($customer_id == "") {
-            $customer_id = $this->auth->generator(15);
-            //Customer  basic information adding.
-            $data = array(
-                'customer_id' 	    => $customer_id,
-                'customer_name'     => $this->input->post('customer_name_others', TRUE),
-                'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
-                'customer_mobile' 	=> $this->input->post('customer_mobile_no', TRUE),
-                'customer_email' 	=> "NONE",
-                'status' 			=> 1
-            );
-            $this->Customers->customer_entry($data);
-            //Previous balance adding -> Sending to customer model to adjust the data.
-            $this->Customers->previous_balance_add(0, $customer_id);
-        } else {
+        // if ($customer_id == "") {
+        //     $customer_id = $this->auth->generator(15);
+        //     //Customer  basic information adding.
+        //     $data = array(
+        //         'customer_id' 	    => $customer_id,
+        //         'customer_name'     => $this->input->post('customer_name_others', TRUE),
+        //         'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
+        //         'customer_mobile' 	=> $this->input->post('customer_mobile_no', TRUE),
+        //         'customer_email' 	=> "NONE",
+        //         'status' 			=> 1
+        //     );
+        //     $this->Customers->customer_entry($data);
+        //     //Previous balance adding -> Sending to customer model to adjust the data.
+        //     $this->Customers->previous_balance_add(0, $customer_id);
+        // } else {
             $customer_id = $this->input->post('customer_id', TRUE);
-        }
+        // }
         //Data inserting into quotation table
         $invoice_discount = $this->input->post('invoice_discount', TRUE);
         $total_discount   = $this->input->post('total_discount', TRUE);
