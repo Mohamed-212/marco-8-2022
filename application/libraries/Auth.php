@@ -62,6 +62,7 @@ class Auth
                 'isAdmin' => $isAdmin,
                 'sid_web' => $sid_web,
                 'user_id' => $result[0]['user_id'],
+                'id'      => $result[0]['user_id'],
                 'store_id' => $result[0]['store_id'],
                 'user_type' => $result[0]['user_type'],
                 'user_name' => $result[0]['first_name'] . " " . $result[0]['last_name'],
