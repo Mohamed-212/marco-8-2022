@@ -182,8 +182,10 @@ class Lcustomer {
 		$CI->load->model('dashboard/Customers');
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
+		$CI->load->model('dashboard/CustomerContactInfo');
 		$customer_detail = $CI->Customers->customer_personal_data($customer_id);
 		$invoice_info 	= $CI->Customers->customer_invoice_data($customer_id);
+		$contact_info = $CI->CustomerContactInfo->get_contact_info_data($customer_detail[0]['customer_id']);
 		$invoice_amount = 0;
 		if(!empty($invoice_info)){
 			foreach($invoice_info as $k=>$v){
@@ -213,7 +215,7 @@ class Lcustomer {
 			'receipt_info' 		=> $receipt_info,
 			'currency' 			=> $currency_details[0]['currency_icon'],
 			'position' 			=> $currency_details[0]['currency_position'],
-			
+			'contact_info'     => $contact_info,
 			);
 		$chapterList = $CI->parser->parse('dashboard/customer/customer_details',$data,true);
 		return $chapterList;
@@ -285,9 +287,11 @@ class Lcustomer {
 		$CI->load->model('web/Homes');
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
+		$CI->load->model('dashboard/CustomerContactInfo');
 		$customer_detail = $CI->Customers->customer_personal_data($customer_id);
 		$ledger 		 = $CI->Customers->customerledger_tradational($customer_id);
 		$summary 		 = $CI->Customers->customer_transection_summary($customer_id);
+		$contact_info = $CI->CustomerContactInfo->get_contact_info_data($customer_id);
 	
 		$balance = 0;
 		if(!empty($ledger)){
@@ -340,6 +344,7 @@ class Lcustomer {
 			'company_info'		=> $company_info,
 			'currency' => $currency_details[0]['currency_icon'],
 			'position' => $currency_details[0]['currency_position'],
+			'contact_info' => $contact_info,
 			);
 
 		$singlecustomerdetails = $CI->parser->parse('dashboard/customer/customer_ledger',$data,true);
