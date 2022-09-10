@@ -146,6 +146,7 @@ function calculateSumQuotation() {
     var ser_chg = 0;
     var shipping_charge = 0;
     var sum = 0;
+    var percentage_dis = 0;
 
     //Total CGST
     $(".total_cgst").each(function () {
