@@ -497,7 +497,7 @@
                                     </tr>
                                     <tr>
 
-                                        <td colspan="4" rowspan="4">
+                                        <td colspan="4" rowspan="5">
                                             <label for="invoice_details" class=""><?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?></label>
                                             <textarea class="form-control" name="invoice_details" id="invoice_details" rows="6" placeholder="<?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?>"></textarea>
                                         </td>
@@ -515,6 +515,14 @@
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <input type="text" id="invoice_discount" class="form-control text-right" name="invoice_discount" placeholder="0.00" onkeyup="calculateSum();" onchange="calculateSum();" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right" colspan="2">
+                                            <b><?php echo display(isset($order) ? 'order_discount' : 'percentage_discount') ?>:</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="text" id="percentage_discount" class="form-control text-right" name="percentage_discount" placeholder="0 %" onkeyup="calculateSum();" onchange="calculateSum();" />
                                         </td>
                                     </tr>
                                     <tr>
