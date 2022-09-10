@@ -9,6 +9,7 @@ class Ccustomer extends MX_Controller
         $this->auth->check_user_auth();
         $this->load->library('dashboard/lcustomer');
         $this->load->model('dashboard/Customers');
+        $this->load->model('dashboard/CustomerContactInfo');
     }
 
     //Default loading for Customer System.
@@ -41,7 +42,6 @@ class Ccustomer extends MX_Controller
     //Insert Product and upload
     public function insert_customer()
     {
-
         $customer_id = generator(15);
         //Customer  basic information adding.
         $data = array(
@@ -61,9 +61,28 @@ class Ccustomer extends MX_Controller
             'zip'                   => $this->input->post('zip', TRUE),
             'status'                => 1
         );
+
         $result = $this->Customers->customer_entry($data);
         if ($result == TRUE) {
             $this->session->set_userdata(array('message' => display('successfully_added')));
+            // insert customer info
+            $contact_info = $this->input->post('contact_info', TRUE);
+            try {
+                $contact_info = json_decode($contact_info);
+
+                if ($contact_info) {
+                    foreach ($contact_info as $info) {
+                        $info = (array) $info;
+                        $info['customer_id'] = $customer_id;
+                        $info['phone'] = $info['mobile'];
+                        unset($info['info_id']);
+                        unset($info['mobile']);
+
+                        $this->CustomerContactInfo->insert($info);
+                    }
+                }
+            } catch (Exception $e) {
+            }
             if (isset($_POST['add-customer'])) {
                 redirect(base_url('dashboard/Ccustomer/manage_customer'));
                 exit;
