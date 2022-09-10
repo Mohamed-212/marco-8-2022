@@ -62,7 +62,7 @@ class Hrm_model extends CI_Model {
                 $headcode="2116000001";
             }
     $c_acc=$id.'-'.$data['first_name'].''.$data['last_name'];
-    $createby=$this->session->userdata('id');
+    $createby=$this->session->userdata('user_id');
     $createdate=date('Y-m-d H:i:s');
     $employee_coa = [
              'HeadCode'         => $headcode,
