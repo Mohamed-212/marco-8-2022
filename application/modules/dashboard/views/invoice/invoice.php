@@ -98,6 +98,7 @@
                                 <input type="text" class="form-control datepicker " name="to_date" id="to_date" value="<?php echo set_value('to_date', @$_GET['to_date']) ?>" placeholder='<?php echo display('end_date') ?>' autocomplete="off">
                             </div>
                         </div>
+                        <?php /* ?>
                         <?php if (!isset($is_order)) : ?>
                             <div class="col-sm-3">
                                 <div class="form-group">
@@ -126,6 +127,7 @@
                                 </div>
                             </div>
                         <?php endif ?>
+                         <?php */ ?>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"><?php echo display('employee_name') ?>:</label>
@@ -168,7 +170,7 @@
                                         <?php if (isset($is_order)) :?>
                                         <th><?php echo display('invoice_no') ?></th>
                                         <?php endif ?>
-                                        <th><?php echo display('status') ?></th>
+<!--                                        <th>--><?php //echo display('status') ?><!--</th>-->
                                         <th><?php echo display('action') ?></th>
                                     </tr>
                                 </thead>
@@ -201,6 +203,7 @@
                                                 <?php echo html_escape($invoice['invoice_no']) ?>
                                                 </td>
                                                 <?php endif ?>
+                                                <?php /* ?>
                                                 <td class="text-center">
                                                     <?php if ($is_order) : ?>
                                                         <label class='label label-warning'>
@@ -294,6 +297,7 @@
                                                         <?php echo form_close() ?>
                                                     <?php endif ?>
                                                 </td>
+                                                <?php */ ?>
                                                 <?php if (isset($is_order)) : ?>
                                                     <td>
                                                         <center>

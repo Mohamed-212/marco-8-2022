@@ -202,6 +202,7 @@ class Invoices extends CI_Model {
                 $quantity = $this->input->post('product_quantity', TRUE);
                 $available_quantity = $this->input->post('available_quantity', TRUE);
                 $product_id = $this->input->post('product_id', TRUE);
+                $payment_id = $this->input->post('payment_id', TRUE);
 
                 //Stock availability check
                 $result = array();
@@ -215,6 +216,12 @@ class Invoices extends CI_Model {
                 //Product existing check
                 if ($product_id == null) {
                     $this->session->set_userdata(array('error_message' => display('please_select_product')));
+                    redirect('dashboard/Cinvoice');
+                }
+
+                //payment account existing check
+                if ($product_id == null) {
+                    $this->session->set_userdata(array('error_message' => display('please_select_payment')));
                     redirect('dashboard/Cinvoice');
                 }
 
@@ -319,7 +326,7 @@ class Invoices extends CI_Model {
                     'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
                     'shipping_method' => $this->input->post('shipping_method', TRUE),
                     'invoice_details' => $this->input->post('invoice_details', TRUE),
-                    'status' => 1,
+                    'status' => 5,
                     'created_at' => date("Y-m-d H:i:s")
                 );
                 $this->db->insert('invoice', $data);
@@ -359,7 +366,6 @@ class Invoices extends CI_Model {
                 //Invoice details for invoice
                 for ($i = 0, $n = count($quantity); $i < $n; $i++) {
                     $product_assembly = $assembly[$i];
-
                     if ($product_assembly == 1) {
                         $product_quantity = $quantity[$i];
                         $product_rate = $rate[$i];
@@ -633,8 +639,8 @@ class Invoices extends CI_Model {
                 $store_id = $this->input->post('store_id', TRUE);
                 $store_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
 
-                $payment_id = $this->input->post('payment_id', TRUE);
-                $account_no = $this->input->post('account_no', TRUE);
+                //$payment_id = $this->input->post('payment_id', TRUE);
+                //$account_no = $this->input->post('account_no', TRUE);
 
                 //1st customer debit total_with_vat
                 $customer_debit = array(
@@ -649,7 +655,6 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $customer_debit);
@@ -683,7 +688,6 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
                 //4th VAT on Sales
@@ -699,7 +703,6 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
 
@@ -716,7 +719,6 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
                 //6th cost of goods sold Main warehouse Credit
@@ -732,7 +734,6 @@ class Invoices extends CI_Model {
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
                 //7th paid_amount Credit
@@ -750,7 +751,6 @@ class Invoices extends CI_Model {
                         'IsPosted' => 1,
                         'CreateBy' => $receive_by,
                         'CreateDate' => $createdate,
-                        //'IsAppove' => 0
                         'IsAppove' => 1
                     );
                     $this->db->insert('acc_transaction', $customer_credit);
@@ -768,7 +768,6 @@ class Invoices extends CI_Model {
                             'IsPosted' => 1,
                             'CreateBy' => $receive_by,
                             'CreateDate' => $createdate,
-                            //'IsAppove' => 0
                             'IsAppove' => 1
                         );
                         $this->db->insert('acc_transaction', $bank_debit);
@@ -3821,6 +3820,7 @@ class Invoices extends CI_Model {
         $this->db->select('
 			a.*,
 			a.created_at as date_time,
+			a.invoice_discount as total_invoice_discount,
 			b.*,
 			c.*,
 			d.product_id,
@@ -4291,7 +4291,7 @@ class Invoices extends CI_Model {
     public function payment_info() {
         $store_id = $this->session->userdata('store_id');
         if (empty($store_id)) {
-            return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '1121', '1122', '1123'))->get()->result();
+            return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '112'))->get()->result();
         } else {
             //$cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->where('PHeadCode', '111')->get()->result();
             $cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('PHeadCode', '111')->get()->result();

@@ -196,6 +196,7 @@ class Linvoice {
 		$CI->load->model('dashboard/Products');
 		
 		$invoice_detail = $CI->Invoices->retrieve_invoice_html_data($invoice_id);
+        $invoice_detail[0]['invoice_discount'] = $invoice_detail[0]['total_invoice_discount'];
 		$order_no=$CI->db->select('b.order as order_no')->from('invoice a')->where('a.order_id',$invoice_detail[0]['order_id'])->join('order b','a.order_id = b.order_id','left')->get()->result();
 		$quotation_no = $CI->db->select('q.quotation as quotation_no')->from('invoice a')->where('a.quotation_id',$invoice_detail[0]['quotation_id'])->join('quotation q','q.quotation_id = a.quotation_id','left')->get()->result();
 
@@ -231,7 +232,6 @@ class Linvoice {
 		$created_at      =explode(' ', $invoice_detail[0]['date_time']);
 		$invoice_time=@$created_at[1];
 
-
 		$data=array(
 			'title'			   =>display('invoice_details'),
 			'invoice_id'	   =>$invoice_detail[0]['invoice_id'],
@@ -249,6 +249,7 @@ class Linvoice {
 			'total_amount'	   =>$invoice_detail[0]['total_amount'],
 			'total_discount'   =>$invoice_detail[0]['total_discount'],
 			'invoice_discount' =>$invoice_detail[0]['invoice_discount'],
+			'percentage_discount' =>$invoice_detail[0]['percentage_discount'],
 			'service_charge'   =>$invoice_detail[0]['service_charge'],
 			'shipping_charge'  =>$invoice_detail[0]['shipping_charge'],
 			'shipping_method'  =>@$shipping_method[0]['method_name'],

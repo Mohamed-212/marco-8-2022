@@ -136,7 +136,7 @@ class Cinstallment extends MX_Controller
     {
         $store_id = $this->session->userdata('store_id');
         if (empty($store_id)) {
-            return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '1121', '1122', '1123'))->get()->result();
+            return $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('111', '112'))->get()->result();
         } else {
             //$cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->where('PHeadCode', '111')->get()->result();
             $cash_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('PHeadCode', '111')->get()->result();
