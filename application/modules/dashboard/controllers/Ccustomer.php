@@ -106,8 +106,12 @@ class Ccustomer extends MX_Controller
     // customer Update
     public function customer_update()
     {
-
         $customer_id = $this->input->post('customer_id', TRUE);
+
+        $contact_info = $this->input->post('contact_info', true);
+        if ($contact_info) {
+            $contact_info = json_decode($contact_info, true);
+        }
 
         //Customer  basic information adding.
         $data = array(
@@ -127,6 +131,19 @@ class Ccustomer extends MX_Controller
         );
 
         $this->Customers->update_customer($data, $customer_id);
+
+        $this->CustomerContactInfo->deleteAll($customer_id);
+        foreach ($contact_info as $info) {
+            $info = (array) $info;
+            $info['customer_id'] = $customer_id;
+            $info['phone'] = $info['mobile'];
+            unset($info['info_id']);
+            unset($info['mobile']);
+            
+            $this->CustomerContactInfo->insert($info);
+        }
+
+
         $this->session->set_userdata(array('message' => display('successfully_updated')));
         redirect('dashboard/Ccustomer/manage_customer');
     }

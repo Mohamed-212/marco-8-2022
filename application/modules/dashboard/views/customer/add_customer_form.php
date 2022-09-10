@@ -198,7 +198,6 @@
                         <div class="form-group row">
                             <input type="hidden" hidden id="contact_info" name="contact_info" value="" />
                             <div class="col-sm-12">
-
                                 <div class="card-body" style="margin-top: 35px;" x-init="addOne">
                                     <div class="row">
                                         <div class="col-sm-11">

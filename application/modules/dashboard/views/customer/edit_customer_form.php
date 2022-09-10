@@ -43,7 +43,40 @@
 
         <!-- New customer -->
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12" x-data="{
+                infos: [],
+                info_object: {
+                    id: 0,
+                    info_id: 0,
+                    name: '',
+                    mobile: '',
+                    address: '',
+                },
+                addOne: function() {
+                    this.infos.push({
+                        info_id: Math.random() * 10000,
+                        name: '',
+                        mobile: '',
+                        address: '',
+                    });
+                },
+                addOneFromData: function (id, name, mobile, address) {
+                    this.infos.push({
+                        info_id: Math.random() * 10000 + id,
+                        id: id,
+                        name: name,
+                        mobile: mobile,
+                        address: address,
+                    });
+                },
+                removeOne: function(id) {
+                    this.infos.splice(this.infos.findIndex(x => x.info_id == id), 1);
+                }
+            }" x-init="$watch('infos', value => {
+                const contactInfo = document.querySelector('#contact_info');
+                contactInfo.value = JSON.stringify(value);
+            });<?php foreach($contact_info as $info) {echo "addOneFromData({$info->id}, '{$info->name}', '{$info->phone}', '{$info->address}');";} ?>">
+                
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
                         <div class="panel-title">
@@ -172,6 +205,56 @@
                                     placeholder="<?php echo display('zip') ?>" value="{zip}">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <input type="hidden" hidden id="contact_info" name="contact_info" value="<?=json_encode($contact_info)?>" />
+                            <div class="col-sm-12">
+                                <div class="card-body" style="margin-top: 35px;" <?php echo count($contact_info) < 1 ? "x-init='addOne'" : ''; ?>>
+                                    <div class="row">
+                                        <div class="col-sm-11">
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">
+                                                    <b><?php echo display('contact_info') ?>:</b>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <template x-for="(c, inx) in infos" :key="c.info_id">
+                                        <div class="row" style="margin: 30px 0;border-bottom: 1px solid #ccc;">
+                                            <div class="col-sm-11">
+                                                <div class="form-group row">
+                                                    <label x-bind:for="'customer_name' + c.info_id" class="col-sm-3 col-form-label"><?php echo display('customer_name') ?></label>
+                                                    <div class="col-sm-6">
+                                                        <input class="form-control" name="info_names[]" x-bind:id="'customer_name' + c.info_id" x-model.trim="c.name" type="text" placeholder="<?php echo display('customer_name') ?>" required="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label x-bind:for="'mobile' + c.info_id" class="col-sm-3 col-form-label"><?php echo display('customer_mobile') ?></label>
+                                                    <div class="col-sm-6">
+                                                        <input class="form-control" name="infos_mobile[]" x-bind:id="'mobile' +c.info_id" x-model.number="c.mobile" type="number" placeholder="<?php echo display('customer_mobile') ?>" required="" min="0" data-toggle="tooltip" data-placement="bottom" title="<?php echo display('add_country_code') ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label x-bind:for="'customer_address_1' + c.info_id" class="col-sm-3 col-form-label"><?php echo display('customer_address') ?></label>
+                                                    <div class="col-sm-6">
+                                                        <textarea class="form-control" name="infos_address[]" x-bind:id="'customer_address_1' + c.info_id" x-model.trim="c.address" rows="3" placeholder="<?php echo display('customer_address') ?>"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-1" style="display: flex;align-items: center;align-content: center;height: 150px;">
+                                                <button type="button" class="btn btn-danger" x-on:click.prevent="removeOne(c.info_id)">
+                                                    <i class="fa fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <button type="button" class="btn btn-info" x-on:click.prevent="addOne">
+                                        <?= display('add_contact_info') ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label for="example-text-input" class="col-sm-4 col-form-label"></label>
                             <div class="col-sm-6">

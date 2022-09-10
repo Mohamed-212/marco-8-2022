@@ -144,8 +144,10 @@ class Lcustomer {
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Customers');
+		$CI->load->model('dashboard/CustomerContactInfo');
 		$customer_detail = $CI->Customers->retrieve_customer_editdata($customer_id);
 		$state_list = $CI->Customers->select_city_country_id($customer_detail[0]['country']);
+		$contact_info = $CI->CustomerContactInfo->get_contact_info_data($customer_detail[0]['customer_id']);
 
 		$country_list 	= $CI->Customers->country_list();
 		$data=array(
@@ -168,6 +170,7 @@ class Lcustomer {
 			'country_id' 		=>$customer_detail[0]['country'],
 			'country_list' 	    =>$country_list,
 			'state_list' 		=>$state_list,
+			'contact_info' 	    =>$contact_info,
 			);
 		$chapterList = $CI->parser->parse('dashboard/customer/edit_customer_form',$data,true);
 		return $chapterList;
