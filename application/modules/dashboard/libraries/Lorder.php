@@ -218,19 +218,19 @@ class Lorder {
 
 		$data=array(
 			'title'				=> 	display('order_update'),
-			'order_id'		=>	$order_detail[0]['invoice_id'],
+			'order_id'		=>	$order_detail[0]['order_id'],
 			'customer_id'		=>	$order_detail[0]['customer_id'],
 			'employee_id'		=>	$order_detail[0]['employee_id'],
 			'store_id'			=>	$order_detail[0]['store_id'],
 			'customer_name'		=>	$order_detail[0]['customer_name'],
 			'date'				=>	$order_detail[0]['date'],
 			'expire_date'		=>	$order_detail[0]['expire_date'],
-			'order'			=>	$order_detail[0]['invoice'],
+			'order'			=>	$order_detail[0]['order'],
 			'total_amount'		=>	$order_detail[0]['total_amount'],
 			'paid_amount'		=>	$order_detail[0]['paid_amount'],
 			'due_amount'		=>	$order_detail[0]['due_amount'],
 			'total_discount'	=>	$order_detail[0]['total_discount'],
-			'order_discount'=>	$order_detail[0]['invoice_discount'],
+			'product_discount'=>	$order_detail[0]['product_discount'],
 			'service_charge'	=>	$order_detail[0]['service_charge'],
 			'details'			=>	$order_detail[0]['details'],
 			'status'			=>	$order_detail[0]['status'],
@@ -380,8 +380,8 @@ class Lorder {
 
 		$data=array(
 			'title'			   =>display('invoice_details'),
-			'invoice_id'	   =>$invoice_detail[0]['invoice_id'],
-			'invoice_no'	   =>$invoice_detail[0]['invoice'],
+			'invoice_id'	   =>$invoice_detail[0]['order_id'],
+			'invoice_no'	   => empty($invoice_detail[0]['invoice_no']) ? '' : $invoice_detail[0]['invoice_no'],
 			'customer_id'      => $invoice_detail[0]['customer_id'],
 			'customer_name'	   =>$invoice_detail[0]['customer_name'],
 			'customer_mobile'  =>$invoice_detail[0]['customer_mobile'],
@@ -394,13 +394,13 @@ class Lorder {
 			'invoice_time'	   =>$invoice_time,
 			'total_amount'	   =>$invoice_detail[0]['total_amount'],
 			'total_discount'   =>$invoice_detail[0]['total_discount'],
-			'invoice_discount' =>$invoice_detail[0]['invoice_discount'],
+			'invoice_discount' =>$invoice_detail[0]['order_discount'],
 			'service_charge'   =>$invoice_detail[0]['service_charge'],
 			'shipping_charge'  =>$invoice_detail[0]['shipping_charge'],
 			'shipping_method'  =>@$shipping_method[0]['method_name'],
 			'paid_amount'	   =>$invoice_detail[0]['paid_amount'],
 			'due_amount'	   =>$invoice_detail[0]['due_amount'],
-			'invoice_details'  =>$invoice_detail[0]['invoice_details'],
+			'invoice_details'  =>$invoice_detail[0]['order_details'],
 			'subTotal_quantity'=>$subTotal_quantity,
 			'invoice_all_data' =>$invoice_detail,
 			'isTaxed'          =>$isTaxed,
@@ -414,6 +414,7 @@ class Lorder {
             'ship_customer_mobile'=>$invoice_detail[0]['ship_customer_mobile'],
             'ship_customer_email'=>$invoice_detail[0]['ship_customer_email'],
             'cardpayments'	     =>$cardpayments,
+            'percentage_discount' => $invoice_detail[0]['percentage_discount'],
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
 		$emp_name = $emp_id = null;

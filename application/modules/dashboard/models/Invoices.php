@@ -194,7 +194,7 @@ class Invoices extends CI_Model {
     }
 
     //Invoice entry
-    public function invoice_entry() {
+    public function invoice_entry($order_id = null) {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -327,7 +327,8 @@ class Invoices extends CI_Model {
                     'shipping_method' => $this->input->post('shipping_method', TRUE),
                     'invoice_details' => $this->input->post('invoice_details', TRUE),
                     'status' => 5,
-                    'created_at' => date("Y-m-d H:i:s")
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'order_id' => $order_id,
                 );
                 $this->db->insert('invoice', $data);
 
@@ -613,15 +614,17 @@ class Invoices extends CI_Model {
 
                 // SALES/INVOICE TRANSECTIONS ENTRY
                 $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
+                
                 if (empty($customer_head)) {
                     $this->load->model('accounting/account_model');
-                    $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
+                    $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
                     if ($customer_name) {
                         $customer_data = $data = array(
-                            'customer_id' => $result->customer_id,
+                            'customer_id' => $customer_id,
                             'customer_name' => $customer_name->customer_name,
                         );
                         $this->account_model->insert_customer_head($customer_data);
+                        
                     }
                     $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
                 }
@@ -1118,7 +1121,8 @@ class Invoices extends CI_Model {
                 'shipping_method' => $this->input->post('shipping_method', TRUE),
                 'invoice_details' => $this->input->post('invoice_details', TRUE),
                 'status' => 1,
-                'created_at' => date('Y-m-d h:i:s')
+                'created_at' => date('Y-m-d h:i:s'),
+                'order_id' => $order_id,
             );
             $this->db->insert('invoice', $data);
 

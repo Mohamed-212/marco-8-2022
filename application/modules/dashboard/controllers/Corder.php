@@ -74,7 +74,7 @@ class Corder extends MX_Controller
                     'order' => true,
                 );
                 $data['module'] = "dashboard";
-                $data['page'] = "invoice/add_invoice_form";
+                $data['page'] = "order/add_order_form";
                 echo Modules::run('template/layout', $data);
             } else {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
@@ -102,7 +102,7 @@ class Corder extends MX_Controller
                 'order' => true,
             );
             $data['module'] = "dashboard";
-            $data['page'] = "invoice/add_invoice_form";
+            $data['page'] = "order/add_order_form";
             echo Modules::run('template/layout', $data);
         }
     }
@@ -384,7 +384,7 @@ class Corder extends MX_Controller
         );
 
         $data['module'] = "dashboard";
-        $data['page'] = "invoice/invoice";
+        $data['page'] = "order/manage_order";
         echo Modules::run('template/layout', $data);
     }
 
@@ -461,12 +461,18 @@ class Corder extends MX_Controller
     }
 
     // Order Update
-    public function order_update() {
+    public function order_update($order_id) {
         $this->permission->check_label('manage_sale')->update()->redirect();
 
-        $order_id = $this->Orders->update_order();
+        $order_id = $this->Orders->update_order($order_id);
         $this->session->set_userdata(array('message' => display('successfully_updated')));
-        redirect('dashboard/Corder/order_inserted_data/' . $order_id);
+
+        $invoice_id = $this->db->select('invoice_id')->from('invoice')->where('order_id', $order_id)->get();
+        if ($invoice_id) {
+            redirect('dashboard/Cinvoice/invoice_inserted_data/' . $invoice_id->row()->invoice_id);
+        } else {
+            redirect('dashboard/Corder/manage_order');
+        }
     }
 
     //Search Inovoice Item
