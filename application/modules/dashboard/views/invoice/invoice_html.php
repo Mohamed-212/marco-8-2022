@@ -564,7 +564,7 @@
 
                                                                     <?php if ($invoice_all_data[0]['percentage_discount'] != 0) { ?>
                                                                         <tr>
-                                                                            <th class="invoice_discount"> <?php echo display('invoice_discount_percentage') ?>:</th>
+                                                                            <th class="invoice_discount"> <?php echo display(isset($is_order) ? 'order_percentage_discount' : 'invoice_discount_percentage') ?>:</th>
                                                                             <td class="invoice_discount">
                                                                                 <?php echo $percentage_discount . ' %' ?>
                                                                             </td>
