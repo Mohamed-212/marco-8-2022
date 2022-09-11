@@ -61,25 +61,41 @@
 						<?php
 						}
 						?>
+
 						<div class="table-responsive mt_10">
 							<?php
 							if (isset($product_id)) {
 							?>
 								<div id="printableArea">
 									<link href="<?php echo MOD_URL . 'dashboard/assets/css/print.css'; ?>" rel="stylesheet" type="text/css" />
-									<table id="" class="table table-bordered bcollapse" style="width: 100%">
+									<style>
+										@media print {
+
+											tr,
+											td {
+												border: none !important;
+											}
+											#table {
+												margin: auto;
+												width: 90%;
+											}
+											body{display: flex;align-items: center;margin: 0;justify-content: center;justify-items: center;}
+										}
+									</style>
+									<table id="table" class="table bcollapse" style="width: 100%" border="0">
 										<?php
 										$counter = 0;
 										// for ($i=0; $i < 60 ; $i++) { 
 										// for ($i=0; $i < $open_quantity ; $i++) { 
+										$stock = 5;
 										for ($i = 0; $i < $stock; $i++) {
 										?>
 											<?php if ($counter == 5) { ?>
 												<tr>
 													<?php $counter = 0; ?>
 												<?php } ?>
-												<td class="td_text" style="text-align: start;width: 52mm;">
-													<div class="barcode-inner barcode_div">
+												<td class="td_text" style="text-align: start;width: 108mm;max-width: 108mm;display:inherit;padding: 25px;">
+													<div class="barcode-inner barcode_div" style="margin: 5px;">
 														<div class="product-name barcode_cominfo" style="text-align: start;">
 															<table style="width: 100%;">
 																<thead>
@@ -122,8 +138,8 @@
 														<img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/' . $product_id . '/' . $year) ?>" class="img-responsive center-block pbarimag" style="margin-left: 0;margin-right: 0;" alt="">
 														<!-- <div class="product-name-details pname_details">{product_name}</div> -->
 														<!-- <div class="price price_text"><?php echo (($position == 0) ? "$currency {price}" : "{price} $currency") ?>
-													<small class="excl_vat"><?php echo display('size') ?>: <?= $size ?></small>
-												</div> -->
+														<small class="excl_vat"><?php echo display('size') ?>: <?= $size ?></small>
+													</div> -->
 													</div>
 
 												</td>
