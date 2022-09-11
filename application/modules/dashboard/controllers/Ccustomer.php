@@ -36,6 +36,8 @@ class Ccustomer extends MX_Controller
 
         $this->load->model('dashboard/Customers');
         $content = $this->lcustomer->customer_list();
+        echo "sds";
+        die('ssssss');
         $this->template_lib->full_admin_html_view($content);
     }
 
