@@ -121,6 +121,10 @@ class Crefund extends MX_Controller {
            $sql="update invoice_details set return_quantity= return_quantity+".$filter['quantity']." where invoice_details_id='".$invoice_details[0]['invoice_details_id']."';";
             $result= $this->db->query($sql);
 
+            //invoice
+            $sql="select I.* from invoice I where I.invoice_id ='".$filter['invoice_no']."';";
+            $result= $this->db->query($sql);
+            $invoice  = $result->result_array();
 
             //acc_transaction
                 $receive_by = $this->session->userdata('user_id');  
@@ -140,8 +144,49 @@ class Crefund extends MX_Controller {
                     {$tota_vat = 0;}
                 $createdate=date('Y-m-d H:i:s');
             // total supplier price
-            $cogs_price= $invoice_details[0]['supplier_rate']*$filter['quantity'];    
-            //1st customer credit total_with_vat
+            $cogs_price= $invoice_details[0]['supplier_rate']*$filter['quantity'];  
+           
+            //return installment
+            if($invoice[0]['is_installment'])
+            {
+                $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_no']."';";
+                $result= $this->db->query($sql);
+                $invoice_installment  = $result->result_array();
+                $invoice_installment  = array_reverse($invoice_installment);
+
+                foreach($invoice_installment as $inv_installment)
+                {
+                    if($inv_installment['status']=='collected')
+                    {
+
+                    }
+                }
+
+                
+            }
+            // else
+            // {
+                // full paid 
+
+                //7th paid_amount depit if full paid 
+                $customer_depit = array(
+                    'fy_id' => $find_active_fiscal_year->id,
+                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'Vtype' => 'Sales',
+                    'VDate' => $createdate,
+                    'COAID' => $customer_head->HeadCode,
+                    'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Debit' => $total_return_with_discount,
+                    'Credit' => 0,
+                    'IsPosted' => 1,
+                    'CreateBy' => $receive_by,
+                    'CreateDate' => $createdate,
+                    //'IsAppove' => 0
+                    'IsAppove' => 1
+                );
+                $this->db->insert('acc_transaction', $customer_depit);
+            // }
+              //1st customer credit total_with_vat
                 $customer_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
@@ -159,7 +204,7 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('acc_transaction', $customer_credit);
 
-            //7th paid_amount depit if full paid 
+                //7th paid_amount depit if full paid 
                 $customer_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
@@ -176,8 +221,8 @@ class Crefund extends MX_Controller {
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $customer_depit);
-            //2nd Allowed Discount credit
-                 $allowed_discount_credit = array(
+                //2nd Allowed Discount credit
+                $allowed_discount_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
                     'Vtype' => 'Sales',
@@ -194,7 +239,7 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('acc_transaction', $allowed_discount_credit);
 
-            //3rd Showroom Sales depit
+                //3rd Showroom Sales depit
                 $showroom_sales_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
@@ -212,8 +257,8 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('acc_transaction', $showroom_sales_depit);
 
-                 //4th VAT on Sales
-                 $vat_depit = array(
+                //4th VAT on Sales
+                $vat_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
                     'Vtype' => 'Sales',
@@ -230,7 +275,7 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('acc_transaction', $vat_depit);
 
-            //5th cost of goods sold Credit
+                //5th cost of goods sold Credit
                 $cogs_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
@@ -247,8 +292,8 @@ class Crefund extends MX_Controller {
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $cogs_credit);
-            
-            //6th cost of goods sold Main warehouse depit
+
+                //6th cost of goods sold Main warehouse depit
                 $cogs_main_warehouse_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
@@ -265,7 +310,6 @@ class Crefund extends MX_Controller {
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
-
           
 
         redirect('dashboard/Crefund/new_refund' . $filter['invoice_id']);
