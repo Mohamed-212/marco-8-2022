@@ -381,7 +381,7 @@ class Lorder {
 		$data=array(
 			'title'			   =>display('invoice_details'),
 			'invoice_id'	   =>$invoice_detail[0]['order_id'],
-			'invoice_no'	   => empty($invoice_detail[0]['invoice_no']) ? $invoice_detail[0]['order'] : $invoice_detail[0]['invoice_no'],
+			'invoice_no'	   => empty($invoice_detail[0]['invoice_no']) ? '' : $invoice_detail[0]['invoice_no'],
 			'customer_id'      => $invoice_detail[0]['customer_id'],
 			'customer_name'	   =>$invoice_detail[0]['customer_name'],
 			'customer_mobile'  =>$invoice_detail[0]['customer_mobile'],

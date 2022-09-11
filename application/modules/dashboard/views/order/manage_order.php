@@ -309,7 +309,7 @@
                                                             } else { ?>
                                                                 <a href="javascript:void(0)" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('invoiced') ?>"><i class="fa fa-check" aria-hidden="true"></i></a>
                                                             <?php } ?>
-                                                            <a href="<?php echo base_url('dashboard/Corder/order_details_pdf/' . $invoice['order_id']) ?>" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('download') ?>"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                                            <!-- <a href="<?php echo base_url('dashboard/Corder/order_details_pdf/' . $invoice['order_id']) ?>" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('download') ?>"><i class="fa fa-download" aria-hidden="true"></i></a> -->
                                                             <?php if ($invoice['order_status'] == 1) { ?>
                                                                 <?php if ($this->permission->check_label('manage_order')->update()->access()) { ?>
                                                                     <!-- <a href="<?php echo base_url() . 'dashboard/Corder/order_update_form/' . $invoice['order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('update') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
