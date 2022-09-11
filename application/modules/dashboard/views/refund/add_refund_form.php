@@ -129,7 +129,7 @@
                                         <label for="quantity" class="col-sm-4 col-form-label"><?php echo display('quantity') ?>
                                             <i class="text-danger">*</i></label>
                                         <div class="col-sm-8">
-                                            <input type="number" class="form-control" id="quantity" required="required" min="1" value="1" max="1" name="quantity">                                            
+                                            <input type="number" class="form-control" id="quantity" required="required" min="0" value="0" max="0" name="quantity">                                            
                                         </div>
                                     </div>
                                 </div>

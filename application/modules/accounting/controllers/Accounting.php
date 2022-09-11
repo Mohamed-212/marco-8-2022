@@ -11,6 +11,8 @@ class Accounting extends MX_Controller
   //tree view show
   public function chart_of_account()
   {
+    ini_set('pcre.backtrack_limit',50000000); 
+    ini_set('pcre.recursion_limit',50000000);
     $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $data['title']   = display('chart_of_account');

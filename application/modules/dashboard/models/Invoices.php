@@ -350,7 +350,7 @@ class Invoices extends CI_Model {
                 $p_id = $this->input->post('product_id', TRUE);
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
-                $total_inv_price=$this->input->post('grand_total_price', TRUE);
+                $total_inv_price=array_sum($this->input->post('total_price', TRUE));
                 $inv_disc = $this->input->post('invoice_discount', TRUE);
                 $percentage_disc = $this->input->post('percentage_discount', TRUE);
                 $inv_disc_rate  = ((int)$inv_disc+(((int)$percentage_disc/100)*(int)$total_inv_price))/(int)$total_inv_price;
@@ -633,7 +633,8 @@ class Invoices extends CI_Model {
                 $tota_vat = $i_vat->total_vat;
                 $total_with_vat = $this->input->post('grand_total_price', TRUE);
                 $cogs_price = $cogs_price;
-                $percentage_discount=((int)$total_with_vat*((int)$this->input->post('percentage_discount', TRUE)/100));
+                $inv_price_without_disc = array_sum($this->input->post('total_price', TRUE));
+                $percentage_discount=((int)$inv_price_without_disc*((int)$this->input->post('percentage_discount', TRUE)/100));
                 $total_discount = (int)$this->input->post('total_discount', TRUE)+(int)$this->input->post('invoice_discount', TRUE)+(int)$percentage_discount;
                 $total_price_before_discount = ($total_with_vat - $tota_vat) + $total_discount;
                 $store_id = $this->input->post('store_id', TRUE);
