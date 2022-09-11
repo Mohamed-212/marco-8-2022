@@ -21,6 +21,13 @@
                 <span><?php echo display('dashboard') ?></span>
             </a>
         </li>
+
+        <li
+            class="treeview <?php echo (($this->uri->segment(3) == "home" || $this->uri->segment(3) == "home") ? "active" : null) ?>">
+            <a href="<?php echo base_url('dashboard/Crefund/new_refund') ?>"><i class="ti-home"></i>
+                <span><?php echo display('return') ?></span>
+            </a>
+        </li>
         <?php if ($this->session->userdata('user_type') == 1 || $this->session->userdata('user_type') == 2) { ?>
         <!-- Invoice menu start -->
         <?php if ($this->permission->module('sales')->access()) { ?>
@@ -835,34 +842,34 @@
         <!-- Stock menu end -->
 
         <!-- Bank menu start -->
-        <?php if ($this->permission->module('bank')->access()) { ?>
-        <li class="treeview <?php if ($this->uri->segment(2) == ("Csettings")) {
-                                        echo "active";
-                                    } else {
-                                        echo " ";
-                                    } ?>">
-            <a href="#">
-                <i class="ti-briefcase"></i><span><?php echo display('bank') ?></span>
-                <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                </span>
-            </a>
-            <ul class="treeview-menu">
-                <?php if ($this->permission->check_label('add_new_bank')->access()) { ?>
-                <li
-                    class="<?php echo (($this->uri->segment(2) == 'Csettings' && ($this->uri->segment(3) == '') ? 'active' : '')) ?>">
-                    <a href="<?php echo base_url('dashboard/Csettings') ?>"><?php echo display('add_new_bank') ?></a>
-                </li>
-                <?php }
-                        if ($this->permission->check_label('manage_bank')->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'bank_list' ? 'active' : '')) ?>">
-                    <a
-                        href="<?php echo base_url('dashboard/Csettings/bank_list') ?>"><?php echo display('manage_bank') ?></a>
-                </li>
-                <?php } ?>
-            </ul>
-        </li>
-        <?php } ?>
+<!--        --><?php //if ($this->permission->module('bank')->access()) { ?>
+<!--        <li class="treeview --><?php //if ($this->uri->segment(2) == ("Csettings")) {
+//                                        echo "active";
+//                                    } else {
+//                                        echo " ";
+//                                    } ?><!--">-->
+<!--            <a href="#">-->
+<!--                <i class="ti-briefcase"></i><span>--><?php //echo display('bank') ?><!--</span>-->
+<!--                <span class="pull-right-container">-->
+<!--                    <i class="fa fa-angle-left pull-right"></i>-->
+<!--                </span>-->
+<!--            </a>-->
+<!--            <ul class="treeview-menu">-->
+<!--                --><?php //if ($this->permission->check_label('add_new_bank')->access()) { ?>
+<!--                <li-->
+<!--                    class="--><?php //echo (($this->uri->segment(2) == 'Csettings' && ($this->uri->segment(3) == '') ? 'active' : '')) ?><!--">-->
+<!--                    <a href="--><?php //echo base_url('dashboard/Csettings') ?><!--">--><?php //echo display('add_new_bank') ?><!--</a>-->
+<!--                </li>-->
+<!--                --><?php //}
+//                        if ($this->permission->check_label('manage_bank')->access()) { ?>
+<!--                <li class="--><?php //echo (($this->uri->segment(3) == 'bank_list' ? 'active' : '')) ?><!--">-->
+<!--                    <a-->
+<!--                        href="--><?php //echo base_url('dashboard/Csettings/bank_list') ?><!--">--><?php //echo display('manage_bank') ?><!--</a>-->
+<!--                </li>-->
+<!--                --><?php //} ?>
+<!--            </ul>-->
+<!--        </li>-->
+<!--        --><?php //} ?>
         <!-- Bank menu end -->
 
         <!-- Report menu start -->

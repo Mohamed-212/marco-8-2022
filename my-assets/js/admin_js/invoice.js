@@ -146,6 +146,7 @@ function calculateSumQuotation() {
     var ser_chg = 0;
     var shipping_charge = 0;
     var sum = 0;
+    var percentage_dis = 0;
 
     //Total CGST
     $(".total_cgst").each(function () {
@@ -186,6 +187,10 @@ function calculateSumQuotation() {
     shipping_charge = (($("#shipping_charge").val()) ? $("#shipping_charge").val() : 0);
 
     sum = +cgst + +sgst + +igst + +e + -f + -inv_dis + +ser_chg + +shipping_charge;
+    percentage_dis = ($("#percentage_discount").val()/100)*sum;
+
+    sum =  sum + -percentage_dis ;
+
     $("#grandTotal").val(sum.toFixed(2));
     $(".total_bill").text(sum.toFixed(2));
 
@@ -200,6 +205,7 @@ function calculateSum() {
     var e = 0;
     var f = 0;
     var total_discount = 0;
+    var percentage_dis = 0;
     var total_price = 0;
     var inv_dis = 0;
     var ser_chg = 0;
@@ -244,6 +250,10 @@ function calculateSum() {
     shipping_charge = (($("#shipping_charge").val()) ? $("#shipping_charge").val() : 0);
 
     sum = +cgst + +sgst + +igst + +e + -f + -inv_dis + +ser_chg + +shipping_charge;
+    percentage_dis = ($("#percentage_discount").val()/100)*sum;
+
+    sum =  sum + -percentage_dis ;
+
     $("#grandTotal").val(sum.toFixed(2));
     $(".total_bill").text(sum.toFixed(2));
 

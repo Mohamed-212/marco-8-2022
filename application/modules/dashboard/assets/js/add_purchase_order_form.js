@@ -36,6 +36,7 @@ function product_per_model(){
         alert("Please Select Currency");
         return false;
     }
+    $("#model_no_text").html('');
     $.ajax({
         url: base_url + "dashboard/Cpurchase/product_search_by_model",
         method: "post",

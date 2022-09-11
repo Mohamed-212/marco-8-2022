@@ -57,6 +57,8 @@ class Admin_auth extends MX_Controller
                 $this->session->set_userdata(array('error_message' => $error));
                 $this->output->set_header("Location: " . base_url() . 'admin', TRUE, 302);
             } else {
+                // add user id to session
+                $this->session->set_userdata('id', $username);
                 redirect('Admin_dashboard');
             }
         } else {

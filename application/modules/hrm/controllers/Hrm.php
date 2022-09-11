@@ -14,7 +14,7 @@ class Hrm extends MX_Controller
     {
         parent::__construct();
         $this->auth->check_user_auth();
-        $this->load->model(array('hrm_model', 'country_model', 'employee_contact_info'));
+        $this->load->model(array('hrm_model', 'country_model', 'Employee_Contact_Info'));
     }
 
 

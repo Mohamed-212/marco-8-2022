@@ -111,6 +111,8 @@ $colors = $CI->Color_backends->retrieve_color_editdata();
 <script src="<?php echo base_url() ?>assets/js/daterangepicker.active.js" type="text/javascript"></script>
 <!-- Sweetalert -->
 <script src="<?php echo base_url('assets/plugins/sweetalert/sweetalert2.all.js') ?>"></script>
+<!-- alpinejs -->
+<script defer src="<?php echo base_url('assets/js/alpinejs.min.js') ?>"></script>
 <!-- Dynamic color -->
 <?php $this->load->view('template/includes/color', array('colors' => $colors));?>
 
