@@ -33,11 +33,10 @@ class Ccustomer extends MX_Controller
     //Manage customer
     public function manage_customer()
     {
-
-        $this->load->model('dashboard/Customers');
-        $content = $this->lcustomer->customer_list();
         echo "sds";
         die('ssssss');
+        $this->load->model('dashboard/Customers');
+        $content = $this->lcustomer->customer_list();
         $this->template_lib->full_admin_html_view($content);
     }
 
