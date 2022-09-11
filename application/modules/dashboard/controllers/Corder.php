@@ -74,7 +74,7 @@ class Corder extends MX_Controller
                     'order' => true,
                 );
                 $data['module'] = "dashboard";
-                $data['page'] = "invoice/add_invoice_form";
+                $data['page'] = "order/add_order_form";
                 echo Modules::run('template/layout', $data);
             } else {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
@@ -102,7 +102,7 @@ class Corder extends MX_Controller
                 'order' => true,
             );
             $data['module'] = "dashboard";
-            $data['page'] = "invoice/add_invoice_form";
+            $data['page'] = "order/add_order_form";
             echo Modules::run('template/layout', $data);
         }
     }

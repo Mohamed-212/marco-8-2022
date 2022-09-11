@@ -755,11 +755,11 @@ class Orders extends CI_Model
                 $tota_vati = $total_cgsti + $total_sgsti + $total_igsti;
                 $installment_month_no = $this->input->post('month_no', true);
                 $data = array(
-                    'invoice_id' => $invoice_id,
+                    'order_id' => $invoice_id,
                     'customer_id' => $customer_id,
                     'date' => $this->input->post('invoice_date', TRUE),
                     'total_amount' => $this->input->post('grand_total_price', TRUE),
-                    'invoice' => $this->number_generator(),
+                    'order' => $this->number_generator(),
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
                     'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
@@ -767,7 +767,7 @@ class Orders extends CI_Model
                     'is_installment' => $this->input->post('is_installment', true),
                     'month_no' => $installment_month_no,
                     'due_day' => $this->input->post('due_day', true),
-                    'invoice_discount' => $this->input->post('invoice_discount', TRUE),
+                    'order_discount' => $this->input->post('invoice_discount', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'store_id' => $this->input->post('store_id', TRUE),
                     'paid_amount' => $this->input->post('paid_amount', TRUE),
@@ -775,11 +775,11 @@ class Orders extends CI_Model
                     'service_charge' => $this->input->post('service_charge', TRUE),
                     'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
                     'shipping_method' => $this->input->post('shipping_method', TRUE),
-                    'invoice_details' => $this->input->post('invoice_details', TRUE),
+                    'details' => $this->input->post('invoice_details', TRUE),
                     'status' => 1,
                     'created_at' => date("Y-m-d H:i:s")
                 );
-                $this->db->insert('order_invoice', $data);
+                $this->db->insert('order', $data);
 
                 // insert installment
                 // if ($this->input->post('is_installment', true) == 1) {
@@ -828,8 +828,8 @@ class Orders extends CI_Model
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
                         $invoice_details = array(
-                            'invoice_details_id' => generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_details_id' => generator(15),
+                            'order_id' => $invoice_id,
                             'product_id' => $product_id,
                             'variant_id' => $variant_id,
                             //  'pricing_id' => $pricing_id,
@@ -864,9 +864,9 @@ class Orders extends CI_Model
                                 if (!empty($variant_color)) {
                                     $this->db->where('variant_color', $variant_color);
                                 }
-                                $this->db->update('order_invoice_details');
+                                $this->db->update('order_details');
                             } else {
-                                $this->db->insert('order_invoice_details', $invoice_details);
+                                $this->db->insert('order_details', $invoice_details);
                             }
                         }
                         //////////////////////////////////////////////////////////////////////
@@ -975,8 +975,8 @@ class Orders extends CI_Model
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
 
                         $invoice_details = array(
-                            'invoice_details_id' => generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_details_id' => generator(15),
+                            'order_id' => $invoice_id,
                             'product_id' => $product_id,
                             'variant_id' => $variant_id,
                             //  'pricing_id' => $pricing_id,
@@ -993,8 +993,8 @@ class Orders extends CI_Model
 
                         if (!empty($quantity)) {
                             $this->db->select('*');
-                            $this->db->from('invoice_details');
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->from('order_details');
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('product_id', $product_id);
                             $this->db->where('variant_id', $variant_id);
                             if (!empty($variant_color)) {
@@ -1005,15 +1005,15 @@ class Orders extends CI_Model
                             if ($result > 0) {
                                 $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
                                 $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('product_id', $product_id);
                                 $this->db->where('variant_id', $variant_id);
                                 if (!empty($variant_color)) {
                                     $this->db->where('variant_color', $variant_color);
                                 }
-                                $this->db->update('order_invoice_details');
+                                $this->db->update('order_details');
                             } else {
-                                $this->db->insert('order_invoice_details', $invoice_details);
+                                $this->db->insert('order_details', $invoice_details);
                             }
 
                             // stock 
@@ -1074,7 +1074,7 @@ class Orders extends CI_Model
                 $receive_by = $this->session->userdata('user_id');
                 $date = $createdate;
 
-                $i_vat = $this->db->select('total_vat')->from('order_invoice')->where('invoice_id', $invoice_id)->get()->row();
+                $i_vat = $this->db->select('total_vat')->from('order')->where('order_id', $invoice_id)->get()->row();
                 $tota_vat = $i_vat->total_vat;
                 $total_with_vat = $this->input->post('grand_total_price', TRUE);
                 $cogs_price = $cogs_price;
@@ -1244,26 +1244,26 @@ class Orders extends CI_Model
                         $cgst_tax = $cgst[$i];
                         $cgst_tax_id = $cgst_id[$i];
                         $cgst_summary = array(
-                            'tax_collection_id' => $this->auth->generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_tax_col_id ' => $this->auth->generator(15),
+                            'order_id' => $invoice_id,
                             'tax_amount' => $cgst_tax,
                             'tax_id' => $cgst_tax_id,
                             'date' => $this->input->post('invoice_date', TRUE),
                         );
                         if (!empty($cgst[$i])) {
                             $result = $this->db->select('*')
-                                ->from('tax_collection_summary')
-                                ->where('invoice_id', $invoice_id)
+                                ->from('order_tax_col_summary')
+                                ->where('order_id', $invoice_id)
                                 ->where('tax_id', $cgst_tax_id)
                                 ->get()
                                 ->num_rows();
                             if ($result > 0) {
                                 $this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('tax_id', $cgst_tax_id);
-                                $this->db->update('order_tax_collection_summary');
+                                $this->db->update('order_tax_col_summary');
                             } else {
-                                $this->db->insert('order_tax_collection_summary', $cgst_summary);
+                                $this->db->insert('order_tax_col_summary', $cgst_summary);
                             }
                         }
                     }
@@ -1275,26 +1275,26 @@ class Orders extends CI_Model
                         $sgst_tax_id = $sgst_id[$i];
 
                         $sgst_summary = array(
-                            'tax_collection_id' => $this->auth->generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_tax_col_id ' => $this->auth->generator(15),
+                            'order_id' => $invoice_id,
                             'tax_amount' => $sgst_tax,
                             'tax_id' => $sgst_tax_id,
                             'date' => $this->input->post('invoice_date', TRUE),
                         );
                         if (!empty($sgst[$i])) {
                             $result = $this->db->select('*')
-                                ->from('tax_collection_summary')
-                                ->where('invoice_id', $invoice_id)
+                                ->from('order_tax_col_summary')
+                                ->where('order_id', $invoice_id)
                                 ->where('tax_id', $sgst_tax_id)
                                 ->get()
                                 ->num_rows();
                             if ($result > 0) {
                                 $this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('tax_id', $sgst_tax_id);
-                                $this->db->update('order_tax_collection_summary');
+                                $this->db->update('order_tax_col_summary');
                             } else {
-                                $this->db->insert('order_tax_collection_summary', $sgst_summary);
+                                $this->db->insert('order_tax_col_summary', $sgst_summary);
                             }
                         }
                     }
@@ -1306,27 +1306,27 @@ class Orders extends CI_Model
                         $igst_tax_id = $igst_id[$i];
 
                         $igst_summary = array(
-                            'tax_collection_id' => generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_tax_col_id ' => generator(15),
+                            'order_id' => $invoice_id,
                             'tax_amount' => $igst_tax,
                             'tax_id' => $igst_tax_id,
                             'date' => $this->input->post('invoice_date', TRUE),
                         );
                         if (!empty($igst[$i])) {
                             $result = $this->db->select('*')
-                                ->from('tax_collection_summary')
-                                ->where('invoice_id', $invoice_id)
+                                ->from('order_tax_col_summary')
+                                ->where('order_id', $invoice_id)
                                 ->where('tax_id', $igst_tax_id)
                                 ->get()
                                 ->num_rows();
 
                             if ($result > 0) {
                                 $this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('tax_id', $igst_tax_id);
-                                $this->db->update('order_tax_collection_summary');
+                                $this->db->update('order_tax_col_summary');
                             } else {
-                                $this->db->insert('order_tax_collection_summary', $igst_summary);
+                                $this->db->insert('order_tax_col_summary', $igst_summary);
                             }
                         }
                     }
@@ -1342,8 +1342,8 @@ class Orders extends CI_Model
                         $variant_id =  $size[$i];
 
                         $cgst_details = array(
-                            'tax_col_de_id' => generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_tax_col_de_id' => generator(15),
+                            'order_id' => $invoice_id,
                             'amount' => $cgst_tax,
                             'product_id' => $product_id,
                             'tax_id' => $cgst_tax_id,
@@ -1353,8 +1353,8 @@ class Orders extends CI_Model
                         if (!empty($cgst[$i])) {
 
                             $result = $this->db->select('*')
-                                ->from('tax_collection_details')
-                                ->where('invoice_id', $invoice_id)
+                                ->from('order_tax_col_details')
+                                ->where('order_id', $invoice_id)
                                 ->where('tax_id', $cgst_tax_id)
                                 ->where('product_id', $product_id)
                                 ->where('variant_id', $variant_id)
@@ -1362,12 +1362,12 @@ class Orders extends CI_Model
                                 ->num_rows();
                             if ($result > 0) {
                                 $this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('tax_id', $cgst_tax_id);
                                 $this->db->where('variant_id', $variant_id);
-                                $this->db->update('order_tax_collection_details');
+                                $this->db->update('order_tax_col_details');
                             } else {
-                                $this->db->insert('order_tax_collection_details', $cgst_details);
+                                $this->db->insert('order_tax_col_details', $cgst_details);
                             }
                         }
                     }
@@ -1381,8 +1381,8 @@ class Orders extends CI_Model
                         $product_id = $p_id[$i];
                         $variant_id = $size[$i];
                         $sgst_summary = array(
-                            'tax_col_de_id' => generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_tax_col_de_id' => generator(15),
+                            'order_id' => $invoice_id,
                             'amount' => $sgst_tax,
                             'product_id' => $product_id,
                             'tax_id' => $sgst_tax_id,
@@ -1391,8 +1391,8 @@ class Orders extends CI_Model
                         );
                         if (!empty($sgst[$i])) {
                             $result = $this->db->select('*')
-                                ->from('tax_collection_details')
-                                ->where('invoice_id', $invoice_id)
+                                ->from('order_tax_col_details')
+                                ->where('order_id', $invoice_id)
                                 ->where('tax_id', $sgst_tax_id)
                                 ->where('product_id', $product_id)
                                 ->where('variant_id', $variant_id)
@@ -1400,12 +1400,12 @@ class Orders extends CI_Model
                                 ->num_rows();
                             if ($result > 0) {
                                 $this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('tax_id', $sgst_tax_id);
                                 $this->db->where('variant_id', $variant_id);
-                                $this->db->update('order_tax_collection_details');
+                                $this->db->update('order_tax_col_details');
                             } else {
-                                $this->db->insert('order_tax_collection_details', $sgst_summary);
+                                $this->db->insert('order_tax_col_details', $sgst_summary);
                             }
                         }
                     }
@@ -1418,8 +1418,8 @@ class Orders extends CI_Model
                         $product_id = $p_id[$i];
                         $variant_id = $size[$i];
                         $igst_summary = array(
-                            'tax_col_de_id' => generator(15),
-                            'invoice_id' => $invoice_id,
+                            'order_tax_col_de_id' => generator(15),
+                            'order_id' => $invoice_id,
                             'amount' => $igst_tax,
                             'product_id' => $product_id,
                             'tax_id' => $igst_tax_id,
@@ -1428,8 +1428,8 @@ class Orders extends CI_Model
                         );
                         if (!empty($igst[$i])) {
                             $result = $this->db->select('*')
-                                ->from('tax_collection_details')
-                                ->where('invoice_id', $invoice_id)
+                                ->from('order_tax_col_details')
+                                ->where('order_id', $invoice_id)
                                 ->where('tax_id', $igst_tax_id)
                                 ->where('product_id', $product_id)
                                 ->where('variant_id', $variant_id)
@@ -1437,12 +1437,12 @@ class Orders extends CI_Model
                                 ->num_rows();
                             if ($result > 0) {
                                 $this->db->set('amount', 'amount+' . $igst_tax, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('tax_id', $igst_tax_id);
                                 $this->db->where('variant_id', $variant_id);
-                                $this->db->update('order_tax_collection_details');
+                                $this->db->update('order_tax_col_details');
                             } else {
-                                $this->db->insert('order_tax_collection_details', $igst_summary);
+                                $this->db->insert('order_tax_col_details', $igst_summary);
                             }
                         }
                     }
@@ -1550,13 +1550,13 @@ class Orders extends CI_Model
 
             //Data inserting into invoice table
             $data = array(
-                'invoice_id' => $invoice_id,
+                'order_id' => $invoice_id,
                 'customer_id' => $customer_id,
                 'date' => $this->input->post('invoice_date', TRUE),
                 'total_amount' => $this->input->post('grand_total_price', TRUE),
-                'invoice' => $this->number_generator(),
+                'order' => $this->number_generator(),
                 'total_discount' => $this->input->post('total_discount', TRUE),
-                'invoice_discount' => $this->input->post('invoice_discount', TRUE),
+                'product_discount' => $this->input->post('invoice_discount', TRUE),
                 'user_id' => $this->session->userdata('user_id'),
                 'store_id' => $this->input->post('store_id', TRUE),
                 'paid_amount' => $this->input->post('paid_amount', TRUE),
@@ -1564,11 +1564,11 @@ class Orders extends CI_Model
                 'service_charge' => $this->input->post('service_charge', TRUE),
                 'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
                 'shipping_method' => $this->input->post('shipping_method', TRUE),
-                'invoice_details' => $this->input->post('invoice_details', TRUE),
+                'details' => $this->input->post('invoice_details', TRUE),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s')
             );
-            $this->db->insert('order_invoice', $data);
+            $this->db->insert('order', $data);
 
 
             //Insert payment method
@@ -1616,8 +1616,8 @@ class Orders extends CI_Model
                 $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity);
 
                 $invoice_details = array(
-                    'invoice_details_id' => generator(15),
-                    'invoice_id' => $invoice_id,
+                    'order_details_id' => generator(15),
+                    'order_id' => $invoice_id,
                     'product_id' => $product_id,
                     //  'pricing_id' => $pricing_id,
                     'variant_id' => $variant_id,
@@ -1634,8 +1634,8 @@ class Orders extends CI_Model
 
                 if (!empty($quantity)) {
                     $this->db->select('*');
-                    $this->db->from('invoice_details');
-                    $this->db->where('invoice_id', $invoice_id);
+                    $this->db->from('order_details');
+                    $this->db->where('order_id', $invoice_id);
                     $this->db->where('product_id', $product_id);
                     $this->db->where('variant_id', $variant_id);
                     if (!empty($variant_color)) {
@@ -1647,15 +1647,15 @@ class Orders extends CI_Model
                     if ($result > 0) {
                         $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
                         $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
-                        $this->db->where('invoice_id', $invoice_id);
+                        $this->db->where('order_id', $invoice_id);
                         $this->db->where('product_id', $product_id);
                         $this->db->where('variant_id', $variant_id);
                         if (!empty($variant_color)) {
                             $this->db->where('variant_color', $variant_color);
                         }
-                        $this->db->update('order_invoice_details');
+                        $this->db->update('order_details');
                     } else {
-                        $this->db->insert('order_invoice_details', $invoice_details);
+                        $this->db->insert('order_details', $invoice_details);
                     }
 
                     // stock 
@@ -1690,7 +1690,7 @@ class Orders extends CI_Model
                         if (!empty($variant_color)) {
                             $this->db->where('variant_color', $variant_color);
                         }
-                        $this->db->update('invoice_stock_tbl', $stock);
+                        $this->db->update('order_invoice_stock_tbl', $stock);
                         //update
                     }
                     // stock
@@ -1712,26 +1712,26 @@ class Orders extends CI_Model
                     $cgst_tax = $cgst[$i];
                     $cgst_tax_id = $cgst_id[$i];
                     $cgst_summary = array(
-                        'tax_collection_id' => $this->auth->generator(15),
-                        'invoice_id' => $invoice_id,
+                        'order_tax_collection_id' => $this->auth->generator(15),
+                        'order_id' => $invoice_id,
                         'tax_amount' => $cgst_tax,
                         'tax_id' => $cgst_tax_id,
                         'date' => $this->input->post('invoice_date', TRUE),
                     );
                     if (!empty($cgst[$i])) {
                         $result = $this->db->select('*')
-                            ->from('order_tax_collection_summary')
-                            ->where('invoice_id', $invoice_id)
+                            ->from('order_tax_col_summary')
+                            ->where('order_id', $invoice_id)
                             ->where('tax_id', $cgst_tax_id)
                             ->get()
                             ->num_rows();
                         if ($result > 0) {
                             $this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('tax_id', $cgst_tax_id);
-                            $this->db->update('tax_collection_summary');
+                            $this->db->update('order_tax_col_summary');
                         } else {
-                            $this->db->insert('order_tax_collection_summary', $cgst_summary);
+                            $this->db->insert('order_tax_col_summary', $cgst_summary);
                         }
                     }
                 }
@@ -1743,26 +1743,26 @@ class Orders extends CI_Model
                     $sgst_tax_id = $sgst_id[$i];
 
                     $sgst_summary = array(
-                        'tax_collection_id' => $this->auth->generator(15),
-                        'invoice_id' => $invoice_id,
+                        'order_tax_collection_id' => $this->auth->generator(15),
+                        'order_id' => $invoice_id,
                         'tax_amount' => $sgst_tax,
                         'tax_id' => $sgst_tax_id,
                         'date' => $this->input->post('invoice_date', TRUE),
                     );
                     if (!empty($sgst[$i])) {
                         $result = $this->db->select('*')
-                            ->from('order_tax_collection_summary')
-                            ->where('invoice_id', $invoice_id)
+                            ->from('order_tax_col_summary')
+                            ->where('order_id', $invoice_id)
                             ->where('tax_id', $sgst_tax_id)
                             ->get()
                             ->num_rows();
                         if ($result > 0) {
                             $this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('tax_id', $sgst_tax_id);
-                            $this->db->update('tax_collection_summary');
+                            $this->db->update('order_tax_col_summary');
                         } else {
-                            $this->db->insert('order_tax_collection_summary', $sgst_summary);
+                            $this->db->insert('order_tax_col_summary', $sgst_summary);
                         }
                     }
                 }
@@ -1774,27 +1774,27 @@ class Orders extends CI_Model
                     $igst_tax_id = $igst_id[$i];
 
                     $igst_summary = array(
-                        'tax_collection_id' => generator(15),
-                        'invoice_id' => $invoice_id,
+                        'order_tax_collection_id' => generator(15),
+                        'order_id' => $invoice_id,
                         'tax_amount' => $igst_tax,
                         'tax_id' => $igst_tax_id,
                         'date' => $this->input->post('invoice_date', TRUE),
                     );
                     if (!empty($igst[$i])) {
                         $result = $this->db->select('*')
-                            ->from('order_tax_collection_summary')
-                            ->where('invoice_id', $invoice_id)
+                            ->from('order_tax_col_summary')
+                            ->where('order_id', $invoice_id)
                             ->where('tax_id', $igst_tax_id)
                             ->get()
                             ->num_rows();
 
                         if ($result > 0) {
                             $this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('tax_id', $igst_tax_id);
-                            $this->db->update('tax_collection_summary');
+                            $this->db->update('order_tax_col_summary');
                         } else {
-                            $this->db->insert('order_tax_collection_summary', $igst_summary);
+                            $this->db->insert('order_tax_col_summary', $igst_summary);
                         }
                     }
                 }
@@ -1809,8 +1809,8 @@ class Orders extends CI_Model
                     $product_id = $p_id[$i];
                     $variant_id = $variants[$i];
                     $cgst_details = array(
-                        'tax_col_de_id' => generator(15),
-                        'invoice_id' => $invoice_id,
+                        'order_tax_col_de_id' => generator(15),
+                        'order_id' => $invoice_id,
                         'amount' => $cgst_tax,
                         'product_id' => $product_id,
                         'tax_id' => $cgst_tax_id,
@@ -1820,8 +1820,8 @@ class Orders extends CI_Model
                     if (!empty($cgst[$i])) {
 
                         $result = $this->db->select('*')
-                            ->from('order_tax_collection_details')
-                            ->where('invoice_id', $invoice_id)
+                            ->from('order_tax_col_details')
+                            ->where('order_id', $invoice_id)
                             ->where('tax_id', $cgst_tax_id)
                             ->where('product_id', $product_id)
                             ->where('variant_id', $variant_id)
@@ -1829,12 +1829,12 @@ class Orders extends CI_Model
                             ->num_rows();
                         if ($result > 0) {
                             $this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('tax_id', $cgst_tax_id);
                             $this->db->where('variant_id', $variant_id);
-                            $this->db->update('tax_collection_details');
+                            $this->db->update('order_tax_col_details');
                         } else {
-                            $this->db->insert('order_tax_collection_details', $cgst_details);
+                            $this->db->insert('order_tax_col_details', $cgst_details);
                         }
                     }
                 }
@@ -1848,8 +1848,8 @@ class Orders extends CI_Model
                     $product_id = $p_id[$i];
                     $variant_id = $variants[$i];
                     $sgst_summary = array(
-                        'tax_col_de_id' => generator(15),
-                        'invoice_id' => $invoice_id,
+                        'order_tax_col_de_id' => generator(15),
+                        'order_id' => $invoice_id,
                         'amount' => $sgst_tax,
                         'product_id' => $product_id,
                         'tax_id' => $sgst_tax_id,
@@ -1858,8 +1858,8 @@ class Orders extends CI_Model
                     );
                     if (!empty($sgst[$i])) {
                         $result = $this->db->select('*')
-                            ->from('order_tax_collection_details')
-                            ->where('invoice_id', $invoice_id)
+                            ->from('order_tax_col_details')
+                            ->where('order_id', $invoice_id)
                             ->where('tax_id', $sgst_tax_id)
                             ->where('product_id', $product_id)
                             ->where('variant_id', $variant_id)
@@ -1867,12 +1867,12 @@ class Orders extends CI_Model
                             ->num_rows();
                         if ($result > 0) {
                             $this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('tax_id', $sgst_tax_id);
                             $this->db->where('variant_id', $variant_id);
-                            $this->db->update('tax_collection_details');
+                            $this->db->update('order_tax_col_details');
                         } else {
-                            $this->db->insert('order_tax_collection_details', $sgst_summary);
+                            $this->db->insert('order_tax_col_details', $sgst_summary);
                         }
                     }
                 }
@@ -1885,8 +1885,8 @@ class Orders extends CI_Model
                     $product_id = $p_id[$i];
                     $variant_id = $variants[$i];
                     $igst_summary = array(
-                        'tax_col_de_id' => generator(15),
-                        'invoice_id' => $invoice_id,
+                        'order_tax_col_de_id' => generator(15),
+                        'order_id' => $invoice_id,
                         'amount' => $igst_tax,
                         'product_id' => $product_id,
                         'tax_id' => $igst_tax_id,
@@ -1895,8 +1895,8 @@ class Orders extends CI_Model
                     );
                     if (!empty($igst[$i])) {
                         $result = $this->db->select('*')
-                            ->from('order_tax_collection_details')
-                            ->where('invoice_id', $invoice_id)
+                            ->from('order_tax_col_details')
+                            ->where('order_id', $invoice_id)
                             ->where('tax_id', $igst_tax_id)
                             ->where('product_id', $product_id)
                             ->where('variant_id', $variant_id)
@@ -1904,12 +1904,12 @@ class Orders extends CI_Model
                             ->num_rows();
                         if ($result > 0) {
                             $this->db->set('amount', 'amount+' . $igst_tax, FALSE);
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('tax_id', $igst_tax_id);
                             $this->db->where('variant_id', $variant_id);
-                            $this->db->update('tax_collection_details');
+                            $this->db->update('order_tax_col_details');
                         } else {
-                            $this->db->insert('order_tax_collection_details', $igst_summary);
+                            $this->db->insert('order_tax_col_details', $igst_summary);
                         }
                     }
                 }
