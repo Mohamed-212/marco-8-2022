@@ -129,7 +129,9 @@
                                 }
 
                                 .thead tr,
-                                .borderd {
+                                .borderd,
+                                .borderd th,
+                                .borderd td {
                                     border: 2px solid orange !important;
                                     color: orange !important;
                                 }
@@ -174,7 +176,9 @@
                             }
 
                             .thead tr,
-                            .borderd {
+                            .borderd,
+                            .borderd th,
+                            .borderd td {
                                 border: 2px solid orange !important;
                                 color: orange !important;
                             }
@@ -440,7 +444,7 @@
                                                         </div>
                                                         <div class="width_30p ft_right">
                                                             <table class="table">
-                                                                <tr>
+                                                                <tr class="borderd">
                                                                     <th class="grand_total">Total price before Discount : </th>
                                                                     <td>
                                                                         <?php echo (($position == 0) ? $currency . " " . $grand_total_without_discount : $grand_total_without_discount . " " . $currency); ?>
@@ -452,13 +456,13 @@
                                                     <?php echo (($position == 0) ? $currency . " " . $total_discount : $total_discount . " " . $currency); ?>
                                                 </td>
                                             </tr>-->
-                                                                <tr>
+                                                                <tr class="borderd">
                                                                     <th class="grand_total"> Discount For Purchase : </th>
                                                                     <td>
                                                                         <?php echo (($position == 0) ? $currency . " " . $total_purchase_dis : $total_purchase_dis . " " . $currency); ?>
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
+                                                                <tr class="borderd">
                                                                     <th class="invoice_discount">Total price After Discount : </th>
                                                                     <td class="invoice_discount">
                                                                         <?php $after_discount = ($grand_total_without_discount - $total_discount - $total_purchase_dis);
@@ -471,7 +475,7 @@
                                                     <?php echo (($position == 0) ? $currency . " " . $total_vat : $total_vat . " " . $currency); ?>
                                                 </td>
                                             </tr>-->
-                                                                <tr>
+                                                                <tr class="borderd">
                                                                     <th class="grand_total">Total:</th>
                                                                     <td class="grand_total">
                                                                         <?php echo (($position == 0) ? $currency . " " . ($after_discount + $total_vat) : ($after_discount + $total_vat) . " " . $currency) ?>
