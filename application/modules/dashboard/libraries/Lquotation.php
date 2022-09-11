@@ -291,6 +291,7 @@ class Lquotation {
 		$CI =& get_instance();
 		$CI->load->model('dashboard/quotations');
 		$CI->load->model('dashboard/Soft_settings');
+		$CI->load->model('hrm/Hrm_model');
 		$CI->load->library('occational');
 		$CI->load->library('Pdfgenerator');
 		$quotation_detail = $CI->quotations->retrieve_quotation_html_data($quotation_id);
@@ -314,8 +315,9 @@ class Lquotation {
 		$soft_settings = $CI->Soft_settings->retrieve_setting_editdata();
 		$data=array(
 			'title'				=>display('quotation_details'),
-			'quotation_id'		=>$quotation_detail[0]['quotation_id'],
-			'quotation_no'		=>$quotation_detail[0]['quotation'],
+			'invoice_id'		=>$quotation_detail[0]['quotation_id'],
+			'invoice_no'		=>$quotation_detail[0]['quotation'],
+			'customer_id'	    =>$quotation_detail[0]['customer_id'],
 			'customer_address'	=>$quotation_detail[0]['customer_short_address'],
 			'customer_name'		=>$quotation_detail[0]['customer_name'],
 			'customer_mobile'	=>$quotation_detail[0]['customer_mobile'],
@@ -326,18 +328,31 @@ class Lquotation {
 			'final_date'		=>$quotation_detail[0]['date'],
 			'expire_date'		=>$quotation_detail[0]['expire_date'],
 			'total_amount'		=>$quotation_detail[0]['total_amount'],
-			'quotation_discount'=>$quotation_detail[0]['quotation_discount'],
+			'invoice_discount'=>$quotation_detail[0]['quotation_discount'],
 			'service_charge' 	=>$quotation_detail[0]['service_charge'],
 			'paid_amount'		=>$quotation_detail[0]['paid_amount'],
 			'due_amount'		=>$quotation_detail[0]['due_amount'],
 			'details'			=>$quotation_detail[0]['details'],
 			'subTotal_quantity'	=>$subTotal_quantity,
-			'quotation_all_data'=>$quotation_detail,
+			'invoice_all_data'=>$quotation_detail,
 			'company_info'		=>$company_info,
 			'currency' 			=>$currency_details[0]['currency_icon'],
 			'position' 			=>$currency_details[0]['currency_position'],
 			'Soft_settings' 	=>$soft_settings,
 			);
+
+			$emp_name = $emp_id = null;
+			var_dump($quotation_detail[0]['employee_id']);
+			if (!empty($quotation_detail) && isset($quotation_detail[0]['employee_id'])) {
+				$emp = $CI->Hrm_model->single_employee_data($quotation_detail[0]['employee_id']);
+				if (null !== $emp) {
+					$emp_name = $emp->first_name . ' ' . $emp->last_name;
+					$emp_id = $emp->id;
+				}
+			}
+			
+			$data['emp_name'] = $emp_name;
+			$data['emp_id'] = $emp_id;
 
 		$chapterList = $CI->parser->parse('dashboard/quotation/quotation_html',$data,true);
 		return $chapterList;
