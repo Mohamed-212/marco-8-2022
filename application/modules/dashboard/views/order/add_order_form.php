@@ -519,7 +519,7 @@
                                     </tr>
                                     <tr>
                                         <td class="text-right" colspan="2">
-                                            <b><?php echo display(isset($order) ? 'order_discount' : 'percentage_discount') ?>:</b>
+                                            <b><?php echo display('order_percentage_discount') ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <input type="text" id="percentage_discount" class="form-control text-right" name="percentage_discount" placeholder="0 %" onkeyup="calculateSum();" onchange="calculateSum();" />
