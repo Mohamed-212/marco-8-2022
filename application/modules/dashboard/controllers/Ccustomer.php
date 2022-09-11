@@ -9,6 +9,8 @@ class Ccustomer extends MX_Controller
         $this->auth->check_user_auth();
         $this->load->library('dashboard/lcustomer');
         $this->load->model('dashboard/Customers');
+        echo "sds";
+        die('ssssss');
         $this->load->model('dashboard/CustomerContactInfo');
     }
 
@@ -33,8 +35,6 @@ class Ccustomer extends MX_Controller
     //Manage customer
     public function manage_customer()
     {
-        echo "sds";
-        die('ssssss');
         $this->load->model('dashboard/Customers');
         $content = $this->lcustomer->customer_list();
         $this->template_lib->full_admin_html_view($content);
