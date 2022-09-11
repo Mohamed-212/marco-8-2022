@@ -9,9 +9,9 @@ class Ccustomer extends MX_Controller
         $this->auth->check_user_auth();
         $this->load->library('dashboard/lcustomer');
         $this->load->model('dashboard/Customers');
+        $this->load->model('dashboard/CustomerContactInfo');
         echo "sds";
         die('ssssss');
-        $this->load->model('dashboard/CustomerContactInfo');
     }
 
     //Default loading for Customer System.
