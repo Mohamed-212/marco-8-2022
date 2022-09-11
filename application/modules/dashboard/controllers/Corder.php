@@ -384,7 +384,7 @@ class Corder extends MX_Controller
         );
 
         $data['module'] = "dashboard";
-        $data['page'] = "invoice/invoice";
+        $data['page'] = "order/manage_order";
         echo Modules::run('template/layout', $data);
     }
 

@@ -51,10 +51,10 @@ class Orders extends CI_Model
     //Order List count
     public function count_order_list($filter = [])
     {
-        $this->db->select('a.invoice_id');
-        $this->db->from('order_invoice a');
+        $this->db->select('a.order_id');
+        $this->db->from('order a');
         if (!empty($filter['invoice_no'])) {
-            $this->db->where('a.invoice', $filter['invoice_no']);
+            $this->db->where('a.order', $filter['invoice_no']);
         }
         if (!empty($filter['customer_id'])) {
             $this->db->where('a.customer_id', $filter['customer_id']);
@@ -66,7 +66,7 @@ class Orders extends CI_Model
             $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
         }
         if (!empty($filter['invoice_status'])) {
-            $this->db->where('a.invoice_status', $filter['invoice_status']);
+            $this->db->where('a.status', $filter['invoice_status']);
         }
         $query = $this->db->count_all_results();
         return $query;
@@ -77,12 +77,12 @@ class Orders extends CI_Model
     {
         // $this->db->select('a.*,b.*,c.order');
         $this->db->select('a.*, a.status as order_status,b.*');
-        $this->db->from('order_invoice a');
+        $this->db->from('order a');
         // $this->db->from('order a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
         // $this->db->join('invoice c', 'c.order_id = a.order_id', 'left');
         if (!empty($filter['invoice_no'] != '')) {
-            $this->db->where('a.invoice', $filter['invoice_no']);
+            $this->db->where('a.order', $filter['invoice_no']);
         }
         if ($filter['customer_id'] != '') {
             $this->db->where('a.customer_id', $filter['customer_id']);
@@ -96,7 +96,7 @@ class Orders extends CI_Model
         if ($filter['invoice_status'] != '') {
             $this->db->where('a.status', $filter['invoice_status']);
         }
-        $this->db->order_by('a.invoice', 'desc');
+        $this->db->order_by('a.order', 'desc');
         $this->db->limit($limit, $start);
         $query = $this->db->get();
 
@@ -4178,8 +4178,8 @@ class Orders extends CI_Model
     // Delete invoice Item
     public function delete_order($order_id)
     {
-        //find previous invoice history and REDUCE the stock
-        $order_history = $this->db->select('*')->from('order_invoice_details')->where('invoice_id', $order_id)->get()->result_array();
+        //find previous order history and REDUCE the stock
+        $order_history = $this->db->select('*')->from('order_details')->where('order_id', $order_id)->get()->result_array();
         if (count($order_history) > 0) {
             foreach ($order_history as $order_item) {
                 //update
@@ -4205,23 +4205,23 @@ class Orders extends CI_Model
         }
         //find previous invoice history and REDUCE the stock
         //Delete Invoice table
-        $this->db->where('invoice_id', $order_id);
-        $this->db->delete('order_invoice');
+        $this->db->where('order_id', $order_id);
+        $this->db->delete('order');
 
         //Delete invoice_details table
-        $this->db->where('invoice_id', $order_id);
-        $this->db->delete('order_invoice_details');
+        $this->db->where('order_id', $order_id);
+        $this->db->delete('order_details');
 
         //Delete invoice_tax smmary table
-        $this->db->where('invoice_id', $order_id);
-        $this->db->delete('order_tax_collection_summary');
+        $this->db->where('order_id', $order_id);
+        $this->db->delete('order_tax_col_summary');
 
         //Delete invoice_tax details table
-        $this->db->where('invoice_id', $order_id);
-        $this->db->delete('order_tax_collection_details');
+        $this->db->where('order_id', $order_id);
+        $this->db->delete('order_tax_col_details');
 
         // Delete Invoice from customer ledger
-        $this->db->where('invoice_no', $order_id);
+        $this->db->where('order_no', $order_id);
         $this->db->delete('order_customer_ledger');
 
         //remove invoice transection
