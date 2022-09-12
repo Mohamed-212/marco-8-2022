@@ -149,43 +149,41 @@ class Crefund extends MX_Controller {
             //return installment
             if($invoice[0]['is_installment'])
             {
+                $total_installment_return =$total_return_with_discount+$tota_vat;
+                $temp=0;
+                $return=0;
+                $last_installment_amount=0;
                 $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_no']."';";
                 $result= $this->db->query($sql);
                 $invoice_installment  = $result->result_array();
                 $invoice_installment  = array_reverse($invoice_installment);
 
-                foreach($invoice_installment as $inv_installment)
+                for($i=0;$i<count($invoice_installment);$i++)
                 {
-                    if($inv_installment['status']=='collected')
-                    {
+                    $temp+=$invoice_installment[$i]['amount'];
 
+                    if($invoice_installment[$i]['status'])
+                    {
+                        $return+=$invoice_installment[$i]['payment_amount'];
+                    }
+
+                    if($temp <= $total_installment_return)
+                    {
+                        $sql="delete from invoice_installment where id='".$invoice_installment[$i]['id']."';";
+                        $result= $this->db->query($sql);
+                    }
+
+                    if($temp > $total_installment_return)
+                    {
+                        $last_installment_amount=$temp-$total_installment_return;
+                        $sql="update invoice_installment set amount='".$last_installment_amount."' where id='".$invoice_installment[$i]['id']."';";
+                        $result= $this->db->query($sql);
+                        break;
                     }
                 }
-
                 
             }
-            // else
-            // {
-                // full paid 
-
-                //7th paid_amount depit if full paid 
-                $customer_depit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
-                    'Vtype' => 'Sales',
-                    'VDate' => $createdate,
-                    'COAID' => $customer_head->HeadCode,
-                    'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_return_with_discount,
-                    'Credit' => 0,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $customer_depit);
-            // }
+         
               //1st customer credit total_with_vat
                 $customer_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
