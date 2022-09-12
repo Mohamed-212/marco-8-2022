@@ -35,7 +35,7 @@ class Lquotation {
 
 
 	//Quotation Add Form
-	public function quotation_add_form()
+	public function quotation_add_form_old()
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Quotations');
@@ -55,6 +55,7 @@ class Lquotation {
 		$quotationForm = $CI->parser->parse('dashboard/quotation/add_quotation_form',$data,true);
 		return $quotationForm;
 	}
+
 	//Insert quotation
 	public function insert_quotation($data)
 	{
