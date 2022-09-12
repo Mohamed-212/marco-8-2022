@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-class CustomerContactInfo extends CI_Model
+class Customer_contact_info extends CI_Model
 {
     public function __construct()
     {

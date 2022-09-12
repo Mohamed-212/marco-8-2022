@@ -9,7 +9,7 @@ class Ccustomer extends MX_Controller
         $this->auth->check_user_auth();
         $this->load->library('dashboard/lcustomer');
         $this->load->model('dashboard/Customers');
-        $this->load->model('dashboard/CustomerContactInfo');
+        $this->load->model('dashboard/Customer_contact_info');
     }
 
     //Default loading for Customer System.
@@ -33,7 +33,6 @@ class Ccustomer extends MX_Controller
     //Manage customer
     public function manage_customer()
     {
-
         $this->load->model('dashboard/Customers');
         $content = $this->lcustomer->customer_list();
         $this->template_lib->full_admin_html_view($content);
@@ -78,7 +77,7 @@ class Ccustomer extends MX_Controller
                         unset($info['info_id']);
                         unset($info['mobile']);
 
-                        $this->CustomerContactInfo->insert($info);
+                        $this->Customer_contact_info->insert($info);
                     }
                 }
             } catch (Exception $e) {
@@ -132,7 +131,7 @@ class Ccustomer extends MX_Controller
 
         $this->Customers->update_customer($data, $customer_id);
 
-        $this->CustomerContactInfo->deleteAll($customer_id);
+        $this->Customer_contact_info->deleteAll($customer_id);
         foreach ($contact_info as $info) {
             $info = (array) $info;
             $info['customer_id'] = $customer_id;
@@ -140,7 +139,7 @@ class Ccustomer extends MX_Controller
             unset($info['info_id']);
             unset($info['mobile']);
             
-            $this->CustomerContactInfo->insert($info);
+            $this->Customer_contact_info->insert($info);
         }
 
 

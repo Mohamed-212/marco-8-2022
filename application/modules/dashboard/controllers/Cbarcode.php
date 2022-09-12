@@ -57,6 +57,9 @@ class Cbarcode extends MX_Controller
         } else {
             $size = $size[0]['variant_name'];
         }
+
+        $product_name_only = trim(str_replace('- ' . $product_info[0]['product_model'], '', $product_info[0]['product_name']));
+        $model_only = (trim(preg_replace("/- C.*/i", "", $product_info[0]['product_model'])));
        
         $data = array(
             'title' => display('print_barcode'),
@@ -72,6 +75,8 @@ class Cbarcode extends MX_Controller
             'open_quantity' => $product_info[0]['open_quantity'],
             'stock' => $stock,
             'size' => $size,
+            'product_name_only' => $product_name_only,
+            'model_only' => $model_only,
         );
 
 

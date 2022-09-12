@@ -144,10 +144,10 @@ class Lcustomer {
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Customers');
-		$CI->load->model('dashboard/CustomerContactInfo');
+		$CI->load->model('dashboard/Customer_contact_info');
 		$customer_detail = $CI->Customers->retrieve_customer_editdata($customer_id);
 		$state_list = $CI->Customers->select_city_country_id($customer_detail[0]['country']);
-		$contact_info = $CI->CustomerContactInfo->get_contact_info_data($customer_detail[0]['customer_id']);
+		$contact_info = $CI->Customer_contact_info->get_contact_info_data($customer_detail[0]['customer_id']);
 
 		$country_list 	= $CI->Customers->country_list();
 		$data=array(
@@ -182,10 +182,10 @@ class Lcustomer {
 		$CI->load->model('dashboard/Customers');
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
-		$CI->load->model('dashboard/CustomerContactInfo');
+		$CI->load->model('dashboard/Customer_contact_info');
 		$customer_detail = $CI->Customers->customer_personal_data($customer_id);
 		$invoice_info 	= $CI->Customers->customer_invoice_data($customer_id);
-		$contact_info = $CI->CustomerContactInfo->get_contact_info_data($customer_detail[0]['customer_id']);
+		$contact_info = $CI->Customer_contact_info->get_contact_info_data($customer_detail[0]['customer_id']);
 		$invoice_amount = 0;
 		if(!empty($invoice_info)){
 			foreach($invoice_info as $k=>$v){
@@ -287,11 +287,11 @@ class Lcustomer {
 		$CI->load->model('web/Homes');
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
-		$CI->load->model('dashboard/CustomerContactInfo');
+		$CI->load->model('dashboard/Customer_contact_info');
 		$customer_detail = $CI->Customers->customer_personal_data($customer_id);
 		$ledger 		 = $CI->Customers->customerledger_tradational($customer_id);
 		$summary 		 = $CI->Customers->customer_transection_summary($customer_id);
-		$contact_info = $CI->CustomerContactInfo->get_contact_info_data($customer_id);
+		$contact_info = $CI->Customer_contact_info->get_contact_info_data($customer_id);
 	
 		$balance = 0;
 		if(!empty($ledger)){
