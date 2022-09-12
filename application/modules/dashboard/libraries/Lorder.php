@@ -235,6 +235,8 @@ class Lorder {
 			'details'			=>	$order_detail[0]['details'],
 			'status'			=>	$order_detail[0]['status'],
 			'is_quotation'		=>	$order_detail[0]['is_quotation'],
+            'order_discount' 	=>	$order_detail[0]['order_discount'],
+            'invoice_discount' 	=>	$order_detail[0]['order_discount'],
 			'order_all_data'=>	$order_detail,
 			'employee_list'		=>	$employee_list,
 			'store_list'		=>	$store_list,

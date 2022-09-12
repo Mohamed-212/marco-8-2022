@@ -443,6 +443,7 @@
                                                            id="discount_<?php echo $i ?>"
                                                            class="form-control text-right"
                                                            placeholder="0.00"
+                                                           <?php if ($value['discount'] > 0) : ?>data-value="<?php echo html_escape($value['discount']) ?>" <?php endif ?>
                                                            value="<?php echo html_escape($value['discount']) ?>"
                                                            min="0"/>
                                                 </td>
@@ -607,13 +608,20 @@
                                     </tr>
                                     <tr>
                                         <td class="text-right" colspan="2">
-                                            <b><?php echo display('quotation_discount') ?>:</b>
+                                            <b><?php echo display('order_discount') ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <input type="text" id="invoice_discount" class="form-control text-right"
-                                                   name="invoice_discount"
+                                                   name="invoice_discount" <?php if ($order_discount > 0) : ?>
+ data-value="<?php if ($order_discount) {
+                                                       echo($order_discount);
+                                                   } else {
+                                                       echo 0;
+                                                   } ?>"
+                                                   <?php endif ?>
+
                                                    value="<?php if ($order_discount) {
-                                                       echo($order_discount - $total_discount);
+                                                       echo($order_discount);
                                                    } else {
                                                        echo 0;
                                                    } ?>"
@@ -640,6 +648,7 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td colspan="4"></td>
                                         <td colspan="2" class="text-right"><b><?php echo display('grand_total') ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">

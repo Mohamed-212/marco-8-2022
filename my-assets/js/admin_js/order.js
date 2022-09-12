@@ -69,9 +69,14 @@ function  quantity_limit(item) {
 }
 //Quantity calculate
 function quantity_calculate(item) {
-    var quantity = $("#total_qntt_" + item).val();
+    var quantity = $("#total_qntt_" + item).val();   
     var price_item = $("#price_item_" + item).val();
+    if (parseFloat($("#discount_" + item).attr('data-value')) > 0) {
+        $("#discount_" + item).val($("#discount_" + item).attr('data-value'));
+        setTimeout(() => {$("#discount_" + item).attr('data-value', -1);}, 1200);
+    }
     var discount = $("#discount_" + item).val();
+    // console.log(discount);
     var total_discount = $("#total_discount_" + item).val();
     var cgst = $("#cgst_" + item).val();
     var sgst = $("#sgst_" + item).val();
