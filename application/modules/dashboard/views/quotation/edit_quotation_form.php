@@ -4,7 +4,7 @@
     <!-- Product invoice js -->
     <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
     <!-- Invoice js -->
-    <script src="<?php echo base_url() ?>my-assets/js/admin_js/invoice.js" type="text/javascript"></script>
+    <script src="<?php echo base_url() ?>my-assets/js/admin_js/order.js" type="text/javascript"></script>
 
     <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form.js'; ?>"></script>
     <link rel="stylesheet" href="<?php echo MOD_URL . 'dashboard/assets/css/invoice/add_invoice_form.css' ?>">
