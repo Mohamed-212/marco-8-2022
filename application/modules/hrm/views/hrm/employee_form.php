@@ -144,7 +144,7 @@
                             </div>
                         </div>
 
-                        <div class="contact-info-conatiner">
+                        <!-- <div class="contact-info-conatiner">
                             <div class="row form-group">
                                 <div class="col-sm-12">
                                     <h3 class="card-title">
@@ -193,7 +193,7 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <div class="form-group text-right">
@@ -211,11 +211,11 @@
 <i id="counter" data-val="<?=$employee ? count($contact_info)+1 : 0?>"></i>
 <script>
     $(document).ready(function() {
-        $('#contact_info').append(getInputs());
+        // $('#contact_info').append(getInputs());
         $('#counter').attr('data-val', parseInt($('#counter').attr('data-val'), 10) + 1);
 
         $(document).on('click', '#add-contact', function() {
-            $('#contact_info').append(getInputs());
+            // $('#contact_info').append(getInputs());
             $('#counter').attr('data-val', parseInt($('#counter').attr('data-val'), 10) + 1);
         });
 
@@ -234,6 +234,6 @@
             return '<div class="form-group row" style="padding-top: 20px;"><label for="contact' + rand1 + '" class="col-sm-2 col-form-div"><?php echo display('name') ?></label><div class="col-sm-4"><input name="contact_info[' + getCount() + '][name]" class="form-control" type="text" placeholder="<?php echo display('name') ?>" id="contact' + rand1 + '"></div><label for="contact' + rand2 + '" class="col-sm-2 col-form-div"><?php echo display('phone') ?></label><div class="col-sm-4"><input name="contact_info[' + getCount() + '][phone]" class="form-control" type="text" placeholder="<?php echo display('phone') ?>" value="<?php echo $employee->zip ?>" id="contact' + rand2 + '"></div></div><div class="form-group row " style="padding-bottom: 20px;border-bottom: 1px solid #ababab;"><label for="contact' + rand3 + '" class="col-sm-2 col-form-div"><?php echo display('customer_address') ?></label><div class="col-sm-10"><input name="contact_info[' + getCount() + '][address]" class="form-control" type="text" placeholder="<?php echo display('customer_address') ?>" id="contact' + rand3 + '" value="<?php echo $employee->city ?>"></div></div>';
         }
 
-        $('input,select,textarea').removeAttr('required');
+        // $('input,select,textarea').removeAttr('required');
     });
 </script>

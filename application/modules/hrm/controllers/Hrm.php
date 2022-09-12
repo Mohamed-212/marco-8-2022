@@ -14,7 +14,7 @@ class Hrm extends MX_Controller
     {
         parent::__construct();
         $this->auth->check_user_auth();
-        $this->load->model(array('hrm_model', 'country_model', 'Employee_Contact_Info'));
+        $this->load->model(array('hrm_model', 'country_model'));
     }
 
 
@@ -131,7 +131,7 @@ class Hrm extends MX_Controller
             if (empty($id)) {
                 $empId = $this->hrm_model->create_employee($postData);
                 if ($empId) {
-                    $this->employee_contact_info->insert($empId, $contactInfo);
+                    // $this->employee_contact_info->insert($empId, $contactInfo);
                     $this->session->set_flashdata('message', display('save_successfully'));
                     redirect("hrm/hrm/bdtask_employee_list");
                 } else {
@@ -152,7 +152,7 @@ class Hrm extends MX_Controller
                     );
                     $this->db->where('HeadName', $old_head);
                     $this->db->update('acc_coa', $coa_inf);
-                    $this->employee_contact_info->update($this->input->post('id', true), $contactInfo);
+                    // $this->employee_contact_info->update($this->input->post('id', true), $contactInfo);
                     $this->session->set_flashdata('message', display('update_successfully'));
                 } else {
                     $this->session->set_flashdata('exception', display('please_try_again'));
@@ -165,7 +165,7 @@ class Hrm extends MX_Controller
         } else {
             if (!empty($id)) {
                 $data['employee'] = $this->hrm_model->single_employee_data($id);
-                $data['contact_info'] = $this->employee_contact_info->allInfos($id);
+                // $data['contact_info'] = $this->employee_contact_info->allInfos($id);
                 $data['title'] = display('edit_employee');
             }
             $data['country_list'] = $this->country_model->country();
@@ -196,7 +196,7 @@ class Hrm extends MX_Controller
 
         $data['title'] = display('employee_profile');
         $data['row'] = $this->hrm_model->employee_details($id);
-        $data['contact_info'] = $this->employee_contact_info->allInfos($id);
+        // $data['contact_info'] = $this->employee_contact_info->allInfos($id);
 //        $data['module'] = "hrm";
 //        $data['page'] = "hrm/resumepdf";
 //        echo modules::run('template/layout', $data);
