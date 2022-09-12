@@ -402,7 +402,7 @@ class Lorder {
 			'shipping_method'  =>@$shipping_method[0]['method_name'],
 			'paid_amount'	   =>$invoice_detail[0]['paid_amount'],
 			'due_amount'	   =>$invoice_detail[0]['due_amount'],
-			'invoice_details'  =>$invoice_detail[0]['order_details'],
+			'invoice_details'  =>$invoice_detail[0]['details'],
 			'subTotal_quantity'=>$subTotal_quantity,
 			'invoice_all_data' =>$invoice_detail,
 			'isTaxed'          =>$isTaxed,

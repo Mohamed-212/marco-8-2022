@@ -166,7 +166,7 @@ class Quotations extends CI_Model
 	}
 
 	//update_quotation
-	public function update_quotation_old()
+	public function update_quotation_older()
 	{
 
 		//Quotation and customer info
@@ -1890,7 +1890,7 @@ class Quotations extends CI_Model
 	}
 
 	//update_quotation
-	public function update_quotation()
+	public function update_quotation_old()
 	{
 
 		//Quotation and customer info
@@ -2250,6 +2250,28 @@ class Quotations extends CI_Model
 		//End tax details
 		return $quotation_id;
 	}
+
+	public function update_quotation($quotation_id)
+    {
+        // delete then insert new ==> update
+        $this->delete_quotation($quotation_id);
+        // insert as new
+        $quotation_id = $this->quotation_entry($quotation_id);
+
+        // turn to paid
+
+        // turn into invoice
+        // insert invoice from this input data
+        $this->load->model('dashboard/Invoices');
+        $invoice_id = $this->Invoices->invoice_entry(null, $quotation_id);
+
+        // get invoice no
+        $invoiceNo = $this->db->select('invoice')->from('invoice')->where('invoice_id', $invoice_id)->where('quotation_id', $quotation_id)->get()->row();
+        // update quotation status
+        $this->db->set('invoice_no', $invoiceNo->invoice)->set('status', 2)->where('quotation_id', $quotation_id)->update('quotation');
+
+        return $quotation_id;
+    }
 
 	//Quotation paid to invoice
 	public function quot_paid_data($quotation_id)
@@ -2754,6 +2776,7 @@ class Quotations extends CI_Model
 	{
 		$this->db->select('
 				a.*,
+				a.quotation_discount as quotation_discount_value,
 				b.customer_name,
 				c.*,
 				c.product_id,
@@ -2779,6 +2802,7 @@ class Quotations extends CI_Model
 	{
 		$this->db->select('
 			a.*,
+			a.quotation_discount as quotation_discount_value,
 			b.*,
 			c.*,
 			d.product_id,

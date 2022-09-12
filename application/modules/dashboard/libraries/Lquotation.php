@@ -122,7 +122,6 @@ class Lquotation {
 			'paid_amount'		=>	$quotation_detail[0]['paid_amount'],
 			'due_amount'		=>	$quotation_detail[0]['due_amount'],
 			'total_discount'	=>	$quotation_detail[0]['total_discount'],
-			'quotation_discount'=>	$quotation_detail[0]['quotation_discount'],
 			'service_charge'	=>	$quotation_detail[0]['service_charge'],
 			'details'			=>	$quotation_detail[0]['details'],
 			'status'			=>	$quotation_detail[0]['status'],
@@ -135,8 +134,11 @@ class Lquotation {
 			'bank_list'        =>	$bank_list,
 			'payment_info'     =>	$payment_info,
 			'tax_amount' 	   => $tax_amount,
-			);
-		$chapterList = $CI->parser->parse('dashboard/quotation/edit_quotation_form',$data,true);
+			'product_discount'=>	$quotation_detail[0]['product_discount'],
+            'quotation_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
+            'invoice_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
+		);
+		$chapterList = $CI->parser->parse('dashboard/quotation/edit_quotation_form_updated',$data,true);
 		return $chapterList;
 	}
 	//Quotation html Data
@@ -178,7 +180,9 @@ class Lquotation {
 			'final_date'		=>	$quotation_detail[0]['final_date'],
 			'expire_date'		=>	$quotation_detail[0]['expire_date'],
 			'total_amount'		=>	$quotation_detail[0]['total_amount'],
-			'quotation_discount'=>	$quotation_detail[0]['quotation_discount'],
+			// 'quotation_discount'=>	$quotation_detail[0]['quotation_discount'],
+			'quotation_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
+            'invoice_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
 			'service_charge'	=>	$quotation_detail[0]['service_charge'],
 			'paid_amount'		=>	$quotation_detail[0]['paid_amount'],
 			'due_amount'		=>	$quotation_detail[0]['due_amount'],
@@ -329,7 +333,9 @@ class Lquotation {
 			'final_date'		=>$quotation_detail[0]['date'],
 			'expire_date'		=>$quotation_detail[0]['expire_date'],
 			'total_amount'		=>$quotation_detail[0]['total_amount'],
-			'invoice_discount'=>$quotation_detail[0]['quotation_discount'],
+			// 'invoice_discount'=>$quotation_detail[0]['quotation_discount'],
+			'quotation_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
+            'invoice_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
 			'service_charge' 	=>$quotation_detail[0]['service_charge'],
 			'paid_amount'		=>$quotation_detail[0]['paid_amount'],
 			'due_amount'		=>$quotation_detail[0]['due_amount'],
@@ -340,6 +346,7 @@ class Lquotation {
 			'currency' 			=>$currency_details[0]['currency_icon'],
 			'position' 			=>$currency_details[0]['currency_position'],
 			'Soft_settings' 	=>$soft_settings,
+			
 			);
 
 			$emp_name = $emp_id = null;
@@ -407,4 +414,3 @@ class Lquotation {
 		return $chapterList;
 	}
 }
-?>
