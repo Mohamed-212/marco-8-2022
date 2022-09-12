@@ -664,20 +664,20 @@ class Orders extends CI_Model
                 foreach ($available_quantity as $k => $v) {
                     if ($v < $quantity[$k]) {
                         $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
-                        redirect('dashboard/Cinvoice');
+                        redirect('dashboard/Corder');
                     }
                 }
 
                 //Product existing check
                 if ($product_id == null) {
                     $this->session->set_userdata(array('error_message' => display('please_select_product')));
-                    redirect('dashboard/Cinvoice');
+                    redirect('dashboard/Corder');
                 }
 
                 //Customer existing check
                 if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
                     $this->session->set_userdata(array('error_message' => display('please_select_customer')));
-                    redirect(base_url() . 'dashboard/Cinvoice');
+                    redirect(base_url() . 'dashboard/Corder');
                 }
 
                 //Customer data Existence Check.
@@ -783,18 +783,18 @@ class Orders extends CI_Model
                 $this->db->insert('order', $data);
 
                 // insert installment
-                // if ($this->input->post('is_installment', true) == 1) {
-                //     $installment_amount = $this->input->post('amount', TRUE);
-                //     $installment_due_date = $this->input->post('due_date', TRUE);
-                //     for ($i = 0; $i < $installment_month_no; $i++) {
-                //         $installment_data = array(
-                //             'invoice_id' => $invoice_id,
-                //             'amount' => $installment_amount[$i],
-                //             'due_date' => $installment_due_date[$i],
-                //         );
-                //         $this->db->insert('order_invoice_installment', $installment_data);
-                //     }
-                // }
+                if ($this->input->post('is_installment', true) == 1) {
+                    $installment_amount = $this->input->post('amount', TRUE);
+                    $installment_due_date = $this->input->post('due_date', TRUE);
+                    for ($i = 0; $i < $installment_month_no; $i++) {
+                        $installment_data = array(
+                            'invoice_id' => $invoice_id,
+                            'amount' => $installment_amount[$i],
+                            'due_date' => $installment_due_date[$i],
+                        );
+                        $this->db->insert('order_invoice_installment', $installment_data);
+                    }
+                }
 
                 //Invoice details info
                 $rate = $this->input->post('product_rate', TRUE);
@@ -1467,26 +1467,26 @@ class Orders extends CI_Model
             foreach ($available_quantity as $k => $v) {
                 if ($v < $quantity[$k]) {
                     $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
-                    redirect('dashboard/Cinvoice');
+                    redirect('dashboard/Corder');
                 }
             }
 
             //Product existing check
             if ($product_id == null) {
                 $this->session->set_userdata(array('error_message' => display('please_select_product')));
-                redirect('dashboard/Cinvoice');
+                redirect('dashboard/Corder');
             }
 
             //Customer existing check
             if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
                 $this->session->set_userdata(array('error_message' => display('please_select_customer')));
-                redirect(base_url() . 'dashboard/Cinvoice');
+                redirect(base_url() . 'dashboard/Corder');
             }
 
             //Customer data Existence Check.
             if ($this->input->post('customer_id', TRUE)) {
                 $customer_id = $this->input->post('customer_id', TRUE);
-            } 
+            }
             // else {
             //     $customer_id = generator(15);
             //     //Customer  basic information adding.
@@ -1523,19 +1523,19 @@ class Orders extends CI_Model
             // create customer head END
             //Full or partial Payment record.
             // if ($this->input->post('paid_amount', TRUE) > 0) {
-                //Insert to customer_ledger Table 
-                // $data2 = array(
-                //     'transaction_id' => generator(15),
-                //     'customer_id' => $customer_id,
-                //     'invoice_no' => $invoice_id,
-                //     'receipt_no' => $this->auth->generator(15),
-                //     'date' => $this->input->post('invoice_date', TRUE),
-                //     'amount' => $this->input->post('paid_amount', TRUE),
-                //     'payment_type' => 1,
-                //     'description' => 'ITP',
-                //     'status' => 1
-                // );
-                // $this->db->insert('order_customer_ledger', $data2);
+            //Insert to customer_ledger Table 
+            // $data2 = array(
+            //     'transaction_id' => generator(15),
+            //     'customer_id' => $customer_id,
+            //     'invoice_no' => $invoice_id,
+            //     'receipt_no' => $this->auth->generator(15),
+            //     'date' => $this->input->post('invoice_date', TRUE),
+            //     'amount' => $this->input->post('paid_amount', TRUE),
+            //     'payment_type' => 1,
+            //     'description' => 'ITP',
+            //     'status' => 1
+            // );
+            // $this->db->insert('order_customer_ledger', $data2);
             // }
 
             //Insert to customer ledger Table 
@@ -1599,6 +1599,20 @@ class Orders extends CI_Model
                 'created_at' => date("Y-m-d H:i:s")
             );
             $this->db->insert('order', $data);
+
+            // insert installment
+            if ($this->input->post('is_installment', true) == 1) {
+                $installment_amount = $this->input->post('amount', TRUE);
+                $installment_due_date = $this->input->post('due_date', TRUE);
+                for ($i = 0; $i < $installment_month_no; $i++) {
+                    $installment_data = array(
+                        'invoice_id' => $invoice_id,
+                        'amount' => $installment_amount[$i],
+                        'due_date' => $installment_due_date[$i],
+                    );
+                    $this->db->insert('order_invoice_installment', $installment_data);
+                }
+            }
 
 
             //Insert payment method
@@ -2753,7 +2767,7 @@ class Orders extends CI_Model
             $this->db->where('invoice_id', $order_id);
             $order = $this->db->update('order_invoice');
             if ($ledger) {
-                
+
                 $store_id      = $this->input->post('store_id', TRUE);
                 $products      = $this->input->post('product_id', TRUE);
                 $variant_ids   = $this->input->post('variant_id', TRUE);
