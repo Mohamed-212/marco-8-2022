@@ -194,7 +194,7 @@ class Invoices extends CI_Model {
     }
 
     //Invoice entry
-    public function invoice_entry($order_id = null) {
+    public function invoice_entry($order_id = null, $quotation_id = null) {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -329,6 +329,7 @@ class Invoices extends CI_Model {
                     'status' => 5,
                     'created_at' => date("Y-m-d H:i:s"),
                     'order_id' => $order_id,
+                    'quotation_id' => $quotation_id,
                 );
                 $this->db->insert('invoice', $data);
 
@@ -1124,6 +1125,7 @@ class Invoices extends CI_Model {
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),
                 'order_id' => $order_id,
+                'quotation_id' => $quotation_id,
             );
             $this->db->insert('invoice', $data);
 

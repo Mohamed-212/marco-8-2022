@@ -605,9 +605,9 @@
                                                                     <?php $taxAmount = 0; ?>
                                                                     <?php
                                                                     $this->db->select('a.*,b.tax_name');
-                                                                    $this->db->from('tax_collection_summary a');
+                                                                    $this->db->from('quotation_tax_col_summary a');
                                                                     $this->db->join('tax b', 'a.tax_id = b.tax_id');
-                                                                    $this->db->where('a.invoice_id', $invoice_id);
+                                                                    $this->db->where('a.quotation_id', $invoice_id);
                                                                     $this->db->where('a.tax_id', 'H5MQN4NXJBSDX4L');
                                                                     $tax_info = $this->db->get()->row();
                                                                     if ($tax_info) { ?>
@@ -620,9 +620,9 @@
                                                                         </tr>
                                                                     <?php }
                                                                     $this->db->select('a.*,b.tax_name');
-                                                                    $this->db->from('tax_collection_summary a');
+                                                                    $this->db->from('quotation_tax_col_summary a');
                                                                     $this->db->join('tax b', 'a.tax_id = b.tax_id');
-                                                                    $this->db->where('a.invoice_id', $invoice_id);
+                                                                    $this->db->where('a.quotation_id', $invoice_id);
                                                                     $this->db->where('a.tax_id', '5SN9PRWPN131T4V');
                                                                     $tax_info = $this->db->get()->row();
                                                                     if ($tax_info) { ?>
@@ -635,9 +635,9 @@
                                                                         </tr>
                                                                         <?php }
                                                                     $this->db->select('a.*,b.tax_name');
-                                                                    $this->db->from('tax_collection_summary a');
+                                                                    $this->db->from('quotation_tax_col_summary a');
                                                                     $this->db->join('tax b', 'a.tax_id = b.tax_id');
-                                                                    $this->db->where('a.invoice_id', $invoice_id);
+                                                                    $this->db->where('a.quotation_id', $invoice_id);
                                                                     $this->db->where('a.tax_id', '52C2SKCKGQY6Q9J');
                                                                     $tax_info = $this->db->get()->row();
                                                                     if ($isTaxed == 1) {

@@ -166,7 +166,7 @@ class Quotations extends CI_Model
 	}
 
 	//update_quotation
-	public function update_quotation_old()
+	public function update_quotation_older()
 	{
 
 		//Quotation and customer info
@@ -1890,7 +1890,7 @@ class Quotations extends CI_Model
 	}
 
 	//update_quotation
-	public function update_quotation()
+	public function update_quotation_old()
 	{
 
 		//Quotation and customer info
@@ -2250,6 +2250,28 @@ class Quotations extends CI_Model
 		//End tax details
 		return $quotation_id;
 	}
+
+	public function update_quotation($quotation_id)
+    {
+        // delete then insert new ==> update
+        $this->delete_quotation($quotation_id);
+        // insert as new
+        $quotation_id = $this->quotation_entry($quotation_id);
+
+        // turn to paid
+
+        // turn into invoice
+        // insert invoice from this input data
+        $this->load->model('dashboard/Invoices');
+        $invoice_id = $this->Invoices->invoice_entry(null, $quotation_id);
+
+        // get invoice no
+        $invoiceNo = $this->db->select('invoice')->from('invoice')->where('invoice_id', $invoice_id)->where('quotation_id', $quotation_id)->get()->row();
+        // update quotation status
+        $this->db->set('invoice_no', $invoiceNo->invoice)->set('status', 2)->where('quotation_id', $quotation_id)->update('quotation');
+
+        return $quotation_id;
+    }
 
 	//Quotation paid to invoice
 	public function quot_paid_data($quotation_id)
@@ -2754,6 +2776,7 @@ class Quotations extends CI_Model
 	{
 		$this->db->select('
 				a.*,
+				a.quotation_discount as quotation_discount_value,
 				b.customer_name,
 				c.*,
 				c.product_id,
@@ -2775,10 +2798,11 @@ class Quotations extends CI_Model
 	}
 
 	//Retrieve quotation_html_data
-	public function retrieve_quotation_html_data($quotation_id)
+	public function retrieve_quotation_html_data_old($quotation_id)
 	{
 		$this->db->select('
 			a.*,
+			a.quotation_discount as quotation_discount_value,
 			b.*,
 			c.*,
 			d.product_id,
@@ -2805,6 +2829,58 @@ class Quotations extends CI_Model
 		}
 		return false;
 	}
+
+	//Retrieve invoice_html_data
+    public function retrieve_quotation_html_data($quotation_id) {
+        $direct_quotation = $this->db->select('*')->from('quotation')->where('quotation', $quotation_id)->get()->result_array();
+        $this->db->select('
+			a.*,
+			a.created_at as date_time,
+			a.quotation_discount as total_quotation_discount,
+			b.*,
+			c.*,
+			d.product_id,
+			d.product_name,
+			d.product_details,
+			d.product_model,
+			d.image_thumb,
+			d.unit,
+			e.unit_short_name,
+			f.variant_name,
+			g.customer_name as ship_customer_name,
+			g.first_name as ship_first_name, g.last_name as ship_last_name,
+			g.customer_short_address as ship_customer_short_address,
+			g.customer_address_1 as ship_customer_address_1,
+			g.customer_address_2 as ship_customer_address_2,
+			g.customer_mobile as ship_customer_mobile,
+			g.customer_email as ship_customer_email,
+			g.city as ship_city,
+			g.state as ship_state,
+			g.country as ship_country,
+			g.zip as ship_zip,
+			g.company as ship_company
+			');
+        $this->db->from('quotation a');
+        $this->db->join('customer_information b', 'b.customer_id = a.customer_id', 'left');
+        $this->db->join('quotation_details c', 'c.quotation_id = a.quotation_id', 'left');
+        if (empty($direct_quotation[0]['order_id'])) {
+            $this->db->join('customer_information g', 'g.customer_id = a.customer_id', 'left');
+        } else {
+            $this->db->join('shipping_info g', 'g.customer_id = a.customer_id', 'left');
+        }
+
+        $this->db->join('product_information d', 'd.product_id = c.product_id', 'left');
+        $this->db->join('unit e', 'e.unit_id = d.unit', 'left');
+        $this->db->join('variant f', 'f.variant_id = c.variant_id', 'left');
+        $this->db->where('a.quotation_id', $quotation_id);
+        $this->db->group_by('d.product_id, c.quotation_details_id');
+        $this->db->order_by('d.product_name', 'asc');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
 
 	// Delete quotation Item
 	public function retrieve_product_data($product_id)
