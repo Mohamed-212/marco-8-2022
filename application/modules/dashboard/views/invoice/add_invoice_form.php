@@ -1,4 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<script>
+    var products_with_no_quantity = "<?=display('products_with_no_quantity')?>";
+</script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
 <!-- Product invoice js -->

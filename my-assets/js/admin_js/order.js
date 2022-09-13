@@ -127,7 +127,8 @@ function check_quotation() {
     }
 }
 
-function submit_form() {
+function submit_form(ev) {
+    ev.preventDefault();
     var elem = $("#is_quotation");
     if (elem.prop('checked') == true) {
         $(".total_cgst").each(function () {
@@ -140,6 +141,22 @@ function submit_form() {
         }
         $("#total_cgst").val('0');
     }
+
+    // validate product quantity
+    $('[name="available_quantity[]"]').each(function () {
+        if (!this.value || this.value < 1) {
+            alert(products_with_no_quantity);
+            return;
+        }
+    });
+
+    $('[name="product_quantity[]"]').each(function () {
+        if (!this.value || this.value < 1) {
+            alert(products_with_no_quantity);
+            return;
+        }
+    });
+
     $("form#validate, form#normalinvoice").submit();
 }
 
