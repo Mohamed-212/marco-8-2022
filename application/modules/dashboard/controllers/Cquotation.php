@@ -169,7 +169,7 @@ class Cquotation extends MX_Controller {
         if ($invoice_id) {
             redirect('dashboard/Cinvoice/invoice_inserted_data/' . $invoice_id->row()->invoice_id);
         } else {
-            redirect('dashboard/Cquotation/manage_quotation');
+            redirect('dashboard/Cquotation');
         }
 
 //		$quotation_id = $this->Quotations->update_quotation();
