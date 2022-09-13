@@ -2984,6 +2984,8 @@ class Orders extends CI_Model
 
         $this->db->select('
 			a.*,
+            a.created_at as date_time,
+			a.order_discount as total_order_discount,
 			b.*,
 			c.*,
 			d.product_id,
