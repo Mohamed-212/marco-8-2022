@@ -474,7 +474,12 @@
                                                                             <?php } ?>
 
                                                                             <td><?php if (!empty($invoice['total_price'])) {
-                                                                                    echo (($position == 0) ? $currency . " " . $invoice['total_price'] : $invoice['total_price'] . " " . $currency);
+                                                                                    echo (($position == 0) ? 
+                                                                                    $currency . " " . 
+                                                                                    ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)) )
+                                                                                     : 
+                                                                                     ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)) ) 
+                                                                                     . " " . $currency);
                                                                                 } ?></td>
                                                                         </tr>
                                                                         <?php
