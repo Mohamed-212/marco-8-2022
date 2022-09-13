@@ -246,22 +246,22 @@ class Crefund extends MX_Controller {
             }
          
               //1st customer credit total_with_vat
-                $customer_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
-                    'Vtype' => 'Sales',
-                    'VDate' => $createdate,
-                    'COAID' => $customer_head->HeadCode,
-                    'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $total_return+$tota_vat,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $customer_credit);
+                // $customer_credit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => 'Inv-' . $filter['invoice_no'],
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $createdate,
+                //     'COAID' => $customer_head->HeadCode,
+                //     'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => 0,
+                //     'Credit' => $total_return+$tota_vat,
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                // $this->db->insert('acc_transaction', $customer_credit);
 
                 //7th paid_amount depit if full paid 
                 $customer_depit = array(
@@ -280,7 +280,7 @@ class Crefund extends MX_Controller {
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $customer_depit);
-                //2nd Allowed Discount credit
+                // 2nd Allowed Discount credit
                 $allowed_discount_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_no'],
@@ -395,7 +395,7 @@ class Crefund extends MX_Controller {
                     'customer_id'       =>$customer_id,
                     'employee_id'       =>$receive_by,
                     'total_discount'    =>$total_discount,
-                    'total_return'      =>$total_return+$tota_vat,
+                    'total_return'      =>$total_return+$tota_vat+$total_discount,
                 );
                 $this->db->insert('invoice_return', $invoice_return);
                 $returninvoice_id=$this->db->insert_id();

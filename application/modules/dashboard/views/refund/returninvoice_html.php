@@ -390,7 +390,7 @@
                                                                             <td><?php echo html_escape($return_qnty);?></td>
                                                                             <td><?php echo html_escape($product['price']); ?></td>
                                                                             <td><?php echo html_escape($customer_price); ?></td>
-                                                                            <td><?php echo html_escape($total); ?></td>
+                                                                            <td><?php echo html_escape($product['price']*$return_qnty); ?></td>
                                                                                                                              
                                                                         </tr>
                                                             </tbody>
@@ -446,7 +446,7 @@
                                                                     <tr>
                                                                         <th class="grand_total"> <?php echo display('total') ?>:</th>
                                                                         <td>
-                                                                            <?php echo ($total ); ?>
+                                                                            <?php echo ($product['price']*$return_qnty); ?>
                                                                         </td>
                                                                     </tr>
 
