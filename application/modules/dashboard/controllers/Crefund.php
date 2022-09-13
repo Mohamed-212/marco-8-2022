@@ -20,13 +20,75 @@ class Crefund extends MX_Controller {
 
     //Add new invoice
     public function new_refund() {
-  
+        
+            $data=[
+                'bank_list' => $this->Invoices->bank_list(),
+                'payment_info' => $this->Invoices->payment_info(),
+            ];
             $data['module'] = "dashboard";
             $data['page'] = "refund/add_refund_form";
             echo Modules::run('template/layout', $data);
     }
 
-   
+    public function manage_return() {
+        $this->permission->check_label('manage_sale')->read()->redirect();
+        $filter = array(
+            'invoice_no' => $this->input->get('invoice_no', TRUE),
+            'employee_id' => $this->input->get('employee_id', TRUE),
+            'customer_id' => $this->input->get('customer_id', TRUE),
+            'from_date' => $this->input->get('from_date', TRUE),
+            'to_date' => $this->input->get('to_date', TRUE),
+            'invoice_status' => $this->input->get('invoice_status', TRUE)
+        );
+        $config["base_url"] = base_url('dashboard/Crefund/manage_return');
+        $config["total_rows"] = $this->Invoices->count_invoice_return_list($filter);
+        $config["per_page"] = 20;
+        $config["uri_segment"] = 4;
+        $config["num_links"] = 5;
+        /* This Application Must Be Used With BootStrap 3 * */
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+        /* ends of bootstrap */
+        $this->pagination->initialize($config);
+        $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $links = $this->pagination->create_links();
+        $invoices_list = $this->Invoices->get_invoice_return_list($filter, $page, $config["per_page"]);
+        if (!empty($invoices_list)) {
+            foreach ($invoices_list as $k => $v) {
+                $invoices_list[$k]['final_date'] = $this->occational->dateConvert($invoices_list[$k]['date']);
+            }
+            $i = 0;
+            foreach ($invoices_list as $k => $v) {
+                $i++;
+                $invoices_list[$k]['sl'] = $i;
+            }
+        }
+        $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
+        $currency_details = $this->Soft_settings->retrieve_currency_info();
+        $data = array(
+            'title' => display('manage_invoice'),
+            'invoices_list' => $invoices_list,
+            'currency' => $currency_details[0]['currency_icon'],
+            'position' => $currency_details[0]['currency_position'],
+            'links' => $links
+        );
+
+        $data['module'] = "dashboard";
+        $data['page'] = "refund/manage_return";
+        echo Modules::run('template/layout', $data);
+    }
 
     public function get_invoice_products() {
         $filter = array(
@@ -58,6 +120,7 @@ class Crefund extends MX_Controller {
             'variant_id' =>  $this->input->get('variant_id', TRUE),
             'status' =>  $this->input->get('status', TRUE),
             'quantity' =>  $this->input->get('quantity', TRUE),
+            'payment_id' =>  $this->input->get('payment_id', TRUE),
            );
 
            //get customer headcode
@@ -130,12 +193,11 @@ class Crefund extends MX_Controller {
                 $receive_by = $this->session->userdata('user_id');  
             //calc total price of returned qunty of product
                 $product_price=$invoice_details[0]['total_price']/$invoice_details[0]['quantity'];
-                $total_return=($invoice_details[0]['total_price']/$invoice_details[0]['quantity'])*$filter['quantity'];
                 $total_discount=$invoice_details[0]['discount']*$filter['quantity'];
                 $total_discount+=$invoice_details[0]['invoice_discount']*$filter['quantity'];
+                $total_return=((($invoice_details[0]['total_price']/$invoice_details[0]['quantity'])*$filter['quantity']))-$total_discount;
+                $total_return_without_discount=$total_return+$total_discount;
                 
-                $total_return_with_discount=$total_return+$total_discount;
-          
             //total vat
                 $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'])->get()->row();
                 if(!empty($i_vat))
@@ -145,14 +207,13 @@ class Crefund extends MX_Controller {
                 $createdate=date('Y-m-d H:i:s');
             // total supplier price
             $cogs_price= $invoice_details[0]['supplier_rate']*$filter['quantity'];  
-           
+            $bank_return= $total_return+$tota_vat;
             //return installment
             if($invoice[0]['is_installment'])
             {
-                $total_installment_return =$total_return_with_discount+$tota_vat;
+                $total_installment_return =$total_return+$tota_vat;
                 $temp=0;
                 $return=0;
-                $last_installment_amount=0;
                 $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_no']."';";
                 $result= $this->db->query($sql);
                 $invoice_installment  = $result->result_array();
@@ -175,13 +236,13 @@ class Crefund extends MX_Controller {
 
                     if($temp > $total_installment_return)
                     {
-                        $last_installment_amount=$temp-$total_installment_return;
-                        $sql="update invoice_installment set amount='".$last_installment_amount."' where id='".$invoice_installment[$i]['id']."';";
+                        $total_installment_return=$temp-$total_installment_return;
+                        $sql="update invoice_installment set amount='".$total_installment_return."' where id='".$invoice_installment[$i]['id']."';";
                         $result= $this->db->query($sql);
                         break;
                     }
                 }
-                
+                $bank_return= $total_installment_return;
             }
          
               //1st customer credit total_with_vat
@@ -210,7 +271,7 @@ class Crefund extends MX_Controller {
                     'VDate' => $createdate,
                     'COAID' => $customer_head->HeadCode,
                     'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_return_with_discount,
+                    'Debit' => $total_return_without_discount,
                     'Credit' => 0,
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
@@ -245,7 +306,7 @@ class Crefund extends MX_Controller {
                     'VDate' => $createdate,
                     'COAID' => 5111, // account payable game 11
                     'Narration' => 'Sales "total price before discount" store_depit depited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_return_with_discount,
+                    'Debit' => $total_return_without_discount,
                     'Credit' => 0 ,
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
@@ -308,11 +369,78 @@ class Crefund extends MX_Controller {
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
-          
 
-        redirect('dashboard/Crefund/new_refund' . $filter['invoice_id']);
+                if (!empty($filter['payment_id'])) {
+                    $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
+                    $bank_credit = array(
+                        'fy_id' => $find_active_fiscal_year->id,
+                        'VNo' => 'Inv-' . $invoice_id,
+                        'Vtype' => 'Sales',
+                        'VDate' => $date,
+                        'COAID' => $payment_head->HeadCode,
+                        'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $filter['payment_id'] . ')',
+                        'Debit' => 0,
+                        'Credit' => $bank_return,
+                        'IsPosted' => 1,
+                        'CreateBy' => $receive_by,
+                        'CreateDate' => $createdate,
+                        'IsAppove' => 1
+                    );
+                    $this->db->insert('acc_transaction', $bank_debit);
+                }
+                $invoice_return=array(
+                    'invoice_id'        =>$filter['invoice_no'],
+                    'return_quantity'   =>$filter['quantity'],
+                    'product_id'        =>$filter['product_id'],
+                    'customer_id'       =>$customer_id,
+                    'employee_id'       =>$receive_by,
+                    'total_discount'    =>$total_discount,
+                    'total_return'      =>$total_return+$tota_vat,
+                );
+                $this->db->insert('invoice_return', $invoice_return);
+                $returninvoice_id=$this->db->insert_id();
+                return redirect(base_url('dashboard/Crefund/return_invoice/' . $returninvoice_id  ));
+
+        // redirect('dashboard/Crefund/new_refund' . $filter['invoice_id']);
     }
 
+    public function return_invoice($returninvoice_id) {
+        //find previous invoice history and REDUCE the stock
+        $invoice_return = $this->db->select('*')->from('invoice_return')->where('id', $returninvoice_id)->get()->result_array();
+        
+        $sql="SELECT * FROM `customer_information` where `customer_id`='".$invoice_return[0]['customer_id']."' ;";
+        $result= $this->db->query($sql);
+        $customer  = $result->result_array();
+        
+        $sql="SELECT * FROM `product_information` where `product_id`='".$invoice_return[0]['product_id']."' ;";
+        $result= $this->db->query($sql);
+        $product  = $result->result_array();
+
+        $sql="SELECT * FROM `users` where `user_id`='".$invoice_return[0]['employee_id']."' ;";
+        $result= $this->db->query($sql);
+        $user  = $result->result_array();
+
+        $sql="SELECT * FROM `pricing_types_product` where `product_id`='".$invoice_return[0]['product_id']."' and `pri_type_id` ='2' ;";
+        $result= $this->db->query($sql);
+        $customer_price= $result->result_array();
+        $data=
+        [
+            'sl'            =>  $invoice_return[0]['id'],
+            'customer'      =>  $customer[0],
+            'createdate'    =>  date('Y-m-d H:i:s'),
+            'receive_by'    =>  $user[0]['first_name']." ".$user[0]['last_name'],
+            'product'       =>  $product[0],
+            'return_qnty'   =>  $invoice_return[0]['return_quantity'],
+            'customer_price'=> $customer_price[0]['product_price'],
+            'total_discount'=>  $invoice_return[0]['total_discount'],
+            'total'         =>  $invoice_return[0]['total_return']
+
+        ];
+        $data['module'] = "dashboard";
+        $data['page'] = "refund/Returninvoice_html";
+        echo Modules::run('template/layout', $data);
+
+    }
     public function change_stock($invoice_id) {
         //find previous invoice history and REDUCE the stock
         $invoice_history = $this->db->select('*')->from('invoice_details')->where('invoice_id', $invoice_id)->get()->result_array();

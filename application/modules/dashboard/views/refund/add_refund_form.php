@@ -122,6 +122,31 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <label for="payment_id" class="col-sm-4 col-form-label"><?php echo display('bank_list') ?>
+                                            <i class="text-danger">*</i></label>
+                                        <div class="col-sm-8">
+                                             <select class="form-control" name="payment_id" id="payment_id">
+                                                                <option value=""></option>
+                                                                <?php
+                                                                if ($payment_info) {
+                                                                    foreach ($payment_info as $payment_method) {
+                                                                ?>
+                                                                        <option value="<?php echo html_escape($payment_method->HeadCode); ?>">
+                                                                            <?php echo html_escape($payment_method->HeadName); ?>
+                                                                        </option>
+                                                                <?php
+                                                                    }
+                                                                }
+                                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div class="row">
                                 <div class="col-sm-6">

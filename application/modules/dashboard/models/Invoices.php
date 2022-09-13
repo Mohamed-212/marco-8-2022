@@ -73,6 +73,8 @@ class Invoices extends CI_Model {
         return $query;
     }
 
+   
+
     //Invoice List
     public function get_invoice_list($filter, $start, $limit) {
         $this->db->select('a.*,b.*,c.order');
@@ -95,6 +97,59 @@ class Invoices extends CI_Model {
             $this->db->where('a.invoice_status', $filter['invoice_status']);
         }
         $this->db->order_by('a.invoice', 'desc');
+        $this->db->limit($limit, $start);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+
+        return false;
+    }
+
+    //Invoice List count
+    public function count_invoice_return_list($filter = []) {
+        $this->db->select('a.invoice_id');
+        $this->db->from('invoice_return a');
+        if (!empty($filter['invoice_no'])) {
+            $this->db->where('a.invoice_id', $filter['invoice_no']);
+        }
+        if (!empty($filter['customer_id'])) {
+            $this->db->where('a.customer_id', $filter['customer_id']);
+        }
+        if (!empty($filter['employee_id'])) {
+            $this->db->where('a.employee_id', $filter['employee_id']);
+        }
+        if (!empty($filter['date'])) {
+            $this->db->where("STR_TO_DATE(a.create_at, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+        }
+        // if (!empty($filter['invoice_status'])) {
+        //     $this->db->where('a.invoice_status', $filter['invoice_status']);
+        // }
+        $query = $this->db->count_all_results();
+        return $query;
+    }
+
+    //Invoice List
+    public function get_invoice_return_list($filter, $start, $limit) {
+        $this->db->select('a.*,b.*');
+        $this->db->from('invoice_return a');
+        $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
+        if (!empty($filter['invoice_no'] != '')) {
+            $this->db->where('a.invoice_id', $filter['invoice_no']);
+        }
+        if ($filter['customer_id'] != '') {
+            $this->db->where('a.customer_id', $filter['customer_id']);
+        }
+        if ($filter['from_date'] != '') {
+            $this->db->where("STR_TO_DATE(a.created_at, '%m-%d-%Y')>=DATE('" . $filter['date'] . "')");
+        }
+        if ($filter['to_date'] != '') {
+            $this->db->where("STR_TO_DATE(a.created_at, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
+        }
+        // if ($filter['invoice_status'] != '') {
+        //     $this->db->where('a.invoice_status', $filter['invoice_status']);
+        // }
+        $this->db->order_by('a.invoice_id', 'desc');
         $this->db->limit($limit, $start);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -351,7 +406,7 @@ class Invoices extends CI_Model {
                 $p_id = $this->input->post('product_id', TRUE);
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
-                $inv_disc = $this->input->post('invoice_discount', TRUE);
+                $inv_disc = (float)$this->input->post('invoice_discount', TRUE);
                 $total_price_vat=array_sum($total_amount)+(float)$this->input->post('total_cgst', TRUE);
                 $total_with_discount_inv=$total_price_vat-$inv_disc-(float)$this->input->post('total_discount', TRUE);
                 $percentage_disc = $this->input->post('percentage_discount', TRUE);

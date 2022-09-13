@@ -22,11 +22,29 @@
             </a>
         </li>
 
-        <li
-            class="treeview <?php echo (($this->uri->segment(3) == "home" || $this->uri->segment(3) == "home") ? "active" : null) ?>">
-            <a href="<?php echo base_url('dashboard/Crefund/new_refund') ?>"><i class="ti-home"></i>
-                <span><?php echo display('return') ?></span>
+       
+        <li class="treeview <?php if (in_array($this->uri->segment('3'), ['new_return', 'manage_return'])) {
+                                        echo 'active';
+                                    } ?>">
+            <a href="#">
+                <i class="ti-layout-accordion-list"></i><span><?php echo display('return') ?></span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
             </a>
+            <ul class="treeview-menu">
+                <li class="<?php echo (($this->uri->segment(3) == 'new_return' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Crefund/new_refund') ?>"><?php echo display('return') ?></a>
+                </li>
+               
+                <li
+                    class="active">
+                    <a
+                        href="<?php echo base_url('dashboard/Crefund/manage_return') ?>"><?php echo display('manage_invoice') ?></a>
+                </li>
+               
+            </ul>
         </li>
         <?php if ($this->session->userdata('user_type') == 1 || $this->session->userdata('user_type') == 2) { ?>
         <!-- Invoice menu start -->
