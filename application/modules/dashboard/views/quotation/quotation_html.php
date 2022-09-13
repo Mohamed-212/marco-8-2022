@@ -221,7 +221,9 @@
                                                                     <?php echo display('quotation_no'); ?> : <?php echo html_escape($quotation_no); ?>
                                                                 </p>
                                                                 <p>
-                                                                    <?php echo display('date'); ?> : <?php echo html_escape($final_date) ?>
+                                                                    <?php echo display('date'); ?> : <span dir="ltr" style="text-transform: uppercase;">
+                                                                    <?php echo html_escape(date('Y - M - d', strtotime($final_date))) ?>
+                                                                    </span>
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('employee'); ?> : <?= $emp_name ?>
