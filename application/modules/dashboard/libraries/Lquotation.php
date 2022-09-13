@@ -351,7 +351,7 @@ class Lquotation {
 			);
 
 			$emp_name = $emp_id = null;
-			var_dump($quotation_detail[0]['employee_id']);
+			// var_dump($quotation_detail[0]['employee_id']);
 			if (!empty($quotation_detail) && isset($quotation_detail[0]['employee_id'])) {
 				$emp = $CI->Hrm_model->single_employee_data($quotation_detail[0]['employee_id']);
 				if (null !== $emp) {
