@@ -255,7 +255,7 @@
                                                                     if ($isTaxed == 1) {
                                                                         //                                                                        echo "<th class='hide-me'>" . display('unit_price_before_VAT') . "</th>";
                                                                     } else {
-                                                                        echo "<th class='hide-me'>" . display('rate') . "</th>";
+                                                                        // echo "<th class='hide-me'>" . display('rate') . "</th>";
                                                                     }
                                                                     ?>
                                                                     <th class='hide-me'><?php echo display('discount') ?></th>
