@@ -370,13 +370,13 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
 
-                if (!empty($filter['payment_id'])) {
+                if ($filter['payment_id'] != "") {
                     $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
                     $bank_credit = array(
                         'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'Inv-' . $invoice_id,
+                        'VNo' => 'Inv-' . $filter['invoice_no'],
                         'Vtype' => 'Sales',
-                        'VDate' => $date,
+                        'VDate' => $createdate,
                         'COAID' => $payment_head->HeadCode,
                         'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $filter['payment_id'] . ')',
                         'Debit' => 0,
@@ -386,7 +386,7 @@ class Crefund extends MX_Controller {
                         'CreateDate' => $createdate,
                         'IsAppove' => 1
                     );
-                    $this->db->insert('acc_transaction', $bank_debit);
+                    $this->db->insert('acc_transaction', $bank_credit);
                 }
                 $invoice_return=array(
                     'invoice_id'        =>$filter['invoice_no'],
