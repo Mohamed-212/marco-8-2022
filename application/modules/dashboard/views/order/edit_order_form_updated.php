@@ -497,7 +497,7 @@
                                                     <!-- Tax calculate start-->
                                                     <?php if ($tax['cgst_status'] == 1) { ?>
                                                         <input type="hidden" id="cgst_<?php echo $i ?>" class="cgst"
-                                                               value="<?php echo(!empty($tax['cgst_tax']) ? $tax['cgst_tax'] : null) ?>"/>
+                                                               value="<?php echo(!empty($productTax->tax_percentage) ? (float)($productTax->tax_percentage/100) : null) ?>"/>
                                                         <input type="hidden" id="total_cgst_<?php echo $i ?>"
                                                                class="total_cgst"
                                                                name="cgst[]" data-value="<?php echo ((float)$productTax->tax_percentage /100) * $value['total_price'] ?>" value="<?php echo ((float)$productTax->tax_percentage /100) * $value['total_price'] ?>" />

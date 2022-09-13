@@ -391,7 +391,7 @@
                                                                     if ($isTaxed == 1) {
 //                                                                        echo "<th class='hide-me'>" . display('unit_price_before_VAT') . "</th>";
                                                                     } else {
-                                                                        echo "<th class='hide-me'>" . display('rate') . "</th>";
+                                                                        // echo "<th class='hide-me'>" . display('rate') . "</th>";
                                                                     }
                                                                     ?>
                                                                     <th class='hide-me'><?php echo display('discount') ?></th>
@@ -660,6 +660,18 @@
                                                                             </tr>
                                                                         <?php }
                                                                     } ?>
+                                                                    <tr class="">
+                                                                            <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
+                                                                        <td class="grand_total">
+                                                                            <?php
+                                                                                $totalQuantity = 0;
+                                                                                foreach ($invoice_all_data as $inv) {
+                                                                                    $total_quantity += (int)$inv['quantity'];
+                                                                                }
+                                                                                echo $total_quantity;
+                                                                            ?>
+                                                                        </td>
+                                                                    </tr>
                                                                     <tr class="borderd">
                                                                             <th class="grand_total"> <?php echo display('total'); ?>:</th>
                                                                         <td class="grand_total">

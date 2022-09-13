@@ -45,10 +45,13 @@ function product_pur_or_list(sl) {
         .val(ui.item.value);
       var sl = $(this).parent().parent().find(".sl").val();
       var id = ui.item.value;
-      var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id;
+      var variant = ui.item.varient_id;
+      var store_id = $('#store_id').val();
+      var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id + "&store_id=" + store_id + (variant ? "&variant_id=" + variant : "");
       var avl_qntt = "avl_qntt_" + sl;
-      var price_item = "price_item_" + sl;
       var variant_id = "variant_id_" + sl;
+      var price_item = "price_item_" + sl;
+      
       var color_variant = "color_variant_" + sl;
       $.ajax({
         type: "POST",
