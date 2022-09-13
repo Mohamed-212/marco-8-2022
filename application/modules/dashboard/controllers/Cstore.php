@@ -553,13 +553,18 @@ class Cstore extends MX_Controller
     }
     public function retrieve_product_data()
     {
+        $this->load->model('dashboard/Products');
+
         $product_id = $this->input->post('product_id', TRUE);
+        $variant_id = $this->input->post('variant_id', TRUE);
         $store_id = $this->input->post('store_id', TRUE);
         $product_info = $this->Purchases->get_total_product($product_id);
 
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
         $this->db->where('product_id', $product_id);
+        $this->db->where('variant_id', $variant_id);
+       
         $this->db->where('store_id', $store_id);
         $purchase = $this->db->get()->row();
         // dd($this->db->last_query());
@@ -567,10 +572,20 @@ class Cstore extends MX_Controller
         $this->db->select("SUM(quantity) as totalSalesQnty");
         $this->db->from('invoice_stock_tbl');
         $this->db->where('product_id', $product_id);
+        $this->db->where('variant_id', $variant_id);
+       
         $this->db->where('store_id', $store_id);
         $sales = $this->db->get()->row();
 
-        $product_info['total_product'] = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+
+        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        // var_dump($purchase->totalPurchaseQnty , $product_information->open_quantity , $sales->totalSalesQnty);exit;
+        
+        // $openQuantity = $details_info->open_quantity;
+
+        $product_info['total_product'] = $stock;
 
         echo json_encode($product_info);
     }
