@@ -649,12 +649,13 @@ class Orders extends CI_Model
     }
 
     // create new order
-    public function order_entry($order_id = null)
+    public function order_entry($order_id = null, $orderNo = null)
     {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
                 $invoice_id = $order_id ? $order_id : generator(15);
+                $orderNo = $orderNo ? $orderNo : $this->number_generator_order();
                 $quantity = $this->input->post('product_quantity', TRUE);
                 $available_quantity = $this->input->post('available_quantity', TRUE);
                 $product_id = $this->input->post('product_id', TRUE);
@@ -759,7 +760,7 @@ class Orders extends CI_Model
                     'customer_id' => $customer_id,
                     'date' => $this->input->post('invoice_date', TRUE),
                     'total_amount' => $this->input->post('grand_total_price', TRUE),
-                    'order' => $this->number_generator(),
+                    'order' => $orderNo,
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
                     'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
@@ -847,8 +848,8 @@ class Orders extends CI_Model
 
                         if (!empty($quantity)) {
                             $this->db->select('*');
-                            $this->db->from('invoice_details');
-                            $this->db->where('invoice_id', $invoice_id);
+                            $this->db->from('order_details');
+                            $this->db->where('order_id', $invoice_id);
                             $this->db->where('product_id', $product_id);
                             $this->db->where('variant_id', $variant_id);
                             if (!empty($variant_color)) {
@@ -859,7 +860,7 @@ class Orders extends CI_Model
                             if ($result > 0) {
                                 $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
                                 $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
-                                $this->db->where('invoice_id', $invoice_id);
+                                $this->db->where('order_id', $invoice_id);
                                 $this->db->where('product_id', $product_id);
                                 $this->db->where('variant_id', $variant_id);
                                 if (!empty($variant_color)) {
@@ -1560,7 +1561,7 @@ class Orders extends CI_Model
                 // 'customer_id' => $customer_id,
                 // 'date' => $this->input->post('invoice_date', TRUE),
                 // 'total_amount' => $this->input->post('grand_total_price', TRUE),
-                // 'order' => $this->number_generator(),
+                // 'order' => $orderNo,
                 // 'total_discount' => $this->input->post('total_discount', TRUE),
                 // 'product_discount' => $this->input->post('invoice_discount', TRUE),
                 // 'user_id' => $this->session->userdata('user_id'),
@@ -1577,7 +1578,7 @@ class Orders extends CI_Model
                 'customer_id' => $customer_id,
                 'date' => $this->input->post('invoice_date', TRUE),
                 'total_amount' => $this->input->post('grand_total_price', TRUE),
-                'order' => $this->number_generator(),
+                'order' => $orderNo,
                 'total_discount' => $this->input->post('total_discount', TRUE),
                 'total_vat' => $tota_vati,
                 'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
@@ -2984,6 +2985,8 @@ class Orders extends CI_Model
 
         $this->db->select('
 			a.*,
+            a.created_at as date_time,
+			a.order_discount as total_order_discount,
 			b.*,
 			c.*,
 			d.product_id,

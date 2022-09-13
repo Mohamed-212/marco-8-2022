@@ -69,19 +69,28 @@ function  quantity_limit(item) {
 }
 //Quantity calculate
 function quantity_calculate(item) {
-    var quantity = $("#total_qntt_" + item).val();
-    var price_item = $("#price_item_" + item).val();
-    var discount = $("#discount_" + item).val();
-    var total_discount = $("#total_discount_" + item).val();
-    var cgst = $("#cgst_" + item).val();
+    var quantity = parseInt($("#total_qntt_" + item).val(), 10);  
+    var price_item = parseFloat($("#price_item_" + item).val());
+    if (parseFloat($("#discount_" + item).attr('data-value')) > 0) {
+        $("#discount_" + item).val($("#discount_" + item).attr('data-value'));
+        setTimeout(() => {$("#discount_" + item).attr('data-value', -1);}, 1200);
+    }
+    var discount = parseFloat($("#discount_" + item).val());
+    // console.log(discount);
+    var total_discount = parseFloat($("#total_discount_" + item).val());
+    var cgst = parseFloat($("#cgst_" + item).val() || 0);
+    console.log(cgst);
     var sgst = $("#sgst_" + item).val();
     var igst = $("#igst_" + item).val();
 
     var all_discount = discount * quantity;
+    
+    console.log(all_discount, quantity , price_item, cgst);
     $("#all_discount_" + item).val(all_discount);
 
     //Tax calculation
     var net_price = (quantity * price_item) - all_discount;
+    // console.log('-- ' + net_price + ' ' + quantity , price_item, all_discount);
     var cgst_tax = (net_price * cgst);
     var sgst_tax = (net_price * sgst);
     var igst_tax = (net_price * igst);
@@ -150,6 +159,12 @@ function calculateSumQuotation() {
 
     //Total CGST
     $(".total_cgst").each(function () {
+        var dataVal = parseFloat($(this).attr('data-value'));
+        if (dataVal > 0) {
+            $(this).val(dataVal);
+            setTimeout(() => {$(this).attr('data-value', -1);}, 1000);
+        }
+
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
     }),
             cgst = 0;
@@ -216,13 +231,15 @@ function calculateSum() {
     $(".total_cgst").each(function () {
         var dataVal = parseFloat($(this).attr('data-value'));
         if (dataVal > 0) {
+            console.log(dataVal);
             $(this).val(dataVal);
-            $(this).attr('data-value', -1);
+            setTimeout(() => {$(this).attr('data-value', -1);}, 1000);
         }
         
-        isNaN($(this).val()) || 0 == $(this).val().length || (cgst += parseFloat($(this).val()))
+        // isNaN($(this).val()) || 0 == $(this).val().length || (cgst += parseFloat($(this).val()))
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
     }),
+           
             $("#total_cgst").val(cgst.toFixed(2)),
             $(".total_cgst_bill").text(cgst.toFixed(2)),
             //Total SGST

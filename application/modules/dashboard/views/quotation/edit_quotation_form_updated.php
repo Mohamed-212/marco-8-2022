@@ -16,12 +16,12 @@
                 <i class="pe-7s-note2"></i>
             </div>
             <div class="header-title">
-                <h1><?php echo display('order_update') ?></h1>
-                <small><?php echo display('order_update') ?></small>
+                <h1><?php echo display('quotation_update') ?></h1>
+                <small><?php echo display('quotation_update') ?></small>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
-                    <li><a href="#"><?php echo display('order') ?></a></li>
-                    <li class="active"><?php echo display('order_update') ?></li>
+                    <li><a href="#"><?php echo display('quotation') ?></a></li>
+                    <li class="active"><?php echo display('quotation_update') ?></li>
                 </ol>
             </div>
         </section>
@@ -51,16 +51,16 @@
             }
             ?>
 
-            <!-- order report -->
+            <!-- quotation report -->
             <div class="row">
                 <div class="col-sm-12">
                     <div class="panel panel-bd lobidrag">
                         <div class="panel-heading">
                             <div class="panel-title">
-                                <h4><?php echo display('order_update') ?></h4>
+                                <h4><?php echo display('quotation_update') ?></h4>
                             </div>
                         </div>
-                        <?php echo form_open('dashboard/Corder/order_update/'.$order_id, array('class' => 'form-vertical', 'id' => 'normalinvoice')) ?>
+                        <?php echo form_open('dashboard/Cquotation/quotation_update/'.$quotation_id, array('class' => 'form-vertical', 'id' => 'normalinvoice')) ?>
                         <div class="panel-body">
 
                             <div class="row">
@@ -234,11 +234,11 @@
                                     </tr>
                                     </thead>
                                     <tbody id="addinvoiceItem">
-                                        <input type="hidden" hidden name="order" value="<?=$order?>" />
+                                        <input type="hidden" hidden name="quotation" value="<?=$quotation?>" />
                                     <?php
                                     $i = 0;
-                                    if ($order_all_data) {
-                                        foreach ($order_all_data as $value) {
+                                    if ($quotation_all_data) {
+                                        foreach ($quotation_all_data as $value) {
 
                                             $i++;
                                             $cgst = null;
@@ -250,30 +250,30 @@
                                             $igst_tax_amount = 0;
 
                                             $cgst_value = $this->db->select('tcd.tax_id, tcd.amount, tcd.product_id, t.tax_name')
-                                                ->from('order_tax_col_details AS tcd')
+                                                ->from('quotation_tax_col_details AS tcd')
                                                 ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                 ->where('tcd.product_id', $value['product_id'])
-                                                ->where('tcd.order_id', $value['order_id'])
+                                                ->where('tcd.quotation_id', $value['quotation_id'])
                                                 ->where('tcd.variant_id', $value['variant_id'])
                                                 // ->where('t.tax_id', 'H5MQN4NXJBSDX4L')
                                                 ->get()
                                                 ->row();
 
                                             $sgst_value = $this->db->select('tcd.tax_id, tcd.amount, tcd.product_id, t.tax_name')
-                                                ->from('order_tax_col_details AS tcd')
+                                                ->from('quotation_tax_col_details AS tcd')
                                                 ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                 ->where('tcd.product_id', $value['product_id'])
-                                                ->where('tcd.order_id', $value['order_id'])
+                                                ->where('tcd.quotation_id', $value['quotation_id'])
                                                 ->where('tcd.variant_id', $value['variant_id'])
                                                 // ->where('t.tax_id', '52C2SKCKGQY6Q9J')
                                                 ->get()
                                                 ->row();
 
                                             $igst_value = $this->db->select('tcd.tax_id, tcd.amount, tcd.product_id, t.tax_name')
-                                                ->from('order_tax_col_details AS tcd')
+                                                ->from('quotation_tax_col_details AS tcd')
                                                 ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
                                                 ->where('tcd.product_id', $value['product_id'])
-                                                ->where('tcd.order_id', $value['order_id'])
+                                                ->where('tcd.quotation_id', $value['quotation_id'])
                                                 ->where('tcd.variant_id', $value['variant_id'])
                                                 // ->where('t.tax_id', '5SN9PRWPN131T4V')
                                                 ->get()
@@ -287,25 +287,25 @@
                                             $igst_id = (!empty($igst_value->tax_id) ? $igst_value->tax_id : null);
 
                                             $cgst_tax = $this->db->select('tcd.tax_id, tcd.tax_amount, t.tax_name')
-                                                ->from('order_tax_col_summary AS tcd')
+                                                ->from('quotation_tax_col_summary AS tcd')
                                                 ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
-                                                ->where('tcd.order_id', $value['order_id'])
+                                                ->where('tcd.quotation_id', $value['quotation_id'])
                                                 // ->where('t.tax_id', 'H5MQN4NXJBSDX4L')
                                                 ->get()
                                                 ->row();
 
                                             $sgst_tax = $this->db->select('tcd.tax_id, tcd.tax_amount, t.tax_name')
-                                                ->from('order_tax_col_summary AS tcd')
+                                                ->from('quotation_tax_col_summary AS tcd')
                                                 ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
-                                                ->where('tcd.order_id', $value['order_id'])
+                                                ->where('tcd.quotation_id', $value['quotation_id'])
                                                 // ->where('t.tax_id', '52C2SKCKGQY6Q9J')
                                                 ->get()
                                                 ->row();
 
                                             $igst_tax = $this->db->select('tcd.tax_id, tcd.tax_amount, t.tax_name')
-                                                ->from('order_tax_col_summary AS tcd')
+                                                ->from('quotation_tax_col_summary AS tcd')
                                                 ->join('tax AS t', 't.tax_id = tcd.tax_id', 'left')
-                                                ->where('tcd.order_id', $value['order_id'])
+                                                ->where('tcd.quotation_id', $value['quotation_id'])
                                                 // ->where('t.tax_id', '5SN9PRWPN131T4V')
                                                 ->get()
                                                 ->row();
@@ -452,9 +452,9 @@
                                                            name="total_price[]" id="total_price_<?php echo $i ?>"
                                                            value="<?php echo html_escape($value['total_price']) ?>"
                                                            readonly="readonly" placeholder="0.00"/>
-                                                    <input type="hidden" name="order_details_id[]"
-                                                           id="order_details_id"
-                                                           value="<?php echo html_escape($value['order_details_id']) ?>"/>
+                                                    <input type="hidden" name="quotation_details_id[]"
+                                                           id="quotation_details_id"
+                                                           value="<?php echo html_escape($value['quotation_details_id']) ?>"/>
                                                 </td>
                                                 <td>
 
@@ -497,7 +497,7 @@
                                                     <!-- Tax calculate start-->
                                                     <?php if ($tax['cgst_status'] == 1) { ?>
                                                         <input type="hidden" id="cgst_<?php echo $i ?>" class="cgst"
-                                                               value="<?php echo(!empty($tax['cgst_tax']) ? $tax['cgst_tax'] : null) ?>"/>
+                                                               value="<?php echo(!empty($productTax->tax_percentage) ? (float)($productTax->tax_percentage/100) : null) ?>"/>
                                                         <input type="hidden" id="total_cgst_<?php echo $i ?>"
                                                                class="total_cgst"
                                                                name="cgst[]" data-value="<?php echo ((float)$productTax->tax_percentage /100) * $value['total_price'] ?>" value="<?php echo ((float)$productTax->tax_percentage /100) * $value['total_price'] ?>" />
@@ -608,20 +608,20 @@
                                     </tr>
                                     <tr>
                                         <td class="text-right" colspan="2">
-                                            <b><?php echo display('order_discount') ?>:</b>
+                                            <b><?php echo display('quotation_discount') ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <input type="text" id="invoice_discount" class="form-control text-right"
-                                                   name="invoice_discount" <?php if ($order_discount > 0) : ?>
- data-value="<?php if ($order_discount) {
-                                                       echo($order_discount);
+                                                   name="invoice_discount" <?php if ($quotation_discount > 0) : ?>
+ data-value="<?php if ($quotation_discount) {
+                                                       echo($quotation_discount);
                                                    } else {
                                                        echo 0;
                                                    } ?>"
                                                    <?php endif ?>
 
-                                                   value="<?php if ($order_discount) {
-                                                       echo($order_discount);
+                                                   value="<?php if ($quotation_discount) {
+                                                       echo($quotation_discount);
                                                    } else {
                                                        echo 0;
                                                    } ?>"
@@ -630,7 +630,7 @@
                                     </tr>
                                     <tr>
                                         <td class="text-right" colspan="2">
-                                            <b><?php echo display('order_percentage_discount') ?>:</b>
+                                            <b><?php echo display('quotation_percentage_discount') ?>:</b>
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <input type="text" id="percentage_discount" class="form-control text-right" name="percentage_discount" placeholder="0 %" onkeyup="calculateSum();" onchange="calculateSum();" data-value="<?=$value['percentage_discount']?>" />

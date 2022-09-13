@@ -70,7 +70,7 @@
                                         <th><?php echo display('quotation_no') ?></th>
                                         <th><?php echo display('customer_name') ?></th>
                                         <th><?php echo display('date') ?></th>
-                                        <th><?php echo display('expire_date') ?></th>
+                                        <!-- <th><?php echo display('expire_date') ?></th> -->
                                         <th><?php echo display('invoice_no') ?></th>
                                         <th><?php echo display('status') ?></th>
                                         <th><?php echo display('total_amount') ?></th>
@@ -94,9 +94,9 @@
                                                 href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/' . $quotation['customer_id']; ?>"><?php echo html_escape($quotation['customer_name']) ?></a>
                                         </td>
                                         <td><?php echo html_escape($quotation['date']) ?></td>
-                                        <td>
+                                        <!-- <td>
                                             <?php echo html_escape(date('Y-m-d', strtotime($quotation['expire_date']))) ?>
-                                        </td>
+                                        </td> -->
                                         <td>
                                             <?php
                                                     $invoice = $this->db->select('invoice,invoice_id')->from('invoice')->where('quotation_id', $quotation['quotation_id'])->get()->row();

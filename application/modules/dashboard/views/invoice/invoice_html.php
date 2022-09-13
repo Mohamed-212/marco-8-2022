@@ -330,7 +330,7 @@
                                                 <div style="padding: 0 25px;">
                                                     <div class="row">
                                                         <div class="col-xs-5">
-                                                            <h3><?php echo display('invoice_to'); ?> : <?php echo html_escape($customer_name); ?></h3>
+                                                            <h3><?php echo display(isset($is_order) ? 'order_to' : 'invoice_to'); ?> : <?php echo html_escape($customer_name); ?></h3>
                                                             <div class="line-height" style=" margin-top: 15px;">
                                                                 <p>
                                                                     <?php echo display('client_code'); ?>  : <?php echo html_escape($customer_id); ?>
@@ -358,10 +358,12 @@
                                                         <div class="col-xs-5 mt_20" style="margin-top: 30px;">
                                                             <div class="line-height" style="">
                                                                 <p>
-                                                                    <?php echo display('invoice_no'); ?> : <?php echo html_escape($invoice_no); ?>
+                                                                    <?php echo display(isset($is_order) ? 'order_no' : 'invoice_no'); ?> : <?php echo html_escape(isset($is_order) ? $order_no : $invoice_no); ?>
                                                                 </p>
                                                                 <p>
-                                                                    <?php echo display('date'); ?> : <?php echo html_escape($final_date) ?>
+                                                                    <?php echo display('date'); ?> : <span dir="ltr" style="text-transform: uppercase;">
+                                                                    <?php echo html_escape(date('Y - M - d', strtotime($final_date))) ?>
+                                                                    </span>
                                                                 </p>
                                                                 <p>
                                                                    <?php echo display('employee'); ?> : <?= $emp_name ?>
@@ -441,7 +443,7 @@
                                                                             <!--                                                <td>--><?php //echo html_escape($invoice['batch_no']); 
                                                                                                                                         ?>
                                                                             <!--</td>-->
-                                                                            <td><?php echo html_escape($invoice['product_price']); ?></td>
+                                                                            <td><?php echo html_escape($invoice['rate']); ?></td>
                                                                             <td><?php echo html_escape($invoice['quantity']); ?></td>
 <!--                                                                            <td class='hide-me'>--><?php //echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) ?>
 <!--                                                                            </td>-->
@@ -468,12 +470,18 @@
                                                                                         echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
                                                                                     }
                                                                                     ?>
+                                                                                    
                                                                                 </td>
 
                                                                             <?php } ?>
 
                                                                             <td><?php if (!empty($invoice['total_price'])) {
-                                                                                    echo (($position == 0) ? $currency . " " . $invoice['total_price'] : $invoice['total_price'] . " " . $currency);
+                                                                                    echo (($position == 0) ? 
+                                                                                    $currency . " " . 
+                                                                                    ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)) )
+                                                                                     : 
+                                                                                     ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)) ) 
+                                                                                     . " " . $currency);
                                                                                 } ?></td>
                                                                         </tr>
                                                                         <?php
@@ -555,7 +563,7 @@
 
                                                                     <?php if ($invoice_all_data[0]['invoice_discount'] != 0) { ?>
                                                                         <tr>
-                                                                            <th class="invoice_discount"> <?php echo display('invoice_discount_value') ?>:</th>
+                                                                            <th class="invoice_discount"> <?php echo display(isset($is_order) ? 'order_discount_value' : 'invoice_discount_value') ?>:</th>
                                                                             <td class="invoice_discount">
                                                                                 <?php echo (($position == 0) ? $currency . " " . $invoice_discount : $invoice_discount . " " . $currency) ?>
                                                                             </td>
