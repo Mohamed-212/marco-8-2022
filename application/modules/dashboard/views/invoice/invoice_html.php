@@ -660,6 +660,18 @@
                                                                             </tr>
                                                                         <?php }
                                                                     } ?>
+                                                                    <tr class="">
+                                                                            <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
+                                                                        <td class="grand_total">
+                                                                            <?php
+                                                                                $totalQuantity = 0;
+                                                                                foreach ($invoice_all_data as $inv) {
+                                                                                    $total_quantity += (int)$inv['quantity'];
+                                                                                }
+                                                                                echo $total_quantity;
+                                                                            ?>
+                                                                        </td>
+                                                                    </tr>
                                                                     <tr class="borderd">
                                                                             <th class="grand_total"> <?php echo display('total'); ?>:</th>
                                                                         <td class="grand_total">
