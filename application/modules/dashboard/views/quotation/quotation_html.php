@@ -309,7 +309,7 @@
                                                                             <!--                                                <td>--><?php //echo html_escape($invoice['batch_no']); 
                                                                                                                                         ?>
                                                                             <!--</td>-->
-                                                                            <td><?php echo html_escape($invoice['product_price']); ?></td>
+                                                                            <td><?php echo html_escape($invoice['rate']); ?></td>
                                                                             <td><?php echo html_escape($invoice['quantity']); ?></td>
                                                                             <!--                                                                            <td class='hide-me'>--><?php //echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) 
                                                                                                                                                                                     ?>
