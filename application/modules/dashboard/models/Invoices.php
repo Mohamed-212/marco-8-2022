@@ -600,7 +600,7 @@ class Invoices extends CI_Model {
                             'supplier_rate' => $supplier_rate[0]['supplier_price'],
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
-                            'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
+                            'invoice_discount' => (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity),
                             'status' => 1
                         );
 
