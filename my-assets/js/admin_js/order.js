@@ -128,7 +128,7 @@ function check_quotation() {
 }
 
 function submit_form(ev) {
-    ev.preventDefault();
+    // ev.preventDefault();
     var elem = $("#is_quotation");
     if (elem.prop('checked') == true) {
         $(".total_cgst").each(function () {
