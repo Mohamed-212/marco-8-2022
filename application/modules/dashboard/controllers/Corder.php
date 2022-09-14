@@ -202,8 +202,13 @@ class Corder extends MX_Controller
             // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
             // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
             $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+
+            $this->form_validation->set_rules('available_quantity[]', display('available_quantity'), 'required|greater_than[0]');
+            $this->form_validation->set_rules('product_quantity[]', display('quantity'), 'required|greater_than[0]');
+
             if ($this->form_validation->run() == false) {
                 $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+                // $this->index();
                 $this->new_order();
             } else {
                 $order_id = $this->Orders->order_entry();
@@ -326,7 +331,7 @@ class Corder extends MX_Controller
     public function manage_order()
     {
         $this->permission->check_label('manage_order')->read()->redirect();
-        
+
         $filter = array(
             'invoice_no' => $this->input->get('invoice_no', TRUE),
             'employee_id' => $this->input->get('employee_id', TRUE),
@@ -335,7 +340,7 @@ class Corder extends MX_Controller
             'to_date' => $this->input->get('to_date', TRUE),
             'invoice_status' => $this->input->get('invoice_status', TRUE)
         );
-       
+
         $config["base_url"] = base_url('dashboard/Corder/manage_order');
         $config["total_rows"] = $this->Orders->count_order_list($filter);
         $config["per_page"] = 20;
@@ -461,8 +466,25 @@ class Corder extends MX_Controller
     }
 
     // Order Update
-    public function order_update($order_id) {
+    public function order_update($order_id)
+    {
         $this->permission->check_label('manage_sale')->update()->redirect();
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+        // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+        // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+
+        $this->form_validation->set_rules('available_quantity[]', display('available_quantity'), 'required|greater_than[0]');
+        $this->form_validation->set_rules('product_quantity[]', display('quantity'), 'required|greater_than[0]');
+
+        if ($this->form_validation->run() == false) {
+            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+            // $this->index();
+            $this->create_invoice_form($order_id);
+            return;
+        }
 
         $order_id = $this->Orders->update_order($order_id);
         $this->session->set_userdata(array('message' => display('successfully_updated')));
@@ -623,6 +645,6 @@ class Corder extends MX_Controller
         // }
 
         $content = $this->lorder->order_edit_data($order_id);
-		$this->template_lib->full_admin_html_view($content);
+        $this->template_lib->full_admin_html_view($content);
     }
 }
