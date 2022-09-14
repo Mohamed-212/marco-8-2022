@@ -139,10 +139,10 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="">
-                                            <option value="0">Sell Price</option>
+                                        <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="" data-val="<?=$pricing_type?>">
+                                            <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> >Sell Price</option>
                                             <?php foreach ($all_pri_type as $pri_type) : ?>
-                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pricing_type == $pri_type['pri_type_id'] ? 'selected' : ''?> ><?php echo html_escape($pri_type['pri_type_name']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
