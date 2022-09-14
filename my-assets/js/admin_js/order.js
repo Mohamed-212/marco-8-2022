@@ -127,8 +127,12 @@ function check_quotation() {
     }
 }
 
-function submit_form(ev) {
-    // ev.preventDefault();
+function submit_form(e) {
+    //here I want to prevent default
+    e = e || window.event;
+    e.preventDefault();
+    var valid = false;
+
     var elem = $("#is_quotation");
     if (elem.prop('checked') == true) {
         $(".total_cgst").each(function () {
@@ -146,18 +150,25 @@ function submit_form(ev) {
     $('[name="available_quantity[]"]').each(function () {
         if (!this.value || this.value < 1) {
             alert(products_with_no_quantity);
+            valid = false;
             return;
         }
-    });
+        valid = true;
+    }).promise().done(function() {
+        if (!valid) return;
+        $('[name="product_quantity[]"]').each(function () {
+            if (!this.value || this.value < 1) {
+                alert(products_with_no_quantity);
+                valid = false;
+                return;
+            }
+            valid = true;
+        }).promise().done(function() {
+            if (!valid) return;
 
-    $('[name="product_quantity[]"]').each(function () {
-        if (!this.value || this.value < 1) {
-            alert(products_with_no_quantity);
-            return;
-        }
+            $("form#validate, form#normalinvoice").submit();
+        });
     });
-
-    $("form#validate, form#normalinvoice").submit();
 }
 
 function calculateSumQuotation() {
