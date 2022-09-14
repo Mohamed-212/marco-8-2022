@@ -884,6 +884,7 @@ class Quotations extends CI_Model
 				$quantity = $this->input->post('product_quantity', TRUE);
 				$available_quantity = $this->input->post('available_quantity', TRUE);
 				$product_id = $this->input->post('product_id', TRUE);
+				$pricing_type = $this->input->post('pri_type', TRUE);
 
 				//Stock availability check
 				$result = array();
@@ -984,9 +985,10 @@ class Quotations extends CI_Model
 					'service_charge' => $this->input->post('service_charge', TRUE),
 					'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
 					'shipping_method' => $this->input->post('shipping_method', TRUE),
-					'details' => $this->input->post('invoice_details', TRUE),
+					'details' => $this->input->post('details', TRUE),
 					'status' => 1,
-					'created_at' => date("Y-m-d H:i:s")
+					'created_at' => date("Y-m-d H:i:s"),
+					'pricing_type' => $pricing_type
 				);
 				$this->db->insert('quotation', $data);
 
@@ -1477,6 +1479,7 @@ class Quotations extends CI_Model
 			$quantity = $this->input->post('product_quantity', TRUE);
 			$available_quantity = $this->input->post('available_quantity', TRUE);
 			$product_id = $this->input->post('product_id', TRUE);
+			$pricing_type = $this->input->post('pri_type', TRUE);
 
 			//Stock availability check
 			$result = array();
@@ -1532,9 +1535,10 @@ class Quotations extends CI_Model
 				'service_charge' => $this->input->post('service_charge', TRUE),
 				'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
 				'shipping_method' => $this->input->post('shipping_method', TRUE),
-				'details' => $this->input->post('invoice_details', TRUE),
+				'details' => $this->input->post('details', TRUE),
 				'status' => 1,
-				'created_at' => date("Y-m-d H:i:s")
+				'created_at' => date("Y-m-d H:i:s"),
+				'pricing_type' => $pricing_type
 			);
 			$this->db->insert('quotation', $data);
 

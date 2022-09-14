@@ -54,6 +54,13 @@
         }
         ?>
 
+        <?php if (!empty(validation_errors())) : ?>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo validation_errors(); ?>
+            </div> 
+        <?php endif; ?>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="column">
@@ -537,7 +544,7 @@
                                     <tr>
                                         <td align="center" class="width_220">
                                             <input type="button" id="add-invoice-item" class="btn btn-info color4 color5" name="add-invoice-item" onClick="addInputField('addinvoiceItem');" value="<?php echo display('add_new_item') ?>" />
-                                            <input type="button" id="add-invoice_btn" class="btn btn-success" name="add-invoice" onclick="submit_form();" value="<?php echo display('submit') ?>" />
+                                            <input type="button" id="add-invoice_btn" class="btn btn-success" name="add-invoice" onclick="submit_form(event)" value="<?php echo display('submit') ?>" />
                                         </td>
                                     </tr>
                                 </tfoot>

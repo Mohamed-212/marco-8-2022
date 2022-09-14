@@ -76,7 +76,8 @@
                                 .logo,
                                 .panel-footer,
                                 .main-header,
-                                .main-sidebar {
+                                .main-sidebar,
+                                .alert {
                                     display: none;
                                 }
 
@@ -124,7 +125,7 @@
                                 #toTop,
                                 footer,
                                 .btn.back-top,
-                                .hide-me,
+                                
                                 .pace, .pace-activity {
                                     display: none;
                                 }

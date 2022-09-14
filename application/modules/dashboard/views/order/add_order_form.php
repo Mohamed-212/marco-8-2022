@@ -7,7 +7,7 @@
 <!-- Product invoice js -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
 <!-- Invoice js -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/invoice.js" type="text/javascript"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/order.js" type="text/javascript"></script>
 
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form.js'; ?>"></script>
 <link rel="stylesheet" href="<?php echo MOD_URL . 'dashboard/assets/css/invoice/add_invoice_form.css' ?>">
@@ -53,6 +53,13 @@
             $this->session->unset_userdata('error_message');
         }
         ?>
+
+        <?php if (!empty(validation_errors())) : ?>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo validation_errors(); ?>
+            </div>
+        <?php endif; ?>
 
         <div class="row">
             <div class="col-sm-12">
@@ -502,7 +509,7 @@
 
                                         <td colspan="4" rowspan="5">
                                             <label for="invoice_details" class=""><?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?></label>
-                                            <textarea class="form-control" name="invoice_details" id="invoice_details" rows="6" placeholder="<?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?>"></textarea>
+                                            <textarea class="form-control" name="invoice_details" id="invoice_details" rows="6" placeholder="<?php echo display(isset($order) ? 'details' : 'invoice_details') ?>"></textarea>
                                         </td>
 
                                         <td class="text-right" colspan="2">
