@@ -243,6 +243,7 @@ class Crefund extends MX_Controller {
                     }
                 }
                 $bank_return= $total_installment_return;
+                
             }
          
               //1st customer credit total_with_vat
@@ -271,7 +272,7 @@ class Crefund extends MX_Controller {
                     'VDate' => $createdate,
                     'COAID' => $customer_head->HeadCode,
                     'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_return_without_discount,
+                    'Debit' => $total_return+$tota_vat,
                     'Credit' => 0,
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,

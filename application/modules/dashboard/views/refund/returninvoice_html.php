@@ -396,6 +396,19 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="row">
+                                                        <div style="text-align:center;">
+                                                            <p><?php echo display('total_qnty'); ?> : <?php echo html_escape($return_qnty); ?></p>
+                                                           
+                                                                <p>
+                                                                    <?php echo '('.display('Do_not_approve_any_payment_except_through_a_receipt_voucher').')'; ?> 
+                                                                </p>
+                                                                <p>
+                                                                    <?php echo '('.display('The_product_cannot_be_exchanged_or_returned within_a_week_of_receiving_the_invoice').')'; ?> 
+                                                                </p>
+                                                            
+                                                        </div>
+                                                    </div>
                                                     <div class="row" style="break-inside: avoid;">
                                                         <div class="col-sm-12">
                                                            <table style="width: 100%;">
