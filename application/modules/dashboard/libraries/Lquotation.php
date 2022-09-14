@@ -126,6 +126,7 @@ class Lquotation {
 			'details'			=>	!empty($quotation_detail[0]['details']) ? $quotation_detail[0]['details'] : $quotation_detail[0]['quotation_details'],
 			'status'			=>	$quotation_detail[0]['status'],
 			'is_quotation'		=>	$quotation_detail[0]['is_quotation'],
+			'pricing_type' 	=>	$quotation_detail[0]['pricing_type'],
 			'quotation_all_data'=>	$quotation_detail,
 			'employee_list'		=>	$employee_list,
 			'store_list'		=>	$store_list,
