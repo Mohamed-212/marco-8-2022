@@ -76,7 +76,8 @@
                                 .logo,
                                 .panel-footer,
                                 .main-header,
-                                .main-sidebar {
+                                .main-sidebar,
+                                .alert {
                                     display: none;
                                 }
 

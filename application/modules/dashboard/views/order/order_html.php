@@ -125,7 +125,8 @@
                                 footer,
                                 .btn.back-top,
                                 /* .hide-me, */
-                                .pace, .pace-activity {
+                                .pace, .pace-activity,
+                                .alert {
                                     display: none;
                                 }
 

@@ -127,7 +127,8 @@
                                 .btn.back-top,
                                 /* .hide-me, */
                                 .pace,
-                                .pace-activity {
+                                .pace-activity,
+                                .alert {
                                     display: none;
                                 }
 
