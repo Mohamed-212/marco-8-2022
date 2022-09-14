@@ -502,7 +502,7 @@
 
                                         <td colspan="4" rowspan="5">
                                             <label for="invoice_details" class=""><?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?></label>
-                                            <textarea class="form-control" name="invoice_details" id="invoice_details" rows="6" placeholder="<?php echo display(isset($order) ? 'order_details' : 'invoice_details') ?>"></textarea>
+                                            <textarea class="form-control" name="invoice_details" id="invoice_details" rows="6" placeholder="<?php echo display(isset($order) ? 'details' : 'invoice_details') ?>"></textarea>
                                         </td>
 
                                         <td class="text-right" colspan="2">
