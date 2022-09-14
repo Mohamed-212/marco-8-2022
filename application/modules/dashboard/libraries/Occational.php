@@ -6,6 +6,11 @@ class Occational {
 		list($month,$day,$year) = explode('-',$date);
 		$day = $day+1;
 		$day = $day-1;
+
+		if (strlen((string)$year) < 4) {
+			return $date;
+		}
+
 		switch ($month)
 		{
 			case "01":
