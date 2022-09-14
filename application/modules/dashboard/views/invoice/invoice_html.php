@@ -124,7 +124,7 @@
                                 #toTop,
                                 footer,
                                 .btn.back-top,
-                                .hide-me,
+                                
                                 .pace, .pace-activity {
                                     display: none;
                                 }
