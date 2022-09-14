@@ -193,9 +193,9 @@ function calculateSumQuotation() {
             setTimeout(() => {$(this).attr('data-value', -1);}, 1000);
         }
 
-        isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
+        isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value));
     }),
-            cgst = 0;
+            // cgst = 0;
     $("#total_cgst").val(cgst.toFixed(2)),
             $(".total_cgst_bill").text(cgst.toFixed(2)),
             //Total SGST
@@ -259,13 +259,14 @@ function calculateSum() {
     $(".total_cgst").each(function () {
         var dataVal = parseFloat($(this).attr('data-value'));
         if (dataVal > 0) {
-            console.log(dataVal);
+            // console.log(dataVal);
             $(this).val(dataVal);
-            setTimeout(() => {$(this).attr('data-value', -1);}, 1000);
+            setTimeout(() => {$(this).attr('data-value', -1);}, 100);
         }
         
         // isNaN($(this).val()) || 0 == $(this).val().length || (cgst += parseFloat($(this).val()))
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
+        console.log(this.value);
     }),
            
             $("#total_cgst").val(cgst.toFixed(2)),

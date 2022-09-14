@@ -438,11 +438,10 @@
                                                     <!-- Tax calculate start-->
                                                     <?php if ($tax['cgst_status'] == 1) { ?>
                                                         <input type="hidden" id="cgst_<?php echo $i ?>" class="cgst" value="<?php echo (!empty($productTax->tax_percentage) ? (float)($productTax->tax_percentage / 100) : null) ?>" />
-                                                        <input type="hidden" id="total_cgst_<?php echo $i ?>" class="total_cgst" name="cgst[]" data-value="<?php echo ((float)$productTax->tax_percentage / 100) * $value['total_price'] ?>" value="<?php echo ((float)$productTax->tax_percentage / 100) * $value['total_price'] ?>" />
+                                                        <input type="hidden" id="total_cgst_<?php echo $i ?>" class="total_cgst" name="cgst[]" data-value="<?php echo ((float)$productTax->tax_percentage / 100) * ($value['total_price'] - ($value['discount'] * $value['quantity'])) ?>" value="<?php echo ((float)$productTax->tax_percentage / 100) * ($value['total_price'] - ($value['discount'] * $value['quantity'])) ?>" />
                                                         <input type="hidden" name="cgst_id[]" id="cgst_id_<?php echo $i ?>" value="<?php echo html_escape($productTax->tax_id) ?>">
                                                     <?php } ?>
                                                     <!-- Tax calculate end -->
-
                                                     <input type="hidden" id="total_discount_<?php echo $i ?>" class="" />
                                                     <input type="hidden" id="all_discount_<?php echo $i ?>" class="total_discount" value="<?php echo ($value['discount'] * $value['quantity']) ?>" />
                                                     <!-- Discount calculate end -->
