@@ -437,7 +437,7 @@ class Lorder {
         
         $data['is_order'] = true;
 		
-		$chapterList = $CI->parser->parse('dashboard/invoice/invoice_html',$data,true);
+		$chapterList = $CI->parser->parse('dashboard/order/order_html',$data,true);
 		return $chapterList;
 	}
 
