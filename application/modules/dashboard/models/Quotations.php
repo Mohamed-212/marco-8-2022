@@ -984,7 +984,7 @@ class Quotations extends CI_Model
 					'service_charge' => $this->input->post('service_charge', TRUE),
 					'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
 					'shipping_method' => $this->input->post('shipping_method', TRUE),
-					'details' => $this->input->post('invoice_details', TRUE),
+					'details' => $this->input->post('details', TRUE),
 					'status' => 1,
 					'created_at' => date("Y-m-d H:i:s")
 				);
@@ -1532,7 +1532,7 @@ class Quotations extends CI_Model
 				'service_charge' => $this->input->post('service_charge', TRUE),
 				'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
 				'shipping_method' => $this->input->post('shipping_method', TRUE),
-				'details' => $this->input->post('invoice_details', TRUE),
+				'details' => $this->input->post('details', TRUE),
 				'status' => 1,
 				'created_at' => date("Y-m-d H:i:s")
 			);

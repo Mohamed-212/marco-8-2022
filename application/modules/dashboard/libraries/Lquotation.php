@@ -123,7 +123,7 @@ class Lquotation {
 			'due_amount'		=>	$quotation_detail[0]['due_amount'],
 			'total_discount'	=>	$quotation_detail[0]['total_discount'],
 			'service_charge'	=>	$quotation_detail[0]['service_charge'],
-			'details'			=>	$quotation_detail[0]['details'],
+			'details'			=>	!empty($quotation_detail[0]['details']) ? $quotation_detail[0]['details'] : $quotation_detail[0]['quotation_details'],
 			'status'			=>	$quotation_detail[0]['status'],
 			'is_quotation'		=>	$quotation_detail[0]['is_quotation'],
 			'quotation_all_data'=>	$quotation_detail,

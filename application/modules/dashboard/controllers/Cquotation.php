@@ -88,9 +88,14 @@ class Cquotation extends MX_Controller {
         // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
         // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
         $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+
+		$this->form_validation->set_rules('available_quantity[]', display('available_quantity'), 'required|greater_than[0]');
+		$this->form_validation->set_rules('product_quantity[]', display('quantity'), 'required|greater_than[0]');
+
         if ($this->form_validation->run() == false) {
             $this->session->set_userdata(array('error_message' => display('failed_try_again')));
-            $this->index();
+            // $this->index();
+			$this->new_quotation();
         } else {
             $quotation_id = $this->Quotations->quotation_entry();
             $this->session->set_userdata(array('message'=>display('successfully_added')));
@@ -160,6 +165,22 @@ class Cquotation extends MX_Controller {
         // }
 
 		$this->permission->check_label('manage_sale')->update()->redirect();
+
+		$this->load->library('form_validation');
+        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+        // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+        // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+
+		$this->form_validation->set_rules('available_quantity[]', display('available_quantity'), 'required|greater_than[0]');
+		$this->form_validation->set_rules('product_quantity[]', display('quantity'), 'required|greater_than[0]');
+
+        if ($this->form_validation->run() == false) {
+            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+            // $this->index();
+			$this->quotation_update_form($quotation_id);
+			return;
+        }
 
         $quotation_id = $this->Quotations->update_quotation($quotation_id);
 
