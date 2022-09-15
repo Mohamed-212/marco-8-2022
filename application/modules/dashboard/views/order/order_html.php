@@ -127,7 +127,7 @@
                                 /* .hide-me, */
                                 .pace, .pace-activity,
                                 .alert {
-                                    display: none;
+                                    display: none !important;
                                 }
 
                                 div.divFooter {
