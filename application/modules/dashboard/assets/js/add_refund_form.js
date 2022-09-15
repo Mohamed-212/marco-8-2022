@@ -12,8 +12,8 @@ var productArr={};
             csrf_test_name: csrf_test_name
         },
         success: function (data) {
-          $('#product_id').empty()
-          select = document.getElementById('product_id');
+          $('#product_id_1').empty()
+          select = document.getElementById('product_id_1');
           var opt =  document.createElement('option');
           opt.innerHTML = '';
           opt.value ='';
@@ -28,11 +28,15 @@ var productArr={};
       });
 	});
 
-	$("#product_id").on('change', function(){
-		var id = this.value;
+  
+  
+});
+
+  function get_variant(row){
+    var id = $("#product_id_"+row).val();
     var invoice_no = $("#invoice_no").val();
-		var csrf_test_name = $("#CSRF_TOKEN").val();
-	    $.ajax({
+    var csrf_test_name = $("#CSRF_TOKEN").val();
+      $.ajax({
         url: base_url + "dashboard/Crefund/get_product_variants",
         method: "post",
         dataType: "json",
@@ -42,9 +46,9 @@ var productArr={};
             csrf_test_name: csrf_test_name
         },
         success: function (data) {
-          $('#variant_id').empty()
+          $('#variant_id_'+row).empty()
           productArr={};
-          select = document.getElementById('variant_id');
+          select = document.getElementById('variant_id_'+row);
           var opt =  document.createElement('option');
           opt.innerHTML = '';
           opt.value ='';
@@ -60,14 +64,73 @@ var productArr={};
           
         },
       });
-      });
+  }
 
-      $("#variant_id").on('change', function(){
-        var id=this.value;
-        var product_id = $("#product_id").val();
-            console.log(productArr[product_id+id]);
-        document.getElementById("quantity").max = productArr[product_id+id];
-	});
+  function get_qnty(row){
+    var id = $("#variant_id_"+row).val();
+    var product_id = $("#product_id_"+row).val();
+    console.log(productArr[product_id+id]);
+    document.getElementById("quantity_"+row).max = productArr[product_id+id];
+    $("#available_quantity_"+row).val(productArr[product_id+id]);
+}
+function addInputField2(t) {
+  //Variable declaratipn
+  var count = 2,
+          limits = 500;
 
-  
-});
+  if (count == limits)
+      alert("You have reached the limit of adding " + count + " inputs");
+  else {
+      var a = "product_name" + count,
+      e = document.createElement("tr");
+     
+     
+      
+      var invoice_no = $("#invoice_no").val();
+      var csrf_test_name = $("#CSRF_TOKEN").val();
+      var opts="";
+        $.ajax({
+          url: base_url + "dashboard/Crefund/get_invoice_products",
+          method: "post",
+          dataType: "json",
+          data: {
+              invoice_no: invoice_no,
+              csrf_test_name: csrf_test_name
+          },
+          success: function (data) {
+         
+            for (i = 0; i < data.length; i++) {
+              console.log(data[i]['product_name'])
+              opts+="<option value='"+data[i]['product_id']+"'>"+data[i]['product_name']+"</option>"
+          } 
+          },
+        });
+        var html = "<td><select class='form-control' id='product_id_"+count+"' onchange='get_variant("+count+")' required='required' name='product_id[]'>"+opts+"</select></td>"
+        html+="<td class='text-center'><select class='form-control' id='variant_id_"+count+"' onchange='get_qnty("+count+")' required='required' name='variant_id[]''></select></td>"
+        html+="<td><select class='form-control' id='status_"+count+"' required='required' name='status[]'><option value='0'>fit</option><option value='1'>damaged</option><option value='2'>no warranty</option></select></td>"
+        html+="<td><input type='text' id='available_quantity_"+count+"' name='available_quantity[]' class='form-control text-right available_quantity_"+count+"' id='avl_qntt_1' placeholder='0' readonly='' /></td>"
+        html+="<td><input type='number' class='form-control' id='quantity_'+count+'' required='required' min='0' value='0' max='0' name='quantity[]'></td>"
+        html+="<td><button style='text-align: right;' class='btn btn-danger' type='button' value='Delete' onclick='deleteRow(this)'>Delete</button></td>"
+        e.innerHTML=html
+        document.getElementById(t).appendChild(e)
+      count++
+  }
+}
+
+function deleteRow(t) {
+  var a = $("#normalinvoice > tbody > tr").length;
+  if (1 == a) {
+      alert("There only one row you can't delete.");
+      return false;
+  } else {
+      var e = t.parentNode.parentNode;
+      e.parentNode.removeChild(e);
+    
+  }
+
+  $('#item-number').html('0');
+  $(".itemNumber>tr").each(function (i) {
+      $('#item-number').html(i + 1);
+      $('.item_bill').html(i + 1);
+  });
+}

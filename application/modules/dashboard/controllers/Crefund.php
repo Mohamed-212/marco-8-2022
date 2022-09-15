@@ -122,7 +122,8 @@ class Crefund extends MX_Controller {
             'quantity' =>  $this->input->get('quantity', TRUE),
             'payment_id' =>  $this->input->get('payment_id', TRUE),
            );
-
+        
+           $return_invoice_id=generator(15);
            //get customer headcode
            $sql="SELECT `customer_id` FROM `invoice` WHERE `invoice_id` ='".$filter['invoice_no']."';";
            $result= $this->db->query($sql);
@@ -390,6 +391,7 @@ class Crefund extends MX_Controller {
                     $this->db->insert('acc_transaction', $bank_credit);
                 }
                 $invoice_return=array(
+                    'return_invoice_id' =>$return_invoice_id,
                     'invoice_id'        =>$filter['invoice_no'],
                     'return_quantity'   =>$filter['quantity'],
                     'product_id'        =>$filter['product_id'],
@@ -400,43 +402,45 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('invoice_return', $invoice_return);
                 $returninvoice_id=$this->db->insert_id();
-                return redirect(base_url('dashboard/Crefund/return_invoice/' . $returninvoice_id  ));
+                return redirect(base_url('dashboard/Crefund/return_invoice/' . $return_invoice_id  ));
 
         // redirect('dashboard/Crefund/new_refund' . $filter['invoice_id']);
     }
 
     public function return_invoice($returninvoice_id) {
         //find previous invoice history and REDUCE the stock
-        $invoice_return = $this->db->select('*')->from('invoice_return')->where('id', $returninvoice_id)->get()->result_array();
-        
-        $sql="SELECT * FROM `customer_information` where `customer_id`='".$invoice_return[0]['customer_id']."' ;";
-        $result= $this->db->query($sql);
-        $customer  = $result->result_array();
-        
-        $sql="SELECT * FROM `product_information` where `product_id`='".$invoice_return[0]['product_id']."' ;";
-        $result= $this->db->query($sql);
-        $product  = $result->result_array();
-
+        $invoice_return = $this->db->select('*')->from('invoice_return')->where('return_invoice_id', $returninvoice_id)->get()->result_array();
         $sql="SELECT * FROM `users` where `user_id`='".$invoice_return[0]['employee_id']."' ;";
         $result= $this->db->query($sql);
         $user  = $result->result_array();
+        foreach($invoice_return as $inv_return)
+        {
+            $sql="SELECT * FROM `customer_information` where `customer_id`='".$invoice_return[0]['customer_id']."' ;";
+            $result= $this->db->query($sql);
+            $customer[]  = $result->result_array();
+            
+            $sql="SELECT * FROM `product_information` where `product_id`='".$invoice_return[0]['product_id']."' ;";
+            $result= $this->db->query($sql);
+            $product[]  = $result->result_array();
 
-        $sql="SELECT * FROM `pricing_types_product` where `product_id`='".$invoice_return[0]['product_id']."' and `pri_type_id` ='2' ;";
-        $result= $this->db->query($sql);
-        $customer_price= $result->result_array();
+           
+
+            $sql="SELECT * FROM `pricing_types_product` where `product_id`='".$invoice_return[0]['product_id']."' and `pri_type_id` ='2' ;";
+            $result= $this->db->query($sql);
+            $customer_price[] = $result->result_array();
+        }
+
         $data=
         [
             'sl'            =>  $invoice_return[0]['id'],
             'customer'      =>  $customer[0],
             'createdate'    =>  date('Y-m-d H:i:s'),
             'receive_by'    =>  $user[0]['first_name']." ".$user[0]['last_name'],
-            'product'       =>  $product[0],
-            'return_qnty'   =>  $invoice_return[0]['return_quantity'],
-            'customer_price'=> $customer_price[0]['product_price'],
-            'total_discount'=>  $invoice_return[0]['total_discount'],
-            'total'         =>  $invoice_return[0]['total_return']
-
+            'product'       =>  $product,
+            'customer_price'=>  $customer_price,
+            'invoice_return'=>  $invoice_return
         ];
+
         $data['module'] = "dashboard";
         $data['page'] = "refund/Returninvoice_html";
         echo Modules::run('template/layout', $data);

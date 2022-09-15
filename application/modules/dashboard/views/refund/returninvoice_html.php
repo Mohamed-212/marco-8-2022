@@ -381,18 +381,29 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                               
+                                                            <?php
+                                                                        $return_qnty=0;
+                                                                        $total=0;
+                                                                        $total_discount=0;
+                                                                    ?>
+                                                            <?php for($i=0;$i<count($invoice_return);$i++){ ?>
                                                                         <tr>
-                                                                            <td><?php echo html_escape($sl); ?></td>
+                                                                            <td><?php echo html_escape($i+1); ?></td>
                                                                             <td>
-                                                                                <strong><?php echo html_escape($product['product_name']); ?> </strong><br>
+                                                                                <strong><?php echo html_escape($product[$i]['product_name']); ?> </strong><br>
                                                                             </td>
-                                                                            <td><?php echo html_escape($return_qnty);?></td>
-                                                                            <td><?php echo html_escape($product['price']); ?></td>
-                                                                            <td><?php echo html_escape($customer_price); ?></td>
-                                                                            <td><?php echo html_escape($product['price']*$return_qnty); ?></td>
+                                                                            <td><?php echo html_escape($invoice_return[$i]['return_quantity']);?></td>
+                                                                            <td><?php echo html_escape($product[$i]['price']); ?></td>
+                                                                            <td><?php echo html_escape($customer_price[$i]['customer_price']); ?></td>
+                                                                            <td><?php echo html_escape($product[$i]['price']*$invoice_return[$i]['return_quantity']); ?></td>
                                                                                                                              
                                                                         </tr>
+                                                                    <?php
+                                                                        $return_qnty+=$invoice_return[$i]['return_quantity'];
+                                                                        $total+=$invoice_return[$i]['total_return'];
+                                                                        $total_discount+=$invoice_return[$i]['total_discount'];
+                                                                    ?>
+                                                            <?php }?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -459,7 +470,7 @@
                                                                     <tr>
                                                                         <th class="grand_total"> <?php echo display('total') ?>:</th>
                                                                         <td>
-                                                                            <?php echo ($product['price']*$return_qnty); ?>
+                                                                            <?php echo ($total); ?>
                                                                         </td>
                                                                     </tr>
 
