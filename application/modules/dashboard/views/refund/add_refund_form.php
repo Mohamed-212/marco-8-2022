@@ -4,7 +4,6 @@
 <!-- Product invoice js -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
 <!-- Invoice js -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/invoice.js" type="text/javascript"></script>
 
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_refund_form.js'; ?>"></script>
 <link rel="stylesheet" href="<?php echo MOD_URL . 'dashboard/assets/css/invoice/add_invoice_form.css' ?>">
@@ -77,52 +76,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group row">
-                                        <label for="product_id" class="col-sm-4 col-form-label"><?php echo display('product') ?>
-                                            <i class="text-danger">*</i></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control" id="product_id" required="required" name="product_id">
-                                               
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>                            
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group row">
-                                        <label for="variant_id" class="col-sm-4 col-form-label"><?php echo display('variant') ?>
-                                            <i class="text-danger">*</i></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control" id="variant_id" required="required" name="variant_id">
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>                            
-                            </div>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group row">
-                                        <label for="status" class="col-sm-4 col-form-label"><?php echo display('status') ?>
-                                            <i class="text-danger">*</i></label>
-                                        <div class="col-sm-8">
-                                            <select class="form-control" id="status" required="required" name="status">
-                                                <option value="0"><?php echo display('fit') ?></option>
-                                                <option value="1"><?php echo display('damaged') ?></option>
-                                                <option value="2"><?php echo display('no warranty') ?></option>
-                                            
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group row">
@@ -147,23 +100,71 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group row">
-                                        <label for="quantity" class="col-sm-4 col-form-label"><?php echo display('quantity') ?>
-                                            <i class="text-danger">*</i></label>
-                                        <div class="col-sm-8">
-                                            <input type="number" class="form-control" id="quantity" required="required" min="0" value="0" max="0" name="quantity">                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            
-                            
-                            </div>
-                            
+                            <div class="table-responsive mt_10">
+                            <table class="table table-bordered table-hover" id="normalinvoice">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center" width="130"><?php echo display('size') ?> <i class="text-danger">*</i></th>
+                                       
+                                        <th class="text-center"><?php echo display('status') ?></th>
+                                      
+                                        <th class="text-center"><?php echo display('available_quantity') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="addinvoiceItem">
+                                    <tr>
+                                       <td>
+                                             <select class="form-control" id="product_id_1" onchange="get_variant(1)" required="required" name="product_id[]">
+                                             </select>
+                                                        
+                                        </td>
 
-                            
+                                        <td class="text-center">
+                                            
+                                                            <select class="form-control" id="variant_id_1" onchange="get_qnty(1)" required="required" name="variant_id[]">
+
+                                                            </select>
+                                                       
+                                        </td>
+
+                                        <td class="text-center">
+                                            
+                                                            <select class="form-control" id="status_1" required="required" name="status[]">
+                                                                <option value="0"><?php echo display('fit') ?></option>
+                                                                <option value="1"><?php echo display('damaged') ?></option>
+                                                                <option value="2"><?php echo display('no warranty') ?></option>
+                                                            </select>
+                                                       
+                                        </td>
+
+                                        <td>
+                                            <input type="text" id="available_quantity_1" name="available_quantity[]" class="form-control text-right available_quantity_1" id="avl_qntt_1" placeholder="0" readonly="" />
+                                        </td>
+
+                                        <td><input type="number" class="form-control" id="quantity_1" required="required" min="0" value="0" max="0" name="quantity[]"></td>
+
+                                        <td>
+                                            <button class="btn btn-danger text-right" type="button" value="<?php echo display('delete') ?>" onclick="deleteRow(this)"><?php echo display('delete') ?>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+
+                                   
+                                    <tr>
+                                        <td class="text-center" colspan="1">
+                                            <input type="button" id="add-invoice-item" class="btn btn-info color4 color5" name="add-invoice-item" onClick="addInputField2('addinvoiceItem');" value="<?php echo display('add_new_item') ?>" />
+                                        </td>
+                                      
+                                    </tr>
+
+                                </tfoot>
+                            </table>
+                        </div>
                 <!-- view -->
                 
                 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form_2.js'; ?>"></script>
