@@ -168,7 +168,7 @@
                                             ?>
                                             <tr>
                                             <td class="text-center"><?php echo $value['date'] ?></td>
-                                            <td align="center"><?php echo $value['details'] ?></td>
+                                            <td align="text-center"><?php echo $value['details'] ?></td>
                                             <td align="right"><?php
                                                 echo(($position == 0) ? "$currency" : " $currency");
                                                 echo number_format($value['debit'], 2, '.', ',');

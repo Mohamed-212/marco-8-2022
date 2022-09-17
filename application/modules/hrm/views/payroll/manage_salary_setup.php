@@ -72,17 +72,19 @@
                                                 echo 'Salary';
                                             } ?></td>
                                         <td><?php echo html_escape($que->create_date); ?></td>
-                                        <td class="center">
-                                            <?php if ($this->permission->method('manage_salary_setup', 'update')->access()) { ?>
+                                        <td>
+                                            <center>
+                                            <?php if ($this->permission->method('manage_salary_setup', 'update')->access()){ ?>
                                                 <a href="<?php echo base_url("hrm/payroll/salsetup_upform/$que->employee_id") ?>"
-                                                   class="btn btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                                   class="btn btn-sm btn-success"><i class="fa fa-pencil"></i></a>
                                             <?php } ?>
-                                            <?php if ($this->permission->method('manage_salary_setup', 'delete')->access()) { ?>
+                                            <?php if ($this->permission->method('manage_salary_setup', 'delete')->access()){ ?>
                                                 <a href="<?php echo base_url("hrm/payroll/delete_salsetup/$que->employee_id") ?>"
-                                                   class="btn btn-xs btn-danger"
+                                                   class="btn btn-sm btn-danger"
                                                    onclick="return confirm('<?php echo display('are_you_sure') ?>') "><i
                                                             class="fa fa-trash"></i></a>
                                             <?php } ?>
+                                            </center>
                                         </td>
                                     </tr>
                                     <?php $sl++; ?>

@@ -77,7 +77,7 @@ function treeSubmit() {
     var is_active = $('input[name=IsActive]').val();
     var is_trans = $('input[name=IsTransaction]').val();
     var is_gl = $('input[name=IsGL]').val();
-    var csrf_test_name = $('[name="csrf_test_name"]').val();
+    var csrf_test_name = $("#CSRF_TOKEN").val();
     $.ajax({
         url: base_url + "accounting/accounting/insert_coa",
         method: 'POST',
@@ -336,7 +336,7 @@ function cmbCode_bankbookonchange() {
 
 $(document).ready(function() {
     "use strict";
-    var csrf_test_name = $('[name="csrf_test_name"]').val();
+    var csrf_test_name = $("#CSRF_TOKEN").val();
     var base_url = $("#base_url").val();
     $('#cmbGLCode').on('change', function() {
         var Headid = $(this).val();

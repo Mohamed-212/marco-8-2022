@@ -81,33 +81,33 @@ $HmvcMenu["hrm"] = array(
             "permission" => "read"
         ),
     ),
-    "expense" => array(
-        "add_expense_item" => array(
-            "controller" => "expense",
-            "method"     => "bdtask_expense_item_form",
-            "permission" => "read"
-        ),
-        "manage_expense_item" => array(
-            "controller" => "expense",
-            "method"     => "bdtask_expense_item_list",
-            "permission" => "read"
-        ),
-        "add_expense" => array(
-            "controller" => "expense",
-            "method"     => "bdtask_add_expense",
-            "permission" => "read"
-        ),
-        "manage_expense" => array(
-            "controller" => "expense",
-            "method"     => "manage_expense",
-            "permission" => "read"
-        ),
-        "expense_statement" => array(
-            "controller" => "expense",
-            "method"     => "expense_statement",
-            "permission" => "read"
-        ),
-    ),
+//    "expense" => array(
+//        "add_expense_item" => array(
+//            "controller" => "expense",
+//            "method"     => "bdtask_expense_item_form",
+//            "permission" => "read"
+//        ),
+//        "manage_expense_item" => array(
+//            "controller" => "expense",
+//            "method"     => "bdtask_expense_item_list",
+//            "permission" => "read"
+//        ),
+//        "add_expense" => array(
+//            "controller" => "expense",
+//            "method"     => "bdtask_add_expense",
+//            "permission" => "read"
+//        ),
+//        "manage_expense" => array(
+//            "controller" => "expense",
+//            "method"     => "manage_expense",
+//            "permission" => "read"
+//        ),
+//        "expense_statement" => array(
+//            "controller" => "expense",
+//            "method"     => "expense_statement",
+//            "permission" => "read"
+//        ),
+//    ),
 //    "office_loan" => array(
 //        "add_person" => array(
 //            "controller" => "loan",
@@ -130,28 +130,28 @@ $HmvcMenu["hrm"] = array(
 //            "permission" => "read"
 //        ),
 //    ),
-    "personal_loan" => array(
-        "add_person" => array(
-            "controller" => "loan",
-            "method"     => "bdtask_add_person",
-            "permission" => "read"
-        ),
-        "add_loan" => array(
-            "controller" => "loan",
-            "method"     => "bdtask_add_loan",
-            "permission" => "read"
-        ),
-        "add_payment" => array(
-            "controller" => "loan",
-            "method"     => "bdtask_add_payment",
-            "permission" => "read"
-        ),
-        "manage_person" => array(
-            "controller" => "loan",
-            "method"     => "manage_person",
-            "permission" => "read"
-        ),
-    ),
+//    "personal_loan" => array(
+//        "add_person" => array(
+//            "controller" => "loan",
+//            "method"     => "bdtask_add_person",
+//            "permission" => "read"
+//        ),
+//        "add_loan" => array(
+//            "controller" => "loan",
+//            "method"     => "bdtask_add_loan",
+//            "permission" => "read"
+//        ),
+//        "add_payment" => array(
+//            "controller" => "loan",
+//            "method"     => "bdtask_add_payment",
+//            "permission" => "read"
+//        ),
+//        "manage_person" => array(
+//            "controller" => "loan",
+//            "method"     => "manage_person",
+//            "permission" => "read"
+//        ),
+//    ),
 
 );
    

@@ -72,16 +72,17 @@
                                                class="col-sm-3 col-form-label"><?php echo display('employee_name') ?>
                                             <span class="text-danger">*</span></label>
                                         <div class="col-sm-9">
-                                            <?php if ($this->session->userdata('isAdmin') == 1) { ?>
-                                                <?php echo form_dropdown('employee_id', $dropdownatn, null, 'class="form-control" id="employee_id" required') ?>
-                                            <?php } else { ?>
-                                                <input type="text" name="employee_name" class="form-control"
-                                                       value="<?php echo $this->session->userdata('first_name') . ' ' . $this->session->userdata('last_name'); ?>"
-                                                       readonly>
-                                                <input type="hidden" name="employee_id" id="employee_id"
-                                                       class="form-control"
-                                                       value="<?php echo $this->session->userdata('employee_id'); ?>">
-                                            <?php } ?>
+<!--                                            --><?php //if ($this->session->userdata('isAdmin') == 1) { ?>
+<!--                                                --><?php //echo form_dropdown('employee_id', $dropdownatn, null, 'class="form-control" id="employee_id" required') ?>
+<!--                                            --><?php //} else { ?>
+<!--                                                <input type="text" name="employee_name" class="form-control"-->
+<!--                                                       value="--><?php //echo $this->session->userdata('first_name') . ' ' . $this->session->userdata('last_name'); ?><!--"-->
+<!--                                                       readonly>-->
+<!--                                                <input type="hidden" name="employee_id" id="employee_id"-->
+<!--                                                       class="form-control"-->
+<!--                                                       value="--><?php //echo $this->session->userdata('employee_id'); ?><!--">-->
+<!--                                            --><?php //} ?>
+                                            <?php echo form_dropdown('employee_id', $dropdownatn, null, 'class="form-control" id="employee_id" required') ?>
                                         </div>
                                     </div>
                                     <div class="form-group row ">
@@ -100,7 +101,7 @@
                                         <div class="col-sm-9 picker-container">
 
                                             <input type="text" id="timepicker-12-hr" name="intime"
-                                                   class="form-control timepicker" required="">
+                                                   class="form-control timepicker2" autocomplete="false" value="<?php echo date('h:i a'); ?>" required="">
                                         </div>
                                     </div>
 

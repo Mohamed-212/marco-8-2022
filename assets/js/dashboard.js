@@ -67,7 +67,7 @@ $(document).ready(function () {
         buttons: [  
             {extend: 'copy', className: 'btn-sm'}, 
             {extend: 'csv', title: 'ExampleFile', className: 'btn-sm'}, 
-            {extend: 'excel', title: 'ExampleFile', className: 'btn-sm', title: 'exportTitle'}, 
+            {extend: 'excel', title: 'ExampleFile', className: 'btn-sm'},
             {extend: 'pdf', title: 'ExampleFile', className: 'btn-sm'}, 
             {extend: 'print', className: 'btn-sm'} 
         ] 
@@ -82,7 +82,7 @@ $(document).ready(function () {
         buttons: [  
             {extend: 'copy', className: 'btn-sm'}, 
             {extend: 'csv', title: 'ExampleFile', className: 'btn-sm'}, 
-            {extend: 'excel', title: 'ExampleFile', className: 'btn-sm', title: 'exportTitle'}, 
+            {extend: 'excel', title: 'ExampleFile', className: 'btn-sm'},
             {extend: 'pdf', title: 'ExampleFile', className: 'btn-sm'}, 
             {extend: 'print', className: 'btn-sm'} 
         ] 
@@ -107,6 +107,12 @@ $(document).ready(function () {
         stepSecond: 15
     });
 
+    //timepicker
+    $('.timepicker2').timepicker({
+        datepicker:false,
+        format:'h:i A',
+        step:60
+    });
 
     //tinymce editor
     tinymce.init({

@@ -78,9 +78,8 @@
                                         <td><?php echo html_escape($que->payment_due); ?></td>
                                         <td><?php echo html_escape($que->payment_date); ?></td>
                                         <td><?php echo html_escape($que->paid_by); ?></td>
-                                        <td class="center">
-
-
+                                        <td>
+                                            <center>
                                             <?php
                                             if($que->payment_due =='paid'){?>
                                                 <a href='<?php echo base_url("hrm/payroll/payslip/$que->emp_sal_pay_id") ?>' class='btn btn-info btn-xs'><?php echo display('payslip') ?></a>
@@ -88,12 +87,8 @@
                                             else {?>
 
                                                 <a href='#' class='btn btn-success btn-xs' onclick='Payment(<?php echo $que->emp_sal_pay_id; ?>,"<?php echo $que->employee_id; ?>","<?php echo $que->total_salary; ?>","<?php echo $que->total_working_minutes; ?>","<?php echo $que->working_period; ?>","<?php echo $que->salary_month; ?>")'><?php echo display('pay_now') ?></a>
-                                            <?php  }
-
-                                            ?>
-
-
-
+                                            <?php  } ?>
+                                            </center>
                                         </td>
                                     </tr>
                                     <?php $sl++; ?>

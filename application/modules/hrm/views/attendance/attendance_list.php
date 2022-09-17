@@ -87,19 +87,19 @@
                                                 <?php } ?>
                                             </td>
                                             <td><?php echo html_escape($row['staytime']); ?></td>
-                                            <td class="center">
-
-                                                <?php if ($this->permission->method('manage_attendance', 'update')->access()) { ?>
+                                            <td>
+                                                <center>
+                                                <?php if ($this->permission->method('manage_attendance', 'update')->access()){ ?>
                                                     <a href="<?php echo base_url("hrm/attendance/edit_attendance/" . $row['att_id']) ?>"
-                                                       class="btn btn-xs btn-success"><i class="fa fa-edit"></i></a>
+                                                       class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
                                                 <?php } ?>
-                                                <?php if ($this->permission->method('manage_attendance', 'delete')->access()) { ?>
+                                                <?php if ($this->permission->check_label('manage_attendance', 'delete')->access()){ ?>
                                                     <a href="<?php echo base_url("hrm/attendance/bdtask_delete_attendance/" . $row['att_id']) ?>"
-                                                       class="btn btn-xs btn-danger"
+                                                       class="btn btn-sm btn-danger"
                                                        onclick="return confirm('<?php echo display('are_you_sure') ?>') "><i
                                                                 class="fa fa-times" aria-hidden="true"></i></a>
                                                 <?php } ?>
-
+                                                </center>
                                             </td>
                                         </tr>
                                         <?php $sl++; ?>
@@ -149,8 +149,8 @@
                                                 <label for="sign_out"
                                                        class="col-sm-3 col-form-label"><?php echo display('sign_out') ?> </label>
                                                 <div class="col-sm-9">
-                                                    <input type="text" name="sign_out" class="form-control timepicker"
-                                                           id="sign_out" value="" required="">
+                                                    <input type="text" name="sign_out" class="form-control timepicker2"
+                                                           id="sign_out" autocomplete="false" value="<?php echo date('h:i a'); ?>" required="">
 
                                                 </div>
                                             </div>

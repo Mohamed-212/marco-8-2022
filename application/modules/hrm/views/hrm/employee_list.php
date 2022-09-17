@@ -89,14 +89,14 @@
                                             <td>
                                                 <center>
                                                     <?php echo form_open() ?>
-                                                    <?php if ($this->permission->method('manage_employee', 'update')->access()) { ?>
+                                                    <?php if ($this->permission->method('manage_employee', 'update')->access()){ ?>
                                                         <a href="<?php echo base_url() . 'hrm/hrm/bdtask_employee_form/' . $employees['id']; ?>"
                                                            class="btn btn-info btn-sm" data-toggle="tooltip"
                                                            data-placement="left"
                                                            title="<?php echo display('update') ?>"><i
                                                                     class="fa fa-pencil" aria-hidden="true"></i></a>
                                                     <?php } ?>
-                                                    <?php if ($this->permission->method('manage_employee', 'delete')->access()) { ?>
+                                                    <?php if ($this->permission->method('manage_employee', 'delete')->access()){ ?>
                                                         <a href="<?php echo base_url('hrm/hrm/bdtask_delete_employee/' . $employees['id']) ?>"
                                                            class="btn btn-danger btn-sm"
                                                            onclick="return confirm('<?php echo display('are_you_sure') ?>')"

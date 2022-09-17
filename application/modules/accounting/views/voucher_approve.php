@@ -70,10 +70,10 @@
                                         <td><?php echo ($approve->Vtype=='DV'?0:$approve->Credit); ?></td>
                                         <td>
                                         <a href="<?php echo base_url("accounting/accounting/isactive/$approve->VNo/active") ?>" onclick="return confirm('<?php echo display("are_you_sure") ?>')" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="right" title="Inactive"><?php echo display('approve')?></a>
-                                            <?php if($this->permission->method('aprove_v','update')->access()){ ?>
+                                            <?php if($this->permission->method('aprove_v', 'update')->access()){ ?>
                                                 <a href="<?php echo base_url("accounting/accounting/voucher_update/$approve->VNo") ?>" class="btn btn-info btn-sm" title="Update"><i class="fa fa-edit"></i></a>
                                             <?php }?>
-                                            <?php if($this->permission->method('aprove_v','delete')->access()){ ?>
+                                            <?php if($this->permission->method('aprove_v', 'delete')->access()){ ?>
                                                 <a href="<?php echo base_url("accounting/accounting/voucher_delete/$approve->VNo") ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure?')" title="delete"><i class="fa fa-trash"></i></a>
                                             <?php }?>
                                         </td>

@@ -100,7 +100,7 @@
                                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                                     </a>
                                                 <?php } ?>
-                                                <?php if ($this->permission->method('manage1_person', 'delete')->access()) { ?>
+                                                <?php if ($this->permission->method('manage1_person', 'delete')->access()){ ?>
                                                     <a href="<?php echo base_url('hrm/loan/delete_office_loan/' . $person['person_id']) ?>"
                                                        class="btn btn-sm btn-danger"
                                                        onclick="return confirm('<?php echo display('are_you_sure') ?>') "><i

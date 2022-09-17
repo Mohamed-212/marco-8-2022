@@ -73,17 +73,19 @@
                                                 echo display('deduct');
                                             }
                                             ?></td>
-                                        <td class="center">
-                                            <?php if ($this->permission->method('manage_benefits', 'update')->access()) { ?>
+                                        <td>
+                                            <center>
+                                            <?php if ($this->permission->method('manage_benefits', 'update')->access()){ ?>
                                                 <a href="<?php echo base_url("hrm/payroll/benefits_update_form/$que->salary_type_id") ?>"
-                                                   class="btn btn-xs btn-success"><i class="fa fa-pencil"></i></a>
+                                                   class="btn btn-sm btn-success"><i class="fa fa-pencil"></i></a>
                                             <?php } ?>
-                                            <?php if ($this->permission->method('manage_benefits', 'delete')->access()) { ?>
+                                            <?php if ($this->permission->method('manage_benefits', 'delete')->access()){ ?>
                                                 <a href="<?php echo base_url("hrm/payroll/delete_benefits/$que->salary_type_id") ?>"
-                                                   class="btn btn-xs btn-danger"
+                                                   class="btn btn-sm btn-danger"
                                                    onclick="return confirm('<?php echo display('are_you_sure') ?>') "><i
                                                             class="fa fa-trash"></i></a>
                                             <?php } ?>
+                                            </center>
                                         </td>
                                     </tr>
                                     <?php $sl++; ?>

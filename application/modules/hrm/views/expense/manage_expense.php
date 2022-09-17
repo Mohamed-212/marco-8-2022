@@ -84,7 +84,7 @@
 
                                             <td>
 
-                                                <?php if($this->permission->method('manage_expense','delete')->access()){ ?>
+                                                <?php if($this->permission->method('manage_expense', 'delete')->access()){ ?>
                                                     <a href="<?php echo base_url("hrm/expense/delete_expense/".$expense['voucher_no']) ?>" class="btn btn-sm btn-danger" onclick="return confirm('<?php echo display('are_you_sure') ?>') " data-toggle="tooltip" data-placement="right" title="" data-original-title="<?php echo display('delete') ?> "><i class="fa fa-trash"></i></a>
                                                 <?php }?>
 

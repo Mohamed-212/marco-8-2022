@@ -189,7 +189,7 @@ class Permission
 	 
 	protected function checkModule($module = null)
 	{ 
-		$permission = $this->ci->session->userdata('permission');
+		$permission = $this->ci->session->userdata('label_permission');
 		$isAdmin    = $this->ci->session->userdata('isAdmin');
 		$isLogIn    = $this->ci->session->userdata('isLogIn');
 
@@ -244,7 +244,7 @@ class Permission
 
 	protected function checkMethod($module = null, $method = null)
 	{ 
-		$permission = $this->ci->session->userdata('permission');
+		$permission = $this->ci->session->userdata('label_permission');
 		$isAdmin    = $this->ci->session->userdata('isAdmin');
 		$isLogIn    = $this->ci->session->userdata('isLogIn');
 

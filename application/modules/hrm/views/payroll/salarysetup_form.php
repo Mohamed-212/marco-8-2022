@@ -114,10 +114,10 @@
                                             <th class="padding10"><?php echo display('tax') ?> (%)</th>
                                             <td><input type="text" name="amount[]" onkeyup="summary()"
                                                        class="form-control deducamount" id="taxinput"></td>
-                                            <td class="padding10"><input type="checkbox" name="tax_manager"
-                                                                         id="taxmanager" onchange='handletax(this);'
-                                                                         value="1">Tax Manager
-                                            </td>
+<!--                                            <td class="padding10"><input type="checkbox" name="tax_manager"-->
+<!--                                                                         id="taxmanager" onchange='handletax(this);'-->
+<!--                                                                         value="1">Tax Manager-->
+<!--                                            </td>-->
                                         </tr>
 
                                     </table>

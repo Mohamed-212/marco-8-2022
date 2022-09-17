@@ -100,14 +100,14 @@
                                             <td>
                                                 <center>
                                                     <?php echo form_open() ?>
-                                                    <?php if ($this->permission->method('manage_person', 'update')->access()) { ?>
+                                                    <?php if ($this->permission->method('manage_person')->update()->access()){ ?>
                                                         <a href="<?php echo base_url('personal_loan_edit/' . $persons['person_id']); ?>"
                                                            class="btn btn-info btn-sm" data-toggle="tooltip"
                                                            data-placement="left" title=""
                                                            data-original-title="Update"><i class="fa fa-pencil"
                                                                                            aria-hidden="true"></i></a>
                                                     <?php } ?>
-                                                    <?php if ($this->permission->method('manage_person', 'delete')->access()) { ?>
+                                                    <?php if ($this->permission->method('manage_person', 'delete')->access()){ ?>
                                                         <a href="<?php echo base_url("hrm/loan/delete_personal_loan/" . $persons['person_id']) ?>"
                                                            class="btn btn-sm btn-danger"
                                                            onclick="return confirm('<?php echo display('are_you_sure') ?>') "><i

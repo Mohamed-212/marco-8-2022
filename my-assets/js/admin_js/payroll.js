@@ -2,7 +2,7 @@
     "use strict";
 function employechange(id){
   var base_url =  $("#base_url").val();
-  var csrf_test_name = $('[name="csrf_test_name"]').val();
+  var csrf_test_name = $("#CSRF_TOKEN").val();
 $.ajax({
   url: base_url + "hrm/payroll/employeebasic/",
   method:'post',
@@ -85,16 +85,16 @@ document.getElementById('grsalary').value=add+b-(deduct);
   var  tax    = parseInt($('#taxinput').val());
   var netamount = amount+tax;
   var base_url =  $("#base_url").val();
-  var csrf_test_name = $('[name="csrf_test_name"]').val();
+  var csrf_test_name = $("#CSRF_TOKEN").val();
     if(checkbox.checked == true){
        $.ajax({
-        url : base_url +'hrm/payroll/salarywithtax/',
+        url : base_url +'hrm/payroll/salarywithtax',
             method: 'post',
             dataType: 'json',
             data: 
             {
-                'amount': amount,
                 csrf_test_name:csrf_test_name,
+                amount: amount,
             },
         success: function(data)
         {            
@@ -150,7 +150,7 @@ function Payment(salpayid,employee_id,TotalSalary,WorkHour,Period,salary_month){
    var sal_id = salpayid;
    var employee_id = employee_id;
    var base_url =  $("#base_url").val();
-   var csrf_test_name = $('[name="csrf_test_name"]').val();
+   var csrf_test_name = $("#CSRF_TOKEN").val();
     $.ajax({
     url: base_url + "hrm/payroll/EmployeePayment/",
     method:'post',

@@ -139,7 +139,6 @@ class Payroll extends MX_Controller
         echo json_encode($sent);
     }
 
-
     public function salarywithtax()
     {
         $tamount = $this->input->post('amount', TRUE);
@@ -166,7 +165,6 @@ class Payroll extends MX_Controller
         $salary = $TotalTax / 12;
         echo json_encode(number_format($salary, 2));
     }
-
 
     public function salary_setup_entry()
     {
@@ -195,7 +193,6 @@ class Payroll extends MX_Controller
         }
     }
 
-
     // Manage Salary Setup
     public function manage_salary_setup()
     {
@@ -207,7 +204,6 @@ class Payroll extends MX_Controller
         $content = $this->parser->parse('hrm/payroll/manage_salary_setup', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
-
 
     public function salsetup_upform($id)
     {
@@ -223,7 +219,6 @@ class Payroll extends MX_Controller
         $content = $this->parser->parse('hrm/payroll/update_sal_setup_form', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
-
 
     // salary setup update
     public function salary_setup_update()
@@ -242,7 +237,6 @@ class Payroll extends MX_Controller
         redirect("hrm/payroll/manage_salary_setup");
     }
 
-
     public function delete_salsetup($id = null)
     {
         if ($this->payroll_model->emp_salstup_delete($id)) {
@@ -254,7 +248,6 @@ class Payroll extends MX_Controller
         }
         redirect("hrm/payroll/manage_salary_setup");
     }
-
 
     public function bdtask_salary_generate()
     {
@@ -382,27 +375,25 @@ class Payroll extends MX_Controller
                     'total_working_minutes' => $worhour,
                     'working_period' => $workingper,
                     'salary_month' => $ab,
+                    'paid_by' => $this->session->userdata('fullname'),
                 );
-
-
-                $empsalgen = array(
-                    'VNo' => $ab,
-                    'Vtype' => 'Salary',
-                    'VDate' => date('Y-m-d'),
-                    'COAID' => $headcode,
-                    'Narration' => 'Employee Salary Generate Month of ' . $ab,
-                    'Debit' => 0,
-                    'Credit' => $netAmount,
-                    'IsPosted' => 1,
-                    'CreateBy' => $this->session->userdata('id'),
-                    'CreateDate' => date('Y-m-d H:i:s'),
-                    'IsAppove' => 1
-                );
-
-
+//                    $empsalgen = array(
+//                        'fy_id' => $find_active_fiscal_year->id,
+//                        'VNo' => $ab,
+//                        'Vtype' => 'Salary',
+//                        'VDate' => date('Y-m-d'),
+//                        'COAID' => $headcode,
+//                        'Narration' => 'Employee Salary Generate Month of ' . $ab,
+//                        'Debit' => 0,
+//                        'Credit' => $netAmount,
+//                        'IsPosted' => 1,
+//                        'CreateBy' => $this->session->userdata('id'),
+//                        'CreateDate' => date('Y-m-d H:i:s'),
+//                        'IsAppove' => 1
+//                    );
                 if (!empty($aAmount->employee_id)) {
                     $this->db->insert('employee_salary_payment', $paymentData);
-                    $this->db->insert('acc_transaction', $empsalgen);
+//                    $this->db->insert('acc_transaction', $empsalgen);
                 }
             }
         $this->session->set_flashdata('message', display('successfully_generated'));
@@ -514,72 +505,76 @@ class Payroll extends MX_Controller
 
     public function payconfirm($id = null)
     {
-        $postData = [
-            'emp_sal_pay_id' => $this->input->post('emp_sal_pay_id', true),
-            'payment_due' => 'paid',
-            'payment_date' => date('Y-m-d'),
-            'paid_by' => $this->session->userdata('fullname'),
-        ];
+        $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+        if (!empty($find_active_fiscal_year)) {
+            $postData = [
+                'emp_sal_pay_id' => $this->input->post('emp_sal_pay_id', true),
+                'payment_due' => 'paid',
+                'payment_date' => date('Y-m-d'),
+                'paid_by' => $this->session->userdata('fullname'),
+            ];
 
-        $emp_id = $this->input->post('employee_id', true);
-        $c_name = $this->db->select('first_name,last_name')->from('employee_history')->where('id', $emp_id)->get()->row();
-        $c_acc = $emp_id . '-' . $c_name->first_name . '' . $c_name->last_name;
-        $coatransactionInfo = $this->db->select('HeadCode')->from('acc_coa')->where('HeadName', $c_acc)->get()->row();
-        $COAID = $coatransactionInfo->HeadCode;
+            $emp_id = $this->input->post('employee_id', true);
+            $c_name = $this->db->select('first_name,last_name')->from('employee_history')->where('id', $emp_id)->get()->row();
+            $c_acc = $emp_id . '-' . $c_name->first_name . '' . $c_name->last_name;
+//        $coatransactionInfo = $this->db->select('HeadCode')->from('acc_coa')->where('HeadName', $c_acc)->get()->row();
+//        $COAID = $coatransactionInfo->HeadCode;
 
-        $cashinhand_credit = array(
-            'VNo' => $this->input->post('emp_sal_pay_id', true),
-            'Vtype' => 'Salary',
-            'VDate' => date('Y-m-d'),
-            'COAID' => 111000002,
-            'Narration' => 'Cash in hand Credit For Employee Salary for-  ' . $c_name->first_name . ' ' . $c_name->last_name,
-            'Debit' => 0,
-            'Credit' => $this->input->post('total_salary', true),
-            'IsPosted' => 1,
-            'CreateBy' => $this->session->userdata('fullname'),
-            'CreateDate' => date('Y-m-d H:i:s'),
-            'IsAppove' => 1
-        );
-
-        $accpayable = array(
-            'VNo' => $this->input->post('emp_sal_pay_id', true),
-            'Vtype' => 'Salary',
-            'VDate' => date('Y-m-d'),
-            'COAID' => $COAID,
-            'Narration' => 'Salary paid For- ' . $c_name->first_name . ' ' . $c_name->last_name,
-            'Debit' => $this->input->post('total_salary', true),
-            'Credit' => 0,
-            'IsPosted' => 1,
-            'CreateBy' => $this->session->userdata('fullname'),
-            'CreateDate' => date('Y-m-d H:i:s'),
-            'IsAppove' => 1
-        );
-        //company expense for employee salary
-        $expense = array(
-            'VNo' => $this->input->post('emp_sal_pay_id', true),
-            'Vtype' => 'Salary',
-            'VDate' => date('Y-m-d'),
-            'COAID' => 421001001,
-            'Narration' => 'Salary paid For- ' . $c_name->first_name . ' ' . $c_name->last_name,
-            'Debit' => $this->input->post('total_salary', true),
-            'Credit' => 0,
-            'IsPosted' => 1,
-            'CreateBy' => $this->session->userdata('fullname'),
-            'CreateDate' => date('Y-m-d H:i:s'),
-            'IsAppove' => 1
-        );
-
-
-        if ($this->payroll_model->update_payment($postData)) {
-            $this->db->insert('acc_transaction', $cashinhand_credit);
-            $this->db->insert('acc_transaction', $expense);
-            $this->db->insert('acc_transaction', $accpayable);
-            $this->session->set_flashdata('message', display('successfully_paid'));
+            $cashinhand_credit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => $this->input->post('emp_sal_pay_id', true),
+                'Vtype' => 'Salary',
+                'VDate' => date('Y-m-d'),
+                'COAID' => 1111,
+                'Narration' => 'Cash in hand Credit For Employee Salary for-  ' . $c_name->first_name . ' ' . $c_name->last_name,
+                'Debit' => 0,
+                'Credit' => $this->input->post('total_salary', true),
+                'IsPosted' => 1,
+                'CreateBy' => $this->session->userdata('fullname'),
+                'CreateDate' => date('Y-m-d H:i:s'),
+                'IsAppove' => 1
+            );
+//        $accpayable = array(
+//            'VNo' => $this->input->post('emp_sal_pay_id', true),
+//            'Vtype' => 'Salary',
+//            'VDate' => date('Y-m-d'),
+//            'COAID' => $COAID,
+//            'Narration' => 'Salary paid For- ' . $c_name->first_name . ' ' . $c_name->last_name,
+//            'Debit' => $this->input->post('total_salary', true),
+//            'Credit' => 0,
+//            'IsPosted' => 1,
+//            'CreateBy' => $this->session->userdata('fullname'),
+//            'CreateDate' => date('Y-m-d H:i:s'),
+//            'IsAppove' => 1
+//        );
+            //company expense for employee salary
+            $expense = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => $this->input->post('emp_sal_pay_id', true),
+                'Vtype' => 'Salary',
+                'VDate' => date('Y-m-d'),
+                'COAID' => 42111,
+                'Narration' => 'Salary paid For- ' . $c_acc,
+                'Debit' => $this->input->post('total_salary', true),
+                'Credit' => 0,
+                'IsPosted' => 1,
+                'CreateBy' => $this->session->userdata('fullname'),
+                'CreateDate' => date('Y-m-d H:i:s'),
+                'IsAppove' => 1
+            );
+            if ($this->payroll_model->update_payment($postData)) {
+                $this->db->insert('acc_transaction', $cashinhand_credit);
+                $this->db->insert('acc_transaction', $expense);
+//            $this->db->insert('acc_transaction', $accpayable);
+                $this->session->set_flashdata('message', display('successfully_paid'));
+            } else {
+                $this->session->set_flashdata('exception', display('please_try_again'));
+            }
+            redirect($_SERVER['HTTP_REFERER']);
         } else {
-            $this->session->set_flashdata('exception', display('please_try_again'));
+            $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
+            redirect(base_url('Admin_dashboard'));
         }
-
-        redirect($_SERVER['HTTP_REFERER']);
     }
 
 
@@ -589,7 +584,7 @@ class Payroll extends MX_Controller
         $data['paymentdata'] = $this->payroll_model->salary_paymentinfo($id);
         $data['addition'] = $this->payroll_model->salary_addition_fields($data['paymentdata'][0]['employee_id']);
         $data['deduction'] = $this->payroll_model->salary_deduction_fields($data['paymentdata'][0]['employee_id']);
-        $data['amountinword'] = $this->numbertowords->convert_number(intval(str_replace(',', '', $data['paymentdata'][0]['total_salary'])));
+        $data['amountinword'] = $this->payroll_model->convert_number(intval(str_replace(',', '', $data['paymentdata'][0]['total_salary'])));
         $data['settingss'] = $this->payroll_model->setting();
         $data['company'] = $this->payroll_model->companyinfo();
 //        $data['module'] = "hrm";

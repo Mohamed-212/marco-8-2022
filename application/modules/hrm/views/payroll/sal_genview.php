@@ -66,14 +66,15 @@
                                         <td><?php echo html_escape($que->gdate); ?></td>
                                         <td><?php echo html_escape($que->generate_by); ?></td>
 
-                                        <td class="center">
-                                            <?php if ($this->permission->method('manage_salary_generate', 'delete')->access()) { ?>
+                                        <td>
+                                            <center>
+                                            <?php if ($this->permission->method('manage_salary_generate', 'delete')->access()){ ?>
                                                 <a href="<?php echo base_url("hrm/payroll/delete_salgenerate/$que->ssg_id") ?>"
-                                                   class="btn btn-xs btn-danger"
+                                                   class="btn btn-sm btn-danger"
                                                    onclick="return confirm('<?php echo display('are_you_sure') ?>') "><i
                                                             class="fa fa-trash"></i></a>
                                             <?php } ?>
-
+                                            </center>
                                         </td>
                                     </tr>
                                     <?php $sl++; ?>

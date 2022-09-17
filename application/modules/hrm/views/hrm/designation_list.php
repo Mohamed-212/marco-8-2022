@@ -88,7 +88,7 @@
                                                     <?php if($this->permission->method('manage_designation','update')->access()){ ?>
                                                         <a href="<?php echo base_url() . 'hrm/hrm/bdtask_designation_form/'.$designations['id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('update') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                                     <?php } ?>
-                                                    <?php if($this->permission->method('manage_designation','delete')->access()){ ?>
+                                                    <?php if($this->permission->method('manage_designation', 'delete')->access()){ ?>
                                                         <a href="<?php echo base_url('hrm/hrm/bdtask_deletedesignation/'.$designations["id"]) ?>" class="btn btn-danger btn-sm"  onclick="return confirm('<?php echo display('are_you_sure') ?>')" data-toggle="tooltip" data-placement="right" title="" data-original-title="<?php echo display('delete') ?> "><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                                     <?php }?>
 
