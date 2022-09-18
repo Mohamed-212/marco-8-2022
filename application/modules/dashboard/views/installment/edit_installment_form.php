@@ -393,6 +393,7 @@
                                         '2' => display('pos'),
                                         '3' => display('wire transfer'),
                                         '4' => display('check'),
+                                        '5' => display('customer_balance'),
                                     );
 
 
