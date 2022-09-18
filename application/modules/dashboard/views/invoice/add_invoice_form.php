@@ -1,4 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<script>
+    var products_with_no_quantity = "<?=display('products_with_no_quantity')?>";
+</script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
 <!-- Product invoice js -->
@@ -50,6 +53,15 @@
             $this->session->unset_userdata('error_message');
         }
         ?>
+
+        
+        <?php if (!empty(validation_errors())) : ?>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo validation_errors(); ?>
+            </div>
+        <?php endif; ?>
+
 
         <div class="row">
             <div class="col-sm-12">
@@ -582,7 +594,7 @@
                                             <?php if (!isset($order)) : ?>
                                                 <input type="button" id="add-invoice" class="btn btn-primary payment_button" value="<?php echo display('payment') ?>" />
                                             <?php endif ?>
-                                            <input type="button" id="add-invoice_btn" class="btn btn-success" name="add-invoice" onclick="submit_form();" value="<?php echo display('submit') ?>" />
+                                            <input type="button" id="add-invoice_btn" class="btn btn-success" name="add-invoice" onclick="submit_form(event);" value="<?php echo display('submit') ?>" />
                                         </td>
                                         <td class="text-right" colspan="5"><b><?php echo display('due') ?>:</b></td>
                                         <td class="text-right" colspan="2">

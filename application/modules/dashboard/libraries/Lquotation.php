@@ -123,9 +123,10 @@ class Lquotation {
 			'due_amount'		=>	$quotation_detail[0]['due_amount'],
 			'total_discount'	=>	$quotation_detail[0]['total_discount'],
 			'service_charge'	=>	$quotation_detail[0]['service_charge'],
-			'details'			=>	$quotation_detail[0]['details'],
+			'details'			=>	!empty($quotation_detail[0]['details']) ? $quotation_detail[0]['details'] : $quotation_detail[0]['quotation_details'],
 			'status'			=>	$quotation_detail[0]['status'],
 			'is_quotation'		=>	$quotation_detail[0]['is_quotation'],
+			'pricing_type' 	=>	$quotation_detail[0]['pricing_type'],
 			'quotation_all_data'=>	$quotation_detail,
 			'employee_list'		=>	$employee_list,
 			'store_list'		=>	$store_list,
@@ -351,7 +352,7 @@ class Lquotation {
 			);
 
 			$emp_name = $emp_id = null;
-			var_dump($quotation_detail[0]['employee_id']);
+			// var_dump($quotation_detail[0]['employee_id']);
 			if (!empty($quotation_detail) && isset($quotation_detail[0]['employee_id'])) {
 				$emp = $CI->Hrm_model->single_employee_data($quotation_detail[0]['employee_id']);
 				if (null !== $emp) {

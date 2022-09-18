@@ -22,8 +22,18 @@ class Cstock_opening extends MX_Controller
         $product_info = $this->Stock_opening_model->product_search_item($product_name);
         $json_product = [];
         foreach ($product_info as $value) {
+            $variant_id = $value['variants'];
+            if (strpos($variant_id, ',') > -1) {
+                $variant_id = explode(',', $variant_id);
+                if (is_array($variant_id) && isset($variant_id[0])) {
+                    $variant_id = $variant_id[0];
+                }
+            } else {
+                $variant_id = $variant_id;
+            }
+
             //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
-            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id'], 'varient_id' => $variant_id);
         }
         echo json_encode($json_product);
     }
@@ -183,7 +193,7 @@ class Cstock_opening extends MX_Controller
                                 'quantity'     => $product_quantity,
                                 'warehouse_id' => '',
                             );
-                            $this->db->insert('purchase_stock_tbl', $stock);
+                            // $this->db->insert('purchase_stock_tbl', $stock);
                             // insert
                         } else {
                             //update
@@ -202,7 +212,7 @@ class Cstock_opening extends MX_Controller
                             if (!empty($variant_color)) {
                                 $this->db->where('variant_color', $variant_color);
                             }
-                            $this->db->update('purchase_stock_tbl', $stock);
+                            // $this->db->update('purchase_stock_tbl', $stock);
                             //update
                         }
                         // stock
@@ -210,7 +220,7 @@ class Cstock_opening extends MX_Controller
                 }
 
                 $this->load->model('accounting/account_model');
-                $store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
+                // $store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
                 $createdate   = date('Y-m-d H:i:s');
                 $receive_by   = $this->session->userdata('user_id');
                 $date         = $createdate;
@@ -321,7 +331,7 @@ class Cstock_opening extends MX_Controller
                             'quantity'     => $product_quantity,
                             'warehouse_id' => '',
                         );
-                        $this->db->insert('purchase_stock_tbl', $stock);
+                        // $this->db->insert('purchase_stock_tbl', $stock);
                         // insert
                     } else {
                         //update
@@ -340,7 +350,7 @@ class Cstock_opening extends MX_Controller
                         if (!empty($variant_color)) {
                             $this->db->where('variant_color', $variant_color);
                         }
-                        $this->db->update('purchase_stock_tbl', $stock);
+                        // $this->db->update('purchase_stock_tbl', $stock);
                         //update
                     }
                     // stock

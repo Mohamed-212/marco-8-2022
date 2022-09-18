@@ -125,9 +125,10 @@
                                 #toTop,
                                 footer,
                                 .btn.back-top,
-                                .hide-me,
+                                /* .hide-me, */
                                 .pace,
-                                .pace-activity {
+                                .pace-activity,
+                                .alert {
                                     display: none;
                                 }
 
@@ -222,7 +223,7 @@
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('date'); ?> : <span dir="ltr" style="text-transform: uppercase;">
-                                                                    <?php echo html_escape(date('Y - M - d', strtotime($final_date))) ?>
+                                                                        <?php echo html_escape(date('Y - M - d', strtotime($final_date))) ?>
                                                                     </span>
                                                                 </p>
                                                                 <p>
@@ -255,7 +256,7 @@
                                                                     if ($isTaxed == 1) {
                                                                         //                                                                        echo "<th class='hide-me'>" . display('unit_price_before_VAT') . "</th>";
                                                                     } else {
-                                                                        echo "<th class='hide-me'>" . display('rate') . "</th>";
+                                                                        // echo "<th class='hide-me'>" . display('rate') . "</th>";
                                                                     }
                                                                     ?>
                                                                     <th class='hide-me'><?php echo display('discount') ?></th>
@@ -345,12 +346,11 @@
                                                                             <?php } ?>
 
                                                                             <td><?php if (!empty($invoice['total_price'])) {
-                                                                                    echo (($position == 0) ? 
-                                                                                    $currency . " " . 
-                                                                                    ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)) )
-                                                                                     : 
-                                                                                     ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)) ) 
-                                                                                     . " " . $currency);
+                                                                                    echo (($position == 0) ?
+                                                                                        $currency . " " .
+                                                                                        ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
+                                                                                        : ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
+                                                                                        . " " . $currency);
                                                                                 } ?></td>
                                                                         </tr>
                                                                         <?php
@@ -529,6 +529,18 @@
                                                                                             </tr>
                                                                                     <?php }
                                                                                     } ?>
+                                                                                    <tr class="">
+                                                                                        <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
+                                                                                        <td class="grand_total">
+                                                                                            <?php
+                                                                                            $totalQuantity = 0;
+                                                                                            foreach ($invoice_all_data as $inv) {
+                                                                                                $total_quantity += (int)$inv['quantity'];
+                                                                                            }
+                                                                                            echo $total_quantity;
+                                                                                            ?>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                     <tr class="borderd">
                                                                                         <th class="grand_total"> <?php echo display('total'); ?>:</th>
                                                                                         <td class="grand_total">

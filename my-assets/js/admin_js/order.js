@@ -127,7 +127,12 @@ function check_quotation() {
     }
 }
 
-function submit_form() {
+function submit_form(e) {
+    //here I want to prevent default
+    e = e || window.event;
+    e.preventDefault();
+    var valid = false;
+
     var elem = $("#is_quotation");
     if (elem.prop('checked') == true) {
         $(".total_cgst").each(function () {
@@ -140,7 +145,30 @@ function submit_form() {
         }
         $("#total_cgst").val('0');
     }
-    $("form#validate, form#normalinvoice").submit();
+
+    // validate product quantity
+    $('[name="available_quantity[]"]').each(function () {
+        if (!this.value || this.value < 1) {
+            alert(products_with_no_quantity);
+            valid = false;
+            return;
+        }
+        valid = true;
+    }).promise().done(function() {
+        if (!valid) return;
+        $('[name="product_quantity[]"]').each(function () {
+            if (!this.value || this.value < 1) {
+                alert(products_with_no_quantity);
+                valid = false;
+                return;
+            }
+            valid = true;
+        }).promise().done(function() {
+            if (!valid) return;
+
+            $("form#validate, form#normalinvoice").submit();
+        });
+    });
 }
 
 function calculateSumQuotation() {
@@ -165,9 +193,9 @@ function calculateSumQuotation() {
             setTimeout(() => {$(this).attr('data-value', -1);}, 1000);
         }
 
-        isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
+        isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value));
     }),
-            cgst = 0;
+            // cgst = 0;
     $("#total_cgst").val(cgst.toFixed(2)),
             $(".total_cgst_bill").text(cgst.toFixed(2)),
             //Total SGST
@@ -231,13 +259,14 @@ function calculateSum() {
     $(".total_cgst").each(function () {
         var dataVal = parseFloat($(this).attr('data-value'));
         if (dataVal > 0) {
-            console.log(dataVal);
+            // console.log(dataVal);
             $(this).val(dataVal);
-            setTimeout(() => {$(this).attr('data-value', -1);}, 1000);
+            setTimeout(() => {$(this).attr('data-value', -1);}, 100);
         }
         
         // isNaN($(this).val()) || 0 == $(this).val().length || (cgst += parseFloat($(this).val()))
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
+        console.log(this.value);
     }),
            
             $("#total_cgst").val(cgst.toFixed(2)),
