@@ -678,10 +678,10 @@ class Orders extends CI_Model
                 }
 
                 //payment account existing check
-                if ($payment_id == null && $order_id) {
-                    $this->session->set_userdata(array('error_message' => display('please_select_payment')));
-                    redirect('dashboard/Corder/create_invoice_form/' . $order_id);
-                }
+                // if ($payment_id == null && $order_id) {
+                //     $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+                //     redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+                // }
 
                 //Customer existing check
                 if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
@@ -1490,10 +1490,10 @@ class Orders extends CI_Model
             }
 
             //payment account existing check
-            if ($payment_id == null && $order_id) {
-                $this->session->set_userdata(array('error_message' => display('please_select_payment')));
-                redirect('dashboard/Corder/create_invoice_form/' . $order_id);
-            }
+            // if ($payment_id == null && $order_id) {
+            //     $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+            //     redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+            // }
 
             //Customer existing check
             if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
@@ -2342,7 +2342,7 @@ class Orders extends CI_Model
         }
 
         //payment account existing check
-        if ($payment_id == null) {
+        if ((float)$this->input->post('paid_amount', TRUE) > 0 && $payment_id == null) {
             $this->session->set_userdata(array('error_message' => display('please_select_payment')));
             redirect('dashboard/Corder/create_invoice_form/' . $order_id);
         }

@@ -277,7 +277,7 @@ class Invoices extends CI_Model {
                 }
 
                 //payment account existing check
-                if ($payment_id == null) {
+                if ((float)$this->input->post('paid_amount', TRUE) > 0 && $payment_id == null) {
                     $this->session->set_userdata(array('error_message' => display('please_select_payment')));
                     redirect('dashboard/Cinvoice');
                 }
