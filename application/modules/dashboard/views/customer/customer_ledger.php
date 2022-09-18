@@ -56,6 +56,42 @@
 			</div>
 		</div>
 
+		<?php if (isset($not_report) && !$not_report) : ?>
+		<div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <?php echo form_open("dashboard/Ccustomer/customer_ledger_report", array('class' => 'form-inline')); ?>
+                        <div class="form-group">
+                            <label for="customer_id"><?php echo display('customer') ?><span
+                                    class="text-danger">*</span>:</label>
+                            <select class="form-control" name="customer_id" id="customer_id" required>
+								<?php foreach ($customers_list as $cust) : ?>
+                                <option value=""></option>
+                                <option value="<?=$cust['customer_id']?>" <?=isset($customer_id) && $customer_id == $cust['customer_id'] ? 'selected' : '' ?> ><?=$cust['customer_name']?></option>
+								<?php endforeach ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="from_date"><?php echo display('from_date') ?><span
+                                    class="text-danger">*</span>:</label>
+                            <input type="text" class="form-control datepicker" autocomplete="off"
+                                placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=$this->input->post('from_date', TRUE);?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="to_date"><?php echo display('to_date') ?><span
+                                    class="text-danger">*</span>:</label>
+                            <input type="text" class="form-control datepicker" autocomplete="off"
+                                placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=$this->input->post('to_date', TRUE);?>" required>
+                        </div>
+                        <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+                        <?php echo form_close() ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<?php endif ?>
+
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="panel panel-bd lobidrag">
