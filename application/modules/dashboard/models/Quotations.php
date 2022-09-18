@@ -2257,6 +2257,38 @@ class Quotations extends CI_Model
 
 	public function update_quotation($quotation_id)
     {
+		//Invoice entry info
+        $quantity = $this->input->post('product_quantity', TRUE);
+        $available_quantity = $this->input->post('available_quantity', TRUE);
+        $product_id = $this->input->post('product_id', TRUE);
+        $payment_id = $this->input->post('payment_id', TRUE);
+
+        //Stock availability check
+        foreach ($available_quantity as $k => $v) {
+            if ($v < $quantity[$k]) {
+                $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
+                redirect('dashboard/Cquotation/quotation_update_form/' . $quotation_id);
+            }
+        }
+
+        //Product existing check
+        if ($product_id == null) {
+            $this->session->set_userdata(array('error_message' => display('please_select_product')));
+            redirect('dashboard/Cquotation/quotation_update_form/' . $quotation_id);
+        }
+
+        //payment account existing check
+        if ($payment_id == null) {
+            $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+            redirect('dashboard/Cquotation/quotation_update_form/' . $quotation_id);
+        }
+
+        //Customer existing check
+        if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
+            $this->session->set_userdata(array('error_message' => display('please_select_customer')));
+            redirect('dashboard/Cquotation/quotation_update_form/' . $quotation_id);
+        }
+
         // delete then insert new ==> update
         $this->delete_quotation($quotation_id);
         // insert as new

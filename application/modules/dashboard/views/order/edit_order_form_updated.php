@@ -597,7 +597,7 @@
                                                             <?php echo display('bank_list') ?> :
                                                         </label>
                                                         <div class="col-sm-8">
-                                                            <select class="form-control" name="payment_id" id="payment_id">
+                                                            <select class="form-control" name="payment_id" id="payment_id" <?=isset($order_id)? 'required' : '' ?> >
                                                                 <option value=""></option>
                                                                 <?php
                                                                 if ($payment_info) {
@@ -621,7 +621,7 @@
                                                         <label for="account_no" class="col-sm-4 col-form-label"><?php echo display('account_no') ?>
                                                             :</label>
                                                         <div class="col-sm-8">
-                                                            <input class="form-control" type="text" name="account_no" id="account_no" placeholder="<?php echo display('account_no') ?>">
+                                                            <input class="form-control" type="text" name="account_no" id="account_no" placeholder="<?php echo display('account_no') ?>" <?=isset($order_id)? 'required' : '' ?> >
                                                         </div>
                                                     </div>
                                                 </div>
