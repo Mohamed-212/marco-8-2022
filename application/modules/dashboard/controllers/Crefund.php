@@ -94,7 +94,12 @@ class Crefund extends MX_Controller {
         $filter = array(
             'invoice_no' =>  $this->input->post('invoice_no', TRUE),
            );
-        $sql="select v.variant_name,b.*,I.variant_id,(I.quantity - I.return_quantity) as quantity from invoice_details I join variant v on v.variant_id=I.variant_id join product_information b on b.product_id = I.product_id where quantity > 0 and I.invoice_id='".$filter['invoice_no']."';";
+        $sql="select invoice_id from invoice where invoice='inv-".$filter['invoice_no']."';";
+        
+        $result = $this->db->query($sql);
+        $invoice_id=$result->result_array()[0]['invoice_id'];
+       
+        $sql="select v.variant_name,b.*,I.variant_id,I.invoice_id,(I.quantity - I.return_quantity) as quantity from invoice_details I join variant v on v.variant_id=I.variant_id join product_information b on b.product_id = I.product_id where quantity > 0 and I.invoice_id='".$invoice_id."';";
         $sql14 = $this->db->query($sql);
         $query = $sql14->result_array();
             echo json_encode($query);
@@ -116,16 +121,15 @@ class Crefund extends MX_Controller {
         $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
         $filter = array(
             'invoice_no' =>  $this->input->get('invoice_no', TRUE),
+            'invoice_id' =>  $this->input->get('invoice_id', TRUE),
             'product_id' =>  $this->input->get('product_id', TRUE),
             'variant_id' =>  $this->input->get('variant_id', TRUE),
             'status' =>  $this->input->get('status', TRUE),
             'quantity' =>  $this->input->get('quantity', TRUE),
             'payment_id' =>  $this->input->get('payment_id', TRUE),
            );
-        // echo count($filter['product_id']);
-        // dd($filter);
-        // return 0;
-           $sql="SELECT `customer_id` FROM `invoice` WHERE `invoice_id` ='".$filter['invoice_no']."';";
+      
+           $sql="SELECT `customer_id` FROM `invoice` WHERE `invoice_id` ='".$filter['invoice_id']."';";
            $result= $this->db->query($sql);
            $customer_id  = $result->result_array();
            $customer_id  = $customer_id[0]['customer_id'];
@@ -139,7 +143,7 @@ class Crefund extends MX_Controller {
                 // echo $filter['quantity'][$j];
                 // dd($filter['quantity']);
                     // get invoice details record 
-                $sql="select I.* from invoice_details I where I.variant_id ='".$filter['variant_id'][$j]."' and I.product_id ='".$filter['product_id'][$j]."' and I.invoice_id ='".$filter['invoice_no']."';";
+                $sql="select I.* from invoice_details I where I.variant_id ='".$filter['variant_id'][$j]."' and I.product_id ='".$filter['product_id'][$j]."' and I.invoice_id ='".$filter['invoice_id']."';";
                 $result= $this->db->query($sql);
                 $invoice_details  = $result->result_array();
                
@@ -173,13 +177,13 @@ class Crefund extends MX_Controller {
                     if (!empty($product_list)) {
                         foreach ($product_list as $product) 
                         {
-                            $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_no']."','".$product['product_id']."','".$filter['variant_id'][$j]."',".$filter['quantity'][$j].",".$filter['status'][$j].")";
+                            $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_id']."','".$product['product_id']."','".$filter['variant_id'][$j]."',".$filter['quantity'][$j].",".$filter['status'][$j].")";
                             $result = $this->db->query($sql);
                         }
                     }
                     else
                     {
-                        $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_no']."','".$filter['product_id'][$j]."','".$filter['variant_id'][$j]."',".$filter['quantity'][$j].",".$filter['status'][$j].")";
+                        $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_id']."','".$filter['product_id'][$j]."','".$filter['variant_id'][$j]."',".$filter['quantity'][$j].",".$filter['status'][$j].")";
                         $result = $this->db->query($sql);
                     }
                     
@@ -191,7 +195,7 @@ class Crefund extends MX_Controller {
                 $result= $this->db->query($sql);
 
                 //invoice
-                $sql="select I.* from invoice I where I.invoice_id ='".$filter['invoice_no']."';";
+                $sql="select I.* from invoice I where I.invoice_id ='".$filter['invoice_id']."';";
                 $result= $this->db->query($sql);
                 $invoice  = $result->result_array();
 
@@ -220,7 +224,7 @@ class Crefund extends MX_Controller {
                         $total_installment_return =$total_return+$tota_vat;
                         $temp=0;
                         $return=0;
-                        $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_no']."';";
+                        $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_id']."';";
                         $result= $this->db->query($sql);
                         $invoice_installment  = $result->result_array();
                         $invoice_installment  = array_reverse($invoice_installment);
@@ -254,7 +258,7 @@ class Crefund extends MX_Controller {
                 //7th paid_amount depit if full paid 
                 $customer_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'VNo' => 'Inv-' . $filter['invoice_id'],
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => $customer_head->HeadCode,
@@ -271,7 +275,7 @@ class Crefund extends MX_Controller {
                 // 2nd Allowed Discount credit
                 $allowed_discount_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'VNo' => 'Inv-' . $filter['invoice_id'],
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => 4114,
@@ -289,7 +293,7 @@ class Crefund extends MX_Controller {
                 //3rd Showroom Sales depit
                 $showroom_sales_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'VNo' => 'Inv-' . $filter['invoice_id'],
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => 5111, // account payable game 11
@@ -307,7 +311,7 @@ class Crefund extends MX_Controller {
                 //4th VAT on Sales
                 $vat_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'VNo' => 'Inv-' . $filter['invoice_id'],
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => 2114, // account payable game 11
@@ -325,7 +329,7 @@ class Crefund extends MX_Controller {
                 //5th cost of goods sold Credit
                 $cogs_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'VNo' => 'Inv-' . $filter['invoice_id'],
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => 4111,
@@ -343,7 +347,7 @@ class Crefund extends MX_Controller {
                 //6th cost of goods sold Main warehouse depit
                 $cogs_main_warehouse_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_no'],
+                    'VNo' => 'Inv-' . $filter['invoice_id'],
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => 1141,
@@ -362,7 +366,7 @@ class Crefund extends MX_Controller {
                     $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
                     $bank_credit = array(
                         'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'Inv-' . $filter['invoice_no'],
+                        'VNo' => 'Inv-' . $filter['invoice_id'],
                         'Vtype' => 'Sales',
                         'VDate' => $createdate,
                         'COAID' => $payment_head->HeadCode,
@@ -378,7 +382,7 @@ class Crefund extends MX_Controller {
                 }
                 $invoice_return=array(
                     'return_invoice_id' =>$return_invoice_id,
-                    'invoice_id'        =>$filter['invoice_no'],
+                    'invoice_id'        =>$filter['invoice_id'],
                     'return_quantity'   =>$filter['quantity'][$j],
                     'product_id'        =>$filter['product_id'][$j],
                     'customer_id'       =>$customer_id,

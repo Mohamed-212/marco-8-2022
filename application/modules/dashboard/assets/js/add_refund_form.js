@@ -13,16 +13,8 @@ var productArr={};
         },
         success: function (data) {
           $('#normalinvoice').find('tbody').empty()
-          // select = document.getElementById('product_id_1');
-          // var opt =  document.createElement('option');
-          // opt.innerHTML = '';
-          // opt.value ='';
-          // select.appendChild(opt);
+          $("#invoice_id").val(data[0]['invoice_id']);
           for (i = 0; i < data.length; i++) {
-            // var opt = document.createElement('option');
-            // opt.innerHTML = data[i]['product_name'];
-            // opt.value = data[i]['product_id'];
-            // select.appendChild(opt);
             $('#normalinvoice').find('tbody').append("<tr>")
             $('#normalinvoice').find('tbody').append("<td><input class='form-control' id='product_name_"+i+"' value='"+data[i]['product_name']+"' name='product_name[]' readonly=''></td>");
             $('#normalinvoice').find('tbody').append("<td hidden><input class='form-control' id='product_id_"+i+"' value='"+data[i]['product_id']+"' name='product_id[]' readonly='' ></td>");

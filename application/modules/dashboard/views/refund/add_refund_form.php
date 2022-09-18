@@ -72,6 +72,8 @@
                                             <input type="text" class="form-control" name="invoice_no" id="invoice_no"
                                                 value="<?php echo set_value('invoice_no', @$_GET['invoice_no']) ?>"
                                                 placeholder='<?php echo display('invoice_no') ?>' >
+                                            <input type="hidden" class="form-control" name="invoice_id" id="invoice_id"
+                                                value="">
                                         </div>
                                     </div>
                                 </div>
