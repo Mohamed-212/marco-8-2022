@@ -162,7 +162,8 @@ class Cinvoice extends MX_Controller {
         if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
             $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
             $this->index();
-        } else {
+        }
+         else {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
             // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');

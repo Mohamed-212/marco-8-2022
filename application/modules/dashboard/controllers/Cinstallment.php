@@ -204,11 +204,38 @@ class Cinstallment extends MX_Controller
                 $employee_id = $this->input->post('employee_id', TRUE);
                 $status = $this->input->post('status', TRUE);
                 $expiry_date = $this->input->post('expiry_date', TRUE);
-
+                //add customer credit
+                $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
+                if (empty($customer_head)) {
+                    $this->load->model('accounting/account_model');
+                    $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
+                    if ($customer_name) {
+                        $customer_data = $data = array(
+                            'customer_id' => $result->customer_id,
+                            'customer_name' => $customer_name->customer_name,
+                        );
+                        $this->account_model->insert_customer_head($customer_data);
+                    }
+                    $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
+                }
                 $this->db->select('*');
                 $this->db->from('invoice_installment');
                 $this->db->where('invoice_id', $invoice_id);
                 $installment_details = $this->db->get()->result_array();
+                $total_from_balance=0;
+                foreach ($installment_details as $index => $installment) {
+                    if ($installment['status'] != 2 && $status[$index] == 2) {
+                            $total_from_balance+=$payment_amount[$index];
+                    }
+                }
+                $sql = "SELECT SUM(Debit) Debit, SUM(Credit) Credit, IsAppove, COAID FROM acc_transaction WHERE COAID LIKE '".$customer_head->HeadCode."%' AND IsAppove =1 GROUP BY IsAppove, COAID";
+                $result= $this->db->query($sql);
+                $customer_balance  = $result->result_array()[0];
+                if($total_from_balance>($customer_balance['Credit']-$customer_balance['Debit']))
+                {
+                    $this->session->set_userdata(array('error_message' => display('balance_not_enough')));
+                    redirect('dashboard/cinstallment/manage_installment');
+                }
 
                 foreach ($installment_details as $index => $installment) {
                     if ($installment['status'] != 2) {
@@ -291,20 +318,7 @@ class Cinstallment extends MX_Controller
                                     );
                                     $this->db->update('invoice', $new_paid_amount);
 
-                                    //add customer credit
-                                    $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
-                                    if (empty($customer_head)) {
-                                        $this->load->model('accounting/account_model');
-                                        $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
-                                        if ($customer_name) {
-                                            $customer_data = $data = array(
-                                                'customer_id' => $result->customer_id,
-                                                'customer_name' => $customer_name->customer_name,
-                                            );
-                                            $this->account_model->insert_customer_head($customer_data);
-                                        }
-                                        $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
-                                    }
+                               
                                     // add paid_amount Credit
                                     $customer_credit = array(
                                         'fy_id' => $find_active_fiscal_year->id,
