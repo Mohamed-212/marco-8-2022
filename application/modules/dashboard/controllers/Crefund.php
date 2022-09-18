@@ -255,23 +255,39 @@ class Crefund extends MX_Controller {
                         $bank_return= $total_installment_return;
                         
                 }
-                //7th paid_amount depit if full paid 
-                $customer_depit = array(
+
+                //1st debit (Sales return for Showroom sales) with total price before discount
+                $store_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'Inv-' . $filter['invoice_id'],
-                    'Vtype' => 'Sales',
+                    'Vtype' => 'Sales return',
                     'VDate' => $createdate,
-                    'COAID' => $customer_head->HeadCode,
-                    'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_return+$tota_vat,
-                    'Credit' => 0,
+                    'COAID' => $customer_head->HeadCode, // account payable game 11
+                    'Narration' => 'Sales return for Showroom sales "total price before discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Debit' => 0,
+                    'Credit' => $total_return+$tota_vat,
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
-                $this->db->insert('acc_transaction', $customer_depit);
+                //7th paid_amount depit if full paid 
+                // $customer_depit = array(
+                //     'fy_id' => $find_active_fiscal_year->id,
+                //     'VNo' => 'Inv-' . $filter['invoice_id'],
+                //     'Vtype' => 'Sales',
+                //     'VDate' => $createdate,
+                //     'COAID' => $customer_head->HeadCode,
+                //     'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                //     'Debit' => $total_return+$tota_vat,
+                //     'Credit' => 0,
+                //     'IsPosted' => 1,
+                //     'CreateBy' => $receive_by,
+                //     'CreateDate' => $createdate,
+                //     //'IsAppove' => 0
+                //     'IsAppove' => 1
+                // );
+                $this->db->insert('acc_transaction', $store_credit);
                 // 2nd Allowed Discount credit
                 $allowed_discount_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,

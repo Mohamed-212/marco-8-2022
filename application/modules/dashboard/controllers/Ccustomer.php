@@ -94,6 +94,20 @@ class Ccustomer extends MX_Controller
             redirect(base_url('dashboard/Ccustomer'));
         }
     }
+    public function number_generator() {
+        $this->db->select('customer_id');
+        $query = $this->db->get('customer_information');
+        $result = $query->result_array();
+        return count($result);
+        // if ($invoice_no >= 1 && $invoice_no < 2) {
+        //     $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no) + 1;
+        // } elseif ($invoice_no >= 2) {
+        //     $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no);
+        // } else {
+        //     $invoice_no = 1000;
+        // }
+        // return $invoice_no;
+    }
 
     //customer Update Form
     public function customer_update_form($customer_id)
