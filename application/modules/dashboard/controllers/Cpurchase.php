@@ -261,7 +261,8 @@ class Cpurchase extends MX_Controller {
         $json_product = [];
         foreach ($product_info as $value) {
             //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
-            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
+            $size = strpos($value['variants'], ',') > -1 ? (explode(',', $value['variants']))[0] : $value['variants'];
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id'], 'variant_id' => $size);
         }
         echo json_encode($json_product);
     }
@@ -480,7 +481,9 @@ class Cpurchase extends MX_Controller {
         $this->db->where('b.store_id', $store_id);
         $total_sale = $this->db->get()->row();
 
-        $stock = $total_purchase->total_purchase - $total_sale->total_sale;
+        $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+
+        $stock = ($total_purchase->total_purchase + $product_information->open_quantity) - $total_sale->total_sale;
 
 
         if ($stock > 0) {

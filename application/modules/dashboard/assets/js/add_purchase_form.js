@@ -172,7 +172,8 @@ function product_pur_or_list(sl) {
             var sl = $(this).parent().parent().find(".sl").val();
             var id = ui.item.value;
             var store_id_tt = $("#store_id").val();
-            var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id + "&store_id=" + store_id_tt;
+            // var variant_id_value = $("#variant_id_" + sl).val();
+            var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id + "&store_id=" + store_id_tt + "&variant_id=" + ui.item.variant_id;
             var avl_qntt = "avl_qntt_" + sl;
             var price_item = "price_item_" + sl;
             var price_item2 = "price_item2_" + sl;
