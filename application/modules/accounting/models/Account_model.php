@@ -1021,10 +1021,11 @@ class Account_model extends CI_Model {
       ->result();
   }
   // Insert Debit voucher 
-  public function insert_debitvoucher(){
+  public function insert_debitvoucher($returnData = false){
     $voucher_no = addslashes(trim($this->input->post('txtVNo',TRUE)));
     $Vtype     = "DV";
     $cAID      = $this->input->post('cmbDebit',TRUE);
+    $accID     = $this->input->post('cmbCode', true);
     $dAID      = $this->input->post('txtCode',TRUE);
     $Debit     = $this->input->post('txtAmount',TRUE);
     $Credit    = $this->input->post('grand_total',TRUE);
@@ -1071,7 +1072,11 @@ class Account_model extends CI_Model {
       );
       $this->db->insert('acc_transaction',$cinsert);
     }
-    return true;
+    if ($returnData) {
+      $debit = $Debit;
+      $cmbDebit = $headinfo->HeadName;
+      return compact('voucher_no', 'cmbDebit', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
+    }
   }
 
   // Credit voucher no
@@ -1086,7 +1091,7 @@ class Account_model extends CI_Model {
       ->result_array(); 
   }
   // Insert Credit voucher 
-  public function insert_creditvoucher(){
+  public function insert_creditvoucher($returnData = false){
     $voucher_no=addslashes(trim($this->input->post('txtVNo',TRUE)));
     $Vtype     ="CV";
     $dAID      =$this->input->post('cmbDebit',TRUE);
@@ -1136,6 +1141,11 @@ class Account_model extends CI_Model {
       ); 
       $this->db->insert('acc_transaction',$cinsert);
       $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode',$dAID)->get()->row();
+    }
+    if ($returnData) {
+      $debit = $Credit;
+      $cmbDebit = $headinfo->HeadName;
+      return compact('voucher_no', 'cmbDebit', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
     }
     return true;
   }

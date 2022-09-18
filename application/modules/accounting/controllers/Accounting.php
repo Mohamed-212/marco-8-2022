@@ -421,6 +421,8 @@ class Accounting extends MX_Controller
   // Sabit
   public function debit_voucher()
   {
+    $print_after_save = $this->input->post('print_me', true);
+  
     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('cmbDebit', display('credit_account_head'), 'required|max_length[100]');
@@ -435,8 +437,31 @@ class Accounting extends MX_Controller
           $this->session->set_userdata('error_message', display('invalid_date_selection'));
           redirect('accounting/accounting/debit_voucher');
         }
-        if ($this->account_model->insert_debitvoucher()) {
+        if ($inserted = $this->account_model->insert_debitvoucher(true)) {
           $this->session->set_flashdata('message', display('save_successfully'));
+          if ($print_after_save) {
+            // echo "<pre>";print_r($inserted);exit;
+  
+            $accounts = [];
+            foreach ($inserted['dAID'] as $acId) {
+              $debitvcode = $this->db->select('*')
+                ->from('acc_coa')
+                ->where('HeadCode', $acId)
+                ->get()
+                ->row();
+              $accounts[] = $debitvcode->HeadName;
+            }
+            $inserted['accounts'] = $accounts;
+            // echo "<pre>";print_r($inserted);exit;
+            $data['title']      = display('debit_voucher');
+            $data['acc']        = $this->account_model->TransaccJ();
+            $data['voucher_no'] = $inserted['voucher_no'];
+            $data['page']       = "debit_voucher";
+            $data['print_only'] = true;
+            $data['data'] = $inserted;
+            $content = $this->parser->parse('accounting/debit_voucher', $data, true);
+            return $this->template_lib->full_admin_html_view($content);
+          }
           redirect('accounting/accounting/debit_voucher');
         } else {
           $this->session->set_flashdata('exception',  display('please_try_again'));
@@ -469,6 +494,8 @@ class Accounting extends MX_Controller
   //Credit voucher
   public function credit_voucher()
   {
+    $print_after_save = $this->input->post('print_me', true);
+
     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('cmbDebit', display('credit_account_head'), 'required|max_length[100]');
@@ -485,7 +512,30 @@ class Accounting extends MX_Controller
           redirect('accounting/accounting/credit_voucher');
         }
 
-        if ($this->account_model->insert_creditvoucher()) {
+        if ($inserted = $this->account_model->insert_creditvoucher(true)) {
+          if ($print_after_save) {
+            // echo "<pre>";
+  
+            $accounts = [];
+            foreach ($inserted['cAID'] as $acId) {
+              $debitvcode = $this->db->select('*')
+                ->from('acc_coa')
+                ->where('HeadCode', $acId)
+                ->get()
+                ->row();
+              $accounts[] = $debitvcode->HeadName;
+            }
+            $inserted['accounts'] = $accounts;
+            // print_r($inserted);
+            $data['title']      = display('credit_voucher');
+            $data['acc']        = $this->account_model->TransaccJ();
+            $data['voucher_no'] = $inserted['voucher_no'];
+            $data['page']       = "credit_voucher";
+            $data['print_only'] = true;
+            $data['data'] = $inserted;
+            $content = $this->parser->parse('accounting/credit_voucher', $data, true);
+            return $this->template_lib->full_admin_html_view($content);
+          }
           $this->session->set_flashdata('message', display('save_successfully'));
         } else {
           $this->session->set_flashdata('exception',  display('please_try_again'));
