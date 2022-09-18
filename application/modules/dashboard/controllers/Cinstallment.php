@@ -224,14 +224,20 @@ class Cinstallment extends MX_Controller
                 $installment_details = $this->db->get()->result_array();
                 $total_from_balance=0;
                 foreach ($installment_details as $index => $installment) {
-                    if ($installment['status'] != 2 && $status[$index] == 2) {
+                    
+                    if ($installment['status'] != 2 ) {
+                        $total_installment=$installment['amount'];
+                        if($status[$index] == 2)
+                        {
                             $total_from_balance+=$payment_amount[$index];
+                        }
+                            
                     }
                 }
                 $sql = "SELECT SUM(Debit) Debit, SUM(Credit) Credit, IsAppove, COAID FROM acc_transaction WHERE COAID LIKE '".$customer_head->HeadCode."%' AND IsAppove =1 GROUP BY IsAppove, COAID";
                 $result= $this->db->query($sql);
                 $customer_balance  = $result->result_array()[0];
-                if($total_from_balance>($customer_balance['Credit']-$customer_balance['Debit']))
+                if($total_from_balance>($customer_balance['Credit']-($customer_balance['Debit']-$total_installment)))
                 {
                     $this->session->set_userdata(array('error_message' => display('balance_not_enough')));
                     redirect('dashboard/cinstallment/manage_installment');
