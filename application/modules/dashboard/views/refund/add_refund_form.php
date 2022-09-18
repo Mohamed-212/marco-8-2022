@@ -115,52 +115,12 @@
                                     </tr>
                                 </thead>
                                 <tbody id="addinvoiceItem">
-                                    <tr>
-                                       <td>
-                                             <select class="form-control" id="product_id_1" onchange="get_variant(1)" required="required" name="product_id[]">
-                                             </select>
-                                                        
-                                        </td>
-
-                                        <td class="text-center">
-                                            
-                                                            <select class="form-control" id="variant_id_1" onchange="get_qnty(1)" required="required" name="variant_id[]">
-
-                                                            </select>
-                                                       
-                                        </td>
-
-                                        <td class="text-center">
-                                            
-                                                            <select class="form-control" id="status_1" required="required" name="status[]">
-                                                                <option value="0"><?php echo display('fit') ?></option>
-                                                                <option value="1"><?php echo display('damaged') ?></option>
-                                                                <option value="2"><?php echo display('no warranty') ?></option>
-                                                            </select>
-                                                       
-                                        </td>
-
-                                        <td>
-                                            <input type="text" id="available_quantity_1" name="available_quantity[]" class="form-control text-right available_quantity_1" id="avl_qntt_1" placeholder="0" readonly="" />
-                                        </td>
-
-                                        <td><input type="number" class="form-control" id="quantity_1" required="required" min="0" value="0" max="0" name="quantity[]"></td>
-
-                                        <td>
-                                            <button class="btn btn-danger text-right" type="button" value="<?php echo display('delete') ?>" onclick="deleteRow(this)"><?php echo display('delete') ?>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                  
                                 </tbody>
                                 <tfoot>
 
                                    
-                                    <tr>
-                                        <td class="text-center" colspan="1">
-                                            <input type="button" id="add-invoice-item" class="btn btn-info color4 color5" name="add-invoice-item" onClick="addInputField2('addinvoiceItem');" value="<?php echo display('add_new_item') ?>" />
-                                        </td>
-                                      
-                                    </tr>
+                                   
 
                                 </tfoot>
                             </table>

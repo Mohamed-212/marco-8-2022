@@ -94,7 +94,7 @@ class Crefund extends MX_Controller {
         $filter = array(
             'invoice_no' =>  $this->input->post('invoice_no', TRUE),
            );
-        $sql="select b.*,(I.quantity - I.return_quantity) as quantity,I.variant_id from invoice_details I join product_information b on b.product_id = I.product_id where quantity > 0 and I.invoice_id='".$filter['invoice_no']."' GROUP BY b.product_id;";
+        $sql="select v.variant_name,b.*,I.variant_id,(I.quantity - I.return_quantity) as quantity from invoice_details I join variant v on v.variant_id=I.variant_id join product_information b on b.product_id = I.product_id where quantity > 0 and I.invoice_id='".$filter['invoice_no']."';";
         $sql14 = $this->db->query($sql);
         $query = $sql14->result_array();
             echo json_encode($query);
@@ -122,9 +122,9 @@ class Crefund extends MX_Controller {
             'quantity' =>  $this->input->get('quantity', TRUE),
             'payment_id' =>  $this->input->get('payment_id', TRUE),
            );
-        
-           $return_invoice_id=generator(15);
-           //get customer headcode
+        // echo count($filter['product_id']);
+        // dd($filter);
+        // return 0;
            $sql="SELECT `customer_id` FROM `invoice` WHERE `invoice_id` ='".$filter['invoice_no']."';";
            $result= $this->db->query($sql);
            $customer_id  = $result->result_array();
@@ -132,139 +132,125 @@ class Crefund extends MX_Controller {
            
            $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
 
-           // get invoice details record 
-           $sql="select I.* from invoice_details I where I.variant_id ='".$filter['variant_id']."' and I.product_id ='".$filter['product_id']."' and I.invoice_id ='".$filter['invoice_no']."';";
-           $result= $this->db->query($sql);
-           $invoice_details  = $result->result_array();
+           $return_invoice_id=generator(15);
+           //get customer headcode
+           for($j=0;$j<count($filter['product_id']);$j++){
+            if($filter['quantity'][$j]> 0){
+                // echo $filter['quantity'][$j];
+                // dd($filter['quantity']);
+                    // get invoice details record 
+                $sql="select I.* from invoice_details I where I.variant_id ='".$filter['variant_id'][$j]."' and I.product_id ='".$filter['product_id'][$j]."' and I.invoice_id ='".$filter['invoice_no']."';";
+                $result= $this->db->query($sql);
+                $invoice_details  = $result->result_array();
+               
+                $this->db->select('*');
+                $this->db->from('assembly_products');
+                $this->db->where('parent_product_id', $filter['product_id'][$j]);
+                $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
+                $query = $this->db->get();
+                $product_list = $query->result();
 
-        //    $invoice_details =  $this->db->select('*')->from('invoice_details')->where('invoice_id', $filter['invoice_no'])->where('product_id', $filter['product_id'])->where('variant_id', $filter['variant_id'])->get()->result_array();
-            $this->db->select('*');
-            $this->db->from('assembly_products');
-            $this->db->where('parent_product_id', $filter['product_id']);
-            $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
-            $query = $this->db->get();
-            $product_list = $query->result();
-
-           if($filter['status'] == 0) //fit
-           {
-                if (!empty($product_list)) {
-                    foreach ($product_list as $product) 
-                    {
-                        $sql="update invoice_stock_tbl set quantity=quantity-".$filter['quantity']." where store_id='".$invoice_details[0]['store_id']."' and variant_id='".$invoice_details[0]['variant_id']."' and product_id='".$product['product_id']."';";
+                if($filter['status'][$j] == 0) //fit
+                {
+                        if (!empty($product_list)) {
+                            foreach ($product_list as $product) 
+                            {
+                                $sql="update invoice_stock_tbl set quantity=quantity-".$filter['quantity'][$j]." where store_id='".$invoice_details[0]['store_id']."' and variant_id='".$invoice_details[0]['variant_id']."' and product_id='".$product['product_id']."';";
+                                $result= $this->db->query($sql);
+                            }
+                        }
+                        else
+                        {
+                        // update stock
+                        $sql="update invoice_stock_tbl set quantity=quantity-".$filter['quantity'][$j]." where store_id='".$invoice_details[0]['store_id']."' and variant_id='".$invoice_details[0]['variant_id']."' and product_id='".$invoice_details[0]['product_id']."';";
                         $result= $this->db->query($sql);
-                    }
+                        }
+                        // echo json_encode($sql);
                 }
+
                 else
                 {
-                // update stock
-                $sql="update invoice_stock_tbl set quantity=quantity-".$filter['quantity']." where store_id='".$invoice_details[0]['store_id']."' and variant_id='".$invoice_details[0]['variant_id']."' and product_id='".$invoice_details[0]['product_id']."';";
+                    if (!empty($product_list)) {
+                        foreach ($product_list as $product) 
+                        {
+                            $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_no']."','".$product['product_id']."','".$filter['variant_id'][$j]."',".$filter['quantity'][$j].",".$filter['status'][$j].")";
+                            $result = $this->db->query($sql);
+                        }
+                    }
+                    else
+                    {
+                        $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_no']."','".$filter['product_id'][$j]."','".$filter['variant_id'][$j]."',".$filter['quantity'][$j].",".$filter['status'][$j].")";
+                        $result = $this->db->query($sql);
+                    }
+                    
+        
+                } 
+                    
+                //update invoice_details
+                $sql="update invoice_details set return_quantity= return_quantity+".$filter['quantity'][$j]." where invoice_details_id='".$invoice_details[0]['invoice_details_id']."';";
                 $result= $this->db->query($sql);
-                }
-                // echo json_encode($sql);
-           }
 
-           else
-           {
-            if (!empty($product_list)) {
-                foreach ($product_list as $product) 
-                {
-                    $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_no']."','".$product['product_id']."','".$filter['variant_id']."',".$filter['quantity'].",".$filter['status'].")";
-                    $result = $this->db->query($sql);
-                }
-            }
-            else
-            {
-                $sql="INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('".$filter['invoice_no']."','".$filter['product_id']."','".$filter['variant_id']."',".$filter['quantity'].",".$filter['status'].")";
-                $result = $this->db->query($sql);
-            }
-            
- 
-           } 
-            
-           //update invoice_details
-           $sql="update invoice_details set return_quantity= return_quantity+".$filter['quantity']." where invoice_details_id='".$invoice_details[0]['invoice_details_id']."';";
-            $result= $this->db->query($sql);
+                //invoice
+                $sql="select I.* from invoice I where I.invoice_id ='".$filter['invoice_no']."';";
+                $result= $this->db->query($sql);
+                $invoice  = $result->result_array();
 
-            //invoice
-            $sql="select I.* from invoice I where I.invoice_id ='".$filter['invoice_no']."';";
-            $result= $this->db->query($sql);
-            $invoice  = $result->result_array();
-
-            //acc_transaction
+                //acc_transaction
                 $receive_by = $this->session->userdata('user_id');  
-            //calc total price of returned qunty of product
+                //calc total price of returned qunty of product
                 $product_price=$invoice_details[0]['total_price']/$invoice_details[0]['quantity'];
-                $total_discount=$invoice_details[0]['discount']*$filter['quantity'];
-                $total_discount+=$invoice_details[0]['invoice_discount']*$filter['quantity'];
-                $total_return=((($invoice_details[0]['total_price']/$invoice_details[0]['quantity'])*$filter['quantity']))-$total_discount;
+                $total_discount=$invoice_details[0]['discount']*$filter['quantity'][$j];
+                $total_discount+=$invoice_details[0]['invoice_discount']*$filter['quantity'][$j];
+                $total_return=((($invoice_details[0]['total_price']/$invoice_details[0]['quantity'])*$filter['quantity'][$j]))-$total_discount;
                 $total_return_without_discount=$total_return+$total_discount;
                 
-            //total vat
-                $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'])->get()->row();
+                //total vat
+                $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'][$j])->get()->row();
                 if(!empty($i_vat))
-                    {$tota_vat = ($product_price*($i_vat->tax_percentage/100))*$filter['quantity'];}
+                    {$tota_vat = ($product_price*($i_vat->tax_percentage/100))*$filter['quantity'][$j];}
                 else
                     {$tota_vat = 0;}
                 $createdate=date('Y-m-d H:i:s');
-            // total supplier price
-            $cogs_price= $invoice_details[0]['supplier_rate']*$filter['quantity'];  
-            $bank_return= $total_return+$tota_vat;
-            //return installment
-            if($invoice[0]['is_installment'])
-            {
-                $total_installment_return =$total_return+$tota_vat;
-                $temp=0;
-                $return=0;
-                $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_no']."';";
-                $result= $this->db->query($sql);
-                $invoice_installment  = $result->result_array();
-                $invoice_installment  = array_reverse($invoice_installment);
-
-                for($i=0;$i<count($invoice_installment);$i++)
+                // total supplier price
+                $cogs_price= $invoice_details[0]['supplier_rate']*$filter['quantity'][$j];  
+                $bank_return= $total_return+$tota_vat;
+                //return installment
+                if($invoice[0]['is_installment'])
                 {
-                    $temp+=$invoice_installment[$i]['amount'];
-
-                    if($invoice_installment[$i]['status'])
-                    {
-                        $return+=$invoice_installment[$i]['payment_amount'];
-                    }
-
-                    if($temp <= $total_installment_return)
-                    {
-                        $sql="delete from invoice_installment where id='".$invoice_installment[$i]['id']."';";
+                        $total_installment_return =$total_return+$tota_vat;
+                        $temp=0;
+                        $return=0;
+                        $sql="select * from invoice_installment where invoice_id ='".$filter['invoice_no']."';";
                         $result= $this->db->query($sql);
-                    }
+                        $invoice_installment  = $result->result_array();
+                        $invoice_installment  = array_reverse($invoice_installment);
 
-                    if($temp > $total_installment_return)
-                    {
-                        $total_installment_return=$temp-$total_installment_return;
-                        $sql="update invoice_installment set amount='".$total_installment_return."' where id='".$invoice_installment[$i]['id']."';";
-                        $result= $this->db->query($sql);
-                        break;
-                    }
+                        for($i=0;$i<count($invoice_installment);$i++)
+                        {
+                            $temp+=$invoice_installment[$i]['amount'];
+
+                            if($invoice_installment[$i]['status'])
+                            {
+                                $return+=$invoice_installment[$i]['payment_amount'];
+                            }
+
+                            if($temp <= $total_installment_return)
+                            {
+                                $sql="delete from invoice_installment where id='".$invoice_installment[$i]['id']."';";
+                                $result= $this->db->query($sql);
+                            }
+
+                            if($temp > $total_installment_return)
+                            {
+                                $total_installment_return=$temp-$total_installment_return;
+                                $sql="update invoice_installment set amount='".$total_installment_return."' where id='".$invoice_installment[$i]['id']."';";
+                                $result= $this->db->query($sql);
+                                break;
+                            }
+                        }
+                        $bank_return= $total_installment_return;
+                        
                 }
-                $bank_return= $total_installment_return;
-                
-            }
-         
-              //1st customer credit total_with_vat
-                // $customer_credit = array(
-                //     'fy_id' => $find_active_fiscal_year->id,
-                //     'VNo' => 'Inv-' . $filter['invoice_no'],
-                //     'Vtype' => 'Sales',
-                //     'VDate' => $createdate,
-                //     'COAID' => $customer_head->HeadCode,
-                //     'Narration' => 'Sales "total with vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                //     'Debit' => 0,
-                //     'Credit' => $total_return+$tota_vat,
-                //     'IsPosted' => 1,
-                //     'CreateBy' => $receive_by,
-                //     'CreateDate' => $createdate,
-                //     //'IsAppove' => 0
-                //     'IsAppove' => 1
-                // );
-                // $this->db->insert('acc_transaction', $customer_credit);
-
                 //7th paid_amount depit if full paid 
                 $customer_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
@@ -393,15 +379,20 @@ class Crefund extends MX_Controller {
                 $invoice_return=array(
                     'return_invoice_id' =>$return_invoice_id,
                     'invoice_id'        =>$filter['invoice_no'],
-                    'return_quantity'   =>$filter['quantity'],
-                    'product_id'        =>$filter['product_id'],
+                    'return_quantity'   =>$filter['quantity'][$j],
+                    'product_id'        =>$filter['product_id'][$j],
                     'customer_id'       =>$customer_id,
                     'employee_id'       =>$receive_by,
                     'total_discount'    =>$total_discount,
                     'total_return'      =>$total_return+$tota_vat+$total_discount,
                 );
-                $this->db->insert('invoice_return', $invoice_return);
-                $returninvoice_id=$this->db->insert_id();
+                $this->db->insert('invoice_return', $invoice_return); 
+            }
+            
+            // $returninvoice_id=$this->db->insert_id();
+        }
+       
+         
                 return redirect(base_url('dashboard/Crefund/return_invoice/' . $return_invoice_id  ));
 
         // redirect('dashboard/Crefund/new_refund' . $filter['invoice_id']);
@@ -415,19 +406,19 @@ class Crefund extends MX_Controller {
         $user  = $result->result_array();
         foreach($invoice_return as $inv_return)
         {
-            $sql="SELECT * FROM `customer_information` where `customer_id`='".$invoice_return[0]['customer_id']."' ;";
+            $sql="SELECT * FROM `customer_information` where `customer_id`='".$inv_return['customer_id']."' ;";
             $result= $this->db->query($sql);
-            $customer[]  = $result->result_array();
+            $customer[]  = $result->result_array()[0];
             
-            $sql="SELECT * FROM `product_information` where `product_id`='".$invoice_return[0]['product_id']."' ;";
+            $sql="SELECT * FROM `product_information` where `product_id`='".$inv_return['product_id']."' ;";
             $result= $this->db->query($sql);
-            $product[]  = $result->result_array();
+            $product[]  = $result->result_array()[0];
 
            
 
-            $sql="SELECT * FROM `pricing_types_product` where `product_id`='".$invoice_return[0]['product_id']."' and `pri_type_id` ='2' ;";
+            $sql="SELECT * FROM `pricing_types_product` where `product_id`='".$inv_return['product_id']."' and `pri_type_id` ='2' ;";
             $result= $this->db->query($sql);
-            $customer_price[] = $result->result_array();
+            $customer_price[] = $result->result_array()[0];
         }
 
         $data=

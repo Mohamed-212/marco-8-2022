@@ -12,17 +12,26 @@ var productArr={};
             csrf_test_name: csrf_test_name
         },
         success: function (data) {
-          $('#product_id_1').empty()
-          select = document.getElementById('product_id_1');
-          var opt =  document.createElement('option');
-          opt.innerHTML = '';
-          opt.value ='';
-          select.appendChild(opt);
+          $('#normalinvoice').find('tbody').empty()
+          // select = document.getElementById('product_id_1');
+          // var opt =  document.createElement('option');
+          // opt.innerHTML = '';
+          // opt.value ='';
+          // select.appendChild(opt);
           for (i = 0; i < data.length; i++) {
-            var opt = document.createElement('option');
-            opt.innerHTML = data[i]['product_name'];
-            opt.value = data[i]['product_id'];
-            select.appendChild(opt);
+            // var opt = document.createElement('option');
+            // opt.innerHTML = data[i]['product_name'];
+            // opt.value = data[i]['product_id'];
+            // select.appendChild(opt);
+            $('#normalinvoice').find('tbody').append("<tr>")
+            $('#normalinvoice').find('tbody').append("<td><input class='form-control' id='product_name_"+i+"' value='"+data[i]['product_name']+"' name='product_name[]' readonly=''></td>");
+            $('#normalinvoice').find('tbody').append("<td hidden><input class='form-control' id='product_id_"+i+"' value='"+data[i]['product_id']+"' name='product_id[]' readonly='' ></td>");
+            $('#normalinvoice').find('tbody').append("<td class='text-center'><input class='form-control' id='variant_name_"+i+"' required='required' name='variant_name[]' value='"+data[i]['variant_name']+"' readonly='' ></td>");
+            $('#normalinvoice').find('tbody').append("<td class='text-center' hidden><input class='form-control' id='variant_id_"+i+"' required='required' name='variant_id[]' value='"+data[i]['variant_id']+"' readonly='' ></td>");
+            $('#normalinvoice').find('tbody').append("<td><select class='form-control' id='status_"+i+"' required='required' name='status[]'><option value='0'>Fit</option><option value='1'>Damaged</option><option value='2'>No warranty</option></select></td>");
+            $('#normalinvoice').find('tbody').append("<td><input type='text' id='available_quantity_"+i+"' name='available_quantity[]' class='form-control text-right available_quantity_"+i+"' id='avl_qntt_"+i+"' value='"+data[i]['quantity']+"' readonly='' /></td>");
+            $('#normalinvoice').find('tbody').append("<td><input type='number' class='form-control' id='quantity_"+i+" required='required' min='0' value='0' max='"+data[i]['quantity']+"' name='quantity[]'></td></tr>");
+
         } 
         },
       });

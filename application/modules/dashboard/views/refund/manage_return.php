@@ -184,7 +184,7 @@
                                                 <td><?php echo html_escape($invoice['sl']) ?></td>
                                                 <td>
 
-                                                        <?php echo html_escape($invoice['invoice_id']) ?>
+                                                        <?php echo html_escape($invoice['return_invoice_id']) ?>
                                                         <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                                     </a>
                                                 </td>
@@ -200,7 +200,7 @@
                                                
                                                 <td>
                                                     <center>
-                                                        <a href="<?= base_url('dashboard/Crefund/return_invoice/'.$invoice['id']);?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore" aria-hidden="true"></i></a>
+                                                        <a href="<?= base_url('dashboard/Crefund/return_invoice/'.$invoice['return_invoice_id']);?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice"><i class="fa fa-window-restore" aria-hidden="true"></i></a>
                                                     </center>
                                                     </td>
                                            

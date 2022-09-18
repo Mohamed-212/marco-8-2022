@@ -110,6 +110,7 @@ class Invoices extends CI_Model {
     public function count_invoice_return_list($filter = []) {
         $this->db->select('a.invoice_id');
         $this->db->from('invoice_return a');
+        $this->db->group_by('a.return_invoice_id');
         if (!empty($filter['invoice_no'])) {
             $this->db->where('a.invoice_id', $filter['invoice_no']);
         }
@@ -134,6 +135,7 @@ class Invoices extends CI_Model {
         $this->db->select('a.*,b.*');
         $this->db->from('invoice_return a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
+        $this->db->group_by('a.return_invoice_id');
         if (!empty($filter['invoice_no'] != '')) {
             $this->db->where('a.invoice_id', $filter['invoice_no']);
         }
