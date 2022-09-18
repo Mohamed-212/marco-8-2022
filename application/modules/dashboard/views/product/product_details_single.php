@@ -209,7 +209,7 @@
                                             </a>
 										</td>
 										<td>
-											<a href="<?php echo base_url().'dashboard/Ccustomer/customer_ledger/'.$sales['customer_id']; ?>"><?php echo html_escape($sales['customer_name']); ?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
+											<a href="<?php echo base_url().'dashboard/Ccustomer/customerledger/'.$sales['customer_id']; ?>"><?php echo html_escape($sales['customer_name']); ?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
 										</td>
 										<td><?php echo html_escape($sales['quantity']); ?></td>
 										<td> <?php echo (($position==0)? $currency." ".$sales['rate'] :$sales['rate']." ".$currency) ?></td>

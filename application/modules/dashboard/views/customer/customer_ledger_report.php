@@ -171,13 +171,14 @@
 
                                     <tr>
                                         <th>NO</th>
-                                        <th>The Document</th>
-                                        <th>Document Number</th>
-                                        <th>Date</th>
-                                        <th>Debit</th>
-                                        <th>Credit</th>
-                                        <th>Balance</th>
-                                        <th>Mobile Number</th>
+                                        <!-- <th>The Document</th> -->
+                                        <th><?php echo display('date') ?></th>
+                                        <th><?php echo display('invoice_no') ?></th>
+                                        <th><?php echo display('receipt_no') ?></th>
+                                        <th><?php echo display('debit') ?></th>
+                                        <th><?php echo display('credit') ?></th>
+                                        <th><?php echo display('balance') ?></th>
+                                        <!-- <th>Mobile Number</th> -->
                                         <th>Notes</th>
                                     </tr>
                                 </thead>
@@ -219,22 +220,26 @@
                                     <tr>
                                         <td><?php echo ((!empty($customer_openning_info)) ? $key + 2 : $key + 1); ?>
                                         </td>
-                                        <td>
+                                        <td><?php echo html_escape($ledger['final_date']); ?></td>
+                                        <!-- <td>
                                             <?php
                                                         $transaction_info = $this->db->select('Vtype,Narration')->from('acc_transaction')->where('VNo', $ledger['invoice_no'])->get()->row();
                                                         echo ($transaction_info) ? $transaction_info->Vtype : '';
                                                         ?>
-                                        </td>
+                                        </td> -->
                                         <td>
                                             <?php if ($this->permission->check_label('new_sale')->access()) { ?>
                                             <a
                                                 href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $ledger['invoice_no']; ?>">
-                                                <?php echo html_escape($ledger['invoice_no']); ?> <i
+                                                <?php echo html_escape($ledger['invoice']); ?> <i
                                                     class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                             </a>
                                             <?php } ?>
                                         </td>
-                                        <td><?php echo html_escape($ledger['final_date']); ?></td>
+                                        <td>
+                                            <?php echo html_escape($ledger['receipt_no']); ?>
+                                        </td>
+                                        
                                         <td class="text-right">
                                             <?php $total_cus_debit += ((empty($ledger['debit'])) ? 0 : $ledger['debit']);
                                                         echo (($position == 0) ? $currency . " " . $ledger['debit'] : $ledger['debit'] . " " . $currency) ?>
@@ -247,12 +252,12 @@
                                             <?php $total_cus_balance += ((empty($ledger['balance'])) ? 0 : $ledger['balance']);
                                                         echo (($position == 0) ? $currency . " " . $ledger['balance'] : $ledger['balance'] . " " . $currency) ?>
                                         </td>
-                                        <td>
+                                        <!-- <td>
                                             <?php
                                                         $customer_info = $this->db->select('customer_mobile')->from('customer_information')->where('customer_id', $ledger['customer_id'])->get()->row();
                                                         echo html_escape($customer_info->customer_mobile);
                                                         ?>
-                                        </td>
+                                        </td> -->
                                         <td><?php echo ($transaction_info) ? $transaction_info->Narration : ''; ?></td>
                                     </tr>
                                     <?php  } ?>

@@ -162,7 +162,7 @@
 											</a>
 										</td>
 										<td>
-											<a href="<?php echo base_url().'dashboard/Ccustomer/customer_ledger/{customer_id}'; ?>">{customer_name} <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
+											<a href="<?php echo base_url().'dashboard/Ccustomer/customerledger/{customer_id}'; ?>">{customer_name} <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
 										</td>
 										<td>{variant_name}</td>
 										<td>{quantity}</td>

@@ -232,9 +232,15 @@ class Lcustomer {
 		$summary 	    =$CI->Customers->customer_transection_summary($customer_id,$from_date,$to_date);
 		$customers_list =$CI->Customers->customer_list(); 
 		$balance = 0;
+		
 		if(!empty($ledger)){
 			foreach($ledger as $index=>$value){
 				$ledger[$index]['final_date'] = $CI->occational->dateConvert($ledger[$index]['date']);
+				// get invoice no
+				if (!empty($ledger[$index]['invoice_no'])) {
+					$invoice = $CI->db->select('invoice')->from('invoice')->where('invoice_id', $ledger[$index]['invoice_no'])->get()->row();
+					$ledger[$index]['invoice'] = $invoice->invoice;
+				}
 				if(empty($ledger[$index]['receipt_no'])or  $ledger[$index]['receipt_no']=="NA")
 				{
 					$ledger[$index]['credit']=$ledger[$index]['amount'];
@@ -280,7 +286,7 @@ class Lcustomer {
 	}
 	
 	//Customer ledger Data
-	public function customerledger_data($customer_id)
+	public function customerledger_data($customer_id, $from_date = null, $to_date = null)
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Customers');
@@ -288,16 +294,29 @@ class Lcustomer {
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
 		$CI->load->model('dashboard/Customer_contact_info');
+		$not_report = false;
+		if ($from_date === 'no') {
+			$from_date = null;
+			$not_report = true;
+		}
 		$customer_detail = $CI->Customers->customer_personal_data($customer_id);
-		$ledger 		 = $CI->Customers->customerledger_tradational($customer_id);
-		$summary 		 = $CI->Customers->customer_transection_summary($customer_id);
+		$ledger 	    =$CI->Customers->customerledger_tradational($customer_id,$from_date,$to_date);
+		$summary 	    =$CI->Customers->customer_transection_summary($customer_id,$from_date,$to_date);
 		$contact_info = $CI->Customer_contact_info->get_contact_info_data($customer_id);
+		$customers_list =$CI->Customers->customer_list(); 
 	
 		$balance = 0;
 		if(!empty($ledger)){
 			foreach($ledger as $index=>$value){
 				$ledger[$index]['final_date'] = $CI->occational->dateConvert($ledger[$index]['date']);
 				
+				// get invoice no
+				if (!empty($ledger[$index]['invoice_no'])) {
+					$invoice = $CI->db->select('invoice')->from('invoice')->where('invoice_id', $ledger[$index]['invoice_no'])->get()->row();
+					$ledger[$index]['invoice'] = $invoice->invoice;
+				}
+				
+
 				if(empty($ledger[$index]['receipt_no'])or  $ledger[$index]['receipt_no']=="NA")
 				{
 					$ledger[$index]['credit']=$ledger[$index]['amount'];
@@ -345,6 +364,8 @@ class Lcustomer {
 			'currency' => $currency_details[0]['currency_icon'],
 			'position' => $currency_details[0]['currency_position'],
 			'contact_info' => $contact_info,
+			'customers_list' => $customers_list,
+			'not_report' => $not_report,
 			);
 
 		$singlecustomerdetails = $CI->parser->parse('dashboard/customer/customer_ledger',$data,true);

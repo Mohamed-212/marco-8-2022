@@ -15,14 +15,24 @@
         .hide-me,
         .pace,
         .pace-activity {
-            display: none;
+            display: none !important;
+        }
+        .panel {
+            border: none !important;
         }
 
         table tr:nth-child(even) td {
             /* background-color: #f9f9f9 !important;
             -webkit-print-color-adjust: exact; */
         }
+
+        .print-only {
+            display: block !important;
+        }
     }
+    .print-only {
+            display: none;
+        }
 </style>
 <style type="text/css">
     * {
@@ -362,7 +372,7 @@
                                 <table class="table table-bordered table-hover" id="debtAccVoucher">
                                     <thead>
                                         <tr class="has-bg">
-                                            <th class="text-center"> <?php echo display('account_name') ?><i class="text-danger">*</i></th>
+                                            <th class="text-center"> <?php echo display('account_name') ?><i class="text-danger hide-me">*</i></th>
                                             <th class="text-center"> <?php echo display('code') ?></th>
                                             <th class="text-center"> <?php echo display('debit') ?></th>
                                             <th class="text-center"> <?php echo display('credit') ?></th>
@@ -371,10 +381,10 @@
                                     </thead>
                                     <tbody id="debitvoucher">
                                         <tr>
-                                            <td class="" width="300px">
+                                            <td class="text-center" width="300px">
                                                 <?php if ($print_only) : ?>
                                                     <?php foreach ($data['accounts'] as $acc) : ?>
-                                                        <input class="form-control" value="<?= $acc ?>" readonly />
+                                                        <input class="form-control" value="<?= $acc ?>" style="text-align: center;" readonly />
                                                     <?php endforeach ?>
                                                 <?php else : ?>
                                                     <select name="cmbCode[]" id="cmbCode_1" class="form-control" onchange="load_dbtvouchercode(this.value,1)" required="">
@@ -470,11 +480,42 @@
                             </tfoot>
                         </table>
                         <?php if ($print_only) : ?>
-                        <div class="footerr row position-relative">
-                            <div class="col-xs-12 divFoote" style="background-image: url();">
-                                <img class="show" src="<?= base_url() ?>/assets/img/footer.png" style="width: 100%;height: auto;" />
+                        <table style="width: 100%;margin-top: 70px;margin-bottom: 50px;table-layout: fixed;">
+                            <thead>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center" style="margin-bottom: 50px;">
+                                    <td>
+                                        <div class=""><?php echo display('recipient') ?></div>
+                                        <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
+                                    </td>
+                                    <td>
+                                        <div class=""><?php echo display('cashier') ?></div>
+                                        <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
+                                    </td>
+                                    <td>
+                                        <div class=""><?php echo display('depends') ?></div>
+                                        <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        <div class="empty-footer"></div>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        
+                            <div class="footerr row position-relative">
+                                <div class="col-xs-12 divFoote" style="background-image: url();">
+                                    <img class="show" src="<?= base_url() ?>/assets/img/footer.png" style="width: 100%;height: auto;" />
+                                </div>
                             </div>
-                        </div>
                         <?php endif ?>
                         <div class="form-group row" style="margin-top: 150px;">
                             <div class="col-sm-12 text-right footer-btns">
