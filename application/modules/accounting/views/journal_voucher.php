@@ -22,7 +22,14 @@
             /* background-color: #f9f9f9 !important;
             -webkit-print-color-adjust: exact; */
         }
+
+        .print-only {
+            display: block !important;
+        }
     }
+    .print-only {
+            display: none;
+        }
 </style>
 <style type="text/css">
     * {
@@ -470,11 +477,42 @@
                             </tfoot>
                         </table>
                         <?php if ($print_only) : ?>
-                        <div class="footerr row position-relative">
-                            <div class="col-xs-12 divFoote" style="background-image: url();">
-                                <img class="show" src="<?= base_url() ?>/assets/img/footer.png" style="width: 100%;height: auto;" />
+                        <table style="width: 100%;margin-top: 70px;margin-bottom: 50px;table-layout: fixed;">
+                            <thead>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center" style="margin-bottom: 50px;">
+                                    <td>
+                                        <div class=""><?php echo display('recipient') ?></div>
+                                        <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
+                                    </td>
+                                    <td>
+                                        <div class=""><?php echo display('cashier') ?></div>
+                                        <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
+                                    </td>
+                                    <td>
+                                        <div class=""><?php echo display('depends') ?></div>
+                                        <hr style="width: 80%;margin: 85px 0;margin-bottom: 0;" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>
+                                        <div class="empty-footer"></div>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        
+                            <div class="footerr row position-relative">
+                                <div class="col-xs-12 divFoote" style="background-image: url();">
+                                    <img class="show" src="<?= base_url() ?>/assets/img/footer.png" style="width: 100%;height: auto;" />
+                                </div>
                             </div>
-                        </div>
                         <?php endif ?>
                         <div class="form-group row" style="margin-top: 150px;">
                             <div class="col-sm-12 text-right footer-btns">
