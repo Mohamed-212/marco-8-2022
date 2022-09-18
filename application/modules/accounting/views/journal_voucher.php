@@ -15,7 +15,10 @@
         .hide-me,
         .pace,
         .pace-activity {
-            display: none;
+            display: none !important;
+        }
+        .panel {
+            border: none !important;
         }
 
         table tr:nth-child(even) td {
@@ -369,7 +372,7 @@
                                 <table class="table table-bordered table-hover" id="debtAccVoucher">
                                     <thead>
                                         <tr class="has-bg">
-                                            <th class="text-center"> <?php echo display('account_name') ?><i class="text-danger">*</i></th>
+                                            <th class="text-center"> <?php echo display('account_name') ?><i class="text-danger hide-me">*</i></th>
                                             <th class="text-center"> <?php echo display('code') ?></th>
                                             <th class="text-center"> <?php echo display('debit') ?></th>
                                             <th class="text-center"> <?php echo display('credit') ?></th>
@@ -378,10 +381,10 @@
                                     </thead>
                                     <tbody id="debitvoucher">
                                         <tr>
-                                            <td class="" width="300px">
+                                            <td class="text-center" width="300px">
                                                 <?php if ($print_only) : ?>
                                                     <?php foreach ($data['accounts'] as $acc) : ?>
-                                                        <input class="form-control" value="<?= $acc ?>" readonly />
+                                                        <input class="form-control" value="<?= $acc ?>" style="text-align: center;" readonly />
                                                     <?php endforeach ?>
                                                 <?php else : ?>
                                                     <select name="cmbCode[]" id="cmbCode_1" class="form-control" onchange="load_dbtvouchercode(this.value,1)" required="">

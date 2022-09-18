@@ -521,6 +521,8 @@ class Accounting extends MX_Controller
 
   public function bdtask_create_contra_voucher()
   {
+    $print_after_save = $this->input->post('print_me', true);
+  
     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('cmbDebit', display('cmbDebit'), 'max_length[100]');
@@ -531,8 +533,31 @@ class Accounting extends MX_Controller
           $this->session->set_userdata('error_message', display('invalid_date_selection'));
           redirect('accounting/accounting/contra_voucher');
         }
-        if ($this->account_model->insert_contravoucher()) {
+        if ($inserted = $this->account_model->insert_contravoucher(true)) {
           $this->session->set_flashdata('message', display('save_successfully'));
+          if ($print_after_save) {
+            // echo "<pre>";
+  
+            $accounts = [];
+            foreach ($inserted['cAID'] as $acId) {
+              $debitvcode = $this->db->select('*')
+                ->from('acc_coa')
+                ->where('HeadCode', $acId)
+                ->get()
+                ->row();
+              $accounts[] = $debitvcode->HeadName;
+            }
+            $inserted['accounts'] = $accounts;
+            // print_r($inserted);
+            $data['title']      = display('contra_voucher');
+            $data['acc']        = $this->account_model->TransaccJ();
+            $data['voucher_no'] = $inserted['voucher_no'];
+            $data['page']       = "contra_voucher";
+            $data['print_only'] = true;
+            $data['data'] = $inserted;
+            $content = $this->parser->parse('accounting/contra_voucher', $data, true);
+            return $this->template_lib->full_admin_html_view($content);
+          }
           redirect('accounting/contra_voucher');
         } else {
           $this->session->set_flashdata('exception', display('please_try_again'));

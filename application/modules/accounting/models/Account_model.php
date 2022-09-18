@@ -1223,7 +1223,7 @@ class Account_model extends CI_Model {
       ->result_array();
   }
   // Insert Countra voucher 
-  public function insert_contravoucher(){
+  public function insert_contravoucher($returnData = false){
     $voucher_no=addslashes(trim($this->input->post('txtVNo',TRUE)));
     $Vtype     ="Contra";
     $dAID      =$this->input->post('cmbDebit',TRUE);
@@ -1256,6 +1256,9 @@ class Account_model extends CI_Model {
         'IsAppove'  =>0,
       );
       $this->db->insert('acc_transaction',$contrainsert);
+    }
+    if ($returnData) {
+      return compact('voucher_no', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
     }
     return true;
   }
