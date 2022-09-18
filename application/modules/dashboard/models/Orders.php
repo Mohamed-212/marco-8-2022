@@ -660,6 +660,7 @@ class Orders extends CI_Model
                 $available_quantity = $this->input->post('available_quantity', TRUE);
                 $product_id = $this->input->post('product_id', TRUE);
                 $pricing_type = $this->input->post('pri_type', TRUE);
+                $payment_id = $this->input->post('payment_id', TRUE);
 
                 //Stock availability check
                 $result = array();
@@ -674,6 +675,12 @@ class Orders extends CI_Model
                 if ($product_id == null) {
                     $this->session->set_userdata(array('error_message' => display('please_select_product')));
                     redirect('dashboard/Corder');
+                }
+
+                //payment account existing check
+                if ($payment_id == null && $order_id) {
+                    $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+                    redirect('dashboard/Corder/create_invoice_form/' . $order_id);
                 }
 
                 //Customer existing check
@@ -1465,6 +1472,7 @@ class Orders extends CI_Model
             $available_quantity = $this->input->post('available_quantity', TRUE);
             $product_id = $this->input->post('product_id', TRUE);
             $pricing_type = $this->input->post('pri_type', TRUE);
+            $payment_id = $this->input->post('payment_id', TRUE);
 
             //Stock availability check
             $result = array();
@@ -1479,6 +1487,12 @@ class Orders extends CI_Model
             if ($product_id == null) {
                 $this->session->set_userdata(array('error_message' => display('please_select_product')));
                 redirect('dashboard/Corder');
+            }
+
+            //payment account existing check
+            if ($payment_id == null && $order_id) {
+                $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+                redirect('dashboard/Corder/create_invoice_form/' . $order_id);
             }
 
             //Customer existing check
@@ -2307,6 +2321,38 @@ class Orders extends CI_Model
 
     public function update_order($order_id)
     {
+        //Invoice entry info
+        $quantity = $this->input->post('product_quantity', TRUE);
+        $available_quantity = $this->input->post('available_quantity', TRUE);
+        $product_id = $this->input->post('product_id', TRUE);
+        $payment_id = $this->input->post('payment_id', TRUE);
+
+        //Stock availability check
+        foreach ($available_quantity as $k => $v) {
+            if ($v < $quantity[$k]) {
+                $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
+                redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+            }
+        }
+
+        //Product existing check
+        if ($product_id == null) {
+            $this->session->set_userdata(array('error_message' => display('please_select_product')));
+            redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+        }
+
+        //payment account existing check
+        if ($payment_id == null) {
+            $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+            redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+        }
+
+        //Customer existing check
+        if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
+            $this->session->set_userdata(array('error_message' => display('please_select_customer')));
+            redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+        }
+
         // delete then insert new ==> update
         $this->delete_order($order_id);
         // insert as new

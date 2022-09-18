@@ -14,7 +14,6 @@ class Account_model extends CI_Model
 
         $result = $this->db->get();
         return $result->num_rows();
-
     }
 
     function get_userlist()
@@ -135,7 +134,6 @@ class Account_model extends CI_Model
             $total_pre += ($opening_value ? $opening_value->amount : 0);
         }
         return $total_pre;
-
     }
 
     public function openig_value($headcodes, $fy_id)
@@ -207,7 +205,6 @@ class Account_model extends CI_Model
                                                     foreach ($nstchild5 as $child5) {
                                                         $newchild5 = $child5->HeadCode;
                                                         array_push($headcodes, $newchild5);
-
                                                     }
                                                 }
                                             }
@@ -222,7 +219,6 @@ class Account_model extends CI_Model
         }
 
         return $headcodes;
-
     }
 
     public function nchild($name)
@@ -267,11 +263,9 @@ class Account_model extends CI_Model
                 $total_val = ($balance ? $balance : 0) + ($opening_value ? $opening_value->amount : 0);
                 $total_closing += ($total_val ? $total_val : 0);
             }
-
         }
 
         return $total_closing;
-
     }
 
 
@@ -1094,20 +1088,21 @@ class Account_model extends CI_Model
             ->result();
     }
 
-    // Insert Debit voucher
-    public function insert_debitvoucher()
+    // Insert Debit voucher 
+    public function insert_debitvoucher($returnData = false)
     {
         $voucher_no = addslashes(trim($this->input->post('txtVNo', TRUE)));
-        $Vtype = "DV";
-        $cAID = $this->input->post('cmbDebit', TRUE);
-        $dAID = $this->input->post('txtCode', TRUE);
-        $Debit = $this->input->post('txtAmount', TRUE);
-        $Credit = $this->input->post('grand_total', TRUE);
-        $VDate = $this->input->post('dtpDate', TRUE);
+        $Vtype     = "DV";
+        $cAID      = $this->input->post('cmbDebit', TRUE);
+        $accID     = $this->input->post('cmbCode', true);
+        $dAID      = $this->input->post('txtCode', TRUE);
+        $Debit     = $this->input->post('txtAmount', TRUE);
+        $Credit    = $this->input->post('grand_total', TRUE);
+        $VDate     = $this->input->post('dtpDate', TRUE);
         $Narration = addslashes(trim($this->input->post('txtRemarks', TRUE)));
-        $IsPosted = 1;
-        $IsAppove = 0;
-        $createdby = $this->session->userdata('user_id');
+        $IsPosted  = 1;
+        $IsAppove  = 0;
+        $createdby  = $this->session->userdata('user_id');
         $createdate = date('Y-m-d H:i:s');
         $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
         for ($i = 0; $i < count($dAID); $i++) {
@@ -1115,38 +1110,42 @@ class Account_model extends CI_Model
             $Damnt = $Debit[$i];
             $debitheadinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dbtid)->get()->row();
             $debitinsert = array(
-                'fy_id' => $find_active_fiscal_year->id,
-                'VNo' => $voucher_no,
-                'Vtype' => $Vtype,
-                'VDate' => $VDate,
-                'COAID' => $dbtid,
+                'fy_id'     => $find_active_fiscal_year->id,
+                'VNo'       => $voucher_no,
+                'Vtype'     => $Vtype,
+                'VDate'     => $VDate,
+                'COAID'     => $dbtid,
                 'Narration' => $Narration,
-                'Debit' => $Damnt,
-                'Credit' => 0,
-                'IsPosted' => $IsPosted,
-                'CreateBy' => $createdby,
+                'Debit'     => $Damnt,
+                'Credit'    => 0,
+                'IsPosted'  => $IsPosted,
+                'CreateBy'  => $createdby,
                 'CreateDate' => $createdate,
-                'IsAppove' => 0
+                'IsAppove'  => 0
             );
             $this->db->insert('acc_transaction', $debitinsert);
             $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $cAID)->get()->row();
             $cinsert = array(
-                'fy_id' => $find_active_fiscal_year->id,
-                'VNo' => $voucher_no,
-                'Vtype' => $Vtype,
-                'VDate' => $VDate,
-                'COAID' => $cAID,
+                'fy_id'     => $find_active_fiscal_year->id,
+                'VNo'       => $voucher_no,
+                'Vtype'     => $Vtype,
+                'VDate'     => $VDate,
+                'COAID'     => $cAID,
                 'Narration' => 'Debit voucher from ' . $headinfo->HeadName,
-                'Debit' => 0,
-                'Credit' => $Damnt,
-                'IsPosted' => $IsPosted,
-                'CreateBy' => $createdby,
+                'Debit'     => 0,
+                'Credit'    => $Damnt,
+                'IsPosted'  => $IsPosted,
+                'CreateBy'  => $createdby,
                 'CreateDate' => $createdate,
-                'IsAppove' => 0
+                'IsAppove'  => 0
             );
             $this->db->insert('acc_transaction', $cinsert);
         }
-        return true;
+        if ($returnData) {
+            $debit = $Debit;
+            $cmbDebit = $headinfo->HeadName;
+            return compact('voucher_no', 'cmbDebit', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
+        }
     }
 
     // Credit voucher no
@@ -1162,18 +1161,18 @@ class Account_model extends CI_Model
     }
 
     // Insert Credit voucher
-    public function insert_creditvoucher()
+    public function insert_creditvoucher($returnData = false)
     {
         $voucher_no = addslashes(trim($this->input->post('txtVNo', TRUE)));
-        $Vtype = "CV";
-        $dAID = $this->input->post('cmbDebit', TRUE);
-        $cAID = $this->input->post('txtCode', TRUE);
-        $Credit = $this->input->post('txtAmount', TRUE);
-        $debit = $this->input->post('grand_total', TRUE);
-        $VDate = $this->input->post('dtpDate', TRUE);
+        $Vtype     = "CV";
+        $dAID      = $this->input->post('cmbDebit', TRUE);
+        $cAID      = $this->input->post('txtCode', TRUE);
+        $Credit    = $this->input->post('txtAmount', TRUE);
+        $debit     = $this->input->post('grand_total', TRUE);
+        $VDate     = $this->input->post('dtpDate', TRUE);
         $Narration = addslashes(trim($this->input->post('txtRemarks', TRUE)));
-        $IsPosted = 1;
-        $IsAppove = 0;
+        $IsPosted  = 1;
+        $IsAppove  = 0;
         $createdby = $this->session->userdata('user_id');
         $createdate = date('Y-m-d H:i:s');
         $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
@@ -1181,38 +1180,43 @@ class Account_model extends CI_Model
             $crtid = $cAID[$i];
             $Cramnt = $Credit[$i];
             $debitheadinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
-            $debitinsert = array(
-                'fy_id' => $find_active_fiscal_year->id,
-                'VNo' => $voucher_no,
-                'Vtype' => $Vtype,
-                'VDate' => $VDate,
-                'COAID' => $crtid,
+            $debitinsert  = array(
+                'fy_id'     => $find_active_fiscal_year->id,
+                'VNo'       => $voucher_no,
+                'Vtype'     => $Vtype,
+                'VDate'     => $VDate,
+                'COAID'     => $crtid,
                 'Narration' => $Narration,
-                'Debit' => 0,
-                'Credit' => $Cramnt,
-                'IsPosted' => $IsPosted,
-                'CreateBy' => $createdby,
+                'Debit'     => 0,
+                'Credit'    => $Cramnt,
+                'IsPosted'  => $IsPosted,
+                'CreateBy'  => $createdby,
                 'CreateDate' => $createdate,
-                'IsAppove' => 0
+                'IsAppove'  => 0
             );
             $this->db->insert('acc_transaction', $debitinsert);
             $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dAID)->get()->row();
             $cinsert = array(
-                'fy_id' => $find_active_fiscal_year->id,
-                'VNo' => $voucher_no,
-                'Vtype' => $Vtype,
-                'VDate' => $VDate,
-                'COAID' => $dAID,
+                'fy_id'     => $find_active_fiscal_year->id,
+                'VNo'       => $voucher_no,
+                'Vtype'     => $Vtype,
+                'VDate'     => $VDate,
+                'COAID'     => $dAID,
                 'Narration' => 'Credit Vourcher from ' . $headinfo->HeadName,
-                'Debit' => $Cramnt,
-                'Credit' => 0,
-                'IsPosted' => $IsPosted,
-                'CreateBy' => $createdby,
+                'Debit'     => $Cramnt,
+                'Credit'    => 0,
+                'IsPosted'  => $IsPosted,
+                'CreateBy'  => $createdby,
                 'CreateDate' => $createdate,
-                'IsAppove' => 0
+                'IsAppove'  => 0
             );
             $this->db->insert('acc_transaction', $cinsert);
             $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dAID)->get()->row();
+        }
+        if ($returnData) {
+            $debit = $Credit;
+            $cmbDebit = $headinfo->HeadName;
+            return compact('voucher_no', 'cmbDebit', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
         }
         return true;
     }
@@ -1305,43 +1309,45 @@ class Account_model extends CI_Model
     }
 
     // Insert Countra voucher
-    public function insert_contravoucher()
-    {
-        $voucher_no = addslashes(trim($this->input->post('txtVNo', TRUE)));
-        $Vtype = "Contra";
-        $dAID = $this->input->post('cmbDebit', TRUE);
-        $cAID = $this->input->post('txtCode', TRUE);
-        $debit = $this->input->post('txtAmount', TRUE);
-        $credit = $this->input->post('txtAmountcr', TRUE);
-        $VDate = $this->input->post('dtpDate', TRUE);
-        $Narration = addslashes(trim($this->input->post('txtRemarks', TRUE)));
-        $IsPosted = 1;
-        $IsAppove = 0;
-        $CreateBy = $this->session->userdata('user_id');
-        $createdate = date('Y-m-d H:i:s');
-        $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
-        for ($i = 0; $i < count($cAID); $i++) {
-            $crtid = $cAID[$i];
-            $Cramnt = $credit[$i];
-            $debits = $debit[$i];
-            $contrainsert = array(
-                'fy_id' => $find_active_fiscal_year->id,
-                'VNo' => $voucher_no,
-                'Vtype' => $Vtype,
-                'VDate' => $VDate,
-                'COAID' => $crtid,
-                'Narration' => $Narration,
-                'Debit' => $debits,
-                'Credit' => $Cramnt,
-                'IsPosted' => $IsPosted,
-                'CreateBy' => $CreateBy,
-                'CreateDate' => $createdate,
-                'IsAppove' => 0,
-            );
-            $this->db->insert('acc_transaction', $contrainsert);
+    public function insert_contravoucher($returnData = false){
+        $voucher_no=addslashes(trim($this->input->post('txtVNo',TRUE)));
+        $Vtype     ="Contra";
+        $dAID      =$this->input->post('cmbDebit',TRUE);
+        $cAID      =$this->input->post('txtCode',TRUE);
+        $debit     =$this->input->post('txtAmount',TRUE);
+        $credit    =$this->input->post('txtAmountcr',TRUE);
+        $VDate     =$this->input->post('dtpDate',TRUE);
+        $Narration =addslashes(trim($this->input->post('txtRemarks',TRUE)));
+        $IsPosted  =1;
+        $IsAppove  =0;
+        $CreateBy  =$this->session->userdata('user_id');
+        $createdate=date('Y-m-d H:i:s');
+        $find_active_fiscal_year=$this->db->select('id')->from('acc_fiscal_year')->where('status',1)->get()->row();
+        for ($i=0; $i < count($cAID); $i++) {
+          $crtid = $cAID[$i];
+          $Cramnt= $credit[$i];
+          $debits= $debit[$i]; 
+          $contrainsert = array(
+            'fy_id'     =>$find_active_fiscal_year->id,
+            'VNo'       =>$voucher_no,
+            'Vtype'     =>$Vtype,
+            'VDate'     =>$VDate,
+            'COAID'     =>$crtid,
+            'Narration' =>$Narration,
+            'Debit'     =>$debits,
+            'Credit'    =>$Cramnt,
+            'IsPosted'  =>$IsPosted,
+            'CreateBy'  =>$CreateBy,
+            'CreateDate'=>$createdate,
+            'IsAppove'  =>0,
+          );
+          $this->db->insert('acc_transaction',$contrainsert);
         }
-        return true;
-    }
+        if ($returnData) {
+            return compact('voucher_no', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
+          }
+          return true;
+      }
 
     // journal voucher no
     public function journal()
@@ -1358,16 +1364,16 @@ class Account_model extends CI_Model
     public function insert_journalvoucher($returnData = false)
     {
         $voucher_no = addslashes(trim($this->input->post('txtVNo', TRUE)));
-        $Vtype = "JV";
-        $dAID = $this->input->post('cmbDebit', TRUE);
-        $cAID = $this->input->post('txtCode', TRUE);
-        $debit = $this->input->post('txtAmount', TRUE);
-        $credit = $this->input->post('txtAmountcr', TRUE);
-        $VDate = $this->input->post('dtpDate', TRUE);
+        $Vtype     = "JV";
+        $dAID      = $this->input->post('cmbDebit', TRUE);
+        $cAID      = $this->input->post('txtCode', TRUE);
+        $debit     = $this->input->post('txtAmount', TRUE);
+        $credit    = $this->input->post('txtAmountcr', TRUE);
+        $VDate     = $this->input->post('dtpDate', TRUE);
         $Narration = addslashes(trim($this->input->post('txtRemarks', TRUE)));
-        $IsPosted = 1;
-        $IsAppove = 0;
-        $CreateBy = $this->session->userdata('user_id');
+        $IsPosted  = 1;
+        $IsAppove  = 0;
+        $CreateBy  = $this->session->userdata('user_id');
         $createdate = date('Y-m-d H:i:s');
         $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
         for ($i = 0; $i < count($cAID); $i++) {
@@ -1375,18 +1381,18 @@ class Account_model extends CI_Model
             $Cramnt = $credit[$i];
             $debits = $debit[$i];
             $contrainsert = array(
-                'fy_id' => $find_active_fiscal_year->id,
-                'VNo' => $voucher_no,
-                'Vtype' => $Vtype,
-                'VDate' => $VDate,
-                'COAID' => $crtid,
+                'fy_id'     => $find_active_fiscal_year->id,
+                'VNo'       => $voucher_no,
+                'Vtype'     => $Vtype,
+                'VDate'     => $VDate,
+                'COAID'     => $crtid,
                 'Narration' => $Narration,
-                'Debit' => $debits,
-                'Credit' => $Cramnt,
-                'IsPosted' => $IsPosted,
-                'CreateBy' => $CreateBy,
+                'Debit'     => $debits,
+                'Credit'    => $Cramnt,
+                'IsPosted'  => $IsPosted,
+                'CreateBy'  => $CreateBy,
                 'CreateDate' => $createdate,
-                'IsAppove' => 0
+                'IsAppove'  => 0
             );
             $this->db->insert('acc_transaction', $contrainsert);
         }
@@ -1613,7 +1619,6 @@ class Account_model extends CI_Model
                 'IsAppove' => 0
             );
             $this->db->insert('acc_transaction', $cinsert);
-
         }
         return true;
     }

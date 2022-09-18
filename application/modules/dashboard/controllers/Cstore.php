@@ -563,16 +563,24 @@ class Cstore extends MX_Controller
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
         $this->db->where('product_id', $product_id);
-        $this->db->where('variant_id', $variant_id);
+        if ($variant_id) {
+            $this->db->where('variant_id', $variant_id);
+        }
+        if ($store_id) {
+            $this->db->where('store_id', $store_id);
+        }
        
-        $this->db->where('store_id', $store_id);
         $purchase = $this->db->get()->row();
         // dd($this->db->last_query());
 
         $this->db->select("SUM(quantity) as totalSalesQnty");
         $this->db->from('invoice_stock_tbl');
-        $this->db->where('product_id', $product_id);
-        $this->db->where('variant_id', $variant_id);
+        if ($variant_id) {
+            $this->db->where('variant_id', $variant_id);
+        }
+        if ($store_id) {
+            $this->db->where('store_id', $store_id);
+        }
        
         $this->db->where('store_id', $store_id);
         $sales = $this->db->get()->row();

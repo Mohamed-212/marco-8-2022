@@ -77,9 +77,9 @@ else {
                                         <!-- js-example-basic-single -->
                                         <select name="supplier_id" id="supplier_id" class="form-control " required=""
                                             readonly>
-                                            {supplier_list}
+                                            <!-- {supplier_list}
                                             <option value="{supplier_id}">{supplier_name}</option>
-                                            {/supplier_list}
+                                            {/supplier_list} -->
                                             {supplier_selected}
                                             <option selected value="{supplier_id}">{supplier_name} </option>
                                             {/supplier_selected}

@@ -70,23 +70,23 @@
                             <label for="supplier_name"><?php echo display('select_supplier') ?><span
                                     class="text-danger">*</span>:</label>
                             <select class="form-control" name="supplier_id" id="supplier_id">
-                                {suppliers_list}
+                                <?php foreach($suppliers_list as $sub) : ?>
                                 <option value=""></option>
-                                <option value="{supplier_id}">{supplier_name}</option>
-                                {/suppliers_list}
+                                <option value="<?=$sub['supplier_id']?>" <?=$supplier_id == $sub['supplier_id'] ? 'selected' : '' ?> ><?=$sub['supplier_name']?></option>
+                                <?php endforeach ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="from_date"><?php echo display('from_date') ?><span
                                     class="text-danger">*</span>:</label>
                             <input type="text" class="form-control datepicker" autocomplete="off"
-                                   placeholder="<?php echo display('from_date'); ?>" name="from_date" required>
+                                   placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=$from_date?>" required>
                         </div>
                         <div class="form-group">
                             <label for="to_date"><?php echo display('to_date') ?><span
                                     class="text-danger">*</span>:</label>
                             <input type="text" class="form-control datepicker" autocomplete="off"
-                                   placeholder="<?php echo display('to_date'); ?>" name="to_date" required>
+                                   placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=$to_date?>" required>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
 <?php echo form_close(); ?>

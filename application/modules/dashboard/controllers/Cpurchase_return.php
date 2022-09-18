@@ -243,6 +243,7 @@ class Cpurchase_return extends MX_Controller {
                                 'total_return_amount' => $purchase_quantity->rate_after_discount * $quantity[$key]
                             );
                             // $sub_total += $total_return_amount[$key];
+                            $total_with_discount = 0;
                             $sub_total += $purchase_quantity->rate_after_discount * $quantity[$key];
                             $total_without_discount += $rate[$key] * $quantity[$key];
                             $total_with_discount += $purchase_quantity->rate_after_discount * $quantity[$key];
@@ -289,10 +290,13 @@ class Cpurchase_return extends MX_Controller {
                                 //reduce from product_purchase
                                 //////////////////////////////////////////////////////////////
                                 $this->load->model('Wearhouses');
-                                $this->db->where('product_id', $product_id);
+                                $this->db->where('product_id', $product);
+                                
                                 $this->db->from('product_information');
+                                $product_id = $product;
+
                                 $product = $this->db->get()->result_array();
-                                $purchaseData = $this->Products->product_purchase_info($product);
+                                $purchaseData = $this->Products->product_purchase_info($product_id);
                                 $totalPurchase = 0;
                                 $totalPrcsAmnt = 0;
                                 if (!empty($purchaseData)) {
@@ -311,13 +315,14 @@ class Cpurchase_return extends MX_Controller {
                                             'supplier_price' => $newrate,
                                         );
 
-                                        $this->db->where('product_id', $product);
+                                        $this->db->where('product_id', $product_id);
                                         $this->db->update('product_information', $supplier_price);
 
                                         $supplier_price2 = array(
                                             'child_product_price' => $newrate,
                                         );
-                                        $this->db->where('child_product_id', $product);
+                                        $this->db->where('child_product_id', $product_id);
+                                        
                                         $this->db->update('assembly_products', $supplier_price2);
                                     }
                                 }
@@ -329,7 +334,7 @@ class Cpurchase_return extends MX_Controller {
                                     'transfer_id' => $this->auth->generator(15),
                                     'purchase_id' => $purchase_id,
                                     'store_id' => $store_id,
-                                    'product_id' => $product,
+                                    'product_id' => $product_id,
                                     'variant_id' => $variant_id[$key],
                                     'variant_color' => $variant_color[$key],
                                     'date_time' => date('m-d-Y'),
@@ -340,7 +345,7 @@ class Cpurchase_return extends MX_Controller {
                                 $this->db->insert('transfer', $store);
                                 // transfer
                                 // stock
-                                $check_stock = $this->check_stock($store_id, $product, $variant_id[$key], $variant_color[$key]);
+                                $check_stock = $this->check_stock($store_id, $product_id, $variant_id[$key], $variant_color[$key]);
                                 if (!empty($check_stock)) {
                                     //update
                                     $stock = array(
@@ -349,8 +354,8 @@ class Cpurchase_return extends MX_Controller {
                                     if (!empty($store_id)) {
                                         $this->db->where('store_id', $store_id);
                                     }
-                                    if (!empty($product)) {
-                                        $this->db->where('product_id', $product);
+                                    if (!empty($product_id)) {
+                                        $this->db->where('product_id', $product_id);
                                     }
                                     if (!empty($variant_id[$key])) {
                                         $this->db->where('variant_id', $variant_id[$key]);
@@ -507,6 +512,7 @@ class Cpurchase_return extends MX_Controller {
                     $total_discount = 0;
                     $total_without_discount = 0;
                     foreach ($products as $key => $product) {
+                        
                         $purchase_quantity = $this->db->select('quantity')->from('product_purchase_details')->where('batch_no', $batch_no[$key])->get()->row();
                         $purchase_return_details = array(
                             'return_id' => $return_id,
