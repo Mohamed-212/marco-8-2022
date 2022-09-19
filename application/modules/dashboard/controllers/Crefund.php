@@ -257,13 +257,13 @@ class Crefund extends MX_Controller {
                 }
 
                 //1st debit (Sales return for Showroom sales) with total price before discount
-                $store_credit = array(
+                $customer_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_id'],
+                    'VNo' => 'SR-' . $return_invoice_id,
                     'Vtype' => 'Sales return',
                     'VDate' => $createdate,
                     'COAID' => $customer_head->HeadCode, // account payable game 11
-                    'Narration' => 'Sales return for Showroom sales "total price before discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Narration' => 'Sales return" total with vat" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
                     'Debit' => 0,
                     'Credit' => $total_return+$tota_vat,
                     'IsPosted' => 1,
@@ -287,15 +287,15 @@ class Crefund extends MX_Controller {
                 //     //'IsAppove' => 0
                 //     'IsAppove' => 1
                 // );
-                $this->db->insert('acc_transaction', $store_credit);
+                $this->db->insert('acc_transaction', $customer_credit);
                 // 2nd Allowed Discount credit
                 $allowed_discount_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_id'],
-                    'Vtype' => 'Sales',
+                    'VNo' => 'SR-' . $return_invoice_id,
+                    'Vtype' => 'Sales return',
                     'VDate' => $createdate,
                     'COAID' => 4114,
-                    'Narration' => 'Sales "total discount" credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Narration' => 'Sales return "total discount" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
                     'Debit' => 0,
                     'Credit' => $total_discount,
                     'IsPosted' => 1,
@@ -309,11 +309,11 @@ class Crefund extends MX_Controller {
                 //3rd Showroom Sales depit
                 $showroom_sales_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_id'],
-                    'Vtype' => 'Sales',
+                    'VNo' => 'SR-' . $return_invoice_id,
+                    'Vtype' => 'Sales return',
                     'VDate' => $createdate,
-                    'COAID' => 5111, // account payable game 11
-                    'Narration' => 'Sales "total price before discount" store_depit depited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'COAID' => 5121, // account payable game 11
+                    'Narration' => 'Sales return for Showroom sales "total price before discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
                     'Debit' => $total_return_without_discount,
                     'Credit' => 0 ,
                     'IsPosted' => 1,
@@ -327,17 +327,16 @@ class Crefund extends MX_Controller {
                 //4th VAT on Sales
                 $vat_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_id'],
-                    'Vtype' => 'Sales',
+                    'VNo' => 'SR-' . $return_invoice_id,
+                    'Vtype' => 'Sales return',
                     'VDate' => $createdate,
                     'COAID' => 2114, // account payable game 11
-                    'Narration' => 'Sales "total vat" depited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Narration' => 'Sales return "total vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
                     'Debit' => $tota_vat,
                     'Credit' => 0,
                     'IsPosted' => 1,
                     'CreateBy' => $receive_by,
                     'CreateDate' => $createdate,
-                    //'IsAppove' => 0
                     'IsAppove' => 1
                 );
                 $this->db->insert('acc_transaction', $vat_depit);
@@ -345,11 +344,11 @@ class Crefund extends MX_Controller {
                 //5th cost of goods sold Credit
                 $cogs_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_id'],
-                    'Vtype' => 'Sales',
+                    'VNo' => 'SR-' . $return_invoice_id,
+                    'Vtype' => 'Sales return',
                     'VDate' => $createdate,
                     'COAID' => 4111,
-                    'Narration' => 'Sales "cost of goods sold" Credited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Narration' => 'Sales return inventory "COGS" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
                     'Debit' => 0,
                     'Credit' => $cogs_price, //sales price asbe
                     'IsPosted' => 1,
@@ -363,11 +362,11 @@ class Crefund extends MX_Controller {
                 //6th cost of goods sold Main warehouse depit
                 $cogs_main_warehouse_depit = array(
                     'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'Inv-' . $filter['invoice_id'],
-                    'Vtype' => 'Sales',
+                    'VNo' => 'SR-' . $return_invoice_id,
+                    'Vtype' => 'Sales return',
                     'VDate' => $createdate,
                     'COAID' => 1141,
-                    'Narration' => '"cost of goods sold" Main warehouse depited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                    'Narration' => 'Sales return "COGS" debited in Main Warehouse by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
                     'Debit' => $cogs_price,
                     'Credit' => 0, //supplier price asbe
                     'IsPosted' => 1,
@@ -382,7 +381,7 @@ class Crefund extends MX_Controller {
                     $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
                     $bank_credit = array(
                         'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'Inv-' . $filter['invoice_id'],
+                        'VNo' => 'SR-' . $return_invoice_id,
                         'Vtype' => 'Sales',
                         'VDate' => $createdate,
                         'COAID' => $payment_head->HeadCode,

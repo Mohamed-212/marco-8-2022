@@ -155,6 +155,37 @@ class Customers extends CI_Model {
 						        $createdate=date('Y-m-d H:i:s');
 						        $date      =$createdate;
 
+								$customer_credit = array(
+									'fy_id' => $find_active_fiscal_year->id,
+					                'VNo'   =>'OP-'.$headcode,
+									'Vtype' => 'Sales',
+									'VDate' => $date,
+									'COAID' => $headcode->HeadCode, // account payable game 11
+									'Narration' => 'Opening balance credired by customer id: ' .$headcode->HeadCode . '(' . $customer_id . ')',
+									'Debit' => 0,
+									'Credit' =>$previous_balance,
+									'IsPosted' => 1,
+									'CreateBy' => $receive_by,
+									'CreateDate' => $createdate,
+									'IsAppove' => 1
+								);
+								$this->db->insert('acc_transaction', $customer_credit);
+
+								$cc = array(
+									'fy_id' => $find_active_fiscal_year->id,
+									'VNo'   =>'OP-'.$headcode,
+									'Vtype' => 'Sales',
+									'VDate' => $date,
+									'COAID' => 1111,
+									'Narration' => 'Opening balance depited by customer id: ' .$headcode->HeadCode . '(' . $customer_id . ')',
+									'Debit' => $previous_balance,
+									'Credit' => 0,
+									'IsPosted' => 1,
+									'CreateBy' => $receive_by,
+									'CreateDate' => $createdate,
+									'IsAppove' => 1
+								);
+								$result = $this->db->insert('acc_transaction', $cc);
 					            $opening_balance_credit = array(
 					                'fy_id'     =>$find_active_fiscal_year->id,
 					                'VNo'       =>'OP-'.$headcode,

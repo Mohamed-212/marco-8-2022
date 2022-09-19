@@ -222,8 +222,12 @@ class Cinstallment extends MX_Controller
                 $this->db->from('invoice_installment');
                 $this->db->where('invoice_id', $invoice_id);
                 $installment_details = $this->db->get()->result_array();
+
+                $sql="SELECT * FROM `invoice_installment` ii join invoice i on i.invoice_id=ii.invoice_id where i.customer_id='".$customer_id."' ;";
+                $result=$this->db->query($sql);
+                $invoice_installment=$result->result_array();
                 $total_from_balance=0;
-                foreach ($installment_details as $index => $installment) {
+                foreach ($invoice_installment as $index => $installment) {
                     
                     if ($installment['status'] != 2 ) {
                         $total_installment=$installment['amount'];
