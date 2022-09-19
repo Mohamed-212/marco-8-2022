@@ -453,7 +453,7 @@ class Crefund extends MX_Controller {
         ];
 
         $data['module'] = "dashboard";
-        $data['page'] = "refund/Returninvoice_html";
+        $data['page'] = "refund/returninvoice_html";
         echo Modules::run('template/layout', $data);
 
     }
