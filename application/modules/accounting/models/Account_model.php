@@ -47,6 +47,10 @@ class Account_model extends CI_Model {
     $result = $this->db->get()->result_array();
     return $result;
   }
+  public function payment_info() {   
+    $bank_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where_in('PHeadCode', array('112'))->get()->result();
+    return $bank_head;
+  }
   function get_parenthead(){
     $this->db->select('*');
     $this->db->from('acc_coa');

@@ -312,8 +312,7 @@ class Accounting extends MX_Controller
       $data['title']        = display('supplier_payment');
       $data['supplier_list'] =  $this->account_model->get_supplier();
       $data['voucher_no']   = $this->account_model->Spayment();
-      $data['bank_list']    = $this->account_model->get_bank_list();
-
+      $data['bank_list']    = $this->account_model->payment_info();
       $content = $this->parser->parse('accounting/supplier_payment_form', $data, true);
       $this->template_lib->full_admin_html_view($content);
     } else {
