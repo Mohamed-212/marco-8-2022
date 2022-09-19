@@ -1,4 +1,9 @@
 <link rel="stylesheet" href="<?php echo MOD_URL.'accounting/assets/css/supplier_payment_form.css'; ?>" />
+<style>
+    .select2.select2-container {
+        width: 100% !important;
+    }
+</style>
 <div class="content-wrapper">
     <section class="content-header">
         <div class="header-icon">
@@ -87,7 +92,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row bank_div" id="bank_div" <label for="bank"
+                        <div class="form-group row bank_div" id="bank_div">
+                         <label for="bank"
                             class="col-sm-2 col-form-label"><?php echo display('bank'); ?>
                             <i class="text-danger">*</i>
                             </label>
@@ -95,8 +101,8 @@
                                 <select name="bank_id" class="form-control bankpayment " id="bank_id">
                                     <option value="">Select Location</option>
                                     <?php foreach($bank_list as $bank){?>
-                                    <option value="<?php echo html_escape($bank['bank_id'])?>">
-                                        <?php echo html_escape($bank['bank_name']);?></option>
+                                    <option value="<?php echo html_escape($bank->HeadCode)?>">
+                                        <?php echo html_escape($bank->HeadName);?></option>
                                     <?php }?>
                                 </select>
                             </div>
