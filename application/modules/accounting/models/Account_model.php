@@ -1425,6 +1425,37 @@ class Account_model extends CI_Model
   //approved
   public function approved($data = [])
   {
+    $trans = $this->db->select('*')->from('acc_transaction')->where('VNo', $data['VNo'])->get()->row();
+    $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $trans->COAID)->get()->row();
+
+    if (in_array($trans->Vtype, ['CV', 'DV']) && substr($trans->COAID, 0, 3) === '113') {
+      // echo "<pre>";var_dump($trans);exit;
+      // insert into customer ledger
+      if ($trans->Vtype == 'CV') {
+          $data2 = array(
+            'transaction_id' => generator(15),
+            'customer_id' => $customer->customer_id,
+            'date' => $trans->CreateDate,
+            'amount' => $trans->Credit,
+            'payment_type' => 1,
+            'description' => 'ITP',
+            'status' => 1
+        );
+        $this->db->insert('customer_ledger', $data2);
+      } else {
+        //Insert to customer ledger Table 
+        $data2 = array(
+          'transaction_id' => generator(15),
+          'receipt_no' => $this->auth->generator(15),
+          'customer_id' => $customer->customer_id,
+          'date' => $trans->CreateDate,
+          'amount' => $trans->Debit,
+          'status' => 1
+        );
+        $this->db->insert('customer_ledger', $data2);
+      }
+    }
+    
     return $this->db->where('VNo', $data['VNo'])
       ->update('acc_transaction', $data);
   }
