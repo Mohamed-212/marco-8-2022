@@ -41,7 +41,7 @@ class Ccustomer extends MX_Controller
     //Insert Product and upload
     public function insert_customer()
     {
-        $customer_id = generator(15);
+        $customer_id = $this->generator(15);
         //Customer  basic information adding.
         $data = array(
             'customer_id'           => $customer_id,
@@ -94,21 +94,22 @@ class Ccustomer extends MX_Controller
             redirect(base_url('dashboard/Ccustomer'));
         }
     }
-    public function number_generator() {
-        $this->db->select('customer_id');
-        $query = $this->db->get('customer_information');
-        $result = $query->result_array();
-        return count($result);
-        // if ($invoice_no >= 1 && $invoice_no < 2) {
-        //     $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no) + 1;
-        // } elseif ($invoice_no >= 2) {
-        //     $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no);
-        // } else {
-        //     $invoice_no = 1000;
-        // }
-        // return $invoice_no;
-    }
+    public function generator($lenth)
+	{
+		$number = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
 
+		for ($i = 0; $i < $lenth; $i++) {
+			$rand_value = rand(0, 9);
+			$rand_number = $number["$rand_value"];
+
+			if (empty($con)) {
+				$con = $rand_number;
+			} else {
+				$con = "$con" . "$rand_number";
+			}
+		}
+		return $con;
+	}
     //customer Update Form
     public function customer_update_form($customer_id)
     {

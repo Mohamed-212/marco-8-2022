@@ -120,10 +120,10 @@ class Signup extends MX_Controller
     //This function is used to Generate Key
     public function generator($lenth)
     {
-        $number = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "M", "O", "P", "Q", "R", "S", "U", "V", "T", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
+        $number = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
 
         for ($i = 0; $i < $lenth; $i++) {
-            $rand_value = rand(0, 34);
+            $rand_value = rand(0, 9);
             $rand_number = $number["$rand_value"];
 
             if (empty($con)) {
@@ -135,21 +135,7 @@ class Signup extends MX_Controller
         return $con;
     }
 
-    //This function is used to Generate Key
-    public function number_generator() {
-        $this->db->select('customer_id');
-        $query = $this->db->get('customer_information');
-        $result = $query->result_array();
-        return count($result);
-        // if ($invoice_no >= 1 && $invoice_no < 2) {
-        //     $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no) + 1;
-        // } elseif ($invoice_no >= 2) {
-        //     $invoice_no = 1000 + (($invoice_no == 1) ? 0 : $invoice_no);
-        // } else {
-        //     $invoice_no = 1000;
-        // }
-        // return $invoice_no;
-    }
+   
 
     public function check_existing_user()
     {

@@ -88,13 +88,16 @@ class Invoices extends CI_Model {
             $this->db->where('a.customer_id', $filter['customer_id']);
         }
         if ($filter['from_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')>=DATE('" . $filter['date'] . "')");
+            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')>=DATE('" . $filter['from_date'] . "')");
         }
         if ($filter['to_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
+            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['to_date'] . "')");
         }
         if ($filter['invoice_status'] != '') {
             $this->db->where('a.invoice_status', $filter['invoice_status']);
+        }
+        if ($filter['employee_id']!='') {
+            $this->db->where('a.employee_id', $filter['employee_id']);
         }
         $this->db->order_by('a.invoice', 'desc');
         $this->db->limit($limit, $start);
@@ -143,10 +146,10 @@ class Invoices extends CI_Model {
             $this->db->where('a.customer_id', $filter['customer_id']);
         }
         if ($filter['from_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.created_at, '%m-%d-%Y')>=DATE('" . $filter['date'] . "')");
+            $this->db->where("STR_TO_DATE(a.created_at, '%m-%d-%Y')>=DATE('" . $filter['from_date'] . "')");
         }
         if ($filter['to_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.created_at, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
+            $this->db->where("STR_TO_DATE(a.created_at, '%m-%d-%Y')<=DATE('" . $filter['to_date'] . "')");
         }
         // if ($filter['invoice_status'] != '') {
         //     $this->db->where('a.invoice_status', $filter['invoice_status']);
