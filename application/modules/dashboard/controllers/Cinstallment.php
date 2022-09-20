@@ -223,25 +223,28 @@ class Cinstallment extends MX_Controller
                 $this->db->where('invoice_id', $invoice_id);
                 $installment_details = $this->db->get()->result_array();
 
-                $sql="SELECT * FROM `invoice_installment` ii join invoice i on i.invoice_id=ii.invoice_id where i.customer_id='".$customer_id."' ;";
+                $sql="SELECT SUM(ii.amount) as total_installment FROM `invoice_installment` ii join invoice i on i.invoice_id=ii.invoice_id where i.customer_id='".$customer_id."' and (ii.status !=2 or ii.`status` IS NULL) ;";
                 $result=$this->db->query($sql);
-                $invoice_installment=$result->result_array();
+                $total_installment=$result->result_array()[0]['total_installment'];
                 $total_from_balance=0;
-                foreach ($invoice_installment as $index => $installment) {
+
+                foreach ($installment_details as $index => $installment) {
                     
                     if ($installment['status'] != 2 ) {
-                        $total_installment=$installment['amount'];
-                        if($status[$index] == 2)
+                        if($payment_type[$index] == 5)
                         {
                             $total_from_balance+=$payment_amount[$index];
                         }
                             
                     }
                 }
+               
                 $sql = "SELECT SUM(Debit) Debit, SUM(Credit) Credit, IsAppove, COAID FROM acc_transaction WHERE COAID LIKE '".$customer_head->HeadCode."%' AND IsAppove =1 GROUP BY IsAppove, COAID";
                 $result= $this->db->query($sql);
                 $customer_balance  = $result->result_array()[0];
-                if($total_from_balance>($customer_balance['Credit']-($customer_balance['Debit']-$total_installment)))
+                $balance=$total_installment-($customer_balance['Debit']-$customer_balance['Credit']);
+                // dd([$total_from_balance,$total_installment,$balance,$customer_balance['Debit'],$customer_balance['Credit']]);
+                if($total_from_balance>$balance)
                 {
                     $this->session->set_userdata(array('error_message' => display('balance_not_enough')));
                     redirect('dashboard/cinstallment/manage_installment');

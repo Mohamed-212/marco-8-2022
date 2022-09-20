@@ -154,54 +154,78 @@ class Customers extends CI_Model {
 						        $headname  =$this->db->select('HeadName')->from('acc_coa')->where('HeadCode',$headcode->HeadCode)->get()->row();
 						        $createdate=date('Y-m-d H:i:s');
 						        $date      =$createdate;
+								$balance_type=$this->input->post('balance_type', TRUE);
+								if($balance_type==1)
+								{
+									$customer_credit = array(
+										'fy_id' => $find_active_fiscal_year->id,
+										'VNo'   =>'OP-'.$headcode,
+										'Vtype' => 'Sales',
+										'VDate' => $date,
+										'COAID' => $headcode, // account payable game 11
+										'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $customer_id . ')',
+										'Debit' => 0,
+										'Credit' =>$previous_balance,
+										'IsPosted' => 1,
+										'CreateBy' => $receive_by,
+										'CreateDate' => $createdate,
+										'IsAppove' => 1
+									);
+									$this->db->insert('acc_transaction', $customer_credit);
 
-								$customer_credit = array(
-									'fy_id' => $find_active_fiscal_year->id,
-					                'VNo'   =>'OP-'.$headcode,
-									'Vtype' => 'Sales',
-									'VDate' => $date,
-									'COAID' => $headcode->HeadCode, // account payable game 11
-									'Narration' => 'Opening balance credired by customer id: ' .$headcode->HeadCode . '(' . $customer_id . ')',
-									'Debit' => 0,
-									'Credit' =>$previous_balance,
-									'IsPosted' => 1,
-									'CreateBy' => $receive_by,
-									'CreateDate' => $createdate,
-									'IsAppove' => 1
-								);
-								$this->db->insert('acc_transaction', $customer_credit);
+									$opening_balance_debit = array(
+										'fy_id'     =>$find_active_fiscal_year->id,
+										'VNo'       =>'OP-'.$headcode,
+										'Vtype'     =>'Sales',
+										'VDate'     =>$date,
+										'COAID'     =>3,
+										'Narration' =>'Opening balance dibited from "Owners Equity And Capital" from: '.$headname->HeadName,
+										'Debit'     =>$previous_balance,
+										'Credit'    =>0,
+										'is_opening'=>1,
+										'IsPosted'  =>1,
+										'CreateBy'  =>$receive_by,
+										'CreateDate'=>$createdate,
+										'IsAppove'  =>1
+									);
+									$this->db->insert('acc_transaction',$opening_balance_debit);
+								}
+								elseif($balance_type==2)
+								{
+									$customer_debit = array(
+										'fy_id' => $find_active_fiscal_year->id,
+										'VNo'   =>'OP-'.$headcode,
+										'Vtype' => 'Sales',
+										'VDate' => $date,
+										'COAID' => $headcode, // account payable game 11
+										'Narration' => 'Opening balance debited by customer id: ' .$headname->HeadName . '(' . $customer_id . ')',
+										'Debit' => $previous_balance,
+										'Credit' =>0,
+										'IsPosted' => 1,
+										'CreateBy' => $receive_by,
+										'CreateDate' => $createdate,
+										'IsAppove' => 1
+									);
+									$this->db->insert('acc_transaction', $customer_debit);
 
-								$cc = array(
-									'fy_id' => $find_active_fiscal_year->id,
-									'VNo'   =>'OP-'.$headcode,
-									'Vtype' => 'Sales',
-									'VDate' => $date,
-									'COAID' => 1111,
-									'Narration' => 'Opening balance depited by customer id: ' .$headcode->HeadCode . '(' . $customer_id . ')',
-									'Debit' => $previous_balance,
-									'Credit' => 0,
-									'IsPosted' => 1,
-									'CreateBy' => $receive_by,
-									'CreateDate' => $createdate,
-									'IsAppove' => 1
-								);
-								$result = $this->db->insert('acc_transaction', $cc);
-					            $opening_balance_credit = array(
-					                'fy_id'     =>$find_active_fiscal_year->id,
-					                'VNo'       =>'OP-'.$headcode,
-					                'Vtype'     =>'Sales',
-					                'VDate'     =>$date,
-					                'COAID'     =>3,
-					                'Narration' =>'Opening balance credired from "Owners Equity And Capital" from: '.$headname->HeadName,
-					                'Debit'     =>0,
-					                'Credit'    =>$previous_balance,
-					                'is_opening'=>1,
-					                'IsPosted'  =>1,
-					                'CreateBy'  =>$receive_by,
-					                'CreateDate'=>$createdate,
-					                'IsAppove'  =>1
-					            );
-						        $this->db->insert('acc_transaction',$opening_balance_credit);
+									$opening_balance_credit = array(
+										'fy_id'     =>$find_active_fiscal_year->id,
+										'VNo'       =>'OP-'.$headcode,
+										'Vtype'     =>'Sales',
+										'VDate'     =>$date,
+										'COAID'     =>3,
+										'Narration' =>'Opening balance credited from "Owners Equity And Capital" from: '.$headname->HeadName,
+										'Debit'     =>0,
+										'Credit'    =>$previous_balance,
+										'is_opening'=>1,
+										'IsPosted'  =>1,
+										'CreateBy'  =>$receive_by,
+										'CreateDate'=>$createdate,
+										'IsAppove'  =>1
+									);
+									$this->db->insert('acc_transaction',$opening_balance_credit);
+								}
+								
 							}
 					    }
 					}
