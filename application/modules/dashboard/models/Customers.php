@@ -157,6 +157,20 @@ class Customers extends CI_Model {
 								$balance_type=$this->input->post('balance_type', TRUE);
 								if($balance_type==1)
 								{
+									// credit
+									// add to customer ledger
+									$customer_ledger_data = array(
+										'transaction_id' => generator(15),
+										'customer_id' => $customer_id,
+										'date' => $date,
+										'amount' => $previous_balance,
+										'payment_type' => 1,
+										'description' => 'ITP',
+										'status' => 1
+									);
+									$this->db->insert('customer_ledger', $customer_ledger_data);
+
+									// add acc trans
 									$customer_credit = array(
 										'fy_id' => $find_active_fiscal_year->id,
 										'VNo'   =>'OP-'.$headcode,
@@ -192,6 +206,19 @@ class Customers extends CI_Model {
 								}
 								elseif($balance_type==2)
 								{
+									// debit
+									// add to customer ledger
+									$customer_ledger_data = array(
+										'transaction_id' => generator(15),
+										'receipt_no' => $this->auth->generator(15),
+										'customer_id' => $customer_id,
+										'date' => $date,
+										'amount' => $previous_balance,
+										'status' => 1
+									);
+									$this->db->insert('customer_ledger', $customer_ledger_data);
+
+									// add acc trans
 									$customer_debit = array(
 										'fy_id' => $find_active_fiscal_year->id,
 										'VNo'   =>'OP-'.$headcode,
