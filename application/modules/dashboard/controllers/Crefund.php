@@ -400,8 +400,9 @@ class Crefund extends MX_Controller {
                     'invoice_id'        =>$filter['invoice_id'],
                     'return_quantity'   =>$filter['quantity'][$j],
                     'product_id'        =>$filter['product_id'][$j],
+                    'rate'              =>$product_price,
                     'customer_id'       =>$customer_id,
-                    'employee_id'       =>$receive_by,
+                    'employee_id'       =>$invoice[0]['employee_id'],
                     'total_discount'    =>$total_discount,
                     'total_return'      =>$total_return+$tota_vat+$total_discount,
                 );

@@ -393,9 +393,9 @@
                                                                                 <strong><?php echo html_escape($product[$i]['product_name']); ?> </strong><br>
                                                                             </td>
                                                                             <td><?php echo html_escape($invoice_return[$i]['return_quantity']);?></td>
-                                                                            <td><?php echo html_escape($product[$i]['price']); ?></td>
+                                                                            <td><?php echo html_escape($invoice_return[$i]['rate']); ?></td>
                                                                             <td><?php echo html_escape($customer_price[$i]['product_price']); ?></td>
-                                                                            <td><?php echo html_escape($product[$i]['price']*$invoice_return[$i]['return_quantity']); ?></td>
+                                                                            <td><?php echo html_escape($invoice_return[$i]['rate']*$invoice_return[$i]['return_quantity']); ?></td>
                                                                                                                              
                                                                         </tr>
                                                                     <?php
