@@ -167,7 +167,7 @@ class Customers extends CI_Model {
 										'Debit' => 0,
 										'Credit' =>$previous_balance,
 										'IsPosted' => 1,
-										'CreateBy' => $receive_by,
+										'CreateBy' => $createby,
 										'CreateDate' => $createdate,
 										'IsAppove' => 1
 									);
@@ -184,7 +184,7 @@ class Customers extends CI_Model {
 										'Credit'    =>0,
 										'is_opening'=>1,
 										'IsPosted'  =>1,
-										'CreateBy'  =>$receive_by,
+										'CreateBy'  =>$createby,
 										'CreateDate'=>$createdate,
 										'IsAppove'  =>1
 									);
@@ -202,7 +202,7 @@ class Customers extends CI_Model {
 										'Debit' => $previous_balance,
 										'Credit' =>0,
 										'IsPosted' => 1,
-										'CreateBy' => $receive_by,
+										'CreateBy' => $createby,
 										'CreateDate' => $createdate,
 										'IsAppove' => 1
 									);
@@ -219,7 +219,7 @@ class Customers extends CI_Model {
 										'Credit'    =>$previous_balance,
 										'is_opening'=>1,
 										'IsPosted'  =>1,
-										'CreateBy'  =>$receive_by,
+										'CreateBy'  =>$createby,
 										'CreateDate'=>$createdate,
 										'IsAppove'  =>1
 									);
