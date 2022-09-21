@@ -140,7 +140,7 @@ class Invoices extends CI_Model {
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
         $this->db->group_by('a.return_invoice_id');
         if (!empty($filter['invoice_no'] != '')) {
-            $this->db->where('a.invoice_id', $filter['invoice_no']);
+            $this->db->where('a.return_invoice_id', $filter['invoice_no']);
         }
         if ($filter['customer_id'] != '') {
             $this->db->where('a.customer_id', $filter['customer_id']);
@@ -154,6 +154,9 @@ class Invoices extends CI_Model {
         // if ($filter['invoice_status'] != '') {
         //     $this->db->where('a.invoice_status', $filter['invoice_status']);
         // }
+        if ($filter['employee_id']!='') {
+            $this->db->where('a.employee_id', $filter['employee_id']);
+        }
         $this->db->order_by('a.invoice_id', 'desc');
         $this->db->limit($limit, $start);
         $query = $this->db->get();

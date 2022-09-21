@@ -81,6 +81,7 @@ class Crefund extends MX_Controller {
             'title' => display('manage_invoice'),
             'invoices_list' => $invoices_list,
             'currency' => $currency_details[0]['currency_icon'],
+            'employees' => $this->empdropdown(),
             'position' => $currency_details[0]['currency_position'],
             'links' => $links
         );
@@ -89,7 +90,20 @@ class Crefund extends MX_Controller {
         $data['page'] = "refund/manage_return";
         echo Modules::run('template/layout', $data);
     }
+    public function empdropdown() {
+        $this->db->select('*');
+        $this->db->from('employee_history');
+        $query = $this->db->get();
+        $data = $query->result();
 
+        $list = array('' => 'Select One...');
+        if (!empty($data)) {
+            foreach ($data as $value) {
+                $list[$value->id] = $value->first_name . " " . $value->last_name;
+            }
+        }
+        return $list;
+    }
     public function get_invoice_products() {
         $filter = array(
             'invoice_no' =>  $this->input->post('invoice_no', TRUE),
@@ -421,7 +435,7 @@ class Crefund extends MX_Controller {
     public function return_invoice($returninvoice_id) {
         //find previous invoice history and REDUCE the stock
         $invoice_return = $this->db->select('*')->from('invoice_return')->where('return_invoice_id', $returninvoice_id)->get()->result_array();
-        $sql="SELECT * FROM `users` where `user_id`='".$invoice_return[0]['employee_id']."' ;";
+        $sql="SELECT * FROM `employee_history` where `id`='".$invoice_return[0]['employee_id']."' ;";
         $result= $this->db->query($sql);
         $user  = $result->result_array();
         foreach($invoice_return as $inv_return)
@@ -445,7 +459,7 @@ class Crefund extends MX_Controller {
         [
             'sl'            =>  $invoice_return[0]['id'],
             'customer'      =>  $customer[0],
-            'createdate'    =>  date('Y-m-d H:i:s'),
+            'createdate'    =>  $invoice_return[0]['created_at'],
             'receive_by'    =>  $user[0]['first_name']." ".$user[0]['last_name'],
             'product'       =>  $product,
             'customer_price'=>  $customer_price,

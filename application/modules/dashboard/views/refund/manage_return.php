@@ -69,7 +69,7 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <?php echo form_open(isset($is_order) ? 'dashboard/Corder/manage_order' : "dashboard/Cinvoice/manage_invoice", array('method' => 'GET')); ?>
+                        <?php echo form_open(isset($is_order) ? 'dashboard/Corder/manage_order' : "dashboard/Crefund/manage_return", array('method' => 'GET')); ?>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"><?php echo display(isset($is_order) ? 'order_no' : 'invoice_no') ?>:</label>
