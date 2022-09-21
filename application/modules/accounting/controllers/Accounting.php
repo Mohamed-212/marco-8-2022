@@ -68,9 +68,21 @@ class Accounting extends MX_Controller
         if ($this->account_model->create_opening($postData)) {
 
           $headcode  = $this->input->post('headcode', true);
-          $headname  = $this->db->select('HeadName')->from('acc_coa')->where('HeadCode', $headcode)->get()->row();
+          $headname  = $this->db->select('HeadName, customer_id')->from('acc_coa')->where('HeadCode', $headcode)->get()->row();
           $createdate = date('Y-m-d H:i:s');
           $date      = $createdate;
+
+          // add to customer ledger
+          $cl_data = array(
+              'transaction_id' => generator(15),
+              'customer_id' => $headname->customer_id,
+              'date' => $date,
+              'amount' => $this->input->post('amount', true),
+              'payment_type' => 1,
+              'description' => 'ITP',
+              'status' => 1
+          );
+          $this->db->insert('customer_ledger', $cl_data);
 
           $opening_balance_credit = array(
             'fy_id'     => $find_active_fiscal_year->id,
