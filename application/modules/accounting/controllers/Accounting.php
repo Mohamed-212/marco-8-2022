@@ -83,23 +83,79 @@ class Accounting extends MX_Controller
               'status' => 1
           );
           $this->db->insert('customer_ledger', $cl_data);
+          $balance_type=$this->input->post('balance_type', TRUE);
+          if($balance_type==1)
+          {
+            // add acc trans
+            $customer_credit = array(
+              'fy_id' => $find_active_fiscal_year->id,
+              'VNo'   =>'OP-'.$headcode,
+              'Vtype' => 'Sales',
+              'VDate' => $date,
+              'COAID' => $headcode, // account payable game 11
+              'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Debit' => 0,
+              'Credit' =>$this->input->post('amount', true),
+              'IsPosted' => 1,
+              'CreateBy' => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $customer_credit);
 
-          $opening_balance_credit = array(
-            'fy_id'     => $find_active_fiscal_year->id,
-            'VNo'       => 'OP-' . $headcode,
-            'Vtype'     => 'Sales',
-            'VDate'     => $date,
-            'COAID'     => 3,
-            'Narration' => 'Opening balance credired from "Owners Equity And Capital" from: ' . $headname->headname,
-            'Debit'     => 0,
-            'Credit'    => $this->input->post('amount', true),
-            'is_opening' => 1,
-            'IsPosted'  => 1,
-            'CreateBy'  => $receive_by,
-            'CreateDate' => $createdate,
-            'IsAppove'  => 1
-          );
-          $this->db->insert('acc_transaction', $opening_balance_credit);
+            $opening_balance_debit = array(
+              'fy_id'     =>$find_active_fiscal_year->id,
+              'VNo'       =>'OP-'.$headcode,
+              'Vtype'     =>'Sales',
+              'VDate'     =>$date,
+              'COAID'     =>3,
+              'Narration' =>'Opening balance dibited from "Owners Equity And Capital" from: '.$headname->HeadName,
+              'Debit'     =>$this->input->post('amount', true),
+              'Credit'    =>0,
+              'is_opening'=>1,
+              'IsPosted'  =>1,
+              'CreateBy'  =>$createby,
+              'CreateDate'=>$createdate,
+              'IsAppove'  =>1
+            );
+            $this->db->insert('acc_transaction',$opening_balance_debit);
+          }
+          elseif($balance_type==2)
+          {
+            // add acc trans
+            $customer_debit = array(
+              'fy_id' => $find_active_fiscal_year->id,
+              'VNo'   =>'OP-'.$headcode,
+              'Vtype' => 'Sales',
+              'VDate' => $date,
+              'COAID' => $headcode, // account payable game 11
+              'Narration' => 'Opening balance debited by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Debit' => $this->input->post('amount', true),
+              'Credit' =>0,
+              'IsPosted' => 1,
+              'CreateBy' => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $customer_debit);
+
+            $opening_balance_credit = array(
+              'fy_id'     =>$find_active_fiscal_year->id,
+              'VNo'       =>'OP-'.$headcode,
+              'Vtype'     =>'Sales',
+              'VDate'     =>$date,
+              'COAID'     =>3,
+              'Narration' =>'Opening balance credited from "Owners Equity And Capital" from: '.$headname->HeadName,
+              'Debit'     =>0,
+              'Credit'    =>$this->input->post('amount', true),
+              'is_opening'=>1,
+              'IsPosted'  =>1,
+              'CreateBy'  =>$receive_by,
+              'CreateDate'=>$createdate,
+              'IsAppove'  =>1
+            );
+            $this->db->insert('acc_transaction',$opening_balance_credit);
+          }
 
           $this->session->set_flashdata('message', display('save_successfully'));
           redirect('accounting/opening_balance');
