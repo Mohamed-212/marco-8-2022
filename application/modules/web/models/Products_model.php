@@ -177,10 +177,11 @@ class Products_model extends CI_Model {
             ->where('store_id',$result->store_id)
             ->get()
             ->row();
-            $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $p_id)->get()->row();
+            // $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $p_id)->get()->row();
 
-        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
-        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        return $stock;
         }else{
             return "none";
         }
@@ -195,11 +196,11 @@ class Products_model extends CI_Model {
         ->get()
         ->row();
 
-        $this->db->select('open_quantity')
-            ->from('product_information')
-            ->where('product_id',$product_id);
+        // $this->db->select('open_quantity')
+        //     ->from('product_information')
+        //     ->where('product_id',$product_id);
             // ->where('variants LIKE ',"%$variant_id%");
-        $openQuantity = $this->db->get()->row()->open_quantity;
+        // $openQuantity = $this->db->get()->row()->open_quantity;
         
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
@@ -220,7 +221,8 @@ class Products_model extends CI_Model {
         }
         $this->db->where('store_id',$result->store_id);
         $sales = $this->db->get()->row();
-        $stock = (($purchase->totalPurchaseQnty + (int)$openQuantity) - $sales->totalSalesQnty);
+        // $stock = (($purchase->totalPurchaseQnty + (int)$openQuantity) - $sales->totalSalesQnty);
+        $stock = ($purchase->totalPurchaseQnty - $sales->totalSalesQnty);
         return $stock;
     }   
     public function get_product_cart_quantity($product_id, $variant, $variant_color=false)
@@ -287,11 +289,11 @@ class Products_model extends CI_Model {
         ->get()
         ->row();
 
-        $this->db->select('open_quantity')
-            ->from('product_information')
-            ->where('product_id',$product_id);
+        // $this->db->select('open_quantity')
+        //     ->from('product_information')
+        //     ->where('product_id',$product_id);
             // ->where('variants LIKE ',"%$variant_id%");
-        $openQuantity = $this->db->get()->row()->open_quantity;
+        // $openQuantity = $this->db->get()->row()->open_quantity;
 
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
@@ -314,7 +316,8 @@ class Products_model extends CI_Model {
         // $cart_qnty = $quantity;
         $cart_qnty = $this->get_product_cart_quantity($product_id, $variant);
         
-        $result = (($purchase->totalPurchaseQnty + (int)$openQuantity) - ($order->totalSalesQnty + $cart_qnty));
+        // $result = (($purchase->totalPurchaseQnty + (int)$openQuantity) - ($order->totalSalesQnty + $cart_qnty));
+        $result = $purchase->totalPurchaseQnty - ($order->totalSalesQnty + $cart_qnty);
         return $result;
     }   
     //Category wise related product

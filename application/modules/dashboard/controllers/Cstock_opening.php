@@ -193,7 +193,7 @@ class Cstock_opening extends MX_Controller
                                 'quantity'     => $product_quantity,
                                 'warehouse_id' => '',
                             );
-                            // $this->db->insert('purchase_stock_tbl', $stock);
+                            $this->db->insert('purchase_stock_tbl', $stock);
                             // insert
                         } else {
                             //update
@@ -212,7 +212,7 @@ class Cstock_opening extends MX_Controller
                             if (!empty($variant_color)) {
                                 $this->db->where('variant_color', $variant_color);
                             }
-                            // $this->db->update('purchase_stock_tbl', $stock);
+                            $this->db->update('purchase_stock_tbl', $stock);
                             //update
                         }
                         // stock

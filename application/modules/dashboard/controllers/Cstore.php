@@ -575,6 +575,7 @@ class Cstore extends MX_Controller
 
         $this->db->select("SUM(quantity) as totalSalesQnty");
         $this->db->from('invoice_stock_tbl');
+        $this->db->where('product_id', $product_id);
         if ($variant_id) {
             $this->db->where('variant_id', $variant_id);
         }
@@ -587,8 +588,8 @@ class Cstore extends MX_Controller
 
         $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
 
-        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
-        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
         // var_dump($purchase->totalPurchaseQnty , $product_information->open_quantity , $sales->totalSalesQnty);exit;
         
         // $openQuantity = $details_info->open_quantity;

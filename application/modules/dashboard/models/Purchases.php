@@ -2683,8 +2683,8 @@ class Purchases extends CI_Model {
             ->where('product_id', $product_id)
             ->get()
             ->row();
-        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
-        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
 
         $data2 = array(
             'total_product' => @$stock,
@@ -2843,10 +2843,10 @@ class Purchases extends CI_Model {
         $this->db->where('store_id', $store_id);
         $sales = $this->db->get()->row();
 
-        $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+        // $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
 
-        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
-        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
         
         return $stock;
     }

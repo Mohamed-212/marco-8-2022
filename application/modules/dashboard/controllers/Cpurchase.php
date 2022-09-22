@@ -481,9 +481,10 @@ class Cpurchase extends MX_Controller {
         $this->db->where('b.store_id', $store_id);
         $total_sale = $this->db->get()->row();
 
-        $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+        // $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
 
-        $stock = ($total_purchase->total_purchase + $product_information->open_quantity) - $total_sale->total_sale;
+        // $stock = ($total_purchase->total_purchase + $product_information->open_quantity) - $total_sale->total_sale;
+        $stock = $total_purchase->total_purchase - $total_sale->total_sale;
 
 
         if ($stock > 0) {

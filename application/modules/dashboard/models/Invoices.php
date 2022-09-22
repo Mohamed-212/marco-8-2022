@@ -4148,7 +4148,7 @@ class Invoices extends CI_Model {
                 ->row();
         $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
 
-        $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+        // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
 
         $discount = "";
 
