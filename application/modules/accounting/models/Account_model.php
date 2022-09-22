@@ -258,7 +258,9 @@ class Account_model extends CI_Model
         ->select('COAID as COAID,sum(Debit) as predebit, sum(Credit) as precredit,VDate')
         ->where('IsAppove', 1)
         ->where('VDate >= ', $fiscal_year->start_date)
-        ->where('VDate <= ', $dtpFromDate)->where('COAID', $rdata->HeadCode)
+        ->where('VDate <= ', $dtpFromDate)
+        ->where('VNo != ','OP-'.$rdata->HeadCode)
+        ->where('COAID', $rdata->HeadCode)
         ->group_by('acc_transaction.COAID')
         ->get()
         ->row();

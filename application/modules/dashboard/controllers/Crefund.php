@@ -15,7 +15,7 @@ class Crefund extends MX_Controller {
 
     //Default invoice add from loading
     public function index() {
-        $this->new_invoice();
+        $this->new_refund();
     }
 
     //Add new invoice
@@ -224,7 +224,7 @@ class Crefund extends MX_Controller {
                 
                 //total vat
                 $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'][$j])->get()->row();
-                if(!empty($i_vat))
+                if(!empty($i_vat) && $invoice[0]['is_quotation']==0)
                     {$tota_vat = ($product_price*($i_vat->tax_percentage/100))*$filter['quantity'][$j];}
                 else
                     {$tota_vat = 0;}
@@ -471,6 +471,25 @@ class Crefund extends MX_Controller {
         echo Modules::run('template/layout', $data);
 
     }
+    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null) {
+        $this->db->select('stock_id,quantity');
+        $this->db->from('invoice_stock_tbl');
+        if (!empty($store_id)) {
+            $this->db->where('store_id', $store_id);
+        }
+        if (!empty($product_id)) {
+            $this->db->where('product_id', $product_id);
+        }
+        if (!empty($variant)) {
+            $this->db->where('variant_id', $variant);
+        }
+        if (!empty($variant_color)) {
+            $this->db->where('variant_color', $variant_color);
+        }
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function change_stock($invoice_id) {
         //find previous invoice history and REDUCE the stock
         $invoice_history = $this->db->select('*')->from('invoice_details')->where('invoice_id', $invoice_id)->get()->result_array();
