@@ -3895,6 +3895,7 @@ class Invoices extends CI_Model {
 			b.*,
 			c.*,
 			d.product_id,
+            d.category_id,
 			d.product_name,
 			d.product_details,
 			d.product_model,

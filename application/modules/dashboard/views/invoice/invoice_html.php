@@ -58,6 +58,8 @@
                                 width: 100%
                             }
 
+                            
+
                             @media print {
                                 table tbody tr:nth-child(even) td {
                                     background-color: #f9f9f9 !important;
@@ -66,6 +68,10 @@
 
                                 .panel-body {
                                     font-size: 10px;
+                                }
+                                
+                                .print-none {
+                                    display: none;
                                 }
 
                                 img:not(.show) {
@@ -414,7 +420,7 @@
 
                                                                     foreach ($invoice_all_data as $invoice) {
                                                                 ?>
-                                                                        <tr>
+                                                                        <tr class="<?=$invoice['category_id'] == 'NZUN74MS3GP8QAV' ? 'print-none' : ''?>">
                                                                             <td><?php echo html_escape($invoice['sl']); ?></td>
                                                                             <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td>
 <!--                                                                            <td class='hide-me'>-->
