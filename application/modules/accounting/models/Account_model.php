@@ -1437,7 +1437,7 @@ class Account_model extends CI_Model
           $data2 = array(
             'transaction_id' => generator(15),
             'customer_id' => $customer->customer_id,
-            'date' => $trans->CreateDate,
+            'date' => date('Y-m-d', strtotime($trans->CreateDate)),
             'amount' => $trans->Credit,
             'payment_type' => 1,
             'description' => 'ITP',
@@ -1450,7 +1450,7 @@ class Account_model extends CI_Model
           'transaction_id' => generator(15),
           'receipt_no' => $this->auth->generator(15),
           'customer_id' => $customer->customer_id,
-          'date' => $trans->CreateDate,
+          'date' => date('Y-m-d', strtotime($trans->CreateDate)),
           'amount' => $trans->Debit,
           'status' => 1
         );

@@ -2457,7 +2457,7 @@ class Orders extends CI_Model
                         'invoice_no'    => $invoice_id,
                         // 'order_no'      => $result->order_id,
                         'order_no'      => $result->invoice_id,
-                        'date'          => $result->date,
+                        'date'          => date('Y-m-d', strtotime($result->date)),
                         'amount'        => $result->total_amount,
                         'status'        => 1
                     );
@@ -2806,7 +2806,7 @@ class Orders extends CI_Model
                     'customer_id'   => $result->customer_id,
                     'invoice_no'    => $invoice_id,
                     'order_no'      => $result->invoice_id,
-                    'date'          => $result->date,
+                    'date'          => date('Y-m-d', strtotime($result->date)),
                     'amount'        => $result->total_amount,
                     'status'        => 1
                 );

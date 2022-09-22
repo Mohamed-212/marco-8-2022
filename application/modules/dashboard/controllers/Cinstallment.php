@@ -304,7 +304,7 @@ class Cinstallment extends MX_Controller
                                             'customer_id' => $customer_id,
                                             'invoice_no' => $invoice_id,
                                             'receipt_no' => $this->auth->generator(15),
-                                            'date' => $invoice[0]['invoice_date'],
+                                            'date' => date('Y-m-d'),
                                             'amount' => $invoice[0]['paid_amount'] + $payment_amount[$index],
                                             'payment_type' => 1,
                                             'description' => 'ITP',
@@ -317,7 +317,7 @@ class Cinstallment extends MX_Controller
                                         'transaction_id' => $this->auth->generator(15),
                                         'customer_id' => $customer_id,
                                         'invoice_no' => $invoice_id,
-                                        'date' => $invoice[0]['invoice_date'],
+                                        'date' => date('Y-m-d'),
                                         'amount' => $invoice[0]['total_amount'],
                                         'status' => 1
                                     );

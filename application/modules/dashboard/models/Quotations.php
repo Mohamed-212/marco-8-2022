@@ -2351,7 +2351,7 @@ class Quotations extends CI_Model
 						'customer_id'	=> $result->customer_id,
 						'invoice_no'	=> $invoice_id,
 						'quotation_no' 	=> $result->quotation_id,
-						'date'			=> $result->date,
+						'date'			=> date('Y-m-d', strtotime($result->date)),
 						'amount'		=> $result->total_amount,
 						'status'		=> 1
 					);
@@ -2654,7 +2654,7 @@ class Quotations extends CI_Model
 					'customer_id'	=> $result->customer_id,
 					'invoice_no'	=> $invoice_id,
 					'quotation_no' 	=> $result->quotation_id,
-					'date'			=> $result->date,
+					'date'			=> date('Y-m-d', strtotime($result->date)),
 					'amount'		=> $result->total_amount,
 					'status'		=> 1
 				);

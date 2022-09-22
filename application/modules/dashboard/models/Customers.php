@@ -307,7 +307,7 @@ class Customers extends CI_Model {
 			'description' 	=> "Previous adjustment with software",
 			'payment_type' 	=> "NA",
 			'cheque_no' 	=> "NA",
-			'date' 			=> date("m-d-Y"),
+			'date' 			=> date("Y-m-d"),
 			'status' 		=> 1
 		);
 
@@ -377,20 +377,26 @@ class Customers extends CI_Model {
 //Retrieve customer All data 
 	public function customerledger_tradational($customer_id,$from_date=null,$to_date=null)
 	{
-		$this->db->select('customer_ledger.*');
-		$this->db->from('customer_ledger');
-		$this->db->where(array('customer_ledger.customer_id'=>$customer_id,'status'=>1));
+		$from_addon = '';
+		$to_addon = '';
+		// $this->db->select('customer_ledger.*');
+		// $this->db->from('customer_ledger');
+		// $this->db->where(array('customer_ledger.customer_id'=>$customer_id,'status'=>1));
 		if (!empty($from_date)) {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
-			$this->db->where('( customer_ledger.date >=' .$newformat1 . ' OR customer_ledger.date >=' . date('d-m-Y',$time1) . ' )', null, false);
+			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
+			$from_addon = "AND  customer_ledger.date >= $newformat1";
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
-			$this->db->where('( customer_ledger.date <=' .$newformat2 . ' OR customer_ledger.date <=' . date('d-m-Y',$time2) . ' )', null, false);
+			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
+			$to_addon = "AND customer_ledger.date >= $newformat2";
 		}
-		$query = $this->db->get();
+		$this->db->reset_query();
+		$query = $this->db->query("SELECT * FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 $from_addon $to_addon;
+		");
 		if ($query->num_rows() > 0) {
 			return $query->result_array();	
 		}
@@ -399,6 +405,8 @@ class Customers extends CI_Model {
 //Retrieve customer total information
 	public function customer_transection_summary($customer_id,$from_date=null,$to_date=null)
 	{
+		$from_addon = '';
+		$to_addon = '';
 		$result=array();
 		$this->db->select_sum('amount','total_credit');
 		$this->db->from('customer_ledger');
@@ -406,36 +414,44 @@ class Customers extends CI_Model {
 		if (!empty($from_date)) {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
-			$this->db->where('( customer_ledger.date >=' .$newformat1 . ' OR customer_ledger.date >=' . date('d-m-Y',$time1) . ' )', null, false);
+			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
+			$from_addon = "AND  customer_ledger.date >= $newformat1";
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
-			$this->db->where('( customer_ledger.date <=' .$newformat2 . ' OR customer_ledger.date <=' . date('d-m-Y',$time2) . ' )', null, false);
+			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
+			$to_addon = "AND customer_ledger.date >= $newformat2";
 		}
-		$query = $this->db->get();
+		$this->db->reset_query();
+		$query = $this->db->query("SELECT SUM(amount) as total_credit FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 AND customer_ledger.receipt_no IS NULL $from_addon $to_addon;
+		");
 		if ($query->num_rows() > 0){
 			$result[]=$query->result_array();	
 		}
 		
+		$from_addon = '';
+		$to_addon = '';
 		$this->db->select_sum('amount','total_debit');
 		$this->db->from('customer_ledger');
 		$this->db->where(array('customer_id'=>$customer_id,'status'=>1));
 		$this->db->where('receipt_no !=',NULL);
-		if (!empty($from_date)){
+		if (!empty($from_date)) {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
-			// $this->db->where('date >=', $newformat1);
-			$this->db->where('( date <=' .$newformat1 . ' OR date <=' . date('d-m-Y',$time1) . ' )', null, false);
+			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
+			$from_addon = "AND  customer_ledger.date >= $newformat1";
 		}
-		if (!empty($to_date)){
+		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
-			// $this->db->where('date <=', $newformat2);
-			$this->db->where('( date <=' .$newformat2 . ' OR date <=' . date('d-m-Y',$time2) . ' )', null, false);
+			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
+			$to_addon = "AND customer_ledger.date >= $newformat2";
 		}
-		$query = $this->db->get();
-		
+		$this->db->reset_query();
+		$query = $this->db->query("SELECT SUM(amount) as total_debit FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 AND customer_ledger.receipt_no IS NOT NULL $from_addon $to_addon;
+		");
+
 		if ($query->num_rows() > 0) {
 			$result[]=$query->result_array();	
 		}
