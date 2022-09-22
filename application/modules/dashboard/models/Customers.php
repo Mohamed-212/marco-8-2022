@@ -383,12 +383,12 @@ class Customers extends CI_Model {
 		if (!empty($from_date)) {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
-			$this->db->where('customer_ledger.date >=', $newformat1);
+			$this->db->where('( customer_ledger.date >=' .$newformat1 . ' OR customer_ledger.date >=' . date('d-m-Y',$time1) . ' )', null, false);
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
-			$this->db->where('customer_ledger.date <=', $newformat2);
+			$this->db->where('( customer_ledger.date <=' .$newformat2 . ' OR customer_ledger.date <=' . date('d-m-Y',$time2) . ' )', null, false);
 		}
 		$query = $this->db->get();
 		if ($query->num_rows() > 0) {
@@ -406,12 +406,12 @@ class Customers extends CI_Model {
 		if (!empty($from_date)) {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
-			$this->db->where('date >=', $newformat1);
+			$this->db->where('( customer_ledger.date >=' .$newformat1 . ' OR customer_ledger.date >=' . date('d-m-Y',$time1) . ' )', null, false);
 		}
-		if (!empty($to_date)){
+		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
-			$this->db->where('date <=', $newformat2);
+			$this->db->where('( customer_ledger.date <=' .$newformat2 . ' OR customer_ledger.date <=' . date('d-m-Y',$time2) . ' )', null, false);
 		}
 		$query = $this->db->get();
 		if ($query->num_rows() > 0){
@@ -425,12 +425,14 @@ class Customers extends CI_Model {
 		if (!empty($from_date)){
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
-			$this->db->where('date >=', $newformat1);
+			// $this->db->where('date >=', $newformat1);
+			$this->db->where('( date <=' .$newformat1 . ' OR date <=' . date('d-m-Y',$time1) . ' )', null, false);
 		}
 		if (!empty($to_date)){
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
-			$this->db->where('date <=', $newformat2);
+			// $this->db->where('date <=', $newformat2);
+			$this->db->where('( date <=' .$newformat2 . ' OR date <=' . date('d-m-Y',$time2) . ' )', null, false);
 		}
 		$query = $this->db->get();
 		
