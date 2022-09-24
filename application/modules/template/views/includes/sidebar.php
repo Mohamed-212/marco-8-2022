@@ -666,12 +666,12 @@
                     <a href="<?php echo base_url('dashboard/Cstore') ?>"><?php echo display('store_add') ?></a>
                 </li>
                 <?php }
-                        if ($this->permission->check_label('import_store_csv')->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'add_store_csv' ? 'active' : '')) ?>">
-                    <a
-                        href="<?php echo base_url('dashboard/Cstore/add_store_csv') ?>"><?php echo display('import_store_csv') ?></a>
-                </li>
-                <?php }
+//                        if ($this->permission->check_label('import_store_csv')->access()) { ?>
+<!--                <li class="--><?php //echo (($this->uri->segment(3) == 'add_store_csv' ? 'active' : '')) ?><!--">-->
+<!--                    <a-->
+<!--                        href="--><?php //echo base_url('dashboard/Cstore/add_store_csv') ?><!--">--><?php //echo display('import_store_csv') ?><!--</a>-->
+<!--                </li>-->
+<!--                --><?php //}
                         if ($this->permission->check_label('manage_store')->access()) { ?>
                 <li class="<?php echo (($this->uri->segment(3) == 'manage_store' ? 'active' : '')) ?>">
                     <a
