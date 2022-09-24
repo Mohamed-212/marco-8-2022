@@ -60,11 +60,11 @@ $HmvcMenu["accounting"] = array(
         "method"     => "voucher_approval",
         "permission" => "read"
     ),
-    "receipt_voucher" => array(
-        "controller" => "accounting",
-        "method"     => "receipt_voucher",
-        "permission" => "read"
-    ),
+//    "receipt_voucher" => array(
+//        "controller" => "accounting",
+//        "method"     => "receipt_voucher",
+//        "permission" => "read"
+//    ),
     "account_reports" => array(
     	"reports_by_voucher" => array(
 	        "controller" => "areports",

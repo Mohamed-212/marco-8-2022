@@ -27,7 +27,7 @@
                                         echo 'active';
                                     } ?>">
             <a href="#">
-                <i class="ti-layout-accordion-list"></i><span><?php echo display('return') ?></span>
+                <i class="ti-reload"></i><span><?php echo display('return') ?></span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>
@@ -830,24 +830,24 @@
                         href="<?php echo base_url('dashboard/Creport/stock_report_store_wise') ?>"><?php echo display('stock_report_store_wise') ?></a>
                 </li>
                 <?php }
-                        if ($this->permission->check_label('stock_adjustment')->create()->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?>">
-                    <a
-                        href="<?php echo base_url('dashboard/Cstock_adjustment/stock_adjustment') ?>"><?php echo display('stock_adjustment') ?></a>
-                </li>
-                <?php }
-                        if ($this->permission->check_label('manage_stock_adjustment')->read()->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'manage_stock_adjustment' ? 'active' : '')) ?>">
-                    <a
-                        href="<?php echo base_url('dashboard/Cstock_adjustment/manage_stock_adjustment') ?>"><?php echo display('manage_stock_adjustment') ?></a>
-                </li>
-                <?php }
-                        if ($this->permission->check_label('batch_wise_stock')->read()->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'batch_wise_stock' ? 'active' : '')) ?>">
-                    <a
-                        href="<?php echo base_url('dashboard/Cbatch_stock/batch_wise_stock') ?>"><?php echo display('batch_wise_stock') ?></a>
-                </li>
-                <?php }
+//                        if ($this->permission->check_label('stock_adjustment')->create()->access()) { ?>
+<!--                <li class="--><?php //echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?><!--">-->
+<!--                    <a-->
+<!--                        href="--><?php //echo base_url('dashboard/Cstock_adjustment/stock_adjustment') ?><!--">--><?php //echo display('stock_adjustment') ?><!--</a>-->
+<!--                </li>-->
+<!--                --><?php //}
+//                        if ($this->permission->check_label('manage_stock_adjustment')->read()->access()) { ?>
+<!--                <li class="--><?php //echo (($this->uri->segment(3) == 'manage_stock_adjustment' ? 'active' : '')) ?><!--">-->
+<!--                    <a-->
+<!--                        href="--><?php //echo base_url('dashboard/Cstock_adjustment/manage_stock_adjustment') ?><!--">--><?php //echo display('manage_stock_adjustment') ?><!--</a>-->
+<!--                </li>-->
+<!--                --><?php //}
+//                        if ($this->permission->check_label('batch_wise_stock')->read()->access()) { ?>
+<!--                <li class="--><?php //echo (($this->uri->segment(3) == 'batch_wise_stock' ? 'active' : '')) ?><!--">-->
+<!--                    <a-->
+<!--                        href="--><?php //echo base_url('dashboard/Cbatch_stock/batch_wise_stock') ?><!--">--><?php //echo display('batch_wise_stock') ?><!--</a>-->
+<!--                </li>-->
+<!--                --><?php //}
                         if ($this->permission->check_label('add_stock_opening')->read()->access()) { ?>
                 <li class="<?php echo (($this->uri->segment(3) == 'add_stock_opening' ? 'active' : '')) ?>">
                     <a
