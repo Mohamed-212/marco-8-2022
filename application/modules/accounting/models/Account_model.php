@@ -1427,37 +1427,44 @@ class Account_model extends CI_Model
   //approved
   public function approved($data = [])
   {
-    $trans = $this->db->select('*')->from('acc_transaction')->where('VNo', $data['VNo'])->get()->row();
-    $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $trans->COAID)->get()->row();
+    $trans_data = $this->db->select('*')->from('acc_transaction')->where('VNo', $data['VNo'])->get();
 
-    if (in_array($trans->Vtype, ['CV', 'DV', 'JV']) && substr($trans->COAID, 0, 3) === '113') {
-      // echo "<pre>";var_dump($trans);exit;
+    if (!empty($trans_data)) {
+      $trans_data = $trans_data->result();
+      // echo "<pre>";var_dump($trans_data);exit;
+      foreach ($trans_data as $trans) {
+        $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $trans->COAID)->get()->row();
 
-      // insert into customer ledger
-      if ($trans->Vtype == 'CV' || ($trans->Vtype == 'JV' && (float)$trans->Credit > 0)) {
-          $data2 = array(
-            'transaction_id' => generator(15),
-            'customer_id' => $customer->customer_id,
-            'date' => date('Y-m-d', strtotime($trans->CreateDate)),
-            'amount' => $trans->Credit,
-            'payment_type' => 1,
-            'description' => 'ITP',
-            'status' => 1
-        );
-        $this->db->insert('customer_ledger', $data2);
-      } 
-      
-      if ($trans->Vtype == 'DV' || ($trans->Vtype == 'JV' && (float)$trans->Debit > 0)) {
-        //Insert to customer ledger Table 
-        $data2 = array(
-          'transaction_id' => generator(15),
-          'receipt_no' => $this->auth->generator(15),
-          'customer_id' => $customer->customer_id,
-          'date' => date('Y-m-d', strtotime($trans->CreateDate)),
-          'amount' => $trans->Debit,
-          'status' => 1
-        );
-        $this->db->insert('customer_ledger', $data2);
+        if (in_array($trans->Vtype, ['CV', 'DV', 'JV']) && substr($trans->COAID, 0, 3) === '113') {
+          // echo "<pre>";var_dump($trans);exit;
+    
+          // insert into customer ledger
+          if ($trans->Vtype == 'CV' || ($trans->Vtype == 'JV' && (float)$trans->Credit > 0)) {
+              $data2 = array(
+                'transaction_id' => generator(15),
+                'customer_id' => $customer->customer_id,
+                'date' => date('Y-m-d', strtotime($trans->CreateDate)),
+                'amount' => $trans->Credit,
+                'payment_type' => 1,
+                'description' => 'ITP',
+                'status' => 1
+            );
+            $this->db->insert('customer_ledger', $data2);
+          } 
+          
+          if ($trans->Vtype == 'DV' || ($trans->Vtype == 'JV' && (float)$trans->Debit > 0)) {
+            //Insert to customer ledger Table 
+            $data2 = array(
+              'transaction_id' => generator(15),
+              'receipt_no' => $this->auth->generator(15),
+              'customer_id' => $customer->customer_id,
+              'date' => date('Y-m-d', strtotime($trans->CreateDate)),
+              'amount' => $trans->Debit,
+              'status' => 1
+            );
+            $this->db->insert('customer_ledger', $data2);
+          }
+        }
       }
     }
     
