@@ -269,6 +269,7 @@ class Lproduct
         $categoryList = $CI->parser->parse('web/themes/' . $theme .'/brand_product',$data,true);
         return $categoryList;
     }
+  
 }
 
 ?>

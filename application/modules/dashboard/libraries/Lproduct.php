@@ -329,6 +329,27 @@ class Lproduct {
         }
     }
 
+    public function return_product_report($from_date=null,$to_date=null,$status=null){
+		$CI =& get_instance();
+		$CI->load->model('dashboard/Products');
+		$CI->load->model('dashboard/Soft_settings');
+		$CI->load->library('dashboard/occational');
+
+		$return_product_report =$CI->Products->return_product_report($from_date,$to_date,$status);
+		$currency_details = $CI->Soft_settings->retrieve_currency_info();
+		$data=array(
+			'title'    =>display('return_product_report'),
+			'return_product_report'=>$return_product_report,
+			'currency' =>$currency_details[0]['currency_icon'],
+			'position' =>$currency_details[0]['currency_position'],
+			'from_date'=>$from_date,
+			'to_date'  =>$to_date,
+			'status'  =>$status,
+			);
+		$singleproductdetails = $CI->parser->parse('refund/return_report',$data,true);
+		return $singleproductdetails;
+	}
+
 }
 
 ?>
