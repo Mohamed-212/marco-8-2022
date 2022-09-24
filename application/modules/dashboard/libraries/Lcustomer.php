@@ -304,7 +304,7 @@ class Lcustomer {
 		$summary 	    =$CI->Customers->customer_transection_summary($customer_id,$from_date,$to_date);
 		$contact_info = $CI->Customer_contact_info->get_contact_info_data($customer_id);
 		$customers_list =$CI->Customers->customer_list(); 
-	
+
 		$balance = 0;
 		if(!empty($ledger)){
 			foreach($ledger as $index=>$value){
