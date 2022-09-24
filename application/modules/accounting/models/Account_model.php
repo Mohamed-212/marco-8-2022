@@ -1430,10 +1430,11 @@ class Account_model extends CI_Model
     $trans = $this->db->select('*')->from('acc_transaction')->where('VNo', $data['VNo'])->get()->row();
     $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $trans->COAID)->get()->row();
 
-    if (in_array($trans->Vtype, ['CV', 'DV']) && substr($trans->COAID, 0, 3) === '113') {
+    if (in_array($trans->Vtype, ['CV', 'DV', 'JV']) && substr($trans->COAID, 0, 3) === '113') {
       // echo "<pre>";var_dump($trans);exit;
+
       // insert into customer ledger
-      if ($trans->Vtype == 'CV') {
+      if ($trans->Vtype == 'CV' || ($trans->Vtype == 'JV' && (float)$trans->Credit > 0)) {
           $data2 = array(
             'transaction_id' => generator(15),
             'customer_id' => $customer->customer_id,
@@ -1444,7 +1445,9 @@ class Account_model extends CI_Model
             'status' => 1
         );
         $this->db->insert('customer_ledger', $data2);
-      } else {
+      } 
+      
+      if ($trans->Vtype == 'DV' || ($trans->Vtype == 'JV' && (float)$trans->Debit > 0)) {
         //Insert to customer ledger Table 
         $data2 = array(
           'transaction_id' => generator(15),
