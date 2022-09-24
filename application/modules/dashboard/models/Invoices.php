@@ -258,6 +258,7 @@ class Invoices extends CI_Model {
 
     //Invoice entry
     public function invoice_entry($order_id = null, $quotation_id = null) {
+      
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -339,7 +340,7 @@ class Invoices extends CI_Model {
                         'customer_id' => $customer_id,
                         'invoice_no' => $invoice_id,
                         'receipt_no' => $this->auth->generator(15),
-                        'date' => $this->input->post('invoice_date', TRUE),
+                        'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
@@ -353,7 +354,7 @@ class Invoices extends CI_Model {
                     'transaction_id' => generator(15),
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
-                    'date' => $this->input->post('invoice_date', TRUE),
+                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('grand_total_price', TRUE),
                     'status' => 1
                 );
@@ -1147,7 +1148,7 @@ class Invoices extends CI_Model {
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
                     'receipt_no' => $this->auth->generator(15),
-                    'date' => $this->input->post('invoice_date', TRUE),
+                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('paid_amount', TRUE),
                     'payment_type' => 1,
                     'description' => 'ITP',
@@ -1161,7 +1162,7 @@ class Invoices extends CI_Model {
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
                 'invoice_no' => $invoice_id,
-                'date' => $this->input->post('invoice_date', TRUE),
+                'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                 'amount' => $this->input->post('grand_total_price', TRUE),
                 'status' => 1
             );
@@ -1618,7 +1619,7 @@ class Invoices extends CI_Model {
                         'customer_id' => $customer_id,
                         'invoice_no' => $invoice_id,
                         'receipt_no' => $this->auth->generator(15),
-                        'date' => $this->input->post('invoice_date', TRUE),
+                        'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
@@ -1632,7 +1633,7 @@ class Invoices extends CI_Model {
                     'transaction_id' => generator(15),
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
-                    'date' => $this->input->post('invoice_date', TRUE),
+                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('grand_total_price', TRUE),
                     'status' => 1
                 );
@@ -2220,7 +2221,7 @@ class Invoices extends CI_Model {
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
                     'receipt_no' => $this->auth->generator(15),
-                    'date' => date('Y-m-d', strtotime(is_null($this->input->post('invoice_date', TRUE)) ? date('Y-m-d') : $this->input->post('invoice_date', TRUE))),
+                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('paid_amount', TRUE),
                     'payment_type' => 1,
                     'description' => 'ITP',
@@ -2234,7 +2235,7 @@ class Invoices extends CI_Model {
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
                 'invoice_no' => $invoice_id,
-                'date' => $this->input->post('invoice_date', TRUE),
+                'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                 'amount' => $this->input->post('grand_total_price', TRUE),
                 'status' => 1
             );
@@ -2668,7 +2669,7 @@ class Invoices extends CI_Model {
                             'customer_id' => $customer_id,
                             'invoice_no' => $invoice_id,
                             'receipt_no' => $this->auth->generator(15),
-                            'date' => $this->input->post('invoice_date', TRUE),
+                            'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                             'amount' => $this->input->post('paid_amount', TRUE),
                             'payment_type' => 1,
                             'description' => 'ITP',
@@ -2682,7 +2683,7 @@ class Invoices extends CI_Model {
                         'transaction_id' => $this->auth->generator(15),
                         'customer_id' => $customer_id,
                         'invoice_no' => $invoice_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
+                        'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('grand_total_price', TRUE),
                         'status' => 1
                     );
@@ -3346,7 +3347,7 @@ class Invoices extends CI_Model {
                         'customer_id' => $customer_id,
                         'invoice_no' => $invoice_id,
                         'receipt_no' => $this->auth->generator(15),
-                        'date' => $this->input->post('invoice_date', TRUE),
+                        'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
@@ -3360,7 +3361,7 @@ class Invoices extends CI_Model {
                     'transaction_id' => $this->auth->generator(15),
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
-                    'date' => $this->input->post('invoice_date', TRUE),
+                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('grand_total_price', TRUE),
                     'status' => 1
                 );

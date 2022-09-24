@@ -386,13 +386,13 @@ class Customers extends CI_Model {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
 			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
-			$from_addon = "AND STR_TO_DATE(customer_ledger.date, '%m-%d-%Y')>=DATE('" . $from_date. "')";
+			$from_addon = "AND STR_TO_DATE(customer_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')";
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
 			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
-			$to_addon = "AND STR_TO_DATE(customer_ledger.date, '%m-%d-%Y')<=DATE('" . $to_date. "')";
+			$to_addon = "AND STR_TO_DATE(customer_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')";
 		}
 		$this->db->reset_query();
 		$query = $this->db->query("SELECT * FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 $from_addon $to_addon;");
