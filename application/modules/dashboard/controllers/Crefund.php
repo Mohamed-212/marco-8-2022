@@ -517,5 +517,14 @@ class Crefund extends MX_Controller {
             }
         }
     }
+
+    public function update_database() {
+        $sql="INSERT INTO customer_ledger (`transaction_id`,`customer_id`,`date`,`amount` ,`payment_type` ,`description` ,`status` ) SELECT '".generator(15)."',acc0.customer_id,A.VDate,A.Credit,1,'ITP',1 from acc_coa acc0 join acc_transaction A on SUBSTR(A.VNo, 4)=acc0.HeadCode where acc0.`PHeadCode` LIKE '1131' and acc0.HeadCode in (SELECT SUBSTR(VNo, 4) AS HeadCode from acc_transaction acc1 WHERE COAID =3 and HeadCode not in (SELECT COAID as HeadCode from acc_transaction acc2 where COAID !=3 and Narration  LIKE 'Opening balance%'));";
+            $result= $this->db->query($sql);
+
+            dd($this->db->affectedRows);
+        
+    }
+
   
 }
