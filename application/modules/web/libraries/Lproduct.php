@@ -91,24 +91,24 @@ class Lproduct
         }
         // translation part end
         $productModelOnly = trim(preg_replace("/- C.*$/i", '', $product_info->product_model));
-        $varients = $CI->db->select('*')->from('product_information')->where('product_name !=', $product_info->product_name)->where('product_model LIKE', "%$productModelOnly%")->get()->result_array();
+        $varients = $CI->db->select('*')->from('product_information')->where('product_model LIKE', "%$productModelOnly%")->get()->result_array();
 
         $varientsArray = [];
         foreach ($varients as $product) {
-            $productVarients = explode(',', $product['variants']);
+            // $productVarients = ;
             
             // check if only size was added
-            if (!is_array($productVarients) && !isset($productVarients[1])) continue;
+            // if (!is_array($productVarients) && !isset($productVarients[1])) continue;
             
 
             // get color varient information
-            $colorVarient = $CI->Variants->variant_search_item($productVarients[1]);
+            // $colorVarient = $CI->Variants->variant_search_item($productVarients[1]);
 
             // var_dump($colorVarient);
             // if varient is not valied
-            if (!$colorVarient || !isset($colorVarient[0])) continue;
+            // if (!$colorVarient || !isset($colorVarient[0])) continue;
 
-            $product['color'] = $colorVarient[0];
+            $product['color'] = trim(substr($product['product_model'], strlen($productModelOnly)+ 3));
             
             $varientsArray[] = $product;
         }
@@ -128,6 +128,7 @@ class Lproduct
             'best_sales'      => $best_sales,
             'footer_block'    => $footer_block,
             'product_name'    => trim(preg_replace("/- C.*/i", "", $product_name)),
+            'product_color'    => trim(substr($product['product_model'], strlen($productModelOnly)+ 3)),
             'brand_name'      => $brand_name,
             'brand_id'        => $product_info->brand_id,
             'product_id'      => $product_info->product_id,
