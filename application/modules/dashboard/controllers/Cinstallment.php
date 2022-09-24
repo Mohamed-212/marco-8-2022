@@ -120,7 +120,7 @@ class Cinstallment extends MX_Controller
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
-            'title' => display('manage_invoice'),
+            'title' => display('manage_installment'),
             'invoices_list' => $invoices_list,
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
