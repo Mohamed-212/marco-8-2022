@@ -96,7 +96,7 @@
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4><?php echo display('manage_invoice') ?></h4>
+                            <h4><?php echo display('manage_installment') ?></h4>
                         </div>
                     </div>
                     <div class="panel-body">
