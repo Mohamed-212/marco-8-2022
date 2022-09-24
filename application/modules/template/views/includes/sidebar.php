@@ -41,7 +41,13 @@
                 <li
                     class="active">
                     <a
-                        href="<?php echo base_url('dashboard/Crefund/manage_return') ?>"><?php echo display('manage_invoice') ?></a>
+                        href="<?php echo base_url('dashboard/Crefund/manage_return') ?>"><?php echo display('manage_return') ?></a>
+                </li>
+
+                <li
+                    class="active">
+                    <a
+                        href="<?php echo base_url('dashboard/Crefund/return_report') ?>"><?php echo display('return_product_report') ?></a>
                 </li>
                
             </ul>

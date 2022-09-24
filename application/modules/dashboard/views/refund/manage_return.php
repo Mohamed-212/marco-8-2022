@@ -8,12 +8,12 @@
             <i class="pe-7s-note2"></i>
         </div>
         <div class="header-title">
-            <h1><?php echo display(isset($is_order) ? 'manage_order' : 'manage_invoice') ?></h1>
-            <small><?php echo display(isset($is_order) ? 'manage_your_order' : 'manage_your_invoice') ?></small>
+            <h1><?php echo display(isset($is_order) ? 'manage_order' : 'manage_return') ?></h1>
+            <small><?php echo display(isset($is_order) ? 'manage_your_order' : 'manage_your_return') ?></small>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
-                <li><a href="#"><?php echo display(isset($is_order) ? 'order' : 'invoice') ?></a></li>
-                <li class="active"><?php echo display(isset($is_order) ? 'manage_order' : 'manage_invoice') ?></li>
+                <li><a href="#"><?php echo display(isset($is_order) ? 'order' : 'return') ?></a></li>
+                <li class="active"><?php echo display(isset($is_order) ? 'manage_order' : 'manage_return') ?></li>
             </ol>
         </div>
     </section>

@@ -453,4 +453,27 @@ class Products extends CI_Model {
 
         return $query->row();
     }
+
+    public function return_product_report($from_date=null,$to_date=null,$status=null){
+		$this->db->select('p.product_name,d.variant_name,pr.product_id,pr.variant_id,SUM(pr.quantity) as quantity,pr.status,pr.created_at');
+		$this->db->from('product_return pr');
+        $this->db->join('variant d', 'd.variant_id = pr.variant_id');
+        $this->db->join('product_information p', 'p.product_id = pr.product_id');
+        if (!empty($from_date)) {
+			$time1 = strtotime($from_date);
+			$newformat1 = date('Y-m-d',$time1);
+			$this->db->where('pr.created_at >=', $from_date);
+		}
+		if (!empty($to_date)) {
+			$time2 = strtotime($to_date);
+			$newformat2 = date('Y-m-d',$time2);
+			$this->db->where('pr.created_at <=', $to_date);
+		}
+		if (!empty($status)) {
+			$this->db->where('pr.status =', $status);
+		}
+
+		$this->db->group_by('pr.product_id,pr.variant_id,pr.status');
+		return $this->db->get()->result_array();
+	}
 }

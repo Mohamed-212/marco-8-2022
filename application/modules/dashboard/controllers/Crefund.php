@@ -9,6 +9,7 @@ class Crefund extends MX_Controller {
         parent::__construct();
         $this->auth->check_user_auth();
         $this->load->model(array('dashboard/Invoices'));
+        $this->load->library('dashboard/lproduct');
         $this->load->library('dashboard/linvoice');
         $this->load->library('dashboard/occational');
     }
@@ -524,6 +525,16 @@ class Crefund extends MX_Controller {
 
             dd($this->db->affectedRows);
         
+    }
+
+    public function return_report() {
+        $this->permission->check_label('customer_balance_report')->read()->redirect();
+        $from_date = $this->input->post('from_date', TRUE);
+        $to_date  = $this->input->post('to_date', TRUE);
+        $status  = $this->input->post('status', TRUE);
+        $content  = $this->lproduct->return_product_report($from_date, $to_date,$status);
+        $this->template_lib->full_admin_html_view($content);
+
     }
 
   
