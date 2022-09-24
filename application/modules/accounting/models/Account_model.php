@@ -1361,12 +1361,12 @@ class Account_model extends CI_Model
   // journal voucher no
   public function journal()
   {
-    return $data = $this->db->select("Max(VNo) as voucher")
+    return $data = $this->db->select("VNo as voucher")
       ->from('acc_transaction')
       ->like('VNo', 'Journal-', 'after')
       ->order_by('ID', 'desc')
       ->get()
-      ->result_array();
+      ->row();
   }
 
   // Insert journal voucher

@@ -695,7 +695,7 @@ class Accounting extends MX_Controller
   {
     $data['title']      = display('journal_voucher');
     $data['acc']        = $this->account_model->TransaccJ();
-    $data['voucher_no'] = $this->account_model->journal();
+    $data['voucher_no'] = [(array)$this->account_model->journal()];
     $data['print_only'] = false;
     $data['page']       = "journal_voucher";
     $content = $this->parser->parse('accounting/journal_voucher', $data, true);
