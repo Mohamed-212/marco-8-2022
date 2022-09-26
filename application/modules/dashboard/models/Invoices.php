@@ -402,13 +402,15 @@ class Invoices extends CI_Model {
                     $installment_amount = $this->input->post('amount', TRUE);
                     $installment_due_date = $this->input->post('due_date', TRUE);
                     for ($i = 0; $i < $installment_month_no; $i++) {
+                        // echo date('Y-m-d', strtotime($installment_due_date[$i])) . '<br>';
                         $installment_data = array(
                             'invoice_id' => $invoice_id,
                             'amount' => $installment_amount[$i],
-                            'due_date' => $installment_due_date[$i],
+                            'due_date' => date('Y-m-d', strtotime($installment_due_date[$i])),
                         );
                         $this->db->insert('invoice_installment', $installment_data);
                     }
+                    // echo "<pre>";print_r($installment_due_date);exit;
                 }
 
                 //Invoice details info
