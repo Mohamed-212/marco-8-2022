@@ -214,19 +214,19 @@
                                             </a>
                                         </li> -->
                                         <li>
-                                            <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
-                                                <span class="number"> <?php echo display('3') ?> </span>
+                                            <a href="#tab2" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display('2') ?> </span>
                                                 <span class="desc"><?php echo display('price') ?></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#tab4" data-toggle="tab" class="step" aria-expanded="true">
-                                                <span class="number"> <?php echo display('4') ?> </span>
+                                            <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display('3') ?> </span>
                                                 <span class="desc"><?php echo display('image') ?></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#tab5" data-toggle="tab" class="step" aria-expanded="true">
+                                            <a href="#tab4" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('5') ?> </span>
                                                 <span class="desc"><?php echo display('web_store') ?></span>
                                             </a>
@@ -288,7 +288,7 @@
                                                        class="col-sm-3 col-form-label"><?php echo display('size') ?> <span
                                                         class="color-red">*</span></label>
                                                 <div class="col-sm-9 custom_select">
-                                                    <select name="variant[]" class="form-control select2"  required=""
+                                                    <select name="variant[]" class="form-control select2" data-tags="true" required=""
                                                             id="variant">
                                                         <option></option>
                                                         <?php
@@ -325,7 +325,7 @@
                                                     <span class="color-red">*</span></label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control select2 width_100p find_filter"
-                                                            id="category_id" name="category_id" required="">
+                                                            id="category_id" name="category_id" data-tags="true" required="">
                                                         <option value=""><?php echo display('select_one') ?></option>
                                                         <?php
                                                         if ($category_list) {
@@ -404,7 +404,7 @@
                                                        class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control select2 width_100p" id="brand"
-                                                            name="brand">
+                                                            name="brand" data-tags="true">
                                                         <option value=""><?php echo display('select_one') ?></option>
                                                         <?php foreach ($brand_list as $brand) { ?>
                                                             <option value="<?php echo html_escape($brand['brand_id']); ?>">
@@ -416,7 +416,7 @@
                                         </div>
                                            <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label for="variant_colors"
+                                                <!-- <label for="variant_colors"
                                                        class="col-sm-3 col-form-label"><?php echo display('color') ?></label>
                                                 <div class="col-sm-9 custom_select">
                                                     <select name="variant_colors[]" class="form-control select2" 
@@ -435,7 +435,7 @@
                                                         }
                                                         ?>
                                                     </select>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div id="variant_price_area">
                                                 <div class="form-group row hidden">
@@ -537,6 +537,7 @@
 
 
                                 </div>
+                                <?php /* ?>
                                 <div class="tab-pane" id="tab2">
                                     <div class="assembly_row assembly_row_mb">
                                         <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
@@ -604,7 +605,8 @@
                                     </div>
                                     <div class="new_pro_row"></div>
                                 </div>
-                                <div class="tab-pane" id="tab3">
+                                <?php */ ?>
+                                <div class="tab-pane" id="tab2">
                                     <div class="form-group row">
                                         <label for="supplier_price"
                                                class="col-sm-4 col-form-label"><?php echo display('supplier_price') ?>
@@ -734,7 +736,7 @@
                                     </div>
 
                                 </div>
-                                <div class="tab-pane" id="tab4">
+                                <div class="tab-pane" id="tab3">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label for="image_thumb"
@@ -746,7 +748,7 @@
                                         </div>
                                     </div>
                                     <div id="image_row">
-                                        <div id="image_row_0">
+                                        <!-- <div id="image_row_0">
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group row">
@@ -765,10 +767,10 @@
                                                 <input type="button" value="-" onclick="deleteImageRow(this);"
                                                        class="btn btn-danger" id="image-remove">
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab5">
+                                <div class="tab-pane" id="tab4">
 
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -959,6 +961,7 @@
                         </div>
                     </div>
                     <?php echo form_close(); ?>
+                    <button class="btn btn-primary" type="button" id="log" >Loggg</button>
                 </div>
             </div>
         </div>
@@ -966,3 +969,10 @@
 </div>
 <!-- Add Product Form End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_product_form.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $('#log').click(function() {
+            console.log($('#variant').val());
+        });
+    });
+</script>
