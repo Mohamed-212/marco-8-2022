@@ -155,6 +155,10 @@
                     class="<?php echo (($this->uri->segment(2) == 'Cproduct' && ($this->uri->segment(3) == '') ? 'active' : '')) ?>">
                     <a href="<?php echo base_url('dashboard/Cproduct') ?>"><?php echo display('add_product') ?></a>
                 </li>
+                <li
+                    class="<?php echo (($this->uri->segment(2) == 'Cproduct' && ($this->uri->segment(3) == 'add_product_assemply') ? 'active' : '')) ?>">
+                    <a href="<?php echo base_url('dashboard/Cproduct/add_product_assemply') ?>"><?php echo display('add_product_assemply') ?></a>
+                </li>
                 <?php } ?>
 <!--               --><?php //if ($this->permission->check_label('import_product_csv')->access()) { ?>
 <!--                <li class="--><?php //echo (($this->uri->segment(3) == 'add_product_csv' ? 'active' : '')) ?><!--">-->

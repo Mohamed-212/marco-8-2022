@@ -40,6 +40,39 @@ class Lproduct {
         return $productForm;
     }
 
+    //Product Add Form
+    public function product_assemply_add_form() {
+        $CI = & get_instance();
+        $CI->load->model('dashboard/Products');
+        $CI->load->model('dashboard/Suppliers');
+        $CI->load->model('dashboard/Categories');
+        $CI->load->model('dashboard/Brands');
+        $CI->load->model('dashboard/Variants');
+        $CI->load->model('dashboard/Units');
+        $CI->load->model('dashboard/Cfiltration_model');
+
+        $supplier = $CI->Suppliers->supplier_list();
+        $category_list = $CI->Categories->category_list();
+        $brand_list = $CI->Brands->brand_list();
+        $variant_list = $CI->Variants->variant_list();
+        $unit_list = $CI->Units->unit_list();
+        $filter_types = $CI->Cfiltration_model->get_all_types();
+        $languages = $this->languages();
+
+        $data = array(
+            'title' => display('add_product'),
+            'supplier' => $supplier,
+            'category_list' => $category_list,
+            'brand_list' => $brand_list,
+            'variant_list' => $variant_list,
+            'unit_list' => $unit_list,
+            'filter_types' => $filter_types,
+            'languages' => $languages,
+        );
+        $productForm = $CI->parser->parse('dashboard/product/add_assemply_product_form.php', $data, true);
+        return $productForm;
+    }
+
     //Insert product
     public function insert_product($data) {
         $CI = & get_instance();

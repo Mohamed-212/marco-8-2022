@@ -207,12 +207,12 @@
                                                 <span class="desc"><?php echo display('item_information') ?> </span>
                                             </a>
                                         </li>
-                                        <!-- <li>
+                                        <li>
                                             <a href="#tab2" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('2') ?> </span>
                                                 <span class="desc"><?php echo display('assembly') ?></span>
                                             </a>
-                                        </li> -->
+                                        </li>
                                         <li>
                                             <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('3') ?> </span>

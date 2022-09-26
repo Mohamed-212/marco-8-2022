@@ -36,6 +36,14 @@ class Cproduct extends MX_Controller {
         $this->template_lib->full_admin_html_view($content);
     }
 
+    //Index page load
+    public function add_product_assemply() {
+        $this->permission->check_label('add_product')->create()->redirect();
+
+        $content = $this->lproduct->product_assemply_add_form(); // get content
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     //Insert Product and upload
     public function insert_product() {
         $this->permission->check_label('add_product')->create()->redirect();
