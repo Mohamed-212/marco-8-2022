@@ -479,77 +479,154 @@ function calculate_price() {
     }
 }
 
+// function addassemblyprorow() {
+//     var tableLength = $("#addassemblypro tbody tr").length;
+//     var tableRow;
+//     var count;
+//     var idno;
+//     var noofrows = 0;
+
+//     if (tableLength > 0) {
+//         tableRow = $("#addassemblypro tbody tr:last").attr('id');
+//         count = tableRow.substring(3);
+//         count = Number(count) + 1;
+
+//     } else {
+//         // no table row
+//         count = 1;
+//         noofrows++;
+//     }
+
+
+//     $("#addassemblypro tbody tr").each(function (index, tr) {
+//         idno = Number($(this).attr('id').substring(3));
+//         var rowvalue = Number($(".assembly_product_id_" + idno).val());
+//         if (rowvalue > 0) {
+
+//             noofrows++;
+
+//         } else {
+//             noofrows = 0;
+//             Swal({
+//                 type: 'warning',
+//                 title: 'Please select product name!'
+//             });
+//         }
+//     });
+//     if (count < 500 && noofrows > 0) {
+//         // var lastcount = count-1;
+//         //   document.getElementById('assemblypro'+lastcount).readOnly = true;
+//         $("#addassemblyprorow").button("reset");
+
+//         var tr = '<tr id="pro' + count + '" class="' + count + ' appended-new-row">' +
+//                 '<td class="col-sm-6">' +
+//                 '<div class="col-sm-12">' +
+//                 '<div class="form-group row">' +
+//                 '<div class="input-group">' +
+//                 '<input type="text" class="form-control assemblyproductSelection" onkeyup="assembly_productList(' + count + ')"  id="assemblypro' + count + '" name="assemblypro[' + count + ']" placeholder="' + display('product_name') + '"  />' +
+//                 '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
+//                 '<div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyprorow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
+//                 '</td>' +
+//                 '<td class="col-sm-3">' +
+//                 '<div class="col-sm-12">' +
+//                 '<div class="form-group row">' +
+//                 '<input type="text" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
+//                 '</div></div></td>' +
+//                 '<td class="col-sm-3">' +
+//                 '<div class="col-sm-12">' +
+//                 '<div class="form-group row">' +
+//                 '<input type="text" class="product_price' + count + ' form-control" id="product_price_' + count + '" value=""  name="product_price[' + count + ']" min="0" readonly=""  />' +
+//                 '</div></div></td>' +
+//                 '</tr>';
+//         if (tableLength > 0) {
+//             $("#addassemblypro tbody tr:last").after(tr);
+//         } else {
+//             $("#addassemblypro tbody").append(tr);
+//         }
+
+//     } else if (count >= 500) {
+//         Swal({
+//             type: 'warning',
+//             title: 'No more Rows!'
+//         });
+//     }
+
+// }
+
 function addassemblyprorow() {
     var tableLength = $("#addassemblypro tbody tr").length;
-    var tableRow;
-    var count;
-    var idno;
-    var noofrows = 0;
+        var tableRow;
+        var count;
+        var idno;
+        var noofrows = 0;
 
-    if (tableLength > 0) {
-        tableRow = $("#addassemblypro tbody tr:last").attr('id');
-        count = tableRow.substring(3);
-        count = Number(count) + 1;
-
-    } else {
-        // no table row
-        count = 1;
-        noofrows++;
-    }
-
-
-    $("#addassemblypro tbody tr").each(function (index, tr) {
-        idno = Number($(this).attr('id').substring(3));
-        var rowvalue = Number($(".assembly_product_id_" + idno).val());
-        if (rowvalue > 0) {
-
-            noofrows++;
+        if (tableLength > 0) {
+            tableRow = $("#addassemblypro tbody tr:last").attr('id');
+            count = tableRow.substring(3);
+            count = Number(count) + 1;
 
         } else {
-            noofrows = 0;
+            // no table row
+            count = 1;
+            noofrows++;
+        }
+
+
+        $("#addassemblypro tbody tr").each(function (index, tr) {
+            idno = Number($(this).attr('id').substring(3));
+            // console.log(idno);
+            var rowvalue = Number($(".assembly_product_id_" + idno).val());
+            // console.log(rowvalue);
+            if (rowvalue > 0) {
+
+                noofrows++;
+
+            } else {
+                noofrows = 0;
+                Swal({
+                    type: 'warning',
+                    title: 'Please select product name!'
+                });
+            }
+        });
+        if (count < 500 && noofrows > 0) {
+            // var lastcount = count-1;
+            //   document.getElementById('assemblypro'+lastcount).readOnly = true;
+            $("#addassemblyprorow").button("reset");
+
+            var tr = '<tr id="pro' + count + '" class="' + count + ' appended-new-row">' +
+                    '<td class="col-sm-6">' +
+                    '<div class="col-sm-12">' +
+                    '<div class="form-group row">' +
+                    '<div class="input-group">' +
+                    '<input type="text" class="form-control assemblyproductSelection" onkeyup="assembly_productList(' + count + ')"  id="assemblypro' + count + '" name="assemblypro[' + count + ']" placeholder="' + display('product_name') + '"  />' +
+                    '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
+                    '<div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyrow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
+                    '</td>' +
+                    '<td class="col-sm-3">' +
+                    '<div class="col-sm-12">' +
+                    '<div class="form-group row">' +
+                    '<input type="text" name="product_whole[' + count + ']" id="price_whole_item_' + count + '" class="price_whole_item_' + count + ' form-control" min="0" readonly="" />' +
+                    '<input type="hidden" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
+                    '</div></div></td>' +
+                    '<td class="col-sm-3">' +
+                    '<div class="col-sm-12">' +
+                    '<div class="form-group row">' +
+                    '<input type="hidden" class="product_price' + count + ' form-control" id="product_price_' + count + '" value=""  name="product_price[' + count + ']" min="0" readonly=""  />' +
+                    '</div></div></td>' +
+                    '</tr>';
+            if (tableLength > 0) {
+                $("#addassemblypro tbody tr:last").after(tr);
+            } else {
+                $("#addassemblypro tbody").append(tr);
+            }
+
+        } else if (count >= 500) {
             Swal({
                 type: 'warning',
-                title: 'Please select product name!'
+                title: 'No more Rows!'
             });
         }
-    });
-    if (count < 500 && noofrows > 0) {
-        // var lastcount = count-1;
-        //   document.getElementById('assemblypro'+lastcount).readOnly = true;
-        $("#addassemblyprorow").button("reset");
-
-        var tr = '<tr id="pro' + count + '" class="' + count + ' appended-new-row">' +
-                '<td class="col-sm-6">' +
-                '<div class="col-sm-12">' +
-                '<div class="form-group row">' +
-                '<div class="input-group">' +
-                '<input type="text" class="form-control assemblyproductSelection" onkeyup="assembly_productList(' + count + ')"  id="assemblypro' + count + '" name="assemblypro[' + count + ']" placeholder="' + display('product_name') + '"  />' +
-                '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' + count + '" value=""  name="assembly_product_id[' + count + ']"  />' +
-                '<div class="input-group-addon btn btn-danger remove_assembly_row" onclick="removeassemblyprorow(' + count + ')"><i class="ti-minus"></i></div></div></div>' +
-                '</td>' +
-                '<td class="col-sm-3">' +
-                '<div class="col-sm-12">' +
-                '<div class="form-group row">' +
-                '<input type="text" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
-                '</div></div></td>' +
-                '<td class="col-sm-3">' +
-                '<div class="col-sm-12">' +
-                '<div class="form-group row">' +
-                '<input type="text" class="product_price' + count + ' form-control" id="product_price_' + count + '" value=""  name="product_price[' + count + ']" min="0" readonly=""  />' +
-                '</div></div></td>' +
-                '</tr>';
-        if (tableLength > 0) {
-            $("#addassemblypro tbody tr:last").after(tr);
-        } else {
-            $("#addassemblypro tbody").append(tr);
-        }
-
-    } else if (count >= 500) {
-        Swal({
-            type: 'warning',
-            title: 'No more Rows!'
-        });
-    }
 
 }
 
