@@ -709,7 +709,7 @@ class Invoices extends CI_Model {
                 $store_id = $this->input->post('store_id', TRUE);
                 $store_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
 
-                //$payment_id = $this->input->post('payment_id', TRUE);
+                $payment_id = $this->input->post('payment_id', TRUE);
                 //$account_no = $this->input->post('account_no', TRUE);
 
                 //1st customer debit total_with_vat
