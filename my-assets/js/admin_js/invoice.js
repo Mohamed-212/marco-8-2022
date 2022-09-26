@@ -157,7 +157,31 @@ function submit_form(e) {
         }).promise().done(function() {
             if (!valid) return;
 
-            $("form#validate, form#normalinvoice").submit();
+            // validate installment amount
+            if ($('#is_installment').val() == '1') {
+                var dueAmount = parseFloat($('#dueAmmount').val());
+                // sum installment amount
+                var installmentAmount = 0;
+                $('#installment_details input[name="amount[]"]').each(function () {
+                    installmentAmount += parseFloat(this.value);
+                }).promise().done(function () {
+                    if (!valid) return;
+                    if (dueAmount == installmentAmount) {
+                        $("form#validate, form#normalinvoice").submit();
+                    } else {
+                        alert(installment_amount_is_not_valid);
+                        valid = false;
+                        return;
+                    }
+                });
+                return;
+            }
+
+            if ($('#payment_id').val() != '') {
+                $("form#validate, form#normalinvoice").submit();
+            } else {
+                alert(payment_bank_not_selected);
+            }
         });
     });
 }
@@ -398,16 +422,16 @@ function add_month() {
                 da = '0' + da;
             }
             var y = d.getFullYear();
-            var date = y + '-' + m + '-' + da;
+            var date = da + '-' + m + '-' + y;
             content += '<div class="row" style="display: flex;justify-content: space-around;">' +
                     '<div class="col-sm-4" style="float: none">' +
                     '<div class="form-group">' +
-                    '<input class="form-control" style="text-align: center;" type="number" name="amount[]" value="' + amount_per_month + '" readonly>' +
+                    '<input class="form-control" style="text-align: center;" type="number" name="amount[]" value="' + amount_per_month + '">' +
                     '</div>' +
                     '</div>' +
                     '<div class="col-sm-4" style="float: none">' +
                     '<div class="form-group">' +
-                    '<input class="form-control" style="text-align: center;" type="date" value="' + date + '" name="due_date[]" readonly>' +
+                    '<input class="form-control" style="text-align: center;" type="text" value="' + date + '" name="due_date[]" readonly>' +
                     '</div>' +
                     '</div>' +
                     '</div>';
