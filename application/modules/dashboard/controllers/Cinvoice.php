@@ -532,6 +532,13 @@ class Cinvoice extends MX_Controller {
         echo json_encode($product_info);
     }
 
+    // Retrieve product data
+    public function retrieve_product_all_data() {
+        $product_id = $this->input->post('product_id', TRUE);
+        $product_info = $this->Invoices->get_total_product_data($product_id);
+        echo json_encode($product_info);
+    }
+
     //purchase search by model
     public function product_search_by_model(){
         $model = $this->input->post('term', TRUE);

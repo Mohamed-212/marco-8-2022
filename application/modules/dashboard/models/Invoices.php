@@ -8,6 +8,7 @@ class Invoices extends CI_Model {
     public function __construct() {
         parent::__construct();
         $this->load->model('dashboard/Customers');
+        $this->load->model('dashboard/Cfiltration_model');
     }
 
     //Select All pricing_types
@@ -4155,6 +4156,8 @@ class Invoices extends CI_Model {
 
         $discount = "";
 
+        $pricing_types = $this->Cfiltration_model->get_pricing_data($product_id);
+
         if (!empty($product_information->onsale) && ($product_information->onsale == 1)) {
             $discount = ($product_information->price - $product_information->onsale_price);
         }
@@ -4182,9 +4185,28 @@ class Invoices extends CI_Model {
             'igst_id' => (!empty($tax['igst_id']) ? $tax['igst_id'] : null),
             'unit' => @$product_information->unit_short_name,
             'assembly' => @$product_information->assembly,
+            'pricing_types' => $pricing_types,
         );
 
         return $data2;
+    }
+
+    //Get total product
+    public function get_total_product_data($product_id) {
+        $this->db->select('product_information.*');
+        $this->db->from('product_information');
+        $this->db->join('unit', 'unit.unit_id = product_information.unit', 'left');
+        $this->db->where(array('product_information.product_id' => $product_id, 'status' => 1));
+        $product_information = $this->db->get()->row();
+        $this->db->select('*')->from('filter_product')
+            ->join('filter_types', 'filter_types.fil_type_id = filter_product.filter_type_id', 'left')
+            ->join('filter_items', 'filter_items.item_id = filter_product.filter_item_id', 'left')
+            ->where('filter_product.product_id', $product_id);
+        $product_information->filters = $this->db->get()->result_object();
+
+        $product_information->pricing_types = $this->Cfiltration_model->get_pricing_data($product_id);
+
+        return $product_information;
     }
 
     //This function is used to Generate Key
