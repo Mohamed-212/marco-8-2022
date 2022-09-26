@@ -1,6 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     var products_with_no_quantity = "<?=display('products_with_no_quantity')?>";
+    var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
+    var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
 </script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
@@ -244,12 +246,12 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="">
-                                            <option value="0">Sell Price</option>
                                             <?php foreach ($all_pri_type as $pri_type) : ?>
                                                 <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
+                                            <option value="0">Sell Price</option>
                                         </select>
                                     </div>
                                 </div>
