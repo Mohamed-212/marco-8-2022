@@ -343,6 +343,8 @@ function stockLimitAjax(t) {
 
 //Invoice installment
 function installment() {
+    var paidAmount = $('#paidAmount').val();
+    var dueAmount = $('#dueAmmount').val();
     $('#installment_details').html('');
     $('#installment_header').html('');
     $('#pay_day').val('');
@@ -360,7 +362,16 @@ function installment() {
         $('#month_no').prop('required', true);
         $('#month_no').attr('aria-required', true);
     }
+    // if due is zero then add all fullpaid to it
+    if (parseInt(dueAmount) == 0) {
+        $('#dueAmmount').val(paidAmount);
+        setTimeout(() => $('#paidAmount').val('0.00'), 20);
+    }
+
     $('.installment_setup').toggle();
+    $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
+
+    $('#installment_id').addClass('btn-success').removeClass('btn-warning');
 }
 
 function add_month() {
@@ -417,8 +428,9 @@ function full_paid() {
     $("#paidAmount").val(grandTotal);
     invoice_paidamount();
     $('.installment_setup').hide();
-    $('#installment_id').hide();
+    $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
     $("#is_installment").val(0);
+    $('#full').removeClass('btn-warning').addClass('btn-success');
 }
 
 //Delete a row from invoice table
