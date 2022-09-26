@@ -575,11 +575,11 @@
                                     <tr>
                                         <td align="center">
                                             <input type="hidden" name="baseUrl" class="baseUrl" value="<?php echo base_url(); ?>" />
-                                            <input class="btn btn-warning" id="full" value="<?php echo display('full_paid') ?>" tabindex="15" onclick="full_paid();" type="button">
+                                            <input class="btn btn-warning payment-type-btn" id="full" value="<?php echo display('full_paid') ?>" tabindex="15" onclick="full_paid();" type="button">
 
                                             <input type="hidden" name="is_installment" id="is_installment" value="0">
                                             <?php if (!isset($order)) : ?>
-                                                <input class="btn btn-primary" id="installment_id" value="<?php echo display('installment') ?>" tabindex="15" onclick="installment();" type="button">
+                                                <input class="btn btn-warning payment-type-btn" id="installment_id" value="<?php echo display('installment') ?>" tabindex="15" onclick="installment();" type="button">
                                             <?php endif ?>
 
                                         </td>
@@ -632,11 +632,11 @@
                                             <div class="row">
                                                 <div class="col-sm-7">
                                                     <div class="form-group row">
-                                                        <label for="account_no" class="col-sm-4 col-form-label"><?php echo display('account_no') ?>
+                                                        <!-- <label for="account_no" class="col-sm-4 col-form-label"><?php echo display('account_no') ?>
                                                             :</label>
                                                         <div class="col-sm-8">
                                                             <input class="form-control" type="text" name="account_no" id="account_no" placeholder="<?php echo display('account_no') ?>">
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </div>
                                             </div>
