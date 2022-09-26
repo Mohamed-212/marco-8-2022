@@ -1,8 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     var products_with_no_quantity = "<?=display('products_with_no_quantity')?>";
-    var installment_amount_is_not_valid = "installment total amount is not valid";
-    var payment_bank_not_selected = "payment bank is not selected";
+    var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
+    var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
 </script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
