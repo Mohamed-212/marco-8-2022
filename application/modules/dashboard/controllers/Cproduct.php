@@ -2185,14 +2185,22 @@ class Cproduct extends MX_Controller
                         <thead>
                             <tr>
                              <th class="col-sm-6 text-center">' . display('product_name') . '  </th>
-                             <th class="col-sm-3 text-center">' . display('supplier_price') . ' </th>
-                             <th class="col-sm-3 text-center"> ' . display('sell_price') . ' </th>
+                             <!-- <th class="col-sm-3 text-center">' . display('supplier_price') . ' </th>
+                             <th class="col-sm-3 text-center"> ' . display('sell_price') . ' </th> -->
+                             <th class="col-sm-6 text-center">' . display('whole_price') . ' </th>
                             </tr>
                         </thead>
                         <tbody >';
 
         if (isset($viewdata) && !empty($viewdata)) {
             foreach ($viewdata as $key => $value) {
+                $pricing = $this->db->select('*')->from('pricing_types_product')->where('product_id', $value['product_id'])->get()->result_array();
+                        $wholePrice = 0;
+                        foreach ($pricing as $pri) {
+                            if ($pri['pri_type_id'] == 1) {
+                                $wholePrice = $pri['product_price'];
+                            }
+                        }
                 $tabledata .= '
                         <tr>
                         <td class="col-sm-6">
@@ -2204,20 +2212,21 @@ class Cproduct extends MX_Controller
                         </div>
                         </div>
                         </td>
-                        <td class="col-sm-3">
+                        <td class="col-sm-6">
                         <div class="col-sm-12">
                         <div class="form-group row">
-                        <input type="text" name="" value="' . $value['supplier_price'] . '" id="" class="form-control"  min="0" readonly="" />
+                        <input type="text" name="" value="' . $wholePrice . '" id="" class="form-control"  min="0" readonly="" />
+                        <input type="hidden" name="" value="' . $value['supplier_price'] . '" id="" class="form-control"  min="0" readonly="" />
                         </div>
                         </div>
                         </td>
-                        <td class="col-sm-3">
+                        <!-- <td class="col-sm-3">
                         <div class="col-sm-12">
                         <div class="form-group row">
-                        <input type="text" name="" value="' . $value['price'] . '" id="" class="form-control"  min="0" readonly="" />
+                        <input type="hidden" name="" value="' . $value['price'] . '" id="" class="form-control"  min="0" readonly="" />
                         </div>
                         </div>
-                        </td>         
+                        </td> -->        
                         </tr>';
             }
         }
