@@ -253,12 +253,12 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="">
-                                            <option value="0">Sell Price</option>
                                             <?php foreach ($all_pri_type as $pri_type) : ?>
                                                 <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
+                                            <option value="0">Sell Price</option>
                                         </select>
                                     </div>
                                 </div>
