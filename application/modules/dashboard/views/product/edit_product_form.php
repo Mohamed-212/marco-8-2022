@@ -590,6 +590,7 @@
                                                         <div class="col-sm-9 custom_select">
                                                             <select name="supplier_id" class="form-control select2" 
                                                                     id="supplier">
+                                                                    <option>select one</option>
                                                                         <?php
                                                                         if ($supplier_list) {
                                                                             foreach ($supplier_list as $supplier) {

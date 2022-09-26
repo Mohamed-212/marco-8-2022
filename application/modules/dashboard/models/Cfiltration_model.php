@@ -82,7 +82,7 @@ class Cfiltration_model extends CI_Model {
         $this->db->from('product_information');
         $this->db->where('product_id', $product_id);
         $query = $this->db->get();
-        return$query->row_array();
+        return $query->row_array();
     }
 
     public function get_assembly_products($product_id) {
@@ -91,7 +91,8 @@ class Cfiltration_model extends CI_Model {
         $this->db->where('parent_product_id', $product_id);
         $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
         $query = $this->db->get();
-        return $query->result_array();
+        $result = $query->result_array();
+        return $result;
     }
 
     public function category_list_all() {

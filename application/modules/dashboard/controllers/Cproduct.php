@@ -1489,8 +1489,9 @@ class Cproduct extends MX_Controller
                              </div>
                                 ' . display('product_name') . '
                             </th>
-                            <th class="col-sm-3 text-center">' . display('supplier_price') . '</th>
-                            <th class="col-sm-3 text-center">' . display('sell_price') . '</th>
+                            <!-- <th class="col-sm-3 text-center">' . display('supplier_price') . '</th>
+                            <th class="col-sm-3 text-center">' . display('sell_price') . '</th> -->
+                            <th class="col-sm-3 text-center">' . display('whole_price') . '</th>
                            </tr>
                          </thead>
                         <tbody>';
@@ -1498,6 +1499,16 @@ class Cproduct extends MX_Controller
 
                 if (isset($assembly_products_data) && !empty($assembly_products_data)) {
                     foreach ($assembly_products_data as $key => $value) {
+                        $pricing = $this->db->select('*')->from('pricing_types_product')->where('product_id', $value['product_id'])->get()->result_array();
+                        $wholePrice = 0;
+                        $customerPrice = 0;
+                        foreach ($pricing as $pri) {
+                            if ($pri['pri_type_id'] == 1) {
+                                $wholePrice = $pri['product_price'];
+                            } else {
+                                $customerPrice = $pri['product_price'];
+                            }
+                        }
                         $table .= '<tr id="pro' . $x . '" class="' . $x . '">'
                             . '<td class="col-sm-6">'
                             . '<div class="col-sm-12">'
@@ -1512,12 +1523,14 @@ class Cproduct extends MX_Controller
                             . '<td class="col-sm-3">'
                             . '<div class="col-sm-12">'
                             . '<div class="form-group row">'
-                            . '<input type="text" class="price_item' . $x . ' form-control" value="' . $value['supplier_price'] . '"  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                            . '<input type="text" class="price_whole_item_' . $x . ' form-control" value="' . $wholePrice . '"  id="price_whole_item_' . $x . '" name="product_whole[' . $x . ']" min="0" readonly="" />'
+                            . '<input type="hidden" class="price_item' . $x . ' form-control" value="' . $value['supplier_price'] . '"  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
                             . '</div></div></td></td>'
                             . '<td class="col-sm-3">'
                             . '<div class="col-sm-12">'
                             . '<div class="form-group row">'
-                            . '<input type="text" class="product_price' . $x . ' form-control" value="' . $value['price'] . '"  id="product_price_' . $x . '" name="product_price[' . $x . ']" min="0" readonly="" />'
+                            . '<input type="hidden" class="product_price' . $x . ' form-control" value="' . $value['price'] . '"  id="product_price_' . $x . '" name="product_price[' . $x . ']" min="0" readonly="" />'
+                            . '<input type="hidden" class="product_customer_price_' . $x . ' form-control" value="' . $customerPrice . '"  id="product_customer_price__' . $x . '" name="product_customer_price_[' . $x . ']" min="0" readonly="" />'
                             . '</div></div></td></tr>';
                         $x++;
                     } // /.foreach        
@@ -1536,7 +1549,10 @@ class Cproduct extends MX_Controller
                         . '<td class="col-sm-6">'
                         . '<div class="col-sm-12">'
                         . '<div class="form-group row">'
-                        . '<input type="text" class="price_item' . $x . ' form-control" value=""  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="text" class="price_whole_item_' . $x . ' form-control" value=""  id="price_whole_item_' . $x . '" name="product_whole[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="hidden" class="price_item' . $x . ' form-control" value=""  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="hidden" class="product_price' . $x . ' form-control" value=""  id="product_price_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="hidden" class="product_customer_price_' . $x . ' form-control" value=""  id="product_customer_price__' . $x . '" name="product_customer_price_[' . $x . ']" min="0" readonly="" />'
                         . '</div></div></td></tr>';
                 }
                 $table .= '</tbody>
