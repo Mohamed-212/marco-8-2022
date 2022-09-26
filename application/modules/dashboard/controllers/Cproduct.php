@@ -119,7 +119,7 @@ class Cproduct extends MX_Controller
                 $category_id = $new_category_id;
             }
 
-           
+
 
             $variant = $this->input->post('variant', TRUE);
             if ($variant) {
@@ -146,15 +146,28 @@ class Cproduct extends MX_Controller
                     // add this size variant to only current category
                     // $category_ids = $this->db->select('category_id')->from('product_category')->where()->get()->result();
                     // foreach ($category_ids as $category_id):
-                        $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variant_id) . ", now(), now())");
+                    $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variant_id) . ", now(), now())");
                     // endforeach;
                 }
             }
 
+            // check if brand is not found then create new one
+            $brand_id = $this->input->post('brand', TRUE);
+            $brandIsFound = $this->db->select('brand_id')->from('brand')->where('brand_id', $brand_id)->get()->num_rows();
+            if ($brandIsFound == 0) {
+                // create new brand with that name
+                $new_brand_id = $this->auth->generator(15);
+                $brand_data = array(
+                    'brand_id'   => $new_brand_id,
+                    'brand_name' => $brand_id,
+                    'brand_image' => null,
+                    'website'    => '',
+                    'status'     => 1
+                );
+                $this->Brands->brand_entry($brand_data);
 
-            echo "<pre>";
-            var_dump($categoryIsFound, $category_id, $found, $variant);
-            exit;
+                $brand_id = $new_brand_id;
+            }
 
             $variant_colors = $this->input->post('variant_colors', TRUE);
             if (!empty($variant_colors)) {
@@ -178,7 +191,7 @@ class Cproduct extends MX_Controller
                 'product_id' => $product_id,
                 'product_name' => $this->input->post('product_name', TRUE),
                 'supplier_id' => $this->input->post('supplier_id', TRUE),
-                'category_id' => $this->input->post('category_id', TRUE),
+                'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
                 'bar_code' => $this->input->post('bar_code', TRUE),
                 'price' => $this->input->post('price', TRUE),
@@ -186,7 +199,7 @@ class Cproduct extends MX_Controller
                 'unit' => $this->input->post('unit', TRUE),
                 'product_model' => $this->input->post('model', TRUE),
                 'product_details' => $this->input->post('details', TRUE),
-                'brand_id' => $this->input->post('brand', TRUE),
+                'brand_id' => $brand_id,
                 'variants' => implode(",", (array) $full_variant),
                 'default_variant' => $default_variant,
                 'variant_price' => (!empty($variant_prices) ? 1 : 0),

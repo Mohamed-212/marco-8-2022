@@ -961,7 +961,7 @@
                         </div>
                     </div>
                     <?php echo form_close(); ?>
-                    <button class="btn btn-primary" type="button" id="log" >Loggg</button>
+                    <!-- <button class="btn btn-primary" type="button" id="log" >Loggg</button> -->
                 </div>
             </div>
         </div>
@@ -970,9 +970,9 @@
 <!-- Add Product Form End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_product_form.js'; ?>"></script>
 <script>
-    $(document).ready(function() {
-        $('#log').click(function() {
-            console.log($('#variant').val());
-        });
-    });
+    // $(document).ready(function() {
+    //     $('#log').click(function() {
+    //         console.log($('#variant').val());
+    //     });
+    // });
 </script>
