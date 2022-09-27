@@ -383,6 +383,14 @@ class Lorder {
         $order_detail[0]['invoice_discount'] = $order_detail[0]['total_order_discount'];
         $order_detail[0]['created_at'] = $order_detail[0]['date_time'];
 
+        $all_details = [];
+
+		foreach ($order_detail as $detail) {
+			$detail['customer_price'] = 0;
+			$customer_price = $CI->db->select('product_price')->from('pricing_types_product')->where('product_id', $detail['product_id'])->where('pri_type_id', 2)->get()->row();
+			$detail['customer_price'] = $customer_price->product_price;
+			$all_details[] = $detail;
+		}
 
 		$data=array(
 			'title'			   =>display('invoice_details'),
@@ -408,7 +416,7 @@ class Lorder {
 			'due_amount'	   =>$order_detail[0]['due_amount'],
 			'invoice_details'  =>$order_detail[0]['details'],
 			'subTotal_quantity'=>$subTotal_quantity,
-			'invoice_all_data' =>$order_detail,
+			'invoice_all_data' =>$all_details,
 			'isTaxed'          =>$isTaxed,
 			'order_no'         =>$order_no,
 			'quotation_no'     =>$quotation_no,

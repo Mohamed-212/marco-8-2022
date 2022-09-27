@@ -384,7 +384,7 @@
                                                             <thead class="thead">
                                                                 <tr>
                                                                     <th><?php echo display('sl') ?></th>
-                                                                    <th class="hide-me"><?php echo display('product_code') ?></th>
+                                                                    <!-- <th class="hide-me"><?php echo display('product_code') ?></th> -->
 <!--                                                                    <th class="hide-me">--><?php //echo display('item_picture') ?><!--</th>-->
                                                                     <th><?php echo display('product_name') ?></th>
                                                                     <th class="hide-me"><?php echo display('size') ?></th>
@@ -393,6 +393,7 @@
                                                                                                                         ?>
                                                                     <!--</th>-->
                                                                     <th><?php echo display('price') ?></th>
+                                                                    <th><?php echo display('customer_price') ?></th>
                                                                     <th><?php echo display('quantity') ?></th>
                                                                     <?php
                                                                     if ($isTaxed == 1) {
@@ -422,7 +423,7 @@
                                                                 ?>
                                                                         <tr class="<?=$invoice['category_id'] == 'NZUN74MS3GP8QAV' ? 'print-none' : ''?>">
                                                                             <td><?php echo html_escape($invoice['sl']); ?></td>
-                                                                            <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td>
+                                                                            <!-- <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td> -->
 <!--                                                                            <td class='hide-me'>-->
 <!--                                                                                <img src="--><?php //echo base_url() . (!empty(html_escape($invoice['image_thumb'])) ? html_escape($invoice['image_thumb']) : 'assets/img/icons/default.jpg') ?><!--" width="50" height="50">-->
 <!--                                                                            </td>-->
@@ -451,6 +452,7 @@
                                                                                                                                         ?>
                                                                             <!--</td>-->
                                                                             <td><?php echo html_escape($invoice['rate']); ?></td>
+                                                                            <td><?php echo html_escape($invoice['customer_price']); ?></td>
                                                                             <td><?php echo html_escape($invoice['quantity']); ?></td>
 <!--                                                                            <td class='hide-me'>--><?php //echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) ?>
 <!--                                                                            </td>-->

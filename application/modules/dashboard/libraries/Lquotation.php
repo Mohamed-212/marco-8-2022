@@ -419,6 +419,16 @@ class Lquotation {
 		$invoice_detail[0]['quotation_discount'] = $invoice_detail[0]['total_quotation_discount'];
 		$invoice_detail[0]['created_at'] = $invoice_detail[0]['date_time'];
 		
+
+		$all_details = [];
+
+		foreach ($invoice_detail as $detail) {
+			$detail['customer_price'] = 0;
+			$customer_price = $CI->db->select('product_price')->from('pricing_types_product')->where('product_id', $detail['product_id'])->where('pri_type_id', 2)->get()->row();
+			$detail['customer_price'] = $customer_price->product_price;
+			$all_details[] = $detail;
+		}
+
 		$data=array(
 			'title'			   =>display('quotation_details'),
 			'invoice_id'	   =>$invoice_detail[0]['quotation_id'],
@@ -443,7 +453,7 @@ class Lquotation {
 			'due_amount'	   =>$invoice_detail[0]['due_amount'],
 			'invoice_details'  =>$invoice_detail[0]['details'],
 			'subTotal_quantity'=>$subTotal_quantity,
-			'invoice_all_data' =>$invoice_detail,
+			'invoice_all_data' =>$all_details,
 			'isTaxed'          =>$isTaxed,
 			'order_no'         =>$quotation_no,
 			'quotation_no'     =>$quotation_no,
