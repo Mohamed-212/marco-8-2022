@@ -1973,7 +1973,7 @@ class Cproduct extends MX_Controller
     //        }
     //    }
 
-    public function product_excel_insert()
+    public function product_excel_insert_old()
     {
         ini_set('memory_limit', '5000000000M');
         set_time_limit(5000000000);
@@ -2177,6 +2177,329 @@ class Cproduct extends MX_Controller
         }
     }
 
+    public function product_excel_insert()
+    {
+        ini_set('memory_limit', '5000000000M');
+        set_time_limit(5000000000);
+        $upload_file = $_FILES["upload_excel_file"]["name"];
+        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
+        if ($extension == 'csv') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        } elseif ($extension == 'xls') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        } else {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }
+        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
+        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
+        $datacount = count($sheetdata);
+        $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
+        $voucher_date      = date('Y-m-d H:i:s');
+        $store_id = "SDMQ4TIBSH6LAJ1";
+        if ($datacount > 1) {
+            // echo "<pre>";print_r($sheetdata);exit;
+            for ($i = 1; $i < $datacount; $i++) {
+                $cogs_price = 0;
+                $price_types_list = [];
+                $filter_list = [];
+                $brand_id = $sheetdata[$i][0];
+                $product_model = $sheetdata[$i][1] . ' - ' . $sheetdata[$i][2];
+                $product_color = $sheetdata[$i][2];
+                $category_id = $sheetdata[$i][3];
+                $filter_1 = $sheetdata[$i][4];
+                $filter_2 = $sheetdata[$i][5];
+                $variants = $sheetdata[$i][6]; //size
+                $price = $sheetdata[$i][7]; // sell price
+                $g_price = $sheetdata[$i][8]; // whole price
+                $s_price = $sheetdata[$i][9]; // customer price
+                $product_quantity = $sheetdata[$i][10];
+                $product_rate = $sheetdata[$i][11]; // supplier price
+
+                // echo "<pre>";var_dump($variants);exit;
+
+                //GET BRAND NAME
+                $this->db->select('brand_id');
+                $this->db->from('brand');
+                $this->db->where('brand_name', $brand_id);
+                $brandIsFound = $this->db->get()->row();
+                if (!$brandIsFound) {
+                    // check if brand name is empty
+                    if (empty($brand_id)) {
+                        // check if there is a brand with the name Default
+                        $defaultBrand = $this->db->select('brand_id')->from('brand')->where('brand_name', 'Default')->get()->row();
+                        if (!$defaultBrand) {
+                            // create a new brand with the name Default
+                            $brand_id = 'Default';
+                        } else {
+                            $brand_id = $defaultBrand->brand_id;
+                            $brandIsFound = true;
+                        }
+                    }
+                    if (!$brandIsFound) {
+                        // create new brand with that name
+                        $new_brand_id = $this->auth->generator(15);
+                        $brand_data = array(
+                            'brand_id'   => $new_brand_id,
+                            'brand_name' => $brand_id,
+                            'brand_image' => null,
+                            'website'    => '',
+                            'status'     => 1
+                        );
+                        $this->Brands->brand_entry($brand_data);
+                        $brand_id = $new_brand_id;
+                    }
+                } else {
+                    $brand_id = $brandIsFound->brand_id;
+                }
+
+                // check if category_id is not found
+                $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_name', $category_id)->get()->row();
+                if (!$categoryIsFound) {
+                    // check if new category name is empty
+                    if (empty($category_id)) {
+                        // check if there is a category with the name Default
+                        $defaultCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'Default')->get()->row();
+                        if (!$defaultCategory) {
+                            // create a new category with the name default
+                            $category_id = 'Default';
+                        } else {
+                            $category_id = $defaultCategory->category_id;
+                            $categoryIsFound = true;
+                        }
+                    }
+
+                    if (!$categoryIsFound) {
+                        // create new category with that name
+                        $new_category_id = generator(15);
+                        $category_data = array(
+                            'category_id' => $new_category_id,
+                            'category_name' => $category_id,
+                            'top_menu' => 1,
+                            'menu_pos' => 1,
+                            'cat_favicon' => 'my-assets/image/category.png',
+                            'parent_category_id' => '',
+                            'cat_image' => 'my-assets/image/category.png',
+                            'cat_type' => 1,
+                            'status' => 1
+                        );
+                        $this->Categories->category_entry($category_data);
+                        $category_id = $new_category_id;
+                    }
+                } else {
+                    $category_id = $categoryIsFound->category_id;
+                }
+
+                // check if size variant is exists
+                $variantIsFound = $this->db->select('variant_id')->from('variant')->where('variant_name', $variants)->get()->row();
+                if (!$variantIsFound) {
+                    // check if new variant name is empty
+                    if (empty($variants)) {
+                        // check if there is a variant with the name Default
+                        $defaultVariant = $this->db->select('variant_id')->from('variant')->where('variant_name', 'Default')->get()->row();
+                        if (!$defaultVariant) {
+                            // create a new variant with the name default
+                            $variants = 'Default';
+                        } else {
+                            $variants = $defaultVariant->variant_id;
+                            $variantIsFound = true;
+                        }
+                    }
+
+                    if (!$variantIsFound) {
+                        // create new varient size and then attach it`s id to product
+                        $variant_id = $this->auth->generator(15);
+                        $variant_data = array(
+                            'variant_id' => $variant_id,
+                            'variant_name' => $variants,
+                            'variant_type' => 'size',
+                            'color_code' => '#000000',
+                            'status' => 1
+                        );
+
+                        $result = $this->Variants->variant_entry($variant_data);
+                        $variants = $variant_id;
+                    }
+
+                    if ($result) {
+                        // add this size variant to only current category
+                        // check if varient was added to category before
+                        $variant_category_added = $this->db->select('variant_id')->from('category_variant')->where('category_id', $category_id)->where('variant_id', $variants)->get()->num_rows();
+                        if (!$variant_category_added) {
+                            $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variants) . ", now(), now())");
+                        }
+                    }
+                } else {
+                    $variants = $variantIsFound->variant_id;
+                }
+                echo "<pre>";
+                var_dump('si => ' . $variants, 'cat => ' . $category_id, 'bra => ' . $brand_id);
+                print_r($sheetdata[0]);
+                print_r($sheetdata[$i]);
+                exit;
+                $product_name = $brand_id . ' - ' . $product_model;
+                //$product_name .= ' - Full'; //for assembly
+
+                $excel = array(
+                    'brand_id' => $brand_id,
+                    'product_model' => $product_model,
+                    'category_id' => $category_id,
+                    'price' => $price,
+                    'g_price' => $g_price,
+                    's_price' => $s_price,
+                    'filter_1' => $filter_1,
+                    'filter_2' => $filter_2,
+                    'product_name' => $product_name,
+                    'variants' => $variants,
+                );
+
+                $product_id = $this->generator(8);
+                $product_details = array(
+                    'product_id' => $product_id,
+                    'brand_id' => $excel['brand_id'],
+                    'product_model' => $excel['product_model'],
+                    'category_id' => $excel['category_id'],
+                    'price' => $excel['price'],
+                    'product_name' => $excel['product_name'],
+                    'variants' => $excel['variants'],
+                    'open_quantity' => $product_quantity,
+                    'open_rate' => $product_rate,
+                    'supplier_price' => $product_rate,
+                    'pricing' => 1,
+                    //'assembly' => 1, //for assembly
+                );
+                $this->db->insert('product_information', $product_details);
+                //opening balance
+                if ($product_quantity > 0 && $product_rate > 0) {
+                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+                    if (!empty($find_active_fiscal_year)) {
+                        //Stock opening Details
+                        $cogs_price       += ($product_rate * $product_quantity);
+                        $store = array(
+                            'transfer_id'   => $this->auth->generator(15),
+                            'voucher_no'    => $voucher_no,
+                            'store_id'      => $store_id,
+                            'product_id'    => $product_id,
+                            'variant_id'    => $variants,
+                            'variant_color' => NULL,
+                            'date_time'     => $voucher_date,
+                            'quantity'      => $product_quantity,
+                            'status'        => 3
+                        );
+                        $this->db->insert('transfer', $store);
+                        // stock
+                        $stock = array(
+                            'store_id'     => $store_id,
+                            'product_id'   => $product_id,
+                            'variant_id'   => $variants,
+                            'variant_color' => NULL,
+                            'quantity'     => $product_quantity,
+                            'warehouse_id' => '',
+                        );
+                        $this->db->insert('purchase_stock_tbl', $stock);
+                    }
+                }
+                if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                    $data = array(
+                        't_p_s_id' => $this->auth->generator(15),
+                        'product_id' => $product_id,
+                        'tax_id' => '52C2SKCKGQY6Q9J',
+                        'tax_percentage' => '14',
+                    );
+
+                    $this->db->insert('tax_product_service', $data);
+                }
+
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 1,
+                    'product_price' => $excel['g_price'],
+                );
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 2,
+                    'product_price' => $excel['s_price'],
+                );
+                $this->db->insert_batch('pricing_types_product', $price_types_list);
+                //GENDER
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 1,
+                    'filter_item_id' => $filter_1
+                );
+                //MATERIAL
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 2,
+                    'filter_item_id' => $filter_2
+                );
+                $this->db->insert_batch('filter_product', $filter_list);
+
+                $this->db->select('*');
+                $this->db->from('product_information');
+                $this->db->where('status', 1);
+                $query = $this->db->get();
+                foreach ($query->result() as $row) {
+                    //$json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
+                    $json_product[] = array('label' => $row->product_name, 'value' => $row->product_id);
+                }
+                $cache_file = './my-assets/js/admin_js/json/product.json';
+                $productList = json_encode($json_product);
+                file_put_contents($cache_file, $productList);
+                if ($product_quantity > 0 && $product_rate > 0) {
+                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+                    if (!empty($find_active_fiscal_year)) {
+                        $this->load->model('accounting/account_model');
+                        //$store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
+                        $createdate   = date('Y-m-d H:i:s');
+                        $receive_by   = $this->session->userdata('user_id');
+                        $date         = $createdate;
+                        //1st Inventory-Openning total price debit
+                        $store_debit = array(
+                            'fy_id'     => $find_active_fiscal_year->id,
+                            'VNo'       => $voucher_no,
+                            'Vtype'     => 'Inventory-Openning',
+                            'VDate'     => $date,
+                            'COAID' => 1141, //Main Warehouse
+                            'Narration' => 'Inventory-Openning total price debited at Main warehouse',
+                            //                    'COAID'     => $store_head->HeadCode, //Main Warehouse
+                            //                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
+                            'Debit'     => $cogs_price,
+                            'Credit'    => 0, //purchase price asbe
+                            'IsPosted'  => 1,
+                            'CreateBy'  => $receive_by,
+                            'CreateDate' => $createdate,
+                            'store_id'  => $store_id,
+                            'IsAppove'  => 1
+                        );
+
+                        //2nd Inventory-Openning COGS Credit
+                        $COGSCredit = array(
+                            'fy_id'     => $find_active_fiscal_year->id,
+                            'VNo'       => $voucher_no,
+                            'Vtype'     => 'Inventory-Openning',
+                            'VDate'     => $date,
+                            'COAID'     => 4111,
+                            'Narration' => 'Inventory-Openning total price credited at COGS',
+                            'Debit'     => 0,
+                            'Credit'    => $cogs_price,
+                            'IsPosted'  => 1,
+                            'CreateBy'  => $receive_by,
+                            'CreateDate' => $createdate,
+                            'store_id'  => $store_id,
+                            'IsAppove'  => 1
+                        );
+                        $this->db->insert('acc_transaction', $store_debit);
+                        $this->db->insert('acc_transaction', $COGSCredit);
+                    }
+                }
+            }
+            $this->session->set_userdata(array('message' => display('successfully_added')));
+            redirect('dashboard/Cproduct/manage_product');
+        }
+    }
+
     public function viewpro()
     {
         $product_id = $this->input->post('proid');
@@ -2197,12 +2520,12 @@ class Cproduct extends MX_Controller
         if (isset($viewdata) && !empty($viewdata)) {
             foreach ($viewdata as $key => $value) {
                 $pricing = $this->db->select('*')->from('pricing_types_product')->where('product_id', $value['product_id'])->get()->result_array();
-                        $wholePrice = 0;
-                        foreach ($pricing as $pri) {
-                            if ($pri['pri_type_id'] == 1) {
-                                $wholePrice = $pri['product_price'];
-                            }
-                        }
+                $wholePrice = 0;
+                foreach ($pricing as $pri) {
+                    if ($pri['pri_type_id'] == 1) {
+                        $wholePrice = $pri['product_price'];
+                    }
+                }
                 $tabledata .= '
                         <tr>
                         <td class="col-sm-6">
