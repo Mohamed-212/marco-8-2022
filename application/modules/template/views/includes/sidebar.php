@@ -1480,7 +1480,7 @@
         <!-- Invoice menu end -->
 
         <!-- POS invoice menu start -->
-        <li class="treeview <?php if ($this->uri->segment(3) == ("pos_invoice")) {
+        <!-- <li class="treeview <?php if ($this->uri->segment(3) == ("pos_invoice")) {
                                     echo "active";
                                 } else {
                                     echo " ";
@@ -1488,7 +1488,7 @@
             <a href="<?php echo base_url('dashboard/Store_invoice/pos_invoice') ?>" target="_blank">
                 <i class="ti-layout-tab-window"></i><span><?php echo display('pos_sale') ?></span>
             </a>
-        </li>
+        </li> -->
         <!-- POS invoice menu end -->
 
         <!-- Customer menu start -->
