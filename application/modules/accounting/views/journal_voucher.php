@@ -308,7 +308,18 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" style="padding-left: 30px;padding-top: 100px;">
+                                            <td colspan="2" class="text-center" style="text-align: center;border: 0;">
+                                                <div class="" style="display: flex;align-items: center;justify-content: center;justify-items: center;">
+                                                <div class="line-height col-sm-3" style="">
+                                                    <h3 class="text-center borderd">
+                                                        <?=display('daily_record')?>
+                                                    </h3>
+                                                </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="padding-left: 30px;padding-top: 15px;border: 0;">
                                                 <div class="">
                                                     <?php echo display('voucher_no') ?>:&nbsp;&nbsp; <?php echo html_escape($voucher_no); ?>
                                                 </div>
