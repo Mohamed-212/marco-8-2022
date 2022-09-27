@@ -475,6 +475,8 @@ class Cproduct extends MX_Controller
     {
         $this->permission->check_label('manage_product')->update()->redirect();
 
+        $product_id = str_replace('#', '', $product_id);
+
         $CI = &get_instance();
         $content = $CI->lproduct->product_edit_data($product_id);
         $this->template_lib->full_admin_html_view($content);

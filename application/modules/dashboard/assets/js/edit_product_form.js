@@ -473,9 +473,12 @@ function calculate_price() {
             // alert(rownumber);
             supplier_price += Number($("#price_item_" + rownumber).val());
             sell_price += Number($("#product_price_" + rownumber).val());
+            console.log(supplier_price, sell_price);
+        }).promise().then(function() {
+            $("#supplier_price").val(supplier_price);
+            $("#sell_price").val(sell_price);
         });
-        $("#supplier_price").val(supplier_price);
-        $("#sell_price").val(sell_price);
+        
     }
 }
 
