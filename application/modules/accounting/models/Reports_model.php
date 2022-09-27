@@ -668,7 +668,7 @@ class Reports_model extends CI_Model
         ->from('acc_transaction a')
         ->join('acc_coa b', 'a.COAID = b.HeadCode', 'left')
         ->where('a.IsAppove', 1)
-        ->where('VDate BETWEEN "' . $dtpFromDate . '" and "' . $dtpToDate . '"')
+        // ->where('VDate BETWEEN "' . $dtpFromDate . '" and "' . $dtpToDate . '"')
         ->where('a.COAID', $cmbCode)
         ->get()
         ->result_array();

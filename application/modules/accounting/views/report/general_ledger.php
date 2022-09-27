@@ -22,6 +22,31 @@
         </div>
     </section>
     <section class="content">
+        <!-- Alert Message -->
+        <?php
+        $message = $this->session->userdata('message');
+        if (isset($message)) {
+        ?>
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $message ?>
+            </div>
+        <?php
+            $this->session->unset_userdata('message');
+        }
+        $error_message = $this->session->userdata('error_message');
+        $validatio_error = validation_errors();
+        if (($error_message || $validatio_error)) {
+        ?>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $error_message ?>
+                <?php echo $validatio_error ?>
+            </div>
+        <?php
+            $this->session->unset_userdata('error_message');
+        }
+        ?>
         <!-- General Ledger report -->
         <div class="row">
             <div class="col-sm-12">
@@ -41,7 +66,9 @@
                                 </select>
                             </div>
                             <div class="col-sm-3 custom_select">
-                                <select class="get-all-voucher-info-ajax" name="cmbCode" id="cmbCode"></select>
+                                <select class="get-all-voucher-info-ajax" name="cmbCode" id="cmbCode">
+                                    <option><?php echo display('select_voucher_no'); ?></option>
+                                </select>
                             </div>
                             <div class="col-sm-3">
                                 <input type="text" name="date_range" class="form-control reportrange1"
