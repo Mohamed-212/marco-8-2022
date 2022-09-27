@@ -422,11 +422,17 @@ class Lquotation {
 
 		$all_details = [];
 
+		$hide_discount = false;
 		foreach ($invoice_detail as $detail) {
 			$detail['customer_price'] = 0;
 			$customer_price = $CI->db->select('product_price')->from('pricing_types_product')->where('product_id', $detail['product_id'])->where('pri_type_id', 2)->get()->row();
 			$detail['customer_price'] = $customer_price->product_price;
 			$all_details[] = $detail;
+
+			// hide discount if equal to zero
+			if ((int)$detail['discount'] != 0) {
+				$hide_discount = true;
+			}
 		}
 
 		$data=array(
@@ -466,6 +472,7 @@ class Lquotation {
             'ship_customer_email'=>$invoice_detail[0]['ship_customer_email'],
             'cardpayments'	     =>$cardpayments,
             'percentage_discount' => $invoice_detail[0]['percentage_discount'],
+			'hide_discount' => $hide_discount
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
 		$emp_name = $emp_id = null;

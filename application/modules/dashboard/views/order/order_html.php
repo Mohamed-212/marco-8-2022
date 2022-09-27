@@ -396,7 +396,9 @@
                                                                         // echo "<th class='hide-me'>" . display('rate') . "</th>";
                                                                     }
                                                                     ?>
+                                                                    <?php if ($hide_discount) :?>
                                                                     <th class='hide-me'><?php echo display('discount') ?></th>
+                                                                    <?php endif?>
                                                                     <?php
                                                                     if ($isTaxed == 1) {
                                                                         echo "<th class='hide-me'>" . display('vat_rate') . "</th>";
@@ -450,8 +452,10 @@
                                                                             <td><?php echo html_escape($invoice['quantity']); ?></td>
 <!--                                                                            <td class='hide-me'>--><?php //echo (($position == 0) ? $currency . " " . $invoice['rate'] : $invoice['rate'] . " " . $currency) ?>
 <!--                                                                            </td>-->
+                                                                            <?php if ($hide_discount) :?>
                                                                             <td class='hide-me'><?php echo (($position == 0) ? $currency . " " . $invoice['discount'] : $invoice['discount'] . " " . $currency) ?>
                                                                             </td>
+                                                                            <?php endif?>
                                                                             <?php if ($isTaxed == 1) { ?>
 
                                                                                 <?php
@@ -548,12 +552,14 @@
                                                             <div class="width_30p ft_left">
 
                                                                 <table class="table colored">
+                                                                <?php if ((int)$i_grand_amount != (int)$total_amount) :?>
                                                                     <tr>
                                                                         <th class="grand_total"> <?php echo display('price_before_discount') ?>:</th>
                                                                         <td>
                                                                             <?php echo (($position == 0) ? $currency . " " . $i_grand_amount : $i_grand_amount . " " . $currency); ?>
                                                                         </td>
                                                                     </tr>
+                                                                    <?php endif ?>
 
                                                                     <?php if ($invoice_all_data[0]['total_discount'] != 0) { ?>
                                                                         <tr>

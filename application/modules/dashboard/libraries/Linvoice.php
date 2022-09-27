@@ -234,10 +234,17 @@ class Linvoice {
 
 		$all_details = [];
 
+		$hide_discount = false;
 		foreach ($invoice_detail as $detail) {
 			$detail['customer_price'] = 0;
 			$customer_price = $CI->db->select('product_price')->from('pricing_types_product')->where('product_id', $detail['product_id'])->where('pri_type_id', 2)->get()->row();
 			$detail['customer_price'] = $customer_price->product_price;
+
+			// hide discount if equal to zero
+			if ((int)$detail['discount'] != 0) {
+				$hide_discount = true;
+			}
+
 			$all_details[] = $detail;
 		}
 
@@ -278,6 +285,7 @@ class Linvoice {
             'ship_customer_mobile'=>$invoice_detail[0]['ship_customer_mobile'],
             'ship_customer_email'=>$invoice_detail[0]['ship_customer_email'],
             'cardpayments'	     =>$cardpayments,
+			'hide_discount' => $hide_discount
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
 		$emp_name = $emp_id = null;
