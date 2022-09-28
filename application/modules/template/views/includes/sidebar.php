@@ -55,7 +55,7 @@
         <?php if ($this->session->userdata('user_type') == 1 || $this->session->userdata('user_type') == 2) { ?>
         <!-- Invoice menu start -->
         <?php if ($this->permission->module('sales')->access()) { ?>
-        <li class="treeview <?php if (in_array($this->uri->segment('3'), ['new_invoice', 'manage_invoice', 'invoice_update_form', 'invoice_inserted_data', 'pos_invoice', 'daily_closing_setting', 'invoice_text', 'order_export_csv', 'pad_print_setting', 'captcha_print_setting'])) {
+        <li class="treeview <?php if (in_array($this->uri->segment('3'), ['new_invoice', 'manage_invoice', 'invoice_update_form', 'invoice_inserted_data', 'pos_invoice', 'daily_closing_setting', 'invoice_text', 'order_export_csv', 'pad_print_setting', 'captcha_print_setting', 'invoice_images'])) {
                                         echo 'active';
                                     } ?>">
             <a href="#">
@@ -77,12 +77,16 @@
                     <a
                         href="<?php echo base_url('dashboard/Cinvoice/manage_invoice') ?>"><?php echo display('manage_sale') ?></a>
                 </li>
-                <?php }
-                        if ($this->permission->check_label('pos_sale')->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'pos_invoice') ? 'active' : '') ?>">
+                <?php }?>
+                <!-- <li class="<?php echo (($this->uri->segment(3) == 'invoice_images' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Cinvoice/invoice_images') ?>"><?php echo display('invoice_images') ?></a>
+                </li> -->
+                <?php if ($this->permission->check_label('pos_sale')->access()) { ?>
+                <!-- <li class="<?php echo (($this->uri->segment(3) == 'pos_invoice') ? 'active' : '') ?>">
                     <a
                         href="<?php echo base_url('dashboard/Cinvoice/pos_invoice') ?>"><?php echo display('pos_sale') ?></a>
-                </li>
+                </li> -->
                 <?php }
                         if ($this->permission->check_label('invoice_text')->access()) { ?>
                 <li class="<?php echo (($this->uri->segment(3) == 'invoice_text') ? 'active' : '') ?>">
