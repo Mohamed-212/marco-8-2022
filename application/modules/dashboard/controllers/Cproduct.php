@@ -631,7 +631,7 @@ class Cproduct extends MX_Controller
 
             $data = array(
                 'product_name' => $this->input->post('product_name', TRUE),
-                'supplier_id' => $this->input->post('supplier_id', TRUE),
+                'supplier_id' => empty($this->input->post('supplier_id', TRUE)) ? null : $this->input->post('supplier_id', TRUE),
                 'category_id' => $this->input->post('category_id', TRUE),
                 'warrantee' => $this->input->post('warrantee', TRUE),
                 'bar_code' => $this->input->post('bar_code', TRUE),
