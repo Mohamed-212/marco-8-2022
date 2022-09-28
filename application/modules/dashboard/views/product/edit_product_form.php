@@ -70,33 +70,35 @@
                                                 <span class="desc"><?php echo display('item_information') ?> </span>
                                             </a>
                                         </li>
+                                        <?php if ((bool)$assembly) : ?>
                                         <li>
                                             <a href="#tab2" data-toggle="tab" class="step" aria-expanded="true">
                                                 <span class="number"> <?php echo display('2') ?> </span>
                                                 <span class="desc"><?php echo display('assembly') ?></span>
                                             </a>
                                         </li>
+                                        <?php endif ?>
                                         <li>
-                                            <a href="#tab3" data-toggle="tab" class="step" aria-expanded="true">
-                                                <span class="number"> <?php echo display('3') ?> </span>
+                                            <a href="#tab<?=(bool)$assembly ? 3 : 2?>" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display((bool)$assembly ? 3 : 2) ?> </span>
                                                 <span class="desc"><?php echo display('price') ?></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#tab4" data-toggle="tab" class="step" aria-expanded="true">
-                                                <span class="number"> <?php echo display('4') ?> </span>
+                                            <a href="#tab<?=(bool)$assembly ? 4 : 3?>" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display((bool)$assembly ? 4 : 3) ?> </span>
                                                 <span class="desc"><?php echo display('image') ?></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#tab5" data-toggle="tab" class="step" aria-expanded="true">
-                                                <span class="number"> <?php echo display('5') ?> </span>
+                                            <a href="#tab<?=(bool)$assembly ? 5 : 4?>" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display((bool)$assembly ? 5 : 4) ?> </span>
                                                 <span class="desc"><?php echo display('web_store') ?></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#tab6" data-toggle="tab" class="step" aria-expanded="true">
-                                                <span class="number"> <?php echo display('6') ?> </span>
+                                            <a href="#tab<?=(bool)$assembly ? 6 : 5?>" data-toggle="tab" class="step" aria-expanded="true">
+                                                <span class="number"> <?php echo display((bool)$assembly ? 6 : 5) ?> </span>
                                                 <span class="desc"><?php echo display('product_translation') ?></span>
                                             </a>
                                         </li>
@@ -638,6 +640,7 @@
                                     </div>
                                    
                                 </div>
+                                <?php if ((bool)$assembly) : ?>
                                 <div class="tab-pane" id="tab2">
                                     <div class="assembly_row assembly_row_mb">
                                          <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
@@ -647,7 +650,8 @@
                                         <!-- End for assembly_productList  --> 
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab3">
+                                <?php endif ?>
+                                <div class="tab-pane" id="tab<?=(bool)$assembly ? 3 : 2?>">
                                     <div class="form-group row">
                                         <label for="supplier_price"
                                                class="col-sm-4 col-form-label"><?php echo display('supplier_price') ?>
@@ -752,7 +756,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab4">
+                                <div class="tab-pane" id="tab<?=(bool)$assembly ? 4 : 3?>">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label for="image_thumb"
@@ -840,7 +844,7 @@
                                         <?php } ?>
                                     </div> -->
                                 </div>
-                                <div class="tab-pane" id="tab5">
+                                <div class="tab-pane" id="tab<?=(bool)$assembly ? 5 : 4?>">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
@@ -944,7 +948,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab6">
+                                <div class="tab-pane" id="tab<?=(bool)$assembly ? 6 : 5?>">
                                     <?php
                                     $product_languages = $this->db->select('*')
                                             ->from('product_translation')
