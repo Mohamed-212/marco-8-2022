@@ -497,7 +497,7 @@
             $('#payment_date').text($(this).attr('data-payment-date'));
             $('#payment-type').text($(this).attr('data-payment-type'));
             $('#payment-method').text($(this).attr('data-payment-method'));
-            $('#employee-name').text($('.form-control.employee_id.select2-hidden-accessible').find("option[selected]").text());
+            $('#employee-name').text($(this).parent().parent().find('.form-control.employee_id.select2-hidden-accessible').find("option[selected]").text());
 
             var checkNo = $(this).attr('data-check-no');
             if (!checkNo || !checkNo.length || checkNo.length < 1) {
