@@ -207,6 +207,8 @@ class Lproduct {
             'description' => $product_detail[0]['description'],
             'tag' => $product_detail[0]['tag'],
             'specification' => $product_detail[0]['specification'],
+            'product_model_only' => $product_detail[0]['product_model_only'],
+            'product_color' => $product_detail[0]['product_color'],
             'brand_list' => $brand_list,
             'variant_list' => $variant_list,
             'variant_selected' => $variants_ids,

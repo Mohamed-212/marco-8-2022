@@ -388,10 +388,11 @@
                                         </div>
                                             <div class="col-sm-6">
                                             <div class="form-group row">
-                                                <label for="variant_colors"
-                                                       class="col-sm-3 col-form-label"><?php echo display('color') ?></label>
+                                                <!-- <label for="variant_colors"
+                                                       class="col-sm-3 col-form-label"><?php echo display('color') ?></label> -->
                                                 <div class="col-sm-9 custom_select">
-                                                    <select name="variant_colors[]" class="form-control select2" 
+                                                    <!-- <input type="text" name="color_var" class="form-control" placeholder="CO 0" value="<?=$product_color?>" /> -->
+                                                    <!-- <select name="variant_colors[]" class="form-control select2" 
                                                             id="variant_colors">
                                                         <option value="">Select</option>
                                                         <?php
@@ -407,7 +408,7 @@
                                                             }
                                                         }
                                                         ?>
-                                                    </select>
+                                                    </select> -->
                                                 </div>
                                             </div>
                                             <div id="variant_price_area"
