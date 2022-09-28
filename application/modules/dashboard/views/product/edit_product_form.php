@@ -159,7 +159,7 @@
                                                         class="color-red">*</span></label>
                                                 <div class="col-sm-9 custom_select">
                                                     <select name="variant[]" class="form-control select2"  required="" 
-                                                            id="variant">
+                                                            id="variant" data-tags="true">
                                                         <option value="">Select</option>
                                                         <?php
                                                         if ($variant_list) {
@@ -212,7 +212,7 @@
                                                         class="color-red">*</span></label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control select2 width_100p" required="" id="category_id"
-                                                            name="category_id">
+                                                            name="category_id" data-tags="true">
                                                                 <?php foreach ($category_list as $category) { ?>
                                                             <option
                                                                 value="<?php echo html_escape($category['category_id']) ?>"
@@ -371,7 +371,7 @@
                                                        class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
                                                 <div class="col-sm-9">
                                                     <select class="form-control select2 width_100p" id="brand"
-                                                            name="brand">
+                                                            name="brand" data-tags="true">
                                                         <option value=""><?php echo display('select_one') ?></option>
                                                         <?php foreach ($brand_list as $brand) { ?>
                                                             <option value="<?php echo html_escape($brand['brand_id']); ?>"

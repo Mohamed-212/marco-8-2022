@@ -562,8 +562,80 @@ class Cproduct extends MX_Controller
                 $onsale_price = null;
             }
 
+            
+
+            $category_id = $this->input->post('category_id', TRUE);
+            // check if category_id is not found
+            $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_id', $category_id)->get()->num_rows();
+            if ($categoryIsFound == 0) {
+                // create new category with that name
+                $new_category_id = generator(15);
+                $category_data = array(
+                    'category_id' => $new_category_id,
+                    'category_name' => $category_id,
+                    'top_menu' => 1,
+                    'menu_pos' => 1,
+                    'cat_favicon' => 'my-assets/image/category.png',
+                    'parent_category_id' => '',
+                    'cat_image' => 'my-assets/image/category.png',
+                    'cat_type' => 1,
+                    'status' => 1
+                );
+                $this->Categories->category_entry($category_data);
+                $category_id = $new_category_id;
+            }
+
+
 
             $variant = $this->input->post('variant', TRUE);
+            if ($variant) {
+                $variant = $variant[0];
+            }
+
+            // check if size variant is exists
+            $found = $this->db->select('variant_id')->from('variant')->where('variant_id', $variant)->get()->num_rows();
+            if (!$found) {
+                // create new varient size and then attach it`s id to product
+                $variant_id = $this->auth->generator(15);
+                $variant_data = array(
+                    'variant_id' => $variant_id,
+                    'variant_name' => $variant,
+                    'variant_type' => 'size',
+                    'color_code' => null,
+                    'status' => 1
+                );
+
+                $result = $this->Variants->variant_entry($variant_data);
+                $variant = $variant_id;
+
+                if ($result) {
+                    // add this size variant to only current category
+                    // $category_ids = $this->db->select('category_id')->from('product_category')->where()->get()->result();
+                    // foreach ($category_ids as $category_id):
+                    $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variant_id) . ", now(), now())");
+                    // endforeach;
+                }
+            }
+
+            // check if brand is not found then create new one
+            $brand_id = $this->input->post('brand', TRUE);
+            $brandIsFound = $this->db->select('brand_id')->from('brand')->where('brand_id', $brand_id)->get()->num_rows();
+            if ($brandIsFound == 0) {
+                // create new brand with that name
+                $new_brand_id = $this->auth->generator(15);
+                $brand_data = array(
+                    'brand_id'   => $new_brand_id,
+                    'brand_name' => $brand_id,
+                    'brand_image' => null,
+                    'website'    => '',
+                    'status'     => 1
+                );
+                $this->Brands->brand_entry($brand_data);
+
+                $brand_id = $new_brand_id;
+            }
+
+
             $variant_colors = $this->input->post('variant_colors', TRUE);
 
             if (!empty($variant_colors)) {
@@ -578,20 +650,20 @@ class Cproduct extends MX_Controller
             $filter_names = $this->input->post('filter_name', true);
             // delete previous filter items 
             $this->db->delete('filter_product', array('product_id' => $product_id));
-            $this->db->delete('filter_type_category', array('category_id' => $this->input->post('category_id', TRUE)));
+            $this->db->delete('filter_type_category', array('category_id' => $category_id));
             $filter_list = [];
             $tdata3 = [];
             for ($d = 0; $d < count($filter_types); $d++) {
                 if (!empty($filter_types[$d]) && !empty($filter_names[$d])) {
                     $filter_list[] = array(
-                        'category_id' => $this->input->post('category_id', TRUE),
+                        'category_id' => $category_id,
                         'product_id' => $product_id,
                         'filter_type_id' => $filter_types[$d],
                         'filter_item_id' => $filter_names[$d]
                     );
                     $tdata3[] = array(
                         'type_id' => $filter_types[$d],
-                        'category_id' => $this->input->post('category_id', TRUE)
+                        'category_id' => $category_id
                     );
                 }
             }
@@ -642,7 +714,7 @@ class Cproduct extends MX_Controller
             $data = array(
                 'product_name' => $this->input->post('product_name', TRUE),
                 'supplier_id' => empty($this->input->post('supplier_id', TRUE)) ? null : $this->input->post('supplier_id', TRUE),
-                'category_id' => $this->input->post('category_id', TRUE),
+                'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
                 'bar_code' => $this->input->post('bar_code', TRUE),
                 'price' => $this->input->post('price', TRUE),
@@ -650,7 +722,7 @@ class Cproduct extends MX_Controller
                 'unit' => $this->input->post('unit', TRUE),
                 'product_model' => $this->input->post('model', TRUE),
                 'product_details' => $this->input->post('details', TRUE),
-                'brand_id' => $this->input->post('brand', TRUE),
+                'brand_id' => $brand_id,
                 'variants' => implode(",", (array) $full_variant),
                 'default_variant' => $this->input->post('default_variant', TRUE),
                 'variant_price' => (!empty($variant_prices) ? 1 : 0),
@@ -672,7 +744,9 @@ class Cproduct extends MX_Controller
             );
             $result = $this->Products->update_product($data, $product_id);
             //// start update tax for sunglasses by shady azzam
-            if ($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ') {
+            // get sun glasses category latest id
+            $sun_glasses = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->get()->row();
+            if ($category_id == $sun_glasses->category_id) {
                 $this->db->select('tax.*,tax_product_service.product_id,tax_percentage');
                 $this->db->from('tax_product_service');
                 $this->db->join('tax', 'tax_product_service.tax_id = tax.tax_id', 'left');
