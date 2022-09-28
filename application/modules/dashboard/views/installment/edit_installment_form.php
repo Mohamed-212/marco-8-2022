@@ -390,7 +390,7 @@
                                     );
                                     $payment_type = array(
                                         '1' => display('cash'),
-                                        '2' => display('pos'),
+                                        // '2' => display('pos'),
                                         '3' => display('wire transfer'),
                                         '4' => display('check'),
                                         '5' => display('customer_balance'),
