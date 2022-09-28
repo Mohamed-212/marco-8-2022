@@ -2202,18 +2202,19 @@ class Cproduct extends MX_Controller
                 $cogs_price = 0;
                 $price_types_list = [];
                 $filter_list = [];
-                $brand_id = $sheetdata[$i][0];
-                $product_model = $sheetdata[$i][1] . ' - ' . $sheetdata[$i][2];
-                $product_color = $sheetdata[$i][2];
-                $category_id = $sheetdata[$i][3];
-                $filter_1 = $sheetdata[$i][4];
-                $filter_2 = $sheetdata[$i][5];
-                $variants = $sheetdata[$i][6]; //size
-                $price = $sheetdata[$i][7]; // sell price
-                $g_price = $sheetdata[$i][8]; // whole price
-                $s_price = $sheetdata[$i][9]; // customer price
-                $product_quantity = $sheetdata[$i][10];
-                $product_rate = $sheetdata[$i][11]; // supplier price
+                $brand_id = trim($sheetdata[$i][0]);
+                $product_model = trim($sheetdata[$i][1]) . ' - ' . trim($sheetdata[$i][2]);
+                $product_model_only = trim($sheetdata[$i][1]);
+                $product_color = trim($sheetdata[$i][2]);
+                $category_id = trim($sheetdata[$i][3]);
+                $filter_1 = trim($sheetdata[$i][4]); // gender or any other name
+                $filter_2 = trim($sheetdata[$i][5]);  // material or any other name
+                $variants = trim($sheetdata[$i][6]); //size
+                $price = (float)$sheetdata[$i][7]; // sell price
+                $g_price = (float)$sheetdata[$i][8]; // whole price
+                $s_price = (float)$sheetdata[$i][9]; // customer price
+                $product_quantity = (int)$sheetdata[$i][10];
+                $product_rate = (float)$sheetdata[$i][11]; // supplier price
 
                 // echo "<pre>";var_dump($variants);exit;
 
@@ -2221,6 +2222,7 @@ class Cproduct extends MX_Controller
                 $this->db->select('brand_id');
                 $this->db->from('brand');
                 $this->db->where('brand_name', $brand_id);
+                $brandName = $brand_id;
                 $brandIsFound = $this->db->get()->row();
                 if (!$brandIsFound) {
                     // check if brand name is empty
@@ -2253,6 +2255,7 @@ class Cproduct extends MX_Controller
                 }
 
                 // check if category_id is not found
+                $category_name = $category_id;
                 $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_name', $category_id)->get()->row();
                 if (!$categoryIsFound) {
                     // check if new category name is empty
@@ -2331,12 +2334,90 @@ class Cproduct extends MX_Controller
                 } else {
                     $variants = $variantIsFound->variant_id;
                 }
-                echo "<pre>";
-                var_dump('si => ' . $variants, 'cat => ' . $category_id, 'bra => ' . $brand_id);
-                print_r($sheetdata[0]);
-                print_r($sheetdata[$i]);
-                exit;
-                $product_name = $brand_id . ' - ' . $product_model;
+
+                // get first filter and material filter id
+                $filter_1_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', $sheetdata[0][4])->get()->row();
+                if (!$filter_1_type_id) {
+                    // first filter type is not found
+                    // then create one
+                    $filter_type_data = array(
+                        'fil_type_name' => $sheetdata[0][4]
+                    );
+                    $this->db->insert('filter_types', $filter_type_data);
+                    $filter_1_type_id = $this->db->insert_id();
+                } else {
+                    $filter_1_type_id = $filter_1_type_id->fil_type_id;
+                }
+                // check for filter_1 item
+                $filter_1_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', $filter_1)->get()->row();
+                if (!$filter_1_item_id) {
+                    // check if name is empty then set as default
+                    if (empty($filter_1_item_id)) {
+                        $defaultFilter_1 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', 'Default')->get()->row();
+                        if (!$defaultFilter_1) {
+                            // if not found then create one
+                            $filter_1 = 'Default';
+                        } else {
+                            $filter_1 = $defaultFilter_1->item_id;
+                            $filter_1_item_id = $defaultFilter_1->item_id;
+                        }
+                    }
+
+                    if (!$filter_1_item_id) {
+                        // create new filter item
+                        $filter_item_data = [
+                            'item_name' => $filter_1,
+                            'type_id' => $filter_1_type_id,
+                        ];
+                        $this->db->insert('filter_items', $filter_item_data);
+                        $filter_1 = $this->db->insert_id();
+                    }
+                } else {
+                    $filter_1 = $filter_1_item_id->item_id;
+                }
+
+                // get second filter and material filter id
+                $filter_2_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', $sheetdata[0][5])->get()->row();
+                if (!$filter_2_type_id) {
+                    // second filter type is not found
+                    // then create one
+                    $filter_type_data_2 = array(
+                        'fil_type_name' => $sheetdata[0][5]
+                    );
+                    $this->db->insert('filter_types', $filter_type_data_2);
+                    $filter_2_type_id = $this->db->insert_id();
+                } else {
+                    $filter_2_type_id = $filter_2_type_id->fil_type_id;
+                }
+                // check for filter_2 item
+                $filter_2_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', $filter_2)->get()->row();
+                if (!$filter_2_item_id) {
+                    // check if name is empty then set as default
+                    if (empty($filter_2_item_id)) {
+                        $defaultFilter_2 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', 'Default')->get()->row();
+                        if (!$defaultFilter_2) {
+                            // if not found then create one
+                            $filter_2 = 'Default';
+                        } else {
+                            $filter_2 = $defaultFilter_2->item_id;
+                            $filter_2_item_id = $defaultFilter_2->item_id;
+                        }
+                    }
+
+                    if (!$filter_2_item_id) {
+                        // create new filter item
+                        $filter_item_data_2 = [
+                            'item_name' => $filter_2,
+                            'type_id' => $filter_2_type_id,
+                        ];
+                        $this->db->insert('filter_items', $filter_item_data_2);
+                        $filter_2 = $this->db->insert_id();
+                    }
+                } else {
+                    $filter_2 = $filter_2_item_id->item_id;
+                }
+
+                $product_name = $brandName . ' - ' . $product_model;
                 //$product_name .= ' - Full'; //for assembly
 
                 $excel = array(
@@ -2365,8 +2446,17 @@ class Cproduct extends MX_Controller
                     'open_rate' => $product_rate,
                     'supplier_price' => $product_rate,
                     'pricing' => 1,
+                    'product_model_only' => $product_model_only,
+                    'product_color' => $product_color,
+                    'created_at' => date('Y-m-d H:i:s'),
                     //'assembly' => 1, //for assembly
                 );
+                // echo "<pre>";
+                // var_dump('si => ' . $variants, 'cat => ' . $category_id, 'bra => ' . $brand_id, 'gen => ' . $filter_1_type_id. ' -- itm => ' . $filter_1, 'mat => ' .$filter_2_type_id . '  -- itm => ' . $filter_2);
+                // print_r($sheetdata[0]);
+                // print_r($sheetdata[$i]);
+                // print_r($product_details);
+                // exit;
                 $this->db->insert('product_information', $product_details);
                 //opening balance
                 if ($product_quantity > 0 && $product_rate > 0) {
@@ -2398,7 +2488,7 @@ class Cproduct extends MX_Controller
                         $this->db->insert('purchase_stock_tbl', $stock);
                     }
                 }
-                if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                if ($category_name == 'SUNGLASSES') {
                     $data = array(
                         't_p_s_id' => $this->auth->generator(15),
                         'product_id' => $product_id,
