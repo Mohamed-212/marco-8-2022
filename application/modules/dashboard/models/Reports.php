@@ -73,29 +73,30 @@ class Reports extends CI_Model
         $query = $this->db->select('i.*, c.*, a.*, i.id as installment_id')
             ->from('invoice_installment i')
             ->join('invoice c', 'i.invoice_id = c.invoice_id', 'left')
-            ->join('customer_information a', 'c.customer_id = a.customer_id', 'left');
+            ->join('customer_information a', 'c.customer_id = a.customer_id', 'left')
             // ->where('due_date <=', $today)
-            // ->where('payment_amount', null);
+            ->where('payment_amount', null);
 
         if ($customer_id) {
             $query->where('c.customer_id', $customer_id);
         }
 
-        if ($from_date) {
-            // get report for current month only
-            // $from_date = date('Y-m-d', strtotime('first day of this month', strtotime($from_date)));
+        if ($from_date) {            
             $from_date = date('Y-m-d', strtotime($from_date));
-            $query->where('i.due_date >=', $from_date);
+        } else {
+            // get report for current month only
+            $from_date = date('Y-m-d', strtotime('first day of this month', strtotime(date('Y-m-d'))));
         }
 
         if ($to_date) {
+            $to_date = date('Y-m-d', strtotime($to_date));            
+        } else {
             // get report for current month only
-            // $to_date = date('Y-m-d', strtotime('last day of this month', strtotime($to_date)));
-            $to_date = date('Y-m-d', strtotime($to_date));
-            $query->where('i.due_date <=', $to_date);
+            $to_date = date('Y-m-d', strtotime('last day of this month', strtotime(date('Y-m-d'))));
         }
 
-        // var_dump($from_date, $to_date);exit;
+        $query->where('i.due_date >=', $from_date);
+        $query->where('i.due_date <=', $to_date);
 
         if (!$query = $query->get()) {
             return redirect(base_url());

@@ -808,7 +808,7 @@
     ************************************* -->
         <!-- Stock menu start -->
         <?php if ($this->permission->module('stock')->access()) { ?>
-        <li class="treeview <?php if ($this->uri->segment(2) == ("Creport") || $this->uri->segment(2) == ("Cstock_adjustment") || $this->uri->segment(2) == ("Cbatch_stock") || $this->uri->segment(2) == ("Cstock_opening") || $this->uri->segment(2) == ("unpaid_installment")) {
+        <li class="treeview <?php if ( $this->uri->segment(2) == ("Cstock_adjustment") || $this->uri->segment(2) == ("Cbatch_stock") || $this->uri->segment(2) == ("Cstock_opening")) {
                                         echo "active";
                                     } else {
                                         echo " ";
@@ -868,10 +868,6 @@
                         href="<?php echo base_url('dashboard/Cstock_opening/add_stock_opening') ?>"><?php echo display('add_stock_opening') ?></a>
                 </li>
                 <?php } ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'unpaid_installment' ? 'active' : '')) ?>">
-                    <a
-                        href="<?php echo base_url('dashboard/Creport/unpaid_installment') ?>"><?php echo display('unpaid_installment') ?></a>
-                </li>
             </ul>
         </li>
         <?php } ?>
@@ -910,7 +906,7 @@
 
         <!-- Report menu start -->
         <?php if ($this->permission->module('report')->access()) { ?>
-        <li class="treeview <?php if ($this->uri->segment(3) == ("retrieve_dateWise_SalesReports") || $this->uri->segment(3) == ("todays_sales_report") || $this->uri->segment(3) == ("todays_purchase_report") || $this->uri->segment(3) == ("sales_report_store_wise") || $this->uri->segment(3) == ("retrieve_sales_report_store_wise") || $this->uri->segment(3) == ("transfer_report") || $this->uri->segment(3) == ("product_sales_reports_date_wise") || $this->uri->segment(3) == ("total_profit_report") || $this->uri->segment(3) == ("retrieve_dateWise_profit_report") || $this->uri->segment(3) == ("tax_report_product_wise") || $this->uri->segment(3) == ("tax_report_invoice_wise") || $this->uri->segment(3) == ("store_to_store_transfer") || $this->uri->segment(3) == ('retrieve_dateWise_PurchaseReports') || $this->uri->segment(3) == ('expriy_report_index')) {
+        <li class="treeview <?php if ($this->uri->segment(3) == ("retrieve_dateWise_SalesReports") || $this->uri->segment(3) == ("todays_sales_report") || $this->uri->segment(3) == ("todays_purchase_report") || $this->uri->segment(3) == ("sales_report_store_wise") || $this->uri->segment(3) == ("retrieve_sales_report_store_wise") || $this->uri->segment(3) == ("transfer_report") || $this->uri->segment(3) == ("product_sales_reports_date_wise") || $this->uri->segment(3) == ("total_profit_report") || $this->uri->segment(3) == ("retrieve_dateWise_profit_report") || $this->uri->segment(3) == ("tax_report_product_wise") || $this->uri->segment(3) == ("tax_report_invoice_wise") || $this->uri->segment(3) == ("store_to_store_transfer") || $this->uri->segment(3) == ('retrieve_dateWise_PurchaseReports') || $this->uri->segment(3) == ('expriy_report_index') || $this->uri->segment(3) == ("unpaid_installment")) {
                                         echo "active";
                                     } else {
                                         echo " ";
@@ -979,6 +975,10 @@
                         href="<?php echo base_url('dashboard/cexpriy_report/expriy_report_index') ?>"><?php echo display('expriy_report') ?></a>
                 </li>
                 <?php } ?>
+                <li class="<?php echo (($this->uri->segment(3) == 'unpaid_installment' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Creport/unpaid_installment') ?>"><?php echo display('unpaid_installment') ?></a>
+                </li>
             </ul>
         </li>
         <?php } ?>
