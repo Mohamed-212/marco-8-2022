@@ -88,7 +88,7 @@ class Lreport
         }
 
         $data = array(
-            'title' => display('out_of_stock'),
+            'title' => display('unpaid_installment'),
             'unpaid_installments' => $unpaid_installments
         );
         // echo "<pre>";print_r($data['unpaid_installments']);exit;

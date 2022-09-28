@@ -37,7 +37,7 @@
 		        <div class="panel panel-bd lobidrag">
 		            <div class="panel-heading">
 		                <div class="panel-title">
-		                    <h4><?php echo display('out_of_stock') ?></h4>
+		                    <h4><?php echo display('unpaid_installment') ?></h4>
 		                </div>
 		            </div>
 		            <div class="panel-body">
