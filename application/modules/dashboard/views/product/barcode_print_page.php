@@ -124,8 +124,9 @@
 																	<tr>
 
 																		<td style="text-align: start"><?= $size ?></td>
+																		<?php if ($is_sunglasses_category) :?>
 																		<td style="text-align: end;">Polarized</td>
-
+																		<?php endif?>
 																	</tr>
 																</tbody>
 															</table>

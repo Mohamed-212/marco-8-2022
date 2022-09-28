@@ -61,6 +61,8 @@ class Cbarcode extends MX_Controller
 
         $product_name_only = trim(str_replace('- ' . $product_info[0]['product_model'], '', $product_info[0]['product_name']));
         $model_only = (trim(preg_replace("/- C.*/i", "", $product_info[0]['product_model'])));
+
+        $is_sunglasses_category = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->where('category_id', $product_info[0]['category_id'])->get()->num_rows() > 0;
        
         $data = array(
             'title' => display('print_barcode'),
@@ -78,6 +80,7 @@ class Cbarcode extends MX_Controller
             'size' => $size,
             'product_name_only' => $product_name_only,
             'model_only' => $model_only,
+            'is_sunglasses_category' => $is_sunglasses_category,
         );
 
 
