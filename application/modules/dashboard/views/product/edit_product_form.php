@@ -770,7 +770,7 @@
 
                                     </div>
 
-                                    <div id="image_row">
+                                    <!-- <div id="image_row">
                                         <?php
                                         $gm = 0;
                                         if ($gallery_images) {
@@ -838,7 +838,7 @@
                                             </div>
 
                                         <?php } ?>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="tab-pane" id="tab5">
                                     <div class="row">
