@@ -187,6 +187,10 @@ class Cproduct extends MX_Controller
             // Product variant prices
             $variant_prices = $this->input->post('variant_prices', TRUE);
 
+            $model_and_color = explode('-', $this->input->post('model', TRUE));
+            $product_model_only = trim($model_and_color[0]);
+            $product_color = trim($model_and_color[1]);
+
             $data = array(
                 'product_id' => $product_id,
                 'product_name' => $this->input->post('product_name', TRUE),
@@ -217,6 +221,8 @@ class Cproduct extends MX_Controller
                 'image_thumb' => (!empty($thumb_image) ? $thumb_image : 'my-assets/image/product.png'),
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
+                'product_model_only' => $product_model_only,
+                'product_color' => $product_color,
             );
             $languages = $this->input->post('language', TRUE);
             $trans_names = $this->input->post('trans_name', TRUE);
@@ -629,6 +635,10 @@ class Cproduct extends MX_Controller
             $variant_prices = $this->input->post('variant_prices', TRUE);
             $provar_prices = $this->Products->get_product_variant_prices($product_id);
 
+            $model_and_color = explode('-', $this->input->post('model', TRUE));
+            $product_model_only = trim($model_and_color[0]);
+            $product_color = trim($model_and_color[1]);
+
             $data = array(
                 'product_name' => $this->input->post('product_name', TRUE),
                 'supplier_id' => empty($this->input->post('supplier_id', TRUE)) ? null : $this->input->post('supplier_id', TRUE),
@@ -656,7 +666,9 @@ class Cproduct extends MX_Controller
                 'specification' => stripslashes($this->input->post('specification', TRUE)),
                 'image_large_details' => (!empty($image_url) ? $image_url : $old_img_lrg),
                 'image_thumb' => (!empty($thumb_image) ? $thumb_image : $old_thumb_image),
-                'status' => 1
+                'status' => 1,
+                'product_model_only' => $product_model_only,
+                'product_color' => $product_color,
             );
             $result = $this->Products->update_product($data, $product_id);
             //// start update tax for sunglasses by shady azzam
