@@ -47,7 +47,8 @@ class Cbarcode extends MX_Controller
                 $totalSales = ($totalSales + $salesData[$k]['t_qty']);               
             }
         }
-        $stock = ($totalPurchase + $product_info[0]['open_quantity']) - $totalSales;
+        // $stock = ($totalPurchase + $product_info[0]['open_quantity']) - $totalSales;
+        $stock = $totalPurchase - $totalSales;
 
         // get product size varient
         $sizeId = $product_all_data['size'];

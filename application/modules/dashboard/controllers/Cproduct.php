@@ -1027,8 +1027,8 @@ class Cproduct extends MX_Controller
         }
 
         $openQuantity = $details_info[0]['open_quantity'];
-        $stock = ($totalPurchase + $openQuantity) - $totalSales;
-        // $stock = ($totalPurchase - $totalSales);
+        // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        $stock = ($totalPurchase - $totalSales);
 
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
@@ -1087,8 +1087,8 @@ class Cproduct extends MX_Controller
         }
 
         $openQuantity = $details_info[0]['open_quantity'];
-        $stock = ($totalPurchase + $openQuantity) - $totalSales;
-        // $stock = ($totalPurchase - $totalSales);
+        // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        $stock = ($totalPurchase - $totalSales);
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_report'),
