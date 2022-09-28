@@ -808,7 +808,7 @@
     ************************************* -->
         <!-- Stock menu start -->
         <?php if ($this->permission->module('stock')->access()) { ?>
-        <li class="treeview <?php if ($this->uri->segment(2) == ("Creport") || $this->uri->segment(2) == ("Cstock_adjustment") || $this->uri->segment(2) == ("Cbatch_stock") || $this->uri->segment(2) == ("Cstock_opening")) {
+        <li class="treeview <?php if ($this->uri->segment(2) == ("Creport") || $this->uri->segment(2) == ("Cstock_adjustment") || $this->uri->segment(2) == ("Cbatch_stock") || $this->uri->segment(2) == ("Cstock_opening") || $this->uri->segment(2) == ("unpaid_installment")) {
                                         echo "active";
                                     } else {
                                         echo " ";
@@ -868,6 +868,10 @@
                         href="<?php echo base_url('dashboard/Cstock_opening/add_stock_opening') ?>"><?php echo display('add_stock_opening') ?></a>
                 </li>
                 <?php } ?>
+                <li class="<?php echo (($this->uri->segment(3) == 'unpaid_installment' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Creport/unpaid_installment') ?>"><?php echo display('unpaid_installment') ?></a>
+                </li>
             </ul>
         </li>
         <?php } ?>
