@@ -168,6 +168,9 @@ class Cinstallment extends MX_Controller
 
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
+
+        $customer_ledger = $this->Customers->customer_transection_summary($invoice[0]['customer_id']);
+
         $data = array(
             'title' => display('edit_installment'),
             'installment_details' => $installment_details,
@@ -176,6 +179,7 @@ class Cinstallment extends MX_Controller
             'payment_info' => $payment_info,
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
+            'customer_ledger' => $customer_ledger,
         );
 
         $data['module'] = "dashboard";
