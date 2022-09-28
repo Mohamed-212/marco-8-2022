@@ -422,7 +422,7 @@ function add_month() {
                 da = '0' + da;
             }
             var y = d.getFullYear();
-            var date = da + '-' + m + '-' + y;
+            var date = y + '-' + m + '-' + da;
             content += '<div class="row" style="display: flex;justify-content: space-around;">' +
                     '<div class="col-sm-4" style="float: none">' +
                     '<div class="form-group">' +
