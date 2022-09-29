@@ -57,8 +57,8 @@
                                 <?php echo display('new_invoice') ?></a>
                         <?php }
                         if ($this->permission->check_label('pos_sale')->read()->access()) { ?>
-                            <a href="<?php echo base_url('dashboard/Cinvoice/pos_invoice') ?>" class="btn btn-primary m-b-5 m-r-2"><i class="ti-align-justify"> </i>
-                                <?php echo display('pos_invoice') ?></a>
+                            <!-- <a href="<?php echo base_url('dashboard/Cinvoice/pos_invoice') ?>" class="btn btn-primary m-b-5 m-r-2"><i class="ti-align-justify"> </i>
+                                <?php echo display('pos_invoice') ?></a> -->
                         <?php } ?>
                     <?php endif ?>
                 </div>
@@ -194,7 +194,7 @@
                                                         <?php echo html_escape($invoice['customer_name']) ?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
 
                                                 </td>
-                                                <td><?php echo html_escape($invoice['final_date']) ?></td>
+                                                <td><?php echo date('d-m-Y', strtotime($invoice['created_at'])) ?></td>
                                                 <td class="text-right">
                                                     <?php echo (($position == 0) ? $currency . ' ' . $invoice['total_amount'] : $invoice['total_amount'] . ' ' . $currency) ?>
                                                 </td>

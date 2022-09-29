@@ -253,6 +253,7 @@ class Linvoice {
 			'invoice_id'	   =>$invoice_detail[0]['invoice_id'],
 			'invoice_no'	   =>$invoice_detail[0]['invoice'],
 			'customer_id'      => $invoice_detail[0]['customer_id'],
+			'customer_no'      => $invoice_detail[0]['customer_no'],
 			'customer_name'	   =>$invoice_detail[0]['customer_name'],
 			'customer_mobile'  =>$invoice_detail[0]['customer_mobile'],
 			'customer_email'   =>$invoice_detail[0]['customer_email'],

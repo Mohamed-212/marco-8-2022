@@ -404,6 +404,7 @@ class Lorder {
 			'invoice_id'	   =>$order_detail[0]['order_id'],
 			'invoice_no'	   => empty($order_detail[0]['invoice_no']) ? '' : $order_detail[0]['invoice_no'],
 			'customer_id'      => $order_detail[0]['customer_id'],
+            'customer_no'      => $order_detail[0]['customer_no'],
 			'customer_name'	   =>$order_detail[0]['customer_name'],
 			'customer_mobile'  =>$order_detail[0]['customer_mobile'],
 			'customer_email'   =>$order_detail[0]['customer_email'],

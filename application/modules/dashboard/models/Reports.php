@@ -709,7 +709,7 @@ class Reports extends CI_Model
 
     public function retrieve_sales_report_store_wise($store_id, $start_date = null, $end_date = null)
     {
-        $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
         $this->db->select("a.*,b.store_name");
         $this->db->from('invoice a');
         $this->db->join('store_set b', 'a.store_id = b.store_id');
@@ -717,7 +717,25 @@ class Reports extends CI_Model
         if ($dateRange) {
             $this->db->where($dateRange, NULL, FALSE);
         }
-        $this->db->order_by('a.date', 'desc');
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    //=============sales report employee wise=================
+
+    public function retrieve_sales_report_employee_wise($employee_id, $start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
+        $this->db->select("a.*,b.first_name,b.last_name");
+        $this->db->from('invoice a');
+        $this->db->join('employee_history b', 'a.employee_id = b.id');
+        $this->db->where('a.employee_id', $employee_id);
+        if ($dateRange) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
         return $query->result_array();
@@ -727,13 +745,13 @@ class Reports extends CI_Model
     //Retrieve todays_sales_report
     public function todays_total_sales_report()
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
 
         $this->db->select('date,
 			invoice,
 			SUM(total_amount) as total_sale');
         $this->db->from('invoice');
-        $this->db->where('date', $today);
+        $this->db->where('DATE(created_at)', $today);
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -741,13 +759,13 @@ class Reports extends CI_Model
     //Retrieve todays_total_purchase_report
     public function todays_total_purchase_report()
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
 
         $this->db->select('purchase_date,
 			invoice_no,
 			SUM(grand_total_amount) as total_purchase');
         $this->db->from('product_purchase');
-        $this->db->where('purchase_date', $today);
+        $this->db->where('DATE(created_at)', $today);
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -755,13 +773,13 @@ class Reports extends CI_Model
     //Retrieve todays_total_discount_report
     public function todays_total_discount_report()
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
 
         $this->db->select('date,
 			invoice,
 			SUM(invoice_discount) as total_discount');
         $this->db->from('invoice');
-        $this->db->where('date', $today);
+        $this->db->where('DATE(created_at)', $today);
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -769,11 +787,11 @@ class Reports extends CI_Model
     //Retrieve todays_sales_report
     public function todays_sales_report($per_page, $page)
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
         $this->db->select("a.*,b.customer_id,b.customer_name");
         $this->db->from('invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
-        $this->db->where('a.date', $today);
+        $this->db->where('DATE(a.created_at)', $today);
         $this->db->limit($per_page, $page);
         $this->db->order_by('a.invoice_id', 'desc');
         $query = $this->db->get();
@@ -783,11 +801,11 @@ class Reports extends CI_Model
     //Retrieve todays_sales_report_count
     public function todays_sales_report_count()
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
         $this->db->select("a.*,b.customer_id,b.customer_name");
         $this->db->from('invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
-        $this->db->where('a.date', $today);
+        $this->db->where('DATE(a.created_at)', $today);
         $this->db->order_by('a.invoice_id', 'desc');
         $query = $this->db->get();
         return $query->num_rows();

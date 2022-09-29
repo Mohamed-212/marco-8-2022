@@ -383,6 +383,7 @@ class Accounting extends MX_Controller
       $data['voucher_no']   = $this->account_model->Spayment();
       $data['bank_list']    = $this->account_model->payment_info();
       $data['crcc']      = $this->account_model->Cracc();
+
       $content = $this->parser->parse('accounting/supplier_payment_form', $data, true);
       $this->template_lib->full_admin_html_view($content);
     } else {
@@ -401,6 +402,43 @@ class Accounting extends MX_Controller
     $data['payment_info']  = $this->account_model->supplierpaymentinfo($voucher_no, $coaid);
 
     $data['title']         = display('supplier_payment_receipt');
+
+    $data['data'] = $data['payment_info'][0];
+
+    $data['payment'] = [
+      'type' => 0,
+      'coid' => 0,
+    ];
+
+    $supplier_name = $data['supplier_info'][0]['supplier_name'];
+    // if payment type => 1 && ==> box payment type -> مثل الصندوق الرئيسى
+    $trans_type_1 = $this->db->select('*')->from('acc_transaction')->where('Narration', 'Paid to ' . $supplier_name)->get()->row();
+    // if payment type => 2 && ==> bank payment type -> مثل بنك CIB
+    $trans_type_2 = $this->db->select('*')->from('acc_transaction')->where('Narration', 'Supplier Payment To ' . $supplier_name)->get()->row();
+
+    if ($trans_type_1) {
+      // cash payment --> from box
+      $data['payment'] = [
+        'type' => 1,
+        'coid' => $trans_type_1->COAID,
+      ];
+    }
+
+    if ($trans_type_2) {
+      // bank payment
+      $data['payment'] = [
+        'type' => 2,
+        'coid' => $trans_type_2->COAID,
+      ];
+    }
+
+    $account = $this->db->select('*')->from('acc_coa')->where('HeadCode', $data['payment']['coid'])->get()->row();
+
+    $data['payment']['account'] = $account->HeadName;
+
+    // echo "<pre>";var_dump($trans_type_1, $trans_type_2);exit;
+
+    // echo "<pre>";var_dump($data);exit;
 
     $content = $this->parser->parse('accounting/supplier_payment_receipt', $data, true);
     $this->template_lib->full_admin_html_view($content);

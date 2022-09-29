@@ -127,15 +127,30 @@
                             </div>
                             <label for="country" class="col-sm-2 col-form-div"><?php echo display('country') ?> </label>
                             <div class="col-sm-4">
-                                <?php echo form_dropdown('country', $country_list, $employee->country, ' class="form-control"') ?>
+                                <select name="country" id="country" class="form-control">
+                                        <option><?php echo display('country') ?></option>
+                                        <?php if ($countries) {
+                                            foreach ($countries as $country) {  ?>
+                                        <option value="<?php echo $country['id']; ?>" <?=$employee->country == $country['id'] ? 'selected' : ''?>>
+                                            <?php echo html_escape($country['name']); ?></option>
+                                        <?php }
+                                        } ?>
+                                    </select>
                             </div>
 
                         </div>
 
                         <div class="form-group row">
                             <label for="city" class="col-sm-2 col-form-div"><?php echo display('city') ?></label>
-                            <div class="col-sm-4">
-                                <input name="city" class="form-control" type="text" placeholder="<?php echo display('city') ?>" id="city" value="<?php echo $employee->city ?>">
+                            <div class="col-sm-4 custom-select">
+                                <!-- <input name="city" class="form-control" type="text" placeholder="<?php echo display('city') ?>" id="city" value="<?php echo $employee->city ?>"> -->
+
+                                <select name="cities[]" class="form-control select2" data-placeholder="<?php echo display('city') ?>" id="city"  multiple data-multiple="true" data-val="<?=($employee->cities)?>">
+                                    <option><?php echo display('city') ?></option>        
+                                    <?php foreach ($states as $state) : ?>
+                                        <option value="<?=$state->id?>" <?=in_array($state->id, explode(',', $employee->cities)) ? 'selected' : ''?>><?=$state->name?></option>
+                                    <?php endforeach ?>
+                                </select>
 
                             </div>
                             <label for="zip" class="col-sm-2 col-form-div"><?php echo display('zip') ?></label>
@@ -148,7 +163,7 @@
                             <div class="row form-group">
                                 <div class="col-sm-12">
                                     <h3 class="card-title">
-                                    <?php echo display('contact_info')?>
+                                    <?php echo display('contact_info') ?>
                                     </h3>
                                 </div>
                             </div>
@@ -156,29 +171,28 @@
                                 <div class="col-sm-12">
                                     <div id="contact_info">
                                         <?php if ($employee) : ?>
-                                            <?php 
-                                                if (!is_array($contact_info) || !is_object($contact_info))
-                                                {
-                                                    $contact_info = [];
-                                                }
+                                            <?php
+                                            if (!is_array($contact_info) || !is_object($contact_info)) {
+                                                $contact_info = [];
+                                            }
                                             ?>
-                                            <?php foreach($contact_info as $inx => $c) : ?>
+                                            <?php foreach ($contact_info as $inx => $c) : ?>
                                                 <div class="form-group row" style="padding-top: 20px;">
-                                                <label for="contact<?=$inx?>" class="col-sm-2 col-form-div"><?php echo display('name') ?></label>
+                                                <label for="contact<?= $inx ?>" class="col-sm-2 col-form-div"><?php echo display('name') ?></label>
                                                 <div class="col-sm-4">
-                                                    <input name="contact_info[<?=$inx?>][name]" class="form-control" type="text" placeholder="<?php echo display('name') ?>" id="contact<?=$inx?>" value="<?=$c->name?>">
+                                                    <input name="contact_info[<?= $inx ?>][name]" class="form-control" type="text" placeholder="<?php echo display('name') ?>" id="contact<?= $inx ?>" value="<?= $c->name ?>">
                                                 </div>
-                                                <label for="contact<?=$inx?>" class="col-sm-2 col-form-div"><?php echo display('phone') ?></label>
+                                                <label for="contact<?= $inx ?>" class="col-sm-2 col-form-div"><?php echo display('phone') ?></label>
 
                                                 <div class="col-sm-4">
-                                                    <input name="contact_info[<?=$inx?>][phone]" class="form-control" type="text" placeholder="<?php echo display('phone') ?>" value="<?php echo $c->phone ?>" id="contact<?=$inx?>">
+                                                    <input name="contact_info[<?= $inx ?>][phone]" class="form-control" type="text" placeholder="<?php echo display('phone') ?>" value="<?php echo $c->phone ?>" id="contact<?= $inx ?>">
                                                 </div>
                                             </div>
                                             <div class="form-group row " style="padding-bottom: 20px;border-bottom: 1px solid #ababab;">
-                                                <label for="contact<?=$inx?>" class="col-sm-2 col-form-div"><?php echo display('customer_address') ?>
+                                                <label for="contact<?= $inx ?>" class="col-sm-2 col-form-div"><?php echo display('customer_address') ?>
                                                 </label>
                                                 <div class="col-sm-10">
-                                                    <input name="contact_info[<?=$inx?>][address]" class="form-control" type="text" placeholder="<?php echo display('customer_address') ?>" id="contact<?=$inx?>" value="<?php echo $c->address ?>" />
+                                                    <input name="contact_info[<?= $inx ?>][address]" class="form-control" type="text" placeholder="<?php echo display('customer_address') ?>" id="contact<?= $inx ?>" value="<?php echo $c->address ?>" />
                                                 </div>
                                             </div>
                                             <?php endforeach; ?>
@@ -189,7 +203,7 @@
                             <div class="row form-group">
                                 <div class="col-xs-12">
                                     <button type="button" class="btn btn-info" id="add-contact">
-                                        <?=display('add_contact_info')?>
+                                        <?= display('add_contact_info') ?>
                                     </button>
                                 </div>
                             </div>
@@ -208,9 +222,11 @@
         </div>
     </section>
 </div>
-<i id="counter" data-val="<?=$employee ? count($contact_info)+1 : 0?>"></i>
+<i id="counter" data-val="<?= $employee ? count($contact_info) + 1 : 0 ?>"></i>
 <script>
     $(document).ready(function() {
+        var csrf_test_name=  $("#CSRF_TOKEN").val();
+
         // $('#contact_info').append(getInputs());
         $('#counter').attr('data-val', parseInt($('#counter').attr('data-val'), 10) + 1);
 
@@ -235,5 +251,24 @@
         }
 
         // $('input,select,textarea').removeAttr('required');
+
+        $(document).on('change', '#country', function() {
+            var val = $(this).val();
+
+            // get city list
+            var base_url = $("#base_url").val();
+            $.ajax({
+                url: base_url + "hrm/hrm/get_country_cities/",
+                type: "POST",
+                data: {
+                    country_id: val,
+                    csrf_test_name: csrf_test_name,
+                },
+                success: function(data) {
+                    // console.log(data);
+                    $('#city').append(data);
+                }
+            });
+        });
     });
 </script>

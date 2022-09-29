@@ -14,7 +14,7 @@ class Hrm extends MX_Controller
     {
         parent::__construct();
         $this->auth->check_user_auth();
-        $this->load->model(array('hrm_model', 'country_model'));
+        $this->load->model(array('hrm_model', 'country_model', 'dashboard/States'));
     }
 
 
@@ -87,6 +87,20 @@ class Hrm extends MX_Controller
         redirect("hrm/hrm/bdtask_designation_list");
     }
 
+    public function get_country_cities()
+    {
+        $country_id = $this->input->post('country_id');
+        $cities = $this->States->get_states_by_country($country_id);
+
+        $data = '';
+        foreach ($cities as $city) {
+            // var_dump($city);
+            $data .= '<option value="'.$city->id.'">' . $city->name . '</option>';
+        }
+
+        echo $data;
+    }
+
 
     /*employee part start*/
     public function bdtask_employee_form($id = null)
@@ -107,7 +121,6 @@ class Hrm extends MX_Controller
         );
         $old_image = $this->input->post('old_image');
 
-
         $data['employee'] = (object)$postData = [
             'id' => $this->input->post('id', true),
             'first_name' => $this->input->post('first_name', true),
@@ -124,11 +137,13 @@ class Hrm extends MX_Controller
             'country' => $this->input->post('country', true),
             'city' => $this->input->post('city', true),
             'zip' => $this->input->post('zip', true),
+            'cities' => implode(',', $this->input->post('cities', true)),
         ];
         #-------------------------------#
         if ($this->form_validation->run()) {
 
             if (empty($id)) {
+                
                 $empId = $this->hrm_model->create_employee($postData);
                 if ($empId) {
                     // $this->employee_contact_info->insert($empId, $contactInfo);
@@ -169,6 +184,8 @@ class Hrm extends MX_Controller
                 $data['title'] = display('edit_employee');
             }
             $data['country_list'] = $this->country_model->country();
+            $data['countries'] = $this->States->get_country_list();
+            $data['states'] = $this->States->get_states_by_country($data['employee']->country);
             $data['desig'] = $this->hrm_model->designation_dropdown();
             $data['module'] = "hrm";
             $data['page'] = "hrm/employee_form";

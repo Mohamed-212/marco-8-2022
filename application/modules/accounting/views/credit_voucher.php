@@ -312,11 +312,11 @@
                                         <tr>
                                             <td colspan="2" class="text-center" style="text-align: center;border: 0;">
                                                 <div class="" style="display: flex;align-items: center;justify-content: center;justify-items: center;">
-                                                <div class="line-height col-sm-3" style="">
-                                                    <h3 class="text-center borderd">
-                                                        <?=display('receipt_voucher')?>
-                                                    </h3>
-                                                </div>
+                                                    <div class="line-height col-sm-3" style="">
+                                                        <h3 class="text-center borderd">
+                                                            <?= display('receipt_voucher') ?>
+                                                        </h3>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

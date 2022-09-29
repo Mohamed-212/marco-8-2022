@@ -59,7 +59,7 @@ $this->session->unset_userdata('error_message');
 			<?php echo form_open('dashboard/Admin_dashboard/retrieve_sales_report_store_wise',array('class' => '','id' => 'validate' ));?>
 			<?php 
 				date_default_timezone_set(DEF_TIMEZONE);
-				 $today = date('Y-m-d'); ?>
+				 $today = date('d-m-Y'); ?>
 
 			<div class="form-group row">
 				<label for="store_id" class="col-sm-2 col-form-label"><?php echo display('store')?>:</label>
@@ -77,14 +77,14 @@ $this->session->unset_userdata('error_message');
 			<div class="form-group row">
 				<label for="start_date" class="col-sm-2 col-form-label"><?php echo display('start_date') ?>:</label>
 				<div class="col-sm-4">
-					<input type="text" name="start_date" class="form-control datepicker" id="start_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off">
+					<input type="text" name="start_date" class="form-control datepicker2" id="start_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off">
 				</div>
 			</div> 
 
 			<div class="form-group row">
 				<label for="end_date" class="col-sm-2 col-form-label"><?php echo display('end_date') ?>:</label>
 				<div class="col-sm-4">
-					<input type="text" name="end_date" class="form-control datepicker" id="end_date" value="<?php echo html_escape($today)?>" placeholder="<?php echo display('end_date') ?>"  autocomplete="off">
+					<input type="text" name="end_date" class="form-control datepicker2" id="end_date" value="<?php echo html_escape($today)?>" placeholder="<?php echo display('end_date') ?>"  autocomplete="off">
 				</div>
 			</div>   
 
@@ -154,7 +154,8 @@ $this->session->unset_userdata('error_message');
 	                                                     <?php echo html_escape($sales_report['invoice'])?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
 													</a>
 												</td>
-												<td align="center"><?php echo html_escape($sales_report['date'])?></td>
+												<!-- <td align="center"><?php echo html_escape($sales_report['date'])?></td> -->
+												<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($sales_report['created_at']))) ?></td>
 												<td align="center"><?php echo html_escape($sales_report['total_amount'])?></td>
 												<td align="center"><?php echo html_escape($sales_report['paid_amount'])?></td>
 												<td align="center"><?php echo html_escape($sales_report['due_amount'])?></td>
@@ -187,3 +188,10 @@ $this->session->unset_userdata('error_message');
 </section>
 </div>
 <!-- Stock List Supplier Wise End -->
+<script>
+	$(document).ready(function() {
+		$(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+	});
+</script>

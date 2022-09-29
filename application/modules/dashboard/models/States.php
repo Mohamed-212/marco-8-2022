@@ -54,4 +54,14 @@ class States extends CI_Model
     	$result = $this->db->get('countries')->result_array();
     	return $result;
     }
+
+	public function get_states_by_country($country_id)
+	{
+		
+		$this->db->select('*');
+    	$this->db->from('states');
+    	$this->db->where('country_id', $country_id);
+    	$result = $this->db->get()->result();
+    	return $result;
+	}
 }
