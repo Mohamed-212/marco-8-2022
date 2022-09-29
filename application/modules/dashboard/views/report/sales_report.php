@@ -37,17 +37,17 @@
                         <?php echo form_open('dashboard/Admin_dashboard/retrieve_dateWise_SalesReports', array('class' => 'form-inline')) ?>
                         <?php
                         date_default_timezone_set(DEF_TIMEZONE);
-                        $today = date('Y-m-d');
+                        $today = date('d-m-Y');
                         ?>
                         <!-- <div class="col-sm-6"> -->
                                 <div class="form-group">
                                     <label class="" for="from_date"><?php echo display('start_date') ?></label>
-                                    <input type="text" name="from_date" class="form-control datepicker" id="from_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off">
+                                    <input type="text" name="from_date" class="form-control datepicker2" id="from_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off">
                                 <!-- </div> -->
                                 <!-- <div class="col-sm-6"> -->
                                     <div class="form-group">
                                         <label class="" for="to_date"><?php echo display('end_date') ?></label>
-                                        <input type="text" name="to_date" class="form-control datepicker" id="to_date" placeholder="<?php echo display('end_date') ?>" value="<?php echo $today ?>" autocomplete="off">
+                                        <input type="text" name="to_date" class="form-control datepicker2" id="to_date" placeholder="<?php echo display('end_date') ?>" value="<?php echo $today ?>" autocomplete="off">
                                     </div>
                                 </div>
                             <!-- </div> -->
@@ -121,21 +121,23 @@
                                         <?php
                                         if ($sales_report) {
                                         ?>
-                                            {sales_report}
+                                            <?php foreach ($sales_report as $repo) :  $repo = (object)$repo; ?>
                                             <tr>
-                                                <td>{sales_date}</td>
                                                 <td>
-                                                    <a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/{invoice_id}'; ?>">
-                                                        {invoice} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+                                                    <?=date('d-m-Y', strtotime($repo->created_at))?>
+                                                </td>
+                                                <td>
+                                                    <a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $repo->invoice_id; ?>">
+                                                        <?=$repo->invoice?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                                     </a>
                                                 </td>
-                                                <td><a href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/{customer_id}'; ?>">
-                                                        {customer_name} <i class="fa fa-user pull-right" aria-hidden="true"></i></a></td>
+                                                <td><a href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/' . $repo->customer_id; ?>">
+                                                        <?=$repo->customer_name?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a></td>
                                                 <td class="text-right">
-                                                    <?php echo (($position == 0) ? "$currency {total_amount}" : "{total_amount} $currency") ?>
+                                                    <?php echo (($position == 0) ? "$currency {$repo->total_amount}" : "{$repo->total_amount} $currency") ?>
                                                 </td>
                                             </tr>
-                                            {/sales_report}
+                                            <?php endforeach ?>
                                         <?php
                                         }
                                         ?>
@@ -231,4 +233,11 @@
             $(this).change(APchange);
         });
     }
+</script>
+<script>
+	$(document).ready(function() {
+		$(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+	});
 </script>
