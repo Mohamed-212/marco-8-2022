@@ -292,7 +292,7 @@
 
                         <tr>
                             <td colspan="2" style="padding-left: 30px;padding-top: 50px;" id="total-still-td">
-                                <?= display('remaining_amount') ?>:&nbsp;&nbsp; <span id="total-still"></span>
+                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?=(float)$customer_ledger[0][0]['total_credit'] - (float)$customer_ledger[1][0]['total_debit']?><span id="total-still" style="display: none;"></span>
                             </td>
                         </tr>
                     </tbody>
@@ -390,7 +390,7 @@
                                     );
                                     $payment_type = array(
                                         '1' => display('cash'),
-                                        '2' => display('pos'),
+                                        // '2' => display('pos'),
                                         '3' => display('wire transfer'),
                                         '4' => display('check'),
                                         '5' => display('customer_balance'),
@@ -412,7 +412,7 @@
                                                     <input type="text" class="form-control datepicker" name="due_date[]" value="<?php echo html_escape($value['due_date']) ?>" readonly>
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="number" name="payment_amount[]" class="form-control" value="<?php echo html_escape($value['payment_amount']) ?>" placeholder="0.00" max="<?php echo html_escape($value['amount']) ?>" <?php echo html_escape($readonly) ?>>
+                                                    <input type="number" name="payment_amount[]" class="form-control" value="<?php echo html_escape($value['payment_amount']) ?>" placeholder="0.00" <?php echo html_escape($readonly) ?>>
                                                 </td>
                                                 <td class="text-center">
                                                     <input type="text" class="form-control datepicker" name="payment_date[]" readonly value="<?php if ($value['status']) {
@@ -497,7 +497,7 @@
             $('#payment_date').text($(this).attr('data-payment-date'));
             $('#payment-type').text($(this).attr('data-payment-type'));
             $('#payment-method').text($(this).attr('data-payment-method'));
-            $('#employee-name').text($('.form-control.employee_id.select2-hidden-accessible').find("option[selected]").text());
+            $('#employee-name').text($(this).parent().parent().find('.form-control.employee_id.select2-hidden-accessible').find("option[selected]").text());
 
             var checkNo = $(this).attr('data-check-no');
             if (!checkNo || !checkNo.length || checkNo.length < 1) {

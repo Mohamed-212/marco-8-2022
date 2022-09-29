@@ -1,6 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     var products_with_no_quantity = "<?= display('products_with_no_quantity') ?>";
+    var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
+    var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
 </script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
@@ -140,12 +142,12 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="" data-val="<?=$pricing_type?>">
-                                            <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> >Sell Price</option>
                                             <?php foreach ($all_pri_type as $pri_type) : ?>
                                                 <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pricing_type == $pri_type['pri_type_id'] ? 'selected' : ''?> ><?php echo html_escape($pri_type['pri_type_name']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
+                                            <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> >Sell Price</option>
                                         </select>
                                     </div>
                                 </div>
@@ -563,7 +565,7 @@
                                         <td align="center">
                                             <input class="btn btn-warning" id="full" value="<?php echo display('full_paid') ?>" tabindex="15" onclick="full_paid();" type="button">
                                             <input type="hidden" name="is_installment" id="is_installment" value="0">
-                                            <input class="btn btn-primary" id="installment_id" value="<?php echo display('installment') ?>" tabindex="15" onclick="installment();" type="button">
+                                            <input class="btn btn-warning" id="installment_id" value="<?php echo display('installment') ?>" tabindex="15" onclick="installment();" type="button">
 
                                             <input type="hidden" name="baseUrl" class="baseUrl" value="<?php echo base_url(); ?>" />
                                             <input type="hidden" name="quotation_id" id="quotation_id" value="{quotation_id}" />
@@ -618,11 +620,11 @@
                                             <div class="row">
                                                 <div class="col-sm-7">
                                                     <div class="form-group row">
-                                                        <label for="account_no" class="col-sm-4 col-form-label"><?php echo display('account_no') ?>
+                                                        <!-- <label for="account_no" class="col-sm-4 col-form-label"><?php echo display('account_no') ?>
                                                             :</label>
                                                         <div class="col-sm-8">
                                                             <input class="form-control" type="text" name="account_no" id="account_no" placeholder="<?php echo display('account_no') ?>" <?=isset($order_id)? 'required' : '' ?> >
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </div>
                                             </div>

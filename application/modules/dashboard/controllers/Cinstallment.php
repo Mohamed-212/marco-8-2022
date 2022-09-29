@@ -168,6 +168,9 @@ class Cinstallment extends MX_Controller
 
         $this->load->model(array('dashboard/Soft_settings', 'dashboard/Customers'));
         $currency_details = $this->Soft_settings->retrieve_currency_info();
+
+        $customer_ledger = $this->Customers->customer_transection_summary($invoice[0]['customer_id']);
+
         $data = array(
             'title' => display('edit_installment'),
             'installment_details' => $installment_details,
@@ -176,6 +179,7 @@ class Cinstallment extends MX_Controller
             'payment_info' => $payment_info,
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
+            'customer_ledger' => $customer_ledger,
         );
 
         $data['module'] = "dashboard";
@@ -204,14 +208,15 @@ class Cinstallment extends MX_Controller
                 $employee_id = $this->input->post('employee_id', TRUE);
                 $status = $this->input->post('status', TRUE);
                 $expiry_date = $this->input->post('expiry_date', TRUE);
+
                 //add customer credit
                 $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
                 if (empty($customer_head)) {
                     $this->load->model('accounting/account_model');
-                    $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $result->customer_id)->get()->row();
+                    $customer_name = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
                     if ($customer_name) {
                         $customer_data = $data = array(
-                            'customer_id' => $result->customer_id,
+                            'customer_id' => $customer_id,
                             'customer_name' => $customer_name->customer_name,
                         );
                         $this->account_model->insert_customer_head($customer_data);
@@ -252,6 +257,7 @@ class Cinstallment extends MX_Controller
                         redirect('dashboard/cinstallment/manage_installment');
                     }
                 }
+
                 foreach ($installment_details as $index => $installment) {
                     if ($installment['status'] != 2) {
                         if ($payment_amount[$index] && $payment_date[$index]
@@ -373,6 +379,15 @@ class Cinstallment extends MX_Controller
                             }
                         }
                     }
+                }
+
+                // get total payed and total un payed after latest update
+                $invoice_details = $this->db->select('a.paid_amount, a.due_amount')->from('invoice a')->where('invoice_id', $invoice_id)->get()->row();
+                // echo "<pre>";print_r($invoice_details);var_dump((float)$invoice_details->due_amount, (float)$invoice_details->due_amount <= 0);exit;
+                if ((float)$invoice_details->due_amount <= 0) {
+                    // this installment is pilled successfully
+                    // remove un paid
+                    $this->db->where('invoice_id', $invoice_id)->where('status', null)->delete('invoice_installment');
                 }
             } else {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));

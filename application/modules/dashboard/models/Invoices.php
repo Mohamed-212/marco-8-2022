@@ -8,6 +8,7 @@ class Invoices extends CI_Model {
     public function __construct() {
         parent::__construct();
         $this->load->model('dashboard/Customers');
+        $this->load->model('dashboard/Cfiltration_model');
     }
 
     //Select All pricing_types
@@ -402,13 +403,15 @@ class Invoices extends CI_Model {
                     $installment_amount = $this->input->post('amount', TRUE);
                     $installment_due_date = $this->input->post('due_date', TRUE);
                     for ($i = 0; $i < $installment_month_no; $i++) {
+                        // echo date('Y-m-d', strtotime($installment_due_date[$i])) . '<br>';
                         $installment_data = array(
                             'invoice_id' => $invoice_id,
                             'amount' => $installment_amount[$i],
-                            'due_date' => $installment_due_date[$i],
+                            'due_date' => date('Y-m-d', strtotime($installment_due_date[$i])),
                         );
                         $this->db->insert('invoice_installment', $installment_data);
                     }
+                    // echo "<pre>";print_r($installment_due_date);exit;
                 }
 
                 //Invoice details info
@@ -709,7 +712,7 @@ class Invoices extends CI_Model {
                 $store_id = $this->input->post('store_id', TRUE);
                 $store_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
 
-                //$payment_id = $this->input->post('payment_id', TRUE);
+                $payment_id = $this->input->post('payment_id', TRUE);
                 //$account_no = $this->input->post('account_no', TRUE);
 
                 //1st customer debit total_with_vat
@@ -4153,6 +4156,8 @@ class Invoices extends CI_Model {
 
         $discount = "";
 
+        $pricing_types = $this->Cfiltration_model->get_pricing_data($product_id);
+
         if (!empty($product_information->onsale) && ($product_information->onsale == 1)) {
             $discount = ($product_information->price - $product_information->onsale_price);
         }
@@ -4180,9 +4185,28 @@ class Invoices extends CI_Model {
             'igst_id' => (!empty($tax['igst_id']) ? $tax['igst_id'] : null),
             'unit' => @$product_information->unit_short_name,
             'assembly' => @$product_information->assembly,
+            'pricing_types' => $pricing_types,
         );
 
         return $data2;
+    }
+
+    //Get total product
+    public function get_total_product_data($product_id) {
+        $this->db->select('product_information.*');
+        $this->db->from('product_information');
+        $this->db->join('unit', 'unit.unit_id = product_information.unit', 'left');
+        $this->db->where(array('product_information.product_id' => $product_id, 'status' => 1));
+        $product_information = $this->db->get()->row();
+        $this->db->select('*')->from('filter_product')
+            ->join('filter_types', 'filter_types.fil_type_id = filter_product.filter_type_id', 'left')
+            ->join('filter_items', 'filter_items.item_id = filter_product.filter_item_id', 'left')
+            ->where('filter_product.product_id', $product_id);
+        $product_information->filters = $this->db->get()->result_object();
+
+        $product_information->pricing_types = $this->Cfiltration_model->get_pricing_data($product_id);
+
+        return $product_information;
     }
 
     //This function is used to Generate Key

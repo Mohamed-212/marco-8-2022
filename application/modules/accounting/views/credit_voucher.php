@@ -303,14 +303,25 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="2" style="padding: 0;">
+                                            <td colspan="2" style="padding: 0;border: 0;">
                                                 <div class="" style="width: 100%">
                                                     <img class="show" src="<?= base_url() ?>/assets/img/header.png" style="width: 100%;height: auto;" />
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2" style="padding-left: 30px;padding-top: 100px;">
+                                            <td colspan="2" class="text-center" style="text-align: center;border: 0;">
+                                                <div class="" style="display: flex;align-items: center;justify-content: center;justify-items: center;">
+                                                <div class="line-height col-sm-3" style="">
+                                                    <h3 class="text-center borderd">
+                                                        <?=display('receipt_voucher')?>
+                                                    </h3>
+                                                </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="padding-left: 30px;padding-top: 15px;border: 0;">
                                                 <div class="">
                                                     <?php echo display('voucher_no') ?>:&nbsp;&nbsp; <?php echo html_escape($voucher_no); ?>
                                                 </div>
@@ -390,8 +401,8 @@
                                     <label for="txtRemarks" class="col-sm-2 col-form-label"><?php echo display('remark') ?><i class="text-danger hide-me">*</i></label>
                                     <div class="col-sm-4">
                                         <textarea name="txtRemarks" id="txtRemarks" class="form-control" <?= $print_only ? 'readonly' : '' ?> required><?php if ($print_only) {
-                                                                                                                                                    echo $data['Narration'];
-                                                                                                                                                } ?></textarea>
+                                                                                                                                                            echo $data['Narration'];
+                                                                                                                                                        } ?></textarea>
                                     </div>
                                 </div>
                             <?php endif ?>
@@ -437,12 +448,10 @@
                                                         <input type="number" name="txtAmount[]" value="<?= $debit ?>" class="form-control total_price text-right" id="txtAmount_1" readonly>
                                                     <?php endforeach ?>
                                                 <?php else : ?>
-                                                    <input type="number" name="txtAmount[]" value=""
-                                                class="form-control total_price text-right" id="txtAmount_1"
-                                                onkeyup="dbtvouchercalculation(1)" required="">
+                                                    <input type="number" name="txtAmount[]" value="" class="form-control total_price text-right" id="txtAmount_1" onkeyup="dbtvouchercalculation(1)" required="">
                                                 <?php endif; ?>
                                             </td>
-                                            
+
                                             <td class="print-hide">
                                                 <?php if (!$print_only) : ?>
                                                     <button class="btn btn-danger red" type="button" value="<?php echo display('delete') ?>" onclick="deleteRowContravoucher(this)"><i class="fa fa-trash-o"></i></button>
@@ -467,7 +476,7 @@
                                                     <input type="text" id="grandTotal" class="form-control text-right " name="grand_total" value="" readonly="readonly" value="0" />
                                                 <?php endif; ?>
                                             </td>
-                                            
+
                                             <td>
                                                 <?php if (!$print_only) : ?>
                                                     <a id="add_more" class="btn btn-info" name="add_more" onClick="addaccountdbt('debitvoucher')"><i class="fa fa-plus"></i></a>

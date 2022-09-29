@@ -199,7 +199,7 @@
                                                 <td class="text-center">
                                                     <a 
                                                         href="<?php echo base_url() . 'dashboard/Cproduct/product_details/' . urlencode($v_product_list['product_id']); ?>">
-                                                        <?php echo html_escape($v_product_list['product_name']) ?>-(<?php echo html_escape($v_product_list['product_model']) ?>)
+                                                        <?php echo html_escape($v_product_list['product_name']) ?>
                                                         <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i></a>
                                                 </td>
                                                 <td class="text-center">

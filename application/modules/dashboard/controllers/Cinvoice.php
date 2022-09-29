@@ -3,9 +3,11 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Cinvoice extends MX_Controller {
+class Cinvoice extends MX_Controller
+{
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->auth->check_user_auth();
         $this->load->model(array('dashboard/Invoices'));
@@ -14,12 +16,14 @@ class Cinvoice extends MX_Controller {
     }
 
     //Default invoice add from loading
-    public function index() {
+    public function index()
+    {
         $this->new_invoice();
     }
 
     //Add new invoice
-    public function new_invoice() {
+    public function new_invoice()
+    {
         $this->permission->check_label('new_sale')->create()->redirect();
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
@@ -81,7 +85,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function empdropdown() {
+    public function empdropdown()
+    {
         $this->db->select('*');
         $this->db->from('employee_history');
         $query = $this->db->get();
@@ -96,7 +101,8 @@ class Cinvoice extends MX_Controller {
         return $list;
     }
 
-    public function manage_invoice() {
+    public function manage_invoice()
+    {
         $this->permission->check_label('manage_sale')->read()->redirect();
         $filter = array(
             'invoice_no' => $this->input->get('invoice_no', TRUE),
@@ -158,12 +164,12 @@ class Cinvoice extends MX_Controller {
     }
 
     //Insert new invoice
-    public function insert_invoice() {
+    public function insert_invoice()
+    {
         if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
             $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
             $this->index();
-        }
-         else {
+        } else {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
             // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
@@ -189,21 +195,24 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function insert_posInvoice() {
+    public function insert_posInvoice()
+    {
         $invoice_id = $this->Invoices->pos_invoice_entry();
         $this->session->set_userdata(array('message' => display('successfully_added')));
         redirect('dashboard/Cinvoice/pos_invoice_inserted_data_redirect/' . $invoice_id . '?place=pos');
     }
 
     //Invoice Update Form
-    public function invoice_update_form($invoice_id) {
+    public function invoice_update_form($invoice_id)
+    {
         $this->permission->check_label('manage_sale')->update()->redirect();
         $content = $this->linvoice->invoice_edit_data($invoice_id);
         $this->template_lib->full_admin_html_view($content);
     }
 
     // Invoice Update
-    public function invoice_update() {
+    public function invoice_update()
+    {
         $this->permission->check_label('manage_sale')->update()->redirect();
 
         $invoice_id = $this->Invoices->update_invoice();
@@ -212,12 +221,14 @@ class Cinvoice extends MX_Controller {
     }
 
     //Retrive right now inserted data to cretae html
-    public function invoice_inserted_data($invoice_id) {
+    public function invoice_inserted_data($invoice_id)
+    {
         $content = $this->linvoice->invoice_html_data($invoice_id);
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function invoice_inserted_data_pdf($invoice_id) {
+    public function invoice_inserted_data_pdf($invoice_id)
+    {
         $this->load->model('dashboard/Invoices');
         $this->load->model('dashboard/Soft_settings');
         $this->load->library('dashboard/occational');
@@ -286,7 +297,8 @@ class Cinvoice extends MX_Controller {
         $file_path = $this->pdfgenerator->generate($chapterList);
     }
 
-    public function invoice_pdf_data($invoice_id) {
+    public function invoice_pdf_data($invoice_id)
+    {
         $CI = &get_instance();
         $CI->load->model('dashboard/Invoices');
         $CI->load->model('dashboard/Soft_settings');
@@ -355,14 +367,16 @@ class Cinvoice extends MX_Controller {
     }
 
     //POS invoice page load
-    public function pos_invoice() {
+    public function pos_invoice()
+    {
         $this->permission->check_label('pos_sale')->read()->redirect();
         $content = $this->linvoice->pos_invoice_add_form();
         $this->template_lib->full_admin_html_view($content);
     }
 
     //Insert pos invoice
-    public function insert_pos_invoice() {
+    public function insert_pos_invoice()
+    {
         $product_id = urldecode($this->input->post('product_id', TRUE)); //barcode
         $store_id = $this->input->post('store_id', TRUE);
         $stok_report = $this->Invoices->stock_report_bydate_pos($product_id);
@@ -420,7 +434,7 @@ class Cinvoice extends MX_Controller {
 					</td>
 					<td scope=\"row\">
 					<input type=\"number\" name=\"product_quantity[]\"   onchange=\"quantity_limit('" . $product_id . "')\" onkeyup=\"quantity_calculate('"
-                        . $product_id . "');\" onchange=\"quantity_calculate('" . $product_id . "');\" id=\"total_qntt_" . $product_id . "\" class=\"form-control text-right \" value=\"1\" min=\"1\"/>
+                    . $product_id . "');\" onchange=\"quantity_calculate('" . $product_id . "');\" id=\"total_qntt_" . $product_id . "\" class=\"form-control text-right \" value=\"1\" min=\"1\"/>
 					</td>
 					<td width=\"\">
 					<input class=\"total_price form-control text-right \" type=\"text\" name=\"total_price[]\" id=\"total_price_" . $product_id . "\" value='" . $product_details['price'] . "'  readonly=\"readonly\"/>
@@ -513,27 +527,39 @@ class Cinvoice extends MX_Controller {
     }
 
     //Retrive right now inserted data to cretae html
-    public function pos_invoice_inserted_data($invoice_id) {
+    public function pos_invoice_inserted_data($invoice_id)
+    {
         $this->permission->check_label('pos_sale')->read()->redirect();
         $content = $this->linvoice->pos_invoice_html_data($invoice_id);
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function pos_invoice_inserted_data_redirect($invoice_id) {
+    public function pos_invoice_inserted_data_redirect($invoice_id)
+    {
 
         $this->load->library('dashboard/linvoice');
         $this->linvoice->pos_invoice_html_data_redirect($invoice_id);
     }
 
     // Retrieve product data
-    public function retrieve_product_data() {
+    public function retrieve_product_data()
+    {
         $product_id = $this->input->post('product_id', TRUE);
         $product_info = $this->Invoices->get_total_product($product_id);
         echo json_encode($product_info);
     }
 
+    // Retrieve product data
+    public function retrieve_product_all_data()
+    {
+        $product_id = $this->input->post('product_id', TRUE);
+        $product_info = $this->Invoices->get_total_product_data($product_id);
+        echo json_encode($product_info);
+    }
+
     //purchase search by model
-    public function product_search_by_model(){
+    public function product_search_by_model()
+    {
         $model = $this->input->post('term', TRUE);
         $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_model` LIKE '%" . $model . "%')");
         $product_info = $query->result_array();
@@ -546,7 +572,8 @@ class Cinvoice extends MX_Controller {
     }
 
     // Invoice Delete
-    public function invoice_delete($invoice_id) {
+    public function invoice_delete($invoice_id)
+    {
         $this->permission->check_label('manage_sale')->delete()->redirect();
 
         $result = $this->Invoices->delete_invoice($invoice_id);
@@ -559,7 +586,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //AJAX INVOICE STOCK Check
-    public function product_stock_check($product_id) {
+    public function product_stock_check($product_id)
+    {
 
         $purchase_stocks = $this->Invoices->get_total_purchase_item($product_id);
         $total_purchase = 0;
@@ -581,7 +609,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //Search product by product name and category
-    public function search_product() {
+    public function search_product()
+    {
         $product_name = $this->input->post('product_name', TRUE);
         $category_id = $this->input->post('category_id', TRUE);
         $product_search = $this->Invoices->product_search($product_name, $category_id);
@@ -609,7 +638,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //Insert new customer
-    public function insert_customer() {
+    public function insert_customer()
+    {
         $customer_id = generator(15);
         //Customer  basic information adding.
         $data = array(
@@ -629,7 +659,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function change_stock($invoice_id) {
+    public function change_stock($invoice_id)
+    {
         //find previous invoice history and REDUCE the stock
         $invoice_history = $this->db->select('*')->from('invoice_details')->where('invoice_id', $invoice_id)->get()->result_array();
         if (count($invoice_history) > 0) {
@@ -657,7 +688,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function change_inv_stock($invoice_id) {
+    public function change_inv_stock($invoice_id)
+    {
         //find previous invoice history and REDUCE the stock
         $invoice_history = $this->db->select('*')->from('invoice_details')->where('invoice_id', $invoice_id)->get()->result_array();
         if (count($invoice_history) > 0) {
@@ -685,7 +717,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function check_inv_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null) {
+    public function check_inv_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
+    {
         $this->db->select('stock_id,quantity');
         $this->db->from('invoice_stock_tbl');
         if (!empty($store_id)) {
@@ -704,7 +737,8 @@ class Cinvoice extends MX_Controller {
         return $query->row();
     }
 
-    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null) {
+    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
+    {
         $this->db->select('stock_id,quantity');
         $this->db->from('invoice_stock_tbl');
         if (!empty($store_id)) {
@@ -723,7 +757,8 @@ class Cinvoice extends MX_Controller {
         return $query->row();
     }
 
-    public function insert_loyalty_points($customer_id, $points) {
+    public function insert_loyalty_points($customer_id, $points)
+    {
         $piting_status = $this->db->select('*')->from('loyalty_points_settings')->where('id', 1)->get()->row();
         if ($piting_status->status == 1) {
             // here will go the point insertion
@@ -746,7 +781,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //Update status
-    public function update_status($invoice_id) {
+    public function update_status($invoice_id)
+    {
         $this->load->model('dashboard/Soft_settings');
         $invoice_status = $this->input->post('invoice_status', TRUE);
         $order_no = $this->input->post('order_no', TRUE);
@@ -1115,7 +1151,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //Email testing for email
-    public function test_input($data) {
+    public function test_input($data)
+    {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -1123,7 +1160,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //Search Inovoice Item
-    public function search_inovoice_item() {
+    public function search_inovoice_item()
+    {
 
         $customer_id = $this->input->post('customer_id', TRUE);
         $content = $this->linvoice->search_inovoice_item($customer_id);
@@ -1131,7 +1169,8 @@ class Cinvoice extends MX_Controller {
     }
 
     //This function is used to Generate Key
-    public function generator($lenth) {
+    public function generator($lenth)
+    {
         $number = array("1", "2", "3", "4", "5", "6", "7", "8", "9");
 
         for ($i = 0; $i < $lenth; $i++) {
@@ -1147,7 +1186,8 @@ class Cinvoice extends MX_Controller {
         return $con;
     }
 
-    public function get_pos_product() {
+    public function get_pos_product()
+    {
 
         $per_page = $this->input->post('per_page', TRUE);
         $limit = $this->input->post('limit', TRUE);
@@ -1156,13 +1196,13 @@ class Cinvoice extends MX_Controller {
                     a.product_id,a.product_name,a.price,a.image_thumb,a.variants,a.product_model,
                     c.category_name,c.category_id
                 ')
-                ->from('product_information a')
-                ->join('product_category c', 'c.category_id = a.category_id', 'left')
-                ->group_by('a.product_id')
-                ->order_by('a.product_name', 'asc')
-                ->limit($per_page, $limit)
-                ->get()
-                ->result();
+            ->from('product_information a')
+            ->join('product_category c', 'c.category_id = a.category_id', 'left')
+            ->group_by('a.product_id')
+            ->order_by('a.product_name', 'asc')
+            ->limit($per_page, $limit)
+            ->get()
+            ->result();
         $html = '';
 
         foreach ($products as $product) {
@@ -1184,7 +1224,8 @@ class Cinvoice extends MX_Controller {
     }
 
     // Pos Payment form
-    public function get_pos_payment_form() {
+    public function get_pos_payment_form()
+    {
         $grandtotal = $this->input->post('grandtotal', TRUE);
         $totalpaid = $this->input->post('totalpaid', TRUE);
         $more = $this->input->post('more', TRUE);
@@ -1251,7 +1292,8 @@ class Cinvoice extends MX_Controller {
         echo $html;
     }
 
-    public function invoice_text() {
+    public function invoice_text()
+    {
         $this->permission->check_label('invoice_text')->create()->redirect();
         $invoice_text_details = $this->db->select('*')->from('invoice_text_table')->get()->result();
         $data = array(
@@ -1263,7 +1305,8 @@ class Cinvoice extends MX_Controller {
         echo Modules::run('template/layout', $data);
     }
 
-    public function invoice_text_insert() {
+    public function invoice_text_insert()
+    {
         $this->permission->check_label('invoice_text')->update()->redirect();
 
         $invoice_text_details = $this->db->select('*')->from('invoice_text_table')->get()->result();
@@ -1300,7 +1343,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function order_export_csv() {
+    public function order_export_csv()
+    {
         $this->permission->check_label('order_csv_export')->read()->redirect();
 
         $this->form_validation->set_rules('order_date', display('date'), 'trim|required');
@@ -1320,7 +1364,8 @@ class Cinvoice extends MX_Controller {
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function pad_print_setting() {
+    public function pad_print_setting()
+    {
         $this->permission->check_label('pad_print_setting')->create()->redirect();
         $pad_print_setting = $this->db->select('*')->from('pad_print_setting')->get()->row();
         $data = array(
@@ -1332,7 +1377,8 @@ class Cinvoice extends MX_Controller {
         echo Modules::run('template/layout', $data);
     }
 
-    public function pad_print_setting_insert() {
+    public function pad_print_setting_insert()
+    {
         $header = $this->input->post('header', TRUE);
         $footer = $this->input->post('footer', TRUE);
         $id = $this->input->post('id', TRUE);
@@ -1359,7 +1405,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function captcha_print_setting() {
+    public function captcha_print_setting()
+    {
         $this->permission->check_label('captcha_print_setting')->create()->redirect();
         $captcha_print_setting = $this->db->select('*')->from('captcha_print_setting')->get()->row();
         $data = array(
@@ -1371,7 +1418,8 @@ class Cinvoice extends MX_Controller {
         echo Modules::run('template/layout', $data);
     }
 
-    public function captcha_print_setting_insert() {
+    public function captcha_print_setting_insert()
+    {
         $header = $this->input->post('header', TRUE);
         $id = $this->input->post('id', TRUE);
 
@@ -1395,7 +1443,8 @@ class Cinvoice extends MX_Controller {
         }
     }
 
-    public function convert_number($number) {
+    public function convert_number($number)
+    {
         if ($number < 0) {
             $number = - ($number);
         }
@@ -1446,15 +1495,16 @@ class Cinvoice extends MX_Controller {
         return $res;
     }
 
-    public function pad_invoice($invoice_id) {
+    public function pad_invoice($invoice_id)
+    {
         $this->load->model('dashboard/Soft_settings');
         $this->load->library('dashboard/occational');
         $invoice_detail = $this->Invoices->retrieve_invoice_html_data($invoice_id);
         $taxfield = $this->db->select('*')
-                ->from('tax')
-                ->where('status', 1)
-                ->get()
-                ->result_array();
+            ->from('tax')
+            ->where('status', 1)
+            ->get()
+            ->result_array();
         $txregname = '';
         foreach ($taxfield as $txrgname) {
             $regname = $txrgname['tax_name'] . ', ';
@@ -1532,7 +1582,8 @@ class Cinvoice extends MX_Controller {
     }
 
     // get_pri_type_rate
-    public function get_pri_type_rate() {
+    public function get_pri_type_rate()
+    {
         $product_id = urldecode($this->input->post('product_id', TRUE));
         $pri_type_id = urldecode($this->input->post('pri_type_id', TRUE));
         $rate = $this->Invoices->get_pri_type_rate($product_id, $pri_type_id);
@@ -1540,29 +1591,56 @@ class Cinvoice extends MX_Controller {
         echo json_encode($result);
     }
 
-  //purchase search by model
-  public function product_search_all_products(){
-    $product_name = $this->input->post('product_name', TRUE);
-    $searchByCategoryName = (bool)$this->input->post('by_category', TRUE);
+    //purchase search by model
+    public function product_search_all_products()
+    {
+        $product_name = $this->input->post('product_name', TRUE);
+        $searchByCategoryName = (bool)$this->input->post('by_category', TRUE);
 
-    $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%' OR `product_id` = '". $product_name ."')");
-    $product_info = $query->result_array();
-    $json_product = [];
-    foreach ($product_info as $value) {
-        //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
-        $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
-    }
-
-    // select with category name also
-    if ($searchByCategoryName) {
-        $query = $this->db->query("SELECT * FROM `product_category` WHERE (`category_name` LIKE '%" . $product_name . "%' OR `category_id` = '". $product_name ."')");
+        $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%' OR `product_id` = '" . $product_name . "')");
         $product_info = $query->result_array();
+        $json_product = [];
         foreach ($product_info as $value) {
             //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
-            $json_product[] = array('label' => $value['category_name'], 'value' => $value['category_id']);
+            $json_product[] = array('label' => $value['product_name'], 'value' => $value['product_id']);
         }
+
+        // select with category name also
+        if ($searchByCategoryName) {
+            $query = $this->db->query("SELECT * FROM `product_category` WHERE (`category_name` LIKE '%" . $product_name . "%' OR `category_id` = '" . $product_name . "')");
+            $product_info = $query->result_array();
+            foreach ($product_info as $value) {
+                //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+                $json_product[] = array('label' => $value['category_name'], 'value' => $value['category_id']);
+            }
+        }
+
+        echo json_encode($json_product);
     }
 
-    echo json_encode($json_product);
-}
+    public function invoice_images()
+    {
+
+        $data = [
+            'title'	=>display('invoice_images'),
+        ];
+
+        $invoice_no = $this->input->post('invoice_no', true);
+
+        // get invoice data
+        $invoice = $this->db->select('invoice_id')->from('invoice')->where('invoice', $invoice_no)->get()->row();
+        // get invoice details with items
+        $details = $this->db->select('p.*')
+            ->from('invoice_details d')
+            ->join('product_information p', 'p.product_id = d.product_id', 'left')
+            ->get()->result();
+
+        if ($invoice) {
+            $data['items'] = $details;
+            // echo "<pre>";print_r($details);exit;
+        }
+
+        $content = $this->parser->parse('dashboard/invoice/invoice_images', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+    }
 }

@@ -375,7 +375,12 @@ class Creport extends MX_Controller
     public function unpaid_installment()
     {
         $this->load->library('lreport');
-        $content = $this->lreport->unpaid_installments();
+
+        $from_date = $this->input->post('from_date', true);
+        $to_date = $this->input->post('to_date', true);
+        $customer_id = $this->input->post('customer_id', true);
+
+        $content = $this->lreport->unpaid_installments($from_date, $to_date, $customer_id);
         $this->template_lib->full_admin_html_view($content);
     }
 }

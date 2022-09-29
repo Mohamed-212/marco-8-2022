@@ -299,7 +299,9 @@ $(document).ready(function () {
 
         $("#addassemblypro tbody tr").each(function (index, tr) {
             idno = Number($(this).attr('id').substring(3));
+            // console.log(idno);
             var rowvalue = Number($(".assembly_product_id_" + idno).val());
+            // console.log(rowvalue);
             if (rowvalue > 0) {
 
                 noofrows++;
@@ -329,12 +331,13 @@ $(document).ready(function () {
                     '<td class="col-sm-3">' +
                     '<div class="col-sm-12">' +
                     '<div class="form-group row">' +
-                    '<input type="text" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
+                    '<input type="text" name="product_whole[' + count + ']" id="price_whole_item_' + count + '" class="price_whole_item_' + count + ' form-control" min="0" readonly="" />' +
+                    '<input type="hidden" class="price_item' + count + ' form-control" id="price_item_' + count + '" value=""  name="product_rate[' + count + ']" min="0" readonly=""  />' +
                     '</div></div></td>' +
                     '<td class="col-sm-3">' +
                     '<div class="col-sm-12">' +
                     '<div class="form-group row">' +
-                    '<input type="text" class="product_price' + count + ' form-control" id="product_price_' + count + '" value=""  name="product_price[' + count + ']" min="0" readonly=""  />' +
+                    '<input type="hidden" class="product_price' + count + ' form-control" id="product_price_' + count + '" value=""  name="product_price[' + count + ']" min="0" readonly=""  />' +
                     '</div></div></td>' +
                     '</tr>';
             if (tableLength > 0) {
@@ -504,12 +507,18 @@ function removepricerow(row = null) {
 function removeassemblyrow(row = null) {
     if (row) {
         var price = Number($('#price_item_' + row).val());
+        var price2 = Number($('#product_price_' + row).val());
+        // var wholePrice = Number($('#price_whole_item_' + row).val());
+        // var customerPrice = Number($('#product_customer_price_' + row).val());
+        // console.log(price, price2);
         var supplier_price = Number($('#supplier_price').val());
         $('#supplier_price').val(supplier_price - price);
 
-        var price2 = Number($('#product_price_' + row).val());
+        
         var sell_price = Number($('#sell_price').val());
         $('#sell_price').val(sell_price - price2);
+
+        // var wholePrice = Number()
         
         $("#pro" + row).remove();
     } else {

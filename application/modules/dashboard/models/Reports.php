@@ -67,18 +67,38 @@ class Reports extends CI_Model
         return $query->result_array();
     }
 
-    public function unpaid_installments()
+    public function unpaid_installments($from_date = null, $to_date = null, $customer_id = null)
     {
         $today = date('Y-m-d');
         $query = $this->db->select('i.*, c.*, a.*, i.id as installment_id')
             ->from('invoice_installment i')
             ->join('invoice c', 'i.invoice_id = c.invoice_id', 'left')
             ->join('customer_information a', 'c.customer_id = a.customer_id', 'left')
-            ->where('due_date <=', $today)
-            ->where('payment_amount', null)
-            ->get();
+            // ->where('due_date <=', $today)
+            ->where('payment_amount', null);
 
-        if (!$query) {
+        if ($customer_id) {
+            $query->where('c.customer_id', $customer_id);
+        }
+
+        if ($from_date) {            
+            $from_date = date('Y-m-d', strtotime($from_date));
+        } else {
+            // get report for current month only
+            $from_date = date('Y-m-d', strtotime('first day of this month', strtotime(date('Y-m-d'))));
+        }
+
+        if ($to_date) {
+            $to_date = date('Y-m-d', strtotime($to_date));            
+        } else {
+            // get report for current month only
+            $to_date = date('Y-m-d', strtotime('last day of this month', strtotime(date('Y-m-d'))));
+        }
+
+        $query->where('i.due_date >=', $from_date);
+        $query->where('i.due_date <=', $to_date);
+
+        if (!$query = $query->get()) {
             return redirect(base_url());
         }
 

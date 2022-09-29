@@ -127,6 +127,50 @@ function check_quotation() {
     }
 }
 
+// function submit_form(e) {
+//     //here I want to prevent default
+//     e = e || window.event;
+//     e.preventDefault();
+//     var valid = false;
+
+//     var elem = $("#is_quotation");
+//     if (elem.prop('checked') == true) {
+//         $(".total_cgst").each(function () {
+//             this.value = 0;
+//         })
+//         var cgst = $("#total_cgst").val();
+//         if (cgst > 0) {
+//             $("#grandTotal").val($("#grandTotal").val() - cgst);
+//             $("#dueAmmount").val($("#dueAmmount").val() - cgst);
+//         }
+//         $("#total_cgst").val('0');
+//     }
+
+//     // validate product quantity
+//     $('[name="available_quantity[]"]').each(function () {
+//         if (!this.value || this.value < 1) {
+//             alert(products_with_no_quantity);
+//             valid = false;
+//             return;
+//         }
+//         valid = true;
+//     }).promise().done(function() {
+//         if (!valid) return;
+//         $('[name="product_quantity[]"]').each(function () {
+//             if (!this.value || this.value < 1) {
+//                 alert(products_with_no_quantity);
+//                 valid = false;
+//                 return;
+//             }
+//             valid = true;
+//         }).promise().done(function() {
+//             if (!valid) return;
+
+//             $("form#validate, form#normalinvoice").submit();
+//         });
+//     });
+// }
+
 function submit_form(e) {
     //here I want to prevent default
     e = e || window.event;
@@ -166,7 +210,31 @@ function submit_form(e) {
         }).promise().done(function() {
             if (!valid) return;
 
-            $("form#validate, form#normalinvoice").submit();
+            // validate installment amount
+            if ($('#is_installment').val() == '1') {
+                var dueAmount = parseFloat($('#dueAmmount').val());
+                // sum installment amount
+                var installmentAmount = 0;
+                $('#installment_details input[name="amount[]"]').each(function () {
+                    installmentAmount += parseFloat(this.value);
+                }).promise().done(function () {
+                    if (!valid) return;
+                    if (dueAmount == installmentAmount) {
+                        $("form#validate, form#normalinvoice").submit();
+                    } else {
+                        alert(installment_amount_is_not_valid);
+                        valid = false;
+                        return;
+                    }
+                });
+                return;
+            }
+
+            if ($('#payment_id').val() != '') {
+                $("form#validate, form#normalinvoice").submit();
+            } else {
+                alert(payment_bank_not_selected);
+            }
         });
     });
 }
@@ -374,6 +442,8 @@ function stockLimitAjax(t) {
 
 //Invoice installment
 function installment() {
+    var paidAmount = $('#paidAmount').val();
+    var dueAmount = $('#dueAmmount').val();
     $('#installment_details').html('');
     $('#installment_header').html('');
     $('#pay_day').val('');
@@ -391,7 +461,16 @@ function installment() {
         $('#month_no').prop('required', true);
         $('#month_no').attr('aria-required', true);
     }
+    // if due is zero then add all fullpaid to it
+    if (parseInt(dueAmount) == 0) {
+        $('#dueAmmount').val(paidAmount);
+        setTimeout(() => $('#paidAmount').val('0.00'), 20);
+    }
+
     $('.installment_setup').toggle();
+    $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
+
+    $('#installment_id').addClass('btn-success').removeClass('btn-warning');
 }
 
 function add_month() {
@@ -422,7 +501,7 @@ function add_month() {
             content += '<div class="row" style="display: flex;justify-content: space-around;">' +
                     '<div class="col-sm-4" style="float: none">' +
                     '<div class="form-group">' +
-                    '<input class="form-control" style="text-align: center;" type="number" name="amount[]" value="' + amount_per_month + '" readonly>' +
+                    '<input class="form-control" style="text-align: center;" type="number" name="amount[]" value="' + amount_per_month + '" >' +
                     '</div>' +
                     '</div>' +
                     '<div class="col-sm-4" style="float: none">' +
@@ -448,8 +527,9 @@ function full_paid() {
     $("#paidAmount").val(grandTotal);
     invoice_paidamount();
     $('.installment_setup').hide();
-    $('#installment_id').hide();
+    $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
     $("#is_installment").val(0);
+    $('#full').removeClass('btn-warning').addClass('btn-success');
 }
 
 //Delete a row from invoice table

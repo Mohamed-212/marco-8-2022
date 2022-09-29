@@ -109,13 +109,13 @@ class Areports extends MX_Controller
     $this->form_validation->set_rules('cmbGLCode', display('cmbGLCode'), 'trim|required');
     $this->form_validation->set_rules('cmbCode', display('cmbCode'), 'trim|required');
 
-    if (!$this->form_validation->run() == TRUE) {
+    if (false) {
       $this->session->set_userdata(array('error_message' => display('fields_must_not_be_empty')));
       redirect('accounting/areports/general_ledger');
     } else {
       $date = explode('-', $range);
-      $from = date('Y-m-d', strtotime(trim(!empty($date[0]) ? $date[0] : '')));
-      $to   = date('Y-m-d', strtotime(trim(!empty($date[1]) ? $date[1] : '')));
+      $from = date('Y-m-d', strtotime(trim(!empty($date[0]) ? $date[0] : '2020-10-05')));
+      $to   = date('Y-m-d', strtotime(trim(!empty($date[1]) ? $date[1] : '2024-02-25')));
       $dtpFromDate = $from;
       $dtpToDate   = $to;
       $HeadName    = $this->reports_model->general_led_report_headname($cmbGLCode);
@@ -134,6 +134,7 @@ class Areports extends MX_Controller
         'company_info'   => $company_info,
       );
       $data['ledger']  = $this->reports_model->general_led_report_headname($cmbCode);
+      // echo "<pre>";print_r($data);exit;
       $reportList = $this->parser->parse('accounting/report/general_ledger_report', $data, true);
       $this->template_lib->full_admin_html_view($reportList);
     }

@@ -69,15 +69,16 @@ class Lreport
         return $reportList;
     }
 
-    public function unpaid_installments()
+    public function unpaid_installments($from_date = null, $to_date = null, $customer_id = null)
     {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Customers');
         $CI->load->model('dashboard/Soft_settings');
         $CI->load->library('dashboard/occational');
 
-        $unpaid_installments = $CI->Reports->unpaid_installments();
+        $unpaid_installments = $CI->Reports->unpaid_installments($from_date, $to_date, $customer_id);
        
         if (!empty($unpaid_installments)) {
             $i = 0;
@@ -87,9 +88,12 @@ class Lreport
             }
         }
 
+        $customers_list = $CI->Customers->customer_list(); 
+
         $data = array(
-            'title' => display('out_of_stock'),
-            'unpaid_installments' => $unpaid_installments
+            'title' => display('unpaid_installment'),
+            'unpaid_installments' => $unpaid_installments,
+            'customers_list' => $customers_list
         );
         // echo "<pre>";print_r($data['unpaid_installments']);exit;
 

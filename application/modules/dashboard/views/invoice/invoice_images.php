@@ -1,0 +1,105 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<!-- Stock List Start -->
+<div class="content-wrapper">
+    <section class="content-header">
+        <div class="header-icon">
+            <i class="pe-7s-note2"></i>
+        </div>
+        <div class="header-title">
+            <h1><?php echo display('invoice_images') ?></h1>
+            <small><?php echo display('invoice_images') ?></small>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
+                <li><a href="#"><?php echo display('report') ?></a></li>
+                <li class="active"><?php echo display('invoice_images') ?></li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-bd lobidrag">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4><?php echo display('invoice_images') ?></h4>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <?php echo form_open("dashboard/Cinvoice/invoice_images", array('class' => '')); ?>
+                        <div class="form-group row">
+                            <label for="invoice_no" class="col-sm-4"><?php echo display('invoice_no') ?></label>
+                            <input type="text" class="form-control col-sm-8" autocomplete="off" placeholder="<?php echo display('invoice_no'); ?>" name="invoice_no" required>
+                        </div>
+                        <div class="fomr-group">
+                            <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+                        </div>
+                        <?php echo form_close() ?>
+                    </div>
+                    <?php if ($items) : ?>
+                        <div class="panel-body">
+                            <div class="table-responsive mt_10">
+                                <table id="" class="table table-bordered table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"><?php echo display('sl') ?></th>
+                                            <th class="text-center"><?php echo display('customer_name') ?></th>
+                                            <th class="text-center"><?php echo display('invoice_no') ?></th>
+                                            <th class="text-center"><?php echo display('payment_amount') ?></th>
+                                            <th class="text-center"><?php echo display('due_date') ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if ($invoice_imagess) {
+                                        ?>
+                                            <?php foreach ($invoice_imagess as $d) : $d = (object) $d; ?>
+                                                <tr class="text-center">
+                                                    <td><?= $d->sl ?></td>
+                                                    <td>
+                                                        <a href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/' . $d->customer_id; ?>">
+                                                            <?= $d->customer_name ?>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="<?= base_url() ?>dashboard/Cinvoice/invoice_inserted_data/<?= $d->invoice_id ?>">
+                                                            <?= $d->invoice ?>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="<?= base_url() ?>dashboard/Cinstallment/installment_update_form/<?= $d->invoice_id ?>">
+                                                            <?= $d->amount ?>
+                                                        </a>
+                                                    </td>
+                                                    <td><?= $d->due_date ?></td>
+                                                </tr>
+                                            <?php endforeach ?>
+
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="text-center">
+                                <?php if (isset($link)) {
+                                    echo $link;
+                                } ?>
+                            </div>
+                        </div>
+                    <?php endif ?>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- Stock List End -->

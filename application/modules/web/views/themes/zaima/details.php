@@ -91,13 +91,15 @@ $theme = $CI->Themes->get_theme();
                                 <ul class="thumb-nav">
                                     <li id="product-<?= $product_id ?>"><img src="<?php echo  base_url() . (!empty($image_thumb) ? $image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
                                     <?php
-                                    if (!empty($product_gallery_img)) {
-                                        foreach ($product_gallery_img as $gallery) {
+                                    // if (!empty($product_gallery_img)) {
+                                    // foreach ($product_gallery_img as $gallery) {
+                                    /*
                                     ?>
                                             <li><img src="<?php echo  base_url() . (!empty($gallery->image_url) ? $gallery->image_url : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
                                     <?php
-                                        }
-                                    }
+                                    */
+                                    // }
+                                    // }
                                     ?>
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
                                         <li id="product-<?= $var->product_id ?>"><img src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
@@ -114,6 +116,7 @@ $theme = $CI->Themes->get_theme();
                                         </a>
                                     </figure>
                                     <?php
+                                    /*
                                     if ($product_gallery_img) {
                                         foreach ($product_gallery_img as $gallery_tab_img) {
                                     ?>
@@ -125,6 +128,7 @@ $theme = $CI->Themes->get_theme();
                                     <?php
                                         }
                                     }
+                                    */
                                     ?>
 
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
@@ -275,7 +279,7 @@ $theme = $CI->Themes->get_theme();
                         </li>
                     </ul>
                     <div class="short-description">
-                    
+
                         <p><?php echo character_limiter(strip_tags($product_details), 200); ?></p>
 
                         <?php
@@ -290,7 +294,7 @@ $theme = $CI->Themes->get_theme();
                             $var_types = array_column($vresult, 'variant_type');
                         ?>
 
-                            <?php if (in_array('color', $var_types)) { ?>
+                            <?php /* if (in_array('color', $var_types)) { ?>
                                 <div class="product-color mb-3">
                                     <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
                                     <?php
@@ -305,85 +309,90 @@ $theme = $CI->Themes->get_theme();
 
                                 <?php }
                                     }
-                                } ?>
+                                } */ ?>
 
-                                <?php foreach ($varients as $product) : $vt = (object)$product['color']; ?>
-                                    <input type="radio" data-pid="<?= $product['product_id'] ?>" class="product_colors" name="select_color" id="color_<?php echo $vt->variant_id; ?>" value="<?php echo $vt->variant_id; ?>" onclick="select_color_variant(<?php echo html_escape($product['product_id']) ?>, '<?=explode(',', $product['variants'])[0]?>', '<?php echo html_escape($vt->variant_id); ?>')" <?php echo (($vt->variant_id == $default_color) ? 'checked="checked"' : "") ?>>
-                                    <label class="mb-0" for="color_<?php echo $vt->variant_id; ?>"><span class="color_code" style="background: <?php echo (!empty($vt->color_code) ? $vt->color_code : strtolower($vt->variant_name)) ?>"></span></label>
+
+
+                            <div class="product-size mb-3">
+
+                                <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
+                                <?php foreach ($varients as $product) : $vt = $product['color']; ?>
+                                    <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?=$variant?>', '<?=$variant?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
+                                    <label class="mr-1" for="id<?php echo html_escape($product['product_id']) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($product['color']) ?></span></label>
                                 <?php endforeach ?>
-
-                                </div>
-
-
-
-                                <div class="product-size mb-3">
-                                    <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('product_size') ?>:</h5>
-                                    <?php
-                                    foreach ($vresult as $vitem) {
-                                        if ($vitem->variant_type == 'size') {
-                                    ?>
-
-                                            <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?>>
-                                            <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($vitem->variant_name) ?></span></label>
-
-                                    <?php
-                                        }
-                                    }
-
-                                    ?>
-                                </div>
-                            <?php  }  ?>
-                            <!--  /.End of product Size -->
-                    </div>
-                    <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center')); ?>
-                    <?php if (!($is_affiliate == 1)) { ?>
-                        <div class="num-block skin-2">
-                            <div class="num-in d-flex bg-white border mr-2">
-                                <span class="minus position-relative dis reduced"></span>
-                                <input type="text" name="qty" id="sst" class="in-num text-center border-0 qty" value="1" readonly="">
-                                <span class="plus position-relative increase"></span>
                             </div>
+
+                    </div>
+
+
+                    <div class="product-size mb-3">
+                        <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('product_size') ?>:</h5>
+                        <?php
+                            foreach ($vresult as $vitem) {
+                                if ($vitem->variant_type == 'size') {
+                        ?>
+
+                                <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?>>
+                                <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($vitem->variant_name) ?></span></label>
+
+                        <?php
+                                }
+                            }
+
+                        ?>
+                    </div>
+                <?php  }  ?>
+                <!--  /.End of product Size -->
+                </div>
+                <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center')); ?>
+                <?php if (!($is_affiliate == 1)) { ?>
+                    <div class="num-block skin-2">
+                        <div class="num-in d-flex bg-white border mr-2">
+                            <span class="minus position-relative dis reduced"></span>
+                            <input type="text" name="qty" id="sst" class="in-num text-center border-0 qty" value="1" readonly="">
+                            <span class="plus position-relative increase"></span>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if ($stok > 0) { ?>
+                    <a href="javascript:void(0)" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
+                <?php }
+                if ($is_affiliate == 1) { ?>
+                    <a href="<?php echo html_escape($affiliate_url) ?>" class="btn btn-primary text-uppercase fs-12 font-weight-500 mr-2 color4 color46" target="0">
+                        <?php echo display('buy_now') ?>
+                    </a>
+                <?php } ?>
+                <a href="javascript:void(0)" class="add-wishlist wishlist d-flex align-items-center justify-content-center" data-toggle="tooltip" data-placement="top" title="<?php echo display('wishlist') ?>" name="<?php echo html_escape($product_id) ?>">
+                    <i data-feather="heart"></i>
+                </a>
+                <a href="javascript:void(0)" class="add-wishlist d-flex align-items-center justify-content-center compare-btn" data-toggle="tooltip" data-placement="top" onclick="comparison_btn(<?php echo html_escape($product_id) ?>)" title="<?php echo display('compare') ?>">
+                    <i data-feather="repeat"></i>
+                </a>
+                <?php echo form_close(); ?>
+                <div class="product-meta pt-2 border-top mt-2">
+                    <div class="posted-in mb-1">
+                        <strong class="font-weight-500 mr-1"><?php echo display('category') ?>: </strong>
+                        <a href="<?php echo base_url() . 'category/p/' . remove_space($category_name) . '/' . $category_id; ?>"><?php echo html_escape($category_name); ?></a>
+                    </div>
+                    <?php if (!empty($tag)) { ?>
+                        <div class="tag-as">
+                            <strong class="font-weight-500 mr-1"><?php echo display('tag') ?>: </strong>
+                            <?php
+                            rtrim($tag, ',');
+                            $tags = explode(',', $tag);
+                            $i = 1;
+                            foreach ($tags as $tagval) {
+                                echo (($i > 1) ? ',' : '');
+                                $i++ ?>
+                                <a href="javascript:void(0)" class="text-black-50"><?php echo html_escape($tagval); ?></a>
+                            <?php } ?>
                         </div>
                     <?php } ?>
-                    <?php if ($stok > 0) { ?>
-                        <a href="javascript:void(0)" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
-                    <?php }
-                    if ($is_affiliate == 1) { ?>
-                        <a href="<?php echo html_escape($affiliate_url) ?>" class="btn btn-primary text-uppercase fs-12 font-weight-500 mr-2 color4 color46" target="0">
-                            <?php echo display('buy_now') ?>
-                        </a>
-                    <?php } ?>
-                    <a href="javascript:void(0)" class="add-wishlist wishlist d-flex align-items-center justify-content-center" data-toggle="tooltip" data-placement="top" title="<?php echo display('wishlist') ?>" name="<?php echo html_escape($product_id) ?>">
-                        <i data-feather="heart"></i>
-                    </a>
-                    <a href="javascript:void(0)" class="add-wishlist d-flex align-items-center justify-content-center compare-btn" data-toggle="tooltip" data-placement="top" onclick="comparison_btn(<?php echo html_escape($product_id) ?>)" title="<?php echo display('compare') ?>">
-                        <i data-feather="repeat"></i>
-                    </a>
-                    <?php echo form_close(); ?>
-                    <div class="product-meta pt-2 border-top mt-2">
-                        <div class="posted-in mb-1">
-                            <strong class="font-weight-500 mr-1"><?php echo display('category') ?>: </strong>
-                            <a href="<?php echo base_url() . 'category/p/' . remove_space($category_name) . '/' . $category_id; ?>"><?php echo html_escape($category_name); ?></a>
-                        </div>
-                        <?php if (!empty($tag)) { ?>
-                            <div class="tag-as">
-                                <strong class="font-weight-500 mr-1"><?php echo display('tag') ?>: </strong>
-                                <?php
-                                rtrim($tag, ',');
-                                $tags = explode(',', $tag);
-                                $i = 1;
-                                foreach ($tags as $tagval) {
-                                    echo (($i > 1) ? ',' : '');
-                                    $i++ ?>
-                                    <a href="javascript:void(0)" class="text-black-50"><?php echo html_escape($tagval); ?></a>
-                                <?php } ?>
-                            </div>
-                        <?php } ?>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <!-- Advertisement 2 -->
 <?php $this->load->view('adv/details_adv1', array('adv_position' => 2)); ?>
@@ -692,11 +701,11 @@ $theme = $CI->Themes->get_theme();
 <input type="hidden" id="theme_url" value="<?php echo THEME_URL . $theme; ?>">
 <input type="hidden" id="product_max_quantity" value="1" />
 <pre>
-    <?php var_dump($var)?>
+    <?php var_dump($var) ?>
 </pre>
 <script>
     $(document).ready(function() {
-        $('input[data-product=color-' + <?=$product_id?> + "]").attr("checked", 'checked').trigger('click');
+        $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
         $('input[name="select_size1"]').attr("checked", 'checked');
     });
 </script>

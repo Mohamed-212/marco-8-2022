@@ -3,12 +3,14 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Cproduct extends MX_Controller {
+class Cproduct extends MX_Controller
+{
 
     public $product_id;
     private $table = "language";
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
         $this->auth->check_user_auth();
         $this->load->model(array(
@@ -29,15 +31,26 @@ class Cproduct extends MX_Controller {
     }
 
     //Index page load
-    public function index() {
+    public function index()
+    {
         $this->permission->check_label('add_product')->create()->redirect();
 
         $content = $this->lproduct->product_add_form(); // get content
         $this->template_lib->full_admin_html_view($content);
     }
 
+    //Index page load
+    public function add_product_assemply()
+    {
+        $this->permission->check_label('add_product')->create()->redirect();
+
+        $content = $this->lproduct->product_assemply_add_form(); // get content
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     //Insert Product and upload
-    public function insert_product() {
+    public function insert_product()
+    {
         $this->permission->check_label('add_product')->create()->redirect();
 
         $this->load->library('form_validation');
@@ -85,7 +98,77 @@ class Cproduct extends MX_Controller {
                     $thumb_image = $config['new_image'];
                 }
             }
+            $category_id = $this->input->post('category_id', TRUE);
+            // check if category_id is not found
+            $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_id', $category_id)->get()->num_rows();
+            if ($categoryIsFound == 0) {
+                // create new category with that name
+                $new_category_id = generator(15);
+                $category_data = array(
+                    'category_id' => $new_category_id,
+                    'category_name' => $category_id,
+                    'top_menu' => 1,
+                    'menu_pos' => 1,
+                    'cat_favicon' => 'my-assets/image/category.png',
+                    'parent_category_id' => '',
+                    'cat_image' => 'my-assets/image/category.png',
+                    'cat_type' => 1,
+                    'status' => 1
+                );
+                $this->Categories->category_entry($category_data);
+                $category_id = $new_category_id;
+            }
+
+
+
             $variant = $this->input->post('variant', TRUE);
+            if ($variant) {
+                $variant = $variant[0];
+            }
+
+            // check if size variant is exists
+            $found = $this->db->select('variant_id')->from('variant')->where('variant_id', $variant)->get()->num_rows();
+            if (!$found) {
+                // create new varient size and then attach it`s id to product
+                $variant_id = $this->auth->generator(15);
+                $variant_data = array(
+                    'variant_id' => $variant_id,
+                    'variant_name' => $variant,
+                    'variant_type' => 'size',
+                    'color_code' => null,
+                    'status' => 1
+                );
+
+                $result = $this->Variants->variant_entry($variant_data);
+                $variant = $variant_id;
+
+                if ($result) {
+                    // add this size variant to only current category
+                    // $category_ids = $this->db->select('category_id')->from('product_category')->where()->get()->result();
+                    // foreach ($category_ids as $category_id):
+                    $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variant_id) . ", now(), now())");
+                    // endforeach;
+                }
+            }
+
+            // check if brand is not found then create new one
+            $brand_id = $this->input->post('brand', TRUE);
+            $brandIsFound = $this->db->select('brand_id')->from('brand')->where('brand_id', $brand_id)->get()->num_rows();
+            if ($brandIsFound == 0) {
+                // create new brand with that name
+                $new_brand_id = $this->auth->generator(15);
+                $brand_data = array(
+                    'brand_id'   => $new_brand_id,
+                    'brand_name' => $brand_id,
+                    'brand_image' => null,
+                    'website'    => '',
+                    'status'     => 1
+                );
+                $this->Brands->brand_entry($brand_data);
+
+                $brand_id = $new_brand_id;
+            }
+
             $variant_colors = $this->input->post('variant_colors', TRUE);
             if (!empty($variant_colors)) {
                 $full_variant = array_merge($variant, $variant_colors);
@@ -103,11 +186,16 @@ class Cproduct extends MX_Controller {
             $product_id = $this->generator(8);
             // Product variant prices
             $variant_prices = $this->input->post('variant_prices', TRUE);
+
+            $model_and_color = explode('-', $this->input->post('model', TRUE));
+            $product_model_only = trim($model_and_color[0]);
+            $product_color = trim($model_and_color[1]);
+
             $data = array(
                 'product_id' => $product_id,
                 'product_name' => $this->input->post('product_name', TRUE),
                 'supplier_id' => $this->input->post('supplier_id', TRUE),
-                'category_id' => $this->input->post('category_id', TRUE),
+                'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
                 'bar_code' => $this->input->post('bar_code', TRUE),
                 'price' => $this->input->post('price', TRUE),
@@ -115,7 +203,7 @@ class Cproduct extends MX_Controller {
                 'unit' => $this->input->post('unit', TRUE),
                 'product_model' => $this->input->post('model', TRUE),
                 'product_details' => $this->input->post('details', TRUE),
-                'brand_id' => $this->input->post('brand', TRUE),
+                'brand_id' => $brand_id,
                 'variants' => implode(",", (array) $full_variant),
                 'default_variant' => $default_variant,
                 'variant_price' => (!empty($variant_prices) ? 1 : 0),
@@ -133,6 +221,8 @@ class Cproduct extends MX_Controller {
                 'image_thumb' => (!empty($thumb_image) ? $thumb_image : 'my-assets/image/product.png'),
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
+                'product_model_only' => $product_model_only,
+                'product_color' => $product_color,
             );
             $languages = $this->input->post('language', TRUE);
             $trans_names = $this->input->post('trans_name', TRUE);
@@ -326,7 +416,8 @@ class Cproduct extends MX_Controller {
         }
     }
 
-    private function set_upload_options() {
+    private function set_upload_options()
+    {
         //upload an image options
         $config = array();
         $config['upload_path'] = './my-assets/image/gallery/';
@@ -339,7 +430,8 @@ class Cproduct extends MX_Controller {
     }
 
     //Manage Product
-    public function manage_product($page = 0) {
+    public function manage_product($page = 0)
+    {
         $this->permission->check_label('manage_product')->read()->redirect();
         $filter = array(
             'product_name' => $this->input->get('product_name', TRUE),
@@ -385,8 +477,11 @@ class Cproduct extends MX_Controller {
     }
 
     //Product Update Form
-    public function product_update_form($product_id) {
+    public function product_update_form($product_id)
+    {
         $this->permission->check_label('manage_product')->update()->redirect();
+
+        $product_id = str_replace('#', '', $product_id);
 
         $CI = &get_instance();
         $content = $CI->lproduct->product_edit_data($product_id);
@@ -394,7 +489,8 @@ class Cproduct extends MX_Controller {
     }
 
     // Product Update
-    public function product_update($product_id) {
+    public function product_update($product_id)
+    {
 
 
         $this->permission->check_label('manage_product')->update()->redirect();
@@ -466,8 +562,80 @@ class Cproduct extends MX_Controller {
                 $onsale_price = null;
             }
 
+            
+
+            $category_id = $this->input->post('category_id', TRUE);
+            // check if category_id is not found
+            $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_id', $category_id)->get()->num_rows();
+            if ($categoryIsFound == 0) {
+                // create new category with that name
+                $new_category_id = generator(15);
+                $category_data = array(
+                    'category_id' => $new_category_id,
+                    'category_name' => $category_id,
+                    'top_menu' => 1,
+                    'menu_pos' => 1,
+                    'cat_favicon' => 'my-assets/image/category.png',
+                    'parent_category_id' => '',
+                    'cat_image' => 'my-assets/image/category.png',
+                    'cat_type' => 1,
+                    'status' => 1
+                );
+                $this->Categories->category_entry($category_data);
+                $category_id = $new_category_id;
+            }
+
+
 
             $variant = $this->input->post('variant', TRUE);
+            if ($variant) {
+                $variant = $variant[0];
+            }
+
+            // check if size variant is exists
+            $found = $this->db->select('variant_id')->from('variant')->where('variant_id', $variant)->get()->num_rows();
+            if (!$found) {
+                // create new varient size and then attach it`s id to product
+                $variant_id = $this->auth->generator(15);
+                $variant_data = array(
+                    'variant_id' => $variant_id,
+                    'variant_name' => $variant,
+                    'variant_type' => 'size',
+                    'color_code' => null,
+                    'status' => 1
+                );
+
+                $result = $this->Variants->variant_entry($variant_data);
+                $variant = $variant_id;
+
+                if ($result) {
+                    // add this size variant to only current category
+                    // $category_ids = $this->db->select('category_id')->from('product_category')->where()->get()->result();
+                    // foreach ($category_ids as $category_id):
+                    $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variant_id) . ", now(), now())");
+                    // endforeach;
+                }
+            }
+
+            // check if brand is not found then create new one
+            $brand_id = $this->input->post('brand', TRUE);
+            $brandIsFound = $this->db->select('brand_id')->from('brand')->where('brand_id', $brand_id)->get()->num_rows();
+            if ($brandIsFound == 0) {
+                // create new brand with that name
+                $new_brand_id = $this->auth->generator(15);
+                $brand_data = array(
+                    'brand_id'   => $new_brand_id,
+                    'brand_name' => $brand_id,
+                    'brand_image' => null,
+                    'website'    => '',
+                    'status'     => 1
+                );
+                $this->Brands->brand_entry($brand_data);
+
+                $brand_id = $new_brand_id;
+            }
+
+
             $variant_colors = $this->input->post('variant_colors', TRUE);
 
             if (!empty($variant_colors)) {
@@ -482,20 +650,20 @@ class Cproduct extends MX_Controller {
             $filter_names = $this->input->post('filter_name', true);
             // delete previous filter items 
             $this->db->delete('filter_product', array('product_id' => $product_id));
-            $this->db->delete('filter_type_category', array('category_id' => $this->input->post('category_id', TRUE)));
+            $this->db->delete('filter_type_category', array('category_id' => $category_id));
             $filter_list = [];
             $tdata3 = [];
             for ($d = 0; $d < count($filter_types); $d++) {
                 if (!empty($filter_types[$d]) && !empty($filter_names[$d])) {
                     $filter_list[] = array(
-                        'category_id' => $this->input->post('category_id', TRUE),
+                        'category_id' => $category_id,
                         'product_id' => $product_id,
                         'filter_type_id' => $filter_types[$d],
                         'filter_item_id' => $filter_names[$d]
                     );
                     $tdata3[] = array(
                         'type_id' => $filter_types[$d],
-                        'category_id' => $this->input->post('category_id', TRUE)
+                        'category_id' => $category_id
                     );
                 }
             }
@@ -539,10 +707,14 @@ class Cproduct extends MX_Controller {
             $variant_prices = $this->input->post('variant_prices', TRUE);
             $provar_prices = $this->Products->get_product_variant_prices($product_id);
 
+            $model_and_color = explode('-', $this->input->post('model', TRUE));
+            $product_model_only = trim($model_and_color[0]);
+            $product_color = trim($model_and_color[1]);
+
             $data = array(
                 'product_name' => $this->input->post('product_name', TRUE),
-                'supplier_id' => $this->input->post('supplier_id', TRUE),
-                'category_id' => $this->input->post('category_id', TRUE),
+                'supplier_id' => empty($this->input->post('supplier_id', TRUE)) ? null : $this->input->post('supplier_id', TRUE),
+                'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
                 'bar_code' => $this->input->post('bar_code', TRUE),
                 'price' => $this->input->post('price', TRUE),
@@ -550,7 +722,7 @@ class Cproduct extends MX_Controller {
                 'unit' => $this->input->post('unit', TRUE),
                 'product_model' => $this->input->post('model', TRUE),
                 'product_details' => $this->input->post('details', TRUE),
-                'brand_id' => $this->input->post('brand', TRUE),
+                'brand_id' => $brand_id,
                 'variants' => implode(",", (array) $full_variant),
                 'default_variant' => $this->input->post('default_variant', TRUE),
                 'variant_price' => (!empty($variant_prices) ? 1 : 0),
@@ -566,11 +738,15 @@ class Cproduct extends MX_Controller {
                 'specification' => stripslashes($this->input->post('specification', TRUE)),
                 'image_large_details' => (!empty($image_url) ? $image_url : $old_img_lrg),
                 'image_thumb' => (!empty($thumb_image) ? $thumb_image : $old_thumb_image),
-                'status' => 1
+                'status' => 1,
+                'product_model_only' => $product_model_only,
+                'product_color' => $product_color,
             );
             $result = $this->Products->update_product($data, $product_id);
-//// start update tax for sunglasses by shady azzam
-            if ($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ') {
+            //// start update tax for sunglasses by shady azzam
+            // get sun glasses category latest id
+            $sun_glasses = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->get()->row();
+            if ($category_id == $sun_glasses->category_id) {
                 $this->db->select('tax.*,tax_product_service.product_id,tax_percentage');
                 $this->db->from('tax_product_service');
                 $this->db->join('tax', 'tax_product_service.tax_id = tax.tax_id', 'left');
@@ -611,7 +787,7 @@ class Cproduct extends MX_Controller {
                     $this->db->delete('tax_product_service');
                 }
             }
-//// End update tax for sunglasses by shady azzam
+            //// End update tax for sunglasses by shady azzam
 
 
             //Product variant prices
@@ -778,7 +954,8 @@ class Cproduct extends MX_Controller {
     }
 
     // Product Delete
-    public function product_delete($product_id) {
+    public function product_delete($product_id)
+    {
 
         $this->permission->check_label('manage_product')->delete()->redirect();
 
@@ -787,7 +964,8 @@ class Cproduct extends MX_Controller {
     }
 
     //Retrieve Single Item  By Search
-    public function product_by_search() {
+    public function product_by_search()
+    {
         $this->permission->check_label('manage_product')->read()->redirect();
 
         $product_id = $this->input->post('product_id', TRUE);
@@ -818,7 +996,8 @@ class Cproduct extends MX_Controller {
     }
 
     //Retrieve Single Item  By Search
-    public function product_details($product_id) {
+    public function product_details($product_id)
+    {
         $this->permission->check_label('manage_product')->read()->redirect();
 
         $product_id = urldecode($product_id);
@@ -848,8 +1027,8 @@ class Cproduct extends MX_Controller {
         }
 
         $openQuantity = $details_info[0]['open_quantity'];
-        $stock = ($totalPurchase + $openQuantity) - $totalSales;
-        // $stock = ($totalPurchase - $totalSales);
+        // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        $stock = ($totalPurchase - $totalSales);
 
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
@@ -874,7 +1053,8 @@ class Cproduct extends MX_Controller {
     }
 
     //Retrieve Single Item  By Search
-    public function product_details_single() {
+    public function product_details_single()
+    {
         $this->permission->check_label('product_ledger')->read()->redirect();
 
         $product_id = $this->input->post('product_id', TRUE);
@@ -907,8 +1087,8 @@ class Cproduct extends MX_Controller {
         }
 
         $openQuantity = $details_info[0]['open_quantity'];
-        $stock = ($totalPurchase + $openQuantity) - $totalSales;
-        // $stock = ($totalPurchase - $totalSales);
+        // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        $stock = ($totalPurchase - $totalSales);
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_report'),
@@ -936,7 +1116,8 @@ class Cproduct extends MX_Controller {
     }
 
     //Add supplier by ajax
-    public function add_supplier() {
+    public function add_supplier()
+    {
         $this->load->model('Suppliers');
         $this->form_validation->set_rules('supplier_name', display('supplier_name'), 'required');
         $this->form_validation->set_rules('mobile', display('mobile'), 'required');
@@ -966,7 +1147,8 @@ class Cproduct extends MX_Controller {
     }
 
     // Insert category by ajax
-    public function insert_category() {
+    public function insert_category()
+    {
 
         $category_id = $this->auth->generator(15);
         $this->form_validation->set_rules('category_name', display('category_name'), 'required');
@@ -991,7 +1173,8 @@ class Cproduct extends MX_Controller {
     }
 
     //Add Product CSV
-    public function add_product_csv() {
+    public function add_product_csv()
+    {
         $this->permission->check_label('import_product_csv')->create()->redirect();
         $data = array(
             'title' => display('import_product_csv')
@@ -1001,7 +1184,8 @@ class Cproduct extends MX_Controller {
     }
 
     //CSV Upload File
-    function uploadCsv() {
+    function uploadCsv()
+    {
         $this->permission->check_label('import_product_csv')->create()->redirect();
         $count = 0;
         $fp = fopen($_FILES['upload_csv_file']['tmp_name'], 'r') or die("can't open file");
@@ -1081,10 +1265,10 @@ class Cproduct extends MX_Controller {
 
                 if ($count > 0) {
                     $result = $this->db->select('*')
-                            ->from('product_information')
-                            ->where('product_model', $data['product_model'])
-                            ->get()
-                            ->num_rows();
+                        ->from('product_information')
+                        ->where('product_model', $data['product_model'])
+                        ->get()
+                        ->num_rows();
 
                     if ($result == 0 && !empty($data['product_model']) && !empty($data['supplier_id'])) {
 
@@ -1180,7 +1364,8 @@ class Cproduct extends MX_Controller {
     }
 
     //This function is used to Generate Key
-    public function generator($lenth) {
+    public function generator($lenth)
+    {
 
         $number = array("1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
         for ($i = 0; $i < $lenth; $i++) {
@@ -1203,7 +1388,8 @@ class Cproduct extends MX_Controller {
         }
     }
 
-    public function get_default_variant() {
+    public function get_default_variant()
+    {
         $variants = $this->input->post('variants', TRUE);
 
         $variant_list = $this->db->select('*')->from('variant')->where_in('variant_id', $variants)->get()->result();
@@ -1214,7 +1400,8 @@ class Cproduct extends MX_Controller {
         echo $html;
     }
 
-    public function delete_gallery_image() {
+    public function delete_gallery_image()
+    {
         $this->permission->check_label('manage_product')->delete()->redirect();
 
         $imageId = $this->input->post('imageId', TRUE);
@@ -1228,7 +1415,8 @@ class Cproduct extends MX_Controller {
         $this->db->delete('image_gallery');
     }
 
-    public function find_filter_items() {
+    public function find_filter_items()
+    {
         $type_id = $this->input->post('type_id', TRUE);
         $filter_items = $this->cfiltration_model->filter_type_wise_items($type_id);
         $html = '';
@@ -1242,13 +1430,15 @@ class Cproduct extends MX_Controller {
 
     ////////////////////////////pricing_types///////////////////////////////////
 
-    public function get_no_types() {
+    public function get_no_types()
+    {
         $nooftypes = $this->cfiltration_model->get_no_types();
 
         echo json_encode($nooftypes);
     }
 
-    public function find_pricing_types1() {
+    public function find_pricing_types1()
+    {
 
 
         $items = $this->cfiltration_model->get_all_pricing_types();
@@ -1271,7 +1461,8 @@ class Cproduct extends MX_Controller {
         }
     }
 
-    public function find_pricing_types2() {
+    public function find_pricing_types2()
+    {
         $idarray = $this->input->post('idarray', TRUE);
 
         $Data = $this->cfiltration_model->get_all_pricing_types2($idarray);
@@ -1279,26 +1470,27 @@ class Cproduct extends MX_Controller {
         echo json_encode($Data);
     }
 
-    public function getpricetypes() {
+    public function getpricetypes()
+    {
         $product_id = $this->input->post('product_id', TRUE);
         if ($product_id) {
 
             $pricingtypes = $this->cfiltration_model->get_pricing_types();
             $pricingdata = $this->cfiltration_model->get_pricing_data($product_id);
             $table = ' <label for="pricing_type" class="col-sm-4 col-form-label">' . display('pricing') . '</label>'
-                    . ' <div class="col-sm-4">'
-                    . '  <div class="row pricing_type_row">'
-                    . ' <table class="" id="addprice"> <tbody>';
+                . ' <div class="col-sm-4">'
+                . '  <div class="row pricing_type_row">'
+                . ' <table class="" id="addprice"> <tbody>';
 
             $x = 1;
 
             if (isset($pricingdata) && !empty($pricingdata)) {
                 foreach ($pricingdata as $key => $value) {
                     $table .= '<tr id="row' . $x . '" class="' . $x . '">'
-                            . '<td class="col-sm-6">'
-                            . '<div class="col-sm-12 custom_select">'
-                            . '<div class="form-group row">'
-                            . '<select class="form-control pricing-control width_100p pricing_type" name="pricetype[' . $x . ']" id="pricetype' . $x . '" onchange="" >';
+                        . '<td class="col-sm-6">'
+                        . '<div class="col-sm-12 custom_select">'
+                        . '<div class="form-group row">'
+                        . '<select class="form-control pricing-control width_100p pricing_type" name="pricetype[' . $x . ']" id="pricetype' . $x . '" onchange="" >';
                     if (isset($pricingtypes) && !empty($pricingtypes)) {
                         foreach ($pricingtypes as $key => $price) {
                             if ($price['pri_type_id'] == $value['pri_type_id']) {
@@ -1333,11 +1525,11 @@ class Cproduct extends MX_Controller {
                 } // /.foreach        
             } else {
                 $table .= '<tr id="row' . $x . '" class="' . $x . '">'
-                        . '<td class="col-sm-6">'
-                        . '<div class="col-sm-12 custom_select">'
-                        . '<div class="form-group row">'
-                        . '<select class="form-control pricing-control width_100p pricing_type" name="pricetype[' . $x . ']" id="pricetype' . $x . '" onchange="" >'
-                        . '<option value=""> </option>';
+                    . '<td class="col-sm-6">'
+                    . '<div class="col-sm-12 custom_select">'
+                    . '<div class="form-group row">'
+                    . '<select class="form-control pricing-control width_100p pricing_type" name="pricetype[' . $x . ']" id="pricetype' . $x . '" onchange="" >'
+                    . '<option value=""> </option>';
                 if (isset($pricingtypes) && !empty($pricingtypes)) {
                     foreach ($pricingtypes as $key => $price) {
 
@@ -1369,7 +1561,8 @@ class Cproduct extends MX_Controller {
     }
 
     ////////////////////////////////End ////////////////////////////////////////////////////////////////////////
-    public function get_assembly_products() {
+    public function get_assembly_products()
+    {
         $product_id = $this->input->post('product_id', TRUE);
         if ($product_id) {
             $check_assembly = $this->cfiltration_model->check_assembly($product_id);
@@ -1384,8 +1577,9 @@ class Cproduct extends MX_Controller {
                              </div>
                                 ' . display('product_name') . '
                             </th>
-                            <th class="col-sm-3 text-center">' . display('supplier_price') . '</th>
-                            <th class="col-sm-3 text-center">' . display('sell_price') . '</th>
+                            <!-- <th class="col-sm-3 text-center">' . display('supplier_price') . '</th>
+                            <th class="col-sm-3 text-center">' . display('sell_price') . '</th> -->
+                            <th class="col-sm-3 text-center">' . display('whole_price') . '</th>
                            </tr>
                          </thead>
                         <tbody>';
@@ -1393,27 +1587,39 @@ class Cproduct extends MX_Controller {
 
                 if (isset($assembly_products_data) && !empty($assembly_products_data)) {
                     foreach ($assembly_products_data as $key => $value) {
+                        $pricing = $this->db->select('*')->from('pricing_types_product')->where('product_id', $value['product_id'])->get()->result_array();
+                        $wholePrice = 0;
+                        $customerPrice = 0;
+                        foreach ($pricing as $pri) {
+                            if ($pri['pri_type_id'] == 1) {
+                                $wholePrice = $pri['product_price'];
+                            } else {
+                                $customerPrice = $pri['product_price'];
+                            }
+                        }
                         $table .= '<tr id="pro' . $x . '" class="' . $x . '">'
-                                . '<td class="col-sm-6">'
-                                . '<div class="col-sm-12">'
-                                . '<div class="form-group row">'
-                                . '<div class="input-group">'
-                                . '<input type="text" class="form-control assemblyproductSelection"  value="' . $value['product_name'] . '-(' . $value['product_model'] . ')" onkeyup="assembly_productList(' . $x . ');"  value="" id="assemblypro' . $x . '" name="assemblypro' . $x . '" placeholder="' . display('product_name') . '" />'
-                                . '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' . $x . '" value="' . $value['child_product_id'] . '" name="assembly_product_id[' . $x . ']" />';
+                            . '<td class="col-sm-6">'
+                            . '<div class="col-sm-12">'
+                            . '<div class="form-group row">'
+                            . '<div class="input-group">'
+                            . '<input type="text" class="form-control assemblyproductSelection"  value="' . $value['product_name'] . '-(' . $value['product_model'] . ')" onkeyup="assembly_productList(' . $x . ');"  value="" id="assemblypro' . $x . '" name="assemblypro' . $x . '" placeholder="' . display('product_name') . '" />'
+                            . '<input type="hidden" class="autocomplete_hidden_value assembly_product_id_' . $x . '" value="' . $value['child_product_id'] . '" name="assembly_product_id[' . $x . ']" />';
                         $table .= '<div class="input-group-addon btn btn-danger remove_filter_row" onclick="removeassemblyprorow(' . $x . ')">
                               <i class="ti-minus"></i>
                               </div>';
                         $table .= '</div></div></div></td>'
-                                . '<td class="col-sm-3">'
-                                . '<div class="col-sm-12">'
-                                . '<div class="form-group row">'
-                                . '<input type="text" class="price_item' . $x . ' form-control" value="' . $value['supplier_price'] . '"  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
-                                . '</div></div></td></td>'
-                                . '<td class="col-sm-3">'
-                                . '<div class="col-sm-12">'
-                                . '<div class="form-group row">'
-                                . '<input type="text" class="product_price' . $x . ' form-control" value="' . $value['price'] . '"  id="product_price_' . $x . '" name="product_price[' . $x . ']" min="0" readonly="" />'
-                                . '</div></div></td></tr>';
+                            . '<td class="col-sm-3">'
+                            . '<div class="col-sm-12">'
+                            . '<div class="form-group row">'
+                            . '<input type="text" class="price_whole_item_' . $x . ' form-control" value="' . $wholePrice . '"  id="price_whole_item_' . $x . '" name="product_whole[' . $x . ']" min="0" readonly="" />'
+                            . '<input type="hidden" class="price_item' . $x . ' form-control" value="' . $value['supplier_price'] . '"  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                            . '</div></div></td></td>'
+                            . '<td class="col-sm-3">'
+                            . '<div class="col-sm-12">'
+                            . '<div class="form-group row">'
+                            . '<input type="hidden" class="product_price' . $x . ' form-control" value="' . $value['price'] . '"  id="product_price_' . $x . '" name="product_price[' . $x . ']" min="0" readonly="" />'
+                            . '<input type="hidden" class="product_customer_price_' . $x . ' form-control" value="' . $customerPrice . '"  id="product_customer_price__' . $x . '" name="product_customer_price_[' . $x . ']" min="0" readonly="" />'
+                            . '</div></div></td></tr>';
                         $x++;
                     } // /.foreach        
                 } else {
@@ -1428,11 +1634,14 @@ class Cproduct extends MX_Controller {
                               <i class="ti-minus"></i>
                               </div>';
                     $table .= '</div></div></div></td>'
-                            . '<td class="col-sm-6">'
-                            . '<div class="col-sm-12">'
-                            . '<div class="form-group row">'
-                            . '<input type="text" class="price_item' . $x . ' form-control" value=""  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
-                            . '</div></div></td></tr>';
+                        . '<td class="col-sm-6">'
+                        . '<div class="col-sm-12">'
+                        . '<div class="form-group row">'
+                        . '<input type="text" class="price_whole_item_' . $x . ' form-control" value=""  id="price_whole_item_' . $x . '" name="product_whole[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="hidden" class="price_item' . $x . ' form-control" value=""  id="price_item_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="hidden" class="product_price' . $x . ' form-control" value=""  id="product_price_' . $x . '" name="product_rate[' . $x . ']" min="0" readonly="" />'
+                        . '<input type="hidden" class="product_customer_price_' . $x . ' form-control" value=""  id="product_customer_price__' . $x . '" name="product_customer_price_[' . $x . ']" min="0" readonly="" />'
+                        . '</div></div></td></tr>';
                 }
                 $table .= '</tbody>
 	    </table></div></div>';
@@ -1451,7 +1660,8 @@ class Cproduct extends MX_Controller {
 
 
 
-    public function find_filter_types() {
+    public function find_filter_types()
+    {
         $f_count = $this->input->post('f_count', true);
         $filter_types = $this->cfiltration_model->get_all_types();
         $filter_types_html = '<div class="col-sm-6">
@@ -1488,7 +1698,8 @@ class Cproduct extends MX_Controller {
         echo json_encode($filter_types_html);
     }
 
-    public function languages() {
+    public function languages()
+    {
         $settings = $this->db->select('language')->from('soft_setting')->where('setting_id', 1)->get()->row();
         if ($this->db->table_exists($this->table)) {
             $fields = $this->db->field_data($this->table);
@@ -1507,7 +1718,8 @@ class Cproduct extends MX_Controller {
         }
     }
 
-    public function add_translation() {
+    public function add_translation()
+    {
         $count = $this->input->post('row_count', TRUE);
         $languages = $this->languages();
         $new_row_html = '<div style="margin-bottom: 35px;">
@@ -1575,7 +1787,8 @@ class Cproduct extends MX_Controller {
         echo $new_row_html;
     }
 
-    public function product_excel_import() {
+    public function product_excel_import()
+    {
         $this->permission->check_label('import_product_excel')->read()->redirect();
         $data = array(
             'title' => display('import_product_excel')
@@ -1584,7 +1797,8 @@ class Cproduct extends MX_Controller {
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function importImg($src) {
+    public function importImg($src)
+    {
 
         if (!empty($src)) {
             $img = file_get_contents($src);
@@ -1613,7 +1827,8 @@ class Cproduct extends MX_Controller {
         }
     }
 
-    public function importThumbImg($src) {
+    public function importThumbImg($src)
+    {
         if (!empty($src)) {
             $img = file_get_contents($src);
             $im = imagecreatefromstring($img);
@@ -1656,195 +1871,196 @@ class Cproduct extends MX_Controller {
         return $con;
     }
 
-//    public function product_excel_insert() {
-//        $upload_file = $_FILES["upload_excel_file"]["name"];
-//        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
-//        if ($extension == 'csv') {
-//            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-//        } elseif ($extension == 'xls') {
-//            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-//        } else {
-//            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-//        }
-//        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
-//        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
-//        $datacount = count($sheetdata);
-//        if ($datacount > 1) {
-//            for ($i = 1; $i < $datacount; $i++) {
-//
-//                $supplier_id = $sheetdata[$i][0];
-//                $category_id = $sheetdata[$i][1];
-//                $product_name = $sheetdata[$i][2];
-//                $price = $sheetdata[$i][3];
-//                $supplier_price = $sheetdata[$i][4];
-//                $unit = $sheetdata[$i][5];
-//                $product_model = $sheetdata[$i][6];
-//                $product_details = $sheetdata[$i][7];
-//                $image_thumb = $sheetdata[$i][8];
-//                $brand_id = $sheetdata[$i][9];
-//                $variants = $sheetdata[$i][10];
-//                $variant_price = $sheetdata[$i][11];
-//                $type = $sheetdata[$i][12];
-//                $best_sale = $sheetdata[$i][13];
-//                $onsale = $sheetdata[$i][14];
-//                $onsale_price = $sheetdata[$i][15];
-//                $invoice_details = $sheetdata[$i][16];
-//                $image_large_details = $sheetdata[$i][17];
-//                $review = $sheetdata[$i][18];
-//                $description = $sheetdata[$i][19];
-//                $tag = $sheetdata[$i][20];
-//                $specification = $sheetdata[$i][21];
-//                $status = $sheetdata[$i][22];
-//                $arabic_product_name = $sheetdata[$i][23];
-//                $arabic_product_detail = $sheetdata[$i][24];
-//                $arabic_product_description = $sheetdata[$i][25];
-//                $arabic_product_specification = $sheetdata[$i][26];
-//
-//                $image_large = $this->importImg(str_replace(' ', '%20', $image_large_details));
-//                $thumb_image = $this->importThumbImg(str_replace(' ', '%20', $image_thumb));
-//
-//                $excel = array(
-//                    'supplier_id' => $supplier_id,
-//                    'category_id' => $category_id,
-//                    'product_name' => $product_name,
-//                    'price' => $price,
-//                    'supplier_price' => $supplier_price,
-//                    'unit' => $unit,
-//                    'product_model' => $product_model,
-//                    'product_details' => $product_details,
-//                    'image_thumb' => $thumb_image,
-//                    'brand_id' => $brand_id,
-//                    'variants' => $variants,
-//                    'variant_price' => $variant_price,
-//                    'type' => $type,
-//                    'best_sale' => $best_sale,
-//                    'onsale' => $onsale,
-//                    'onsale_price' => $onsale_price,
-//                    'invoice_details' => $invoice_details,
-//                    'image_large_details' => $image_large,
-//                    'review' => $review,
-//                    'description' => $description,
-//                    'tag' => $tag,
-//                    'specification' => $specification,
-//                    'status' => $status,
-//                    'trans_name' => $arabic_product_name,
-//                    'trans_detail' => $arabic_product_detail,
-//                    'trans_description' => $arabic_product_description,
-//                    'trans_specification' => $arabic_product_specification,
-//                );
-//                if (!empty($excel['image_thumb'])) {
-//                    $image_thumb = ((strpos($excel['image_thumb'], 'my-assets/image/product/thumb/') > 0) ? $excel['image_thumb'] : 'my-assets/image/product/thumb/' . $excel['image_thumb']);
-//                } else {
-//                    $image_thumb = base_url('my-assets/image/product.png');
-//                }
-//                if (!empty($excel['image_large_details'])) {
-//                    $image_large_details = ((strpos($excel['image_large_details'], 'my-assets/image/product/') > 0) ? $excel['image_large_details'] : 'my-assets/image/product/' . $excel['image_large_details']);
-//                } else {
-//                    $image_large_details = base_url('my-assets/image/product.png');
-//                }
-//                $product_id = $this->generator(8);
-//                $product_details = array(
-//                    'product_id' => $product_id,
-//                    'supplier_id' => $excel['supplier_id'],
-//                    'category_id' => $excel['category_id'],
-//                    'product_name' => $excel['product_name'],
-//                    'price' => $excel['price'],
-//                    'supplier_price' => $excel['supplier_price'],
-//                    'unit' => $excel['unit'],
-//                    'product_model' => $excel['product_model'],
-//                    'product_details' => $excel['product_details'],
-//                    'image_thumb' => $image_thumb,
-//                    'brand_id' => $excel['brand_id'],
-//                    'variants' => $excel['variants'],
-//                    'variant_price' => (!empty($excel['variant_price']) ? 1 : 0),
-//                    'type' => $excel['type'],
-//                    'best_sale' => $excel['best_sale'],
-//                    'onsale' => $excel['onsale'],
-//                    'onsale_price' => $excel['onsale_price'],
-//                    'invoice_details' => $excel['invoice_details'],
-//                    'image_large_details' => $image_large_details,
-//                    'review' => $excel['review'],
-//                    'description' => $excel['description'],
-//                    'tag' => $excel['tag'],
-//                    'specification' => $excel['specification'],
-//                    'status' => $excel['status']
-//                );
-//                $this->db->insert('product_information', $product_details);
-//                $this->db->select('*');
-//                $this->db->from('product_information');
-//                $this->db->where('status', 1);
-//                $query = $this->db->get();
-//                foreach ($query->result() as $row) {
-//                    $json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
-//                }
-//                $cache_file = './my-assets/js/admin_js/json/product.json';
-//                $productList = json_encode($json_product);
-//                file_put_contents($cache_file, $productList);
-//
-//                //Product variant prices
-//                if (!empty($excel['variant_price'])) {
-//
-//                    $variant_prices = explode('&', $excel['variant_price']);
-//                    if (is_array($variant_prices)) {
-//
-//                        $vprice_list = [];
-//
-//                        foreach ($variant_prices as $vitem) {
-//
-//                            $vitem_list = explode(',', $vitem);
-//
-//                            if (is_array($vitem_list)) {
-//
-//                                $size_variant = trim($vitem_list[0]);
-//                                $color_variant = trim($vitem_list[1]);
-//
-//                                if (empty($vitem_list[2])) {
-//                                    $color_variant = NULL;
-//                                    $variant_price_amt = trim($vitem_list[1]);
-//                                } else {
-//                                    $variant_price_amt = trim($vitem_list[2]);
-//                                }
-//
-//                                if (!empty($size_variant)) {
-//                                    $vprice_list[] = array(
-//                                        'product_id' => $product_id,
-//                                        'var_size_id' => $size_variant,
-//                                        'var_color_id' => (!empty($color_variant) ? $color_variant : NULL),
-//                                        'price' => $variant_price_amt
-//                                    );
-//                                }
-//                            }
-//                        }
-//
-//                        if (!empty($vprice_list)) {
-//                            $this->db->delete('product_variants', array('product_id' => $product_id));
-//                            $this->db->insert_batch('product_variants', $vprice_list);
-//                        }
-//                    }
-//                }
-//                // Product translation
-//                if (!empty($excel['trans_name'])) {
-//                    $trans_name = $excel['trans_name'];
-//                    $trans_detail = $excel['trans_detail'];
-//                    $trans_description = $excel['trans_description'];
-//                    $trans_specification = $excel['trans_specification'];
-//                    $translation_list = array(
-//                        'language' => 'Arabic',
-//                        'product_id' => $product_id,
-//                        'trans_name' => $trans_name,
-//                        'trans_details' => $trans_detail,
-//                        'trans_description' => $trans_description,
-//                        'trans_specification' => $trans_specification,
-//                    );
-//                    $this->db->insert('product_translation', $translation_list);
-//                }
-//            }
-//            $this->session->set_userdata(array('message' => display('successfully_added')));
-//            redirect('dashboard/Cproduct/manage_product');
-//        }
-//    }
+    //    public function product_excel_insert() {
+    //        $upload_file = $_FILES["upload_excel_file"]["name"];
+    //        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
+    //        if ($extension == 'csv') {
+    //            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+    //        } elseif ($extension == 'xls') {
+    //            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+    //        } else {
+    //            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    //        }
+    //        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
+    //        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
+    //        $datacount = count($sheetdata);
+    //        if ($datacount > 1) {
+    //            for ($i = 1; $i < $datacount; $i++) {
+    //
+    //                $supplier_id = $sheetdata[$i][0];
+    //                $category_id = $sheetdata[$i][1];
+    //                $product_name = $sheetdata[$i][2];
+    //                $price = $sheetdata[$i][3];
+    //                $supplier_price = $sheetdata[$i][4];
+    //                $unit = $sheetdata[$i][5];
+    //                $product_model = $sheetdata[$i][6];
+    //                $product_details = $sheetdata[$i][7];
+    //                $image_thumb = $sheetdata[$i][8];
+    //                $brand_id = $sheetdata[$i][9];
+    //                $variants = $sheetdata[$i][10];
+    //                $variant_price = $sheetdata[$i][11];
+    //                $type = $sheetdata[$i][12];
+    //                $best_sale = $sheetdata[$i][13];
+    //                $onsale = $sheetdata[$i][14];
+    //                $onsale_price = $sheetdata[$i][15];
+    //                $invoice_details = $sheetdata[$i][16];
+    //                $image_large_details = $sheetdata[$i][17];
+    //                $review = $sheetdata[$i][18];
+    //                $description = $sheetdata[$i][19];
+    //                $tag = $sheetdata[$i][20];
+    //                $specification = $sheetdata[$i][21];
+    //                $status = $sheetdata[$i][22];
+    //                $arabic_product_name = $sheetdata[$i][23];
+    //                $arabic_product_detail = $sheetdata[$i][24];
+    //                $arabic_product_description = $sheetdata[$i][25];
+    //                $arabic_product_specification = $sheetdata[$i][26];
+    //
+    //                $image_large = $this->importImg(str_replace(' ', '%20', $image_large_details));
+    //                $thumb_image = $this->importThumbImg(str_replace(' ', '%20', $image_thumb));
+    //
+    //                $excel = array(
+    //                    'supplier_id' => $supplier_id,
+    //                    'category_id' => $category_id,
+    //                    'product_name' => $product_name,
+    //                    'price' => $price,
+    //                    'supplier_price' => $supplier_price,
+    //                    'unit' => $unit,
+    //                    'product_model' => $product_model,
+    //                    'product_details' => $product_details,
+    //                    'image_thumb' => $thumb_image,
+    //                    'brand_id' => $brand_id,
+    //                    'variants' => $variants,
+    //                    'variant_price' => $variant_price,
+    //                    'type' => $type,
+    //                    'best_sale' => $best_sale,
+    //                    'onsale' => $onsale,
+    //                    'onsale_price' => $onsale_price,
+    //                    'invoice_details' => $invoice_details,
+    //                    'image_large_details' => $image_large,
+    //                    'review' => $review,
+    //                    'description' => $description,
+    //                    'tag' => $tag,
+    //                    'specification' => $specification,
+    //                    'status' => $status,
+    //                    'trans_name' => $arabic_product_name,
+    //                    'trans_detail' => $arabic_product_detail,
+    //                    'trans_description' => $arabic_product_description,
+    //                    'trans_specification' => $arabic_product_specification,
+    //                );
+    //                if (!empty($excel['image_thumb'])) {
+    //                    $image_thumb = ((strpos($excel['image_thumb'], 'my-assets/image/product/thumb/') > 0) ? $excel['image_thumb'] : 'my-assets/image/product/thumb/' . $excel['image_thumb']);
+    //                } else {
+    //                    $image_thumb = base_url('my-assets/image/product.png');
+    //                }
+    //                if (!empty($excel['image_large_details'])) {
+    //                    $image_large_details = ((strpos($excel['image_large_details'], 'my-assets/image/product/') > 0) ? $excel['image_large_details'] : 'my-assets/image/product/' . $excel['image_large_details']);
+    //                } else {
+    //                    $image_large_details = base_url('my-assets/image/product.png');
+    //                }
+    //                $product_id = $this->generator(8);
+    //                $product_details = array(
+    //                    'product_id' => $product_id,
+    //                    'supplier_id' => $excel['supplier_id'],
+    //                    'category_id' => $excel['category_id'],
+    //                    'product_name' => $excel['product_name'],
+    //                    'price' => $excel['price'],
+    //                    'supplier_price' => $excel['supplier_price'],
+    //                    'unit' => $excel['unit'],
+    //                    'product_model' => $excel['product_model'],
+    //                    'product_details' => $excel['product_details'],
+    //                    'image_thumb' => $image_thumb,
+    //                    'brand_id' => $excel['brand_id'],
+    //                    'variants' => $excel['variants'],
+    //                    'variant_price' => (!empty($excel['variant_price']) ? 1 : 0),
+    //                    'type' => $excel['type'],
+    //                    'best_sale' => $excel['best_sale'],
+    //                    'onsale' => $excel['onsale'],
+    //                    'onsale_price' => $excel['onsale_price'],
+    //                    'invoice_details' => $excel['invoice_details'],
+    //                    'image_large_details' => $image_large_details,
+    //                    'review' => $excel['review'],
+    //                    'description' => $excel['description'],
+    //                    'tag' => $excel['tag'],
+    //                    'specification' => $excel['specification'],
+    //                    'status' => $excel['status']
+    //                );
+    //                $this->db->insert('product_information', $product_details);
+    //                $this->db->select('*');
+    //                $this->db->from('product_information');
+    //                $this->db->where('status', 1);
+    //                $query = $this->db->get();
+    //                foreach ($query->result() as $row) {
+    //                    $json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
+    //                }
+    //                $cache_file = './my-assets/js/admin_js/json/product.json';
+    //                $productList = json_encode($json_product);
+    //                file_put_contents($cache_file, $productList);
+    //
+    //                //Product variant prices
+    //                if (!empty($excel['variant_price'])) {
+    //
+    //                    $variant_prices = explode('&', $excel['variant_price']);
+    //                    if (is_array($variant_prices)) {
+    //
+    //                        $vprice_list = [];
+    //
+    //                        foreach ($variant_prices as $vitem) {
+    //
+    //                            $vitem_list = explode(',', $vitem);
+    //
+    //                            if (is_array($vitem_list)) {
+    //
+    //                                $size_variant = trim($vitem_list[0]);
+    //                                $color_variant = trim($vitem_list[1]);
+    //
+    //                                if (empty($vitem_list[2])) {
+    //                                    $color_variant = NULL;
+    //                                    $variant_price_amt = trim($vitem_list[1]);
+    //                                } else {
+    //                                    $variant_price_amt = trim($vitem_list[2]);
+    //                                }
+    //
+    //                                if (!empty($size_variant)) {
+    //                                    $vprice_list[] = array(
+    //                                        'product_id' => $product_id,
+    //                                        'var_size_id' => $size_variant,
+    //                                        'var_color_id' => (!empty($color_variant) ? $color_variant : NULL),
+    //                                        'price' => $variant_price_amt
+    //                                    );
+    //                                }
+    //                            }
+    //                        }
+    //
+    //                        if (!empty($vprice_list)) {
+    //                            $this->db->delete('product_variants', array('product_id' => $product_id));
+    //                            $this->db->insert_batch('product_variants', $vprice_list);
+    //                        }
+    //                    }
+    //                }
+    //                // Product translation
+    //                if (!empty($excel['trans_name'])) {
+    //                    $trans_name = $excel['trans_name'];
+    //                    $trans_detail = $excel['trans_detail'];
+    //                    $trans_description = $excel['trans_description'];
+    //                    $trans_specification = $excel['trans_specification'];
+    //                    $translation_list = array(
+    //                        'language' => 'Arabic',
+    //                        'product_id' => $product_id,
+    //                        'trans_name' => $trans_name,
+    //                        'trans_details' => $trans_detail,
+    //                        'trans_description' => $trans_description,
+    //                        'trans_specification' => $trans_specification,
+    //                    );
+    //                    $this->db->insert('product_translation', $translation_list);
+    //                }
+    //            }
+    //            $this->session->set_userdata(array('message' => display('successfully_added')));
+    //            redirect('dashboard/Cproduct/manage_product');
+    //        }
+    //    }
 
-    public function product_excel_insert() {
+    public function product_excel_insert_old()
+    {
         ini_set('memory_limit', '5000000000M');
         set_time_limit(5000000000);
         $upload_file = $_FILES["upload_excel_file"]["name"];
@@ -1912,11 +2128,11 @@ class Cproduct extends MX_Controller {
                     'open_rate' => $product_rate,
                     'supplier_price' => $product_rate,
                     'pricing' => 1,
-                        //'assembly' => 1, //for assembly
+                    //'assembly' => 1, //for assembly
                 );
                 $this->db->insert('product_information', $product_details);
                 //opening balance
-                if($product_quantity > 0 && $product_rate > 0){
+                if ($product_quantity > 0 && $product_rate > 0) {
                     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
                     if (!empty($find_active_fiscal_year)) {
                         //Stock opening Details
@@ -1994,7 +2210,7 @@ class Cproduct extends MX_Controller {
                 $cache_file = './my-assets/js/admin_js/json/product.json';
                 $productList = json_encode($json_product);
                 file_put_contents($cache_file, $productList);
-                if($product_quantity > 0 && $product_rate > 0){
+                if ($product_quantity > 0 && $product_rate > 0) {
                     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
                     if (!empty($find_active_fiscal_year)) {
                         $this->load->model('accounting/account_model');
@@ -2010,8 +2226,8 @@ class Cproduct extends MX_Controller {
                             'VDate'     => $date,
                             'COAID' => 1141, //Main Warehouse
                             'Narration' => 'Inventory-Openning total price debited at Main warehouse',
-//                    'COAID'     => $store_head->HeadCode, //Main Warehouse
-//                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
+                            //                    'COAID'     => $store_head->HeadCode, //Main Warehouse
+                            //                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
                             'Debit'     => $cogs_price,
                             'Credit'    => 0, //purchase price asbe
                             'IsPosted'  => 1,
@@ -2047,7 +2263,421 @@ class Cproduct extends MX_Controller {
         }
     }
 
-    public function viewpro() {
+    public function product_excel_insert()
+    {
+        ini_set('memory_limit', '5000000000M');
+        set_time_limit(5000000000);
+        $upload_file = $_FILES["upload_excel_file"]["name"];
+        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
+        if ($extension == 'csv') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        } elseif ($extension == 'xls') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        } else {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }
+        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
+        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
+        $datacount = count($sheetdata);
+        $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
+        $voucher_date      = date('Y-m-d H:i:s');
+        $store_id = "SDMQ4TIBSH6LAJ1";
+        if ($datacount > 1) {
+            // echo "<pre>";print_r($sheetdata);exit;
+            for ($i = 1; $i < $datacount; $i++) {
+                $cogs_price = 0;
+                $price_types_list = [];
+                $filter_list = [];
+                $brand_id = trim($sheetdata[$i][0]);
+                $product_model = trim($sheetdata[$i][1]) . ' - ' . trim($sheetdata[$i][2]);
+                $product_model_only = trim($sheetdata[$i][1]);
+                $product_color = trim($sheetdata[$i][2]);
+                $category_id = trim($sheetdata[$i][3]);
+                $filter_1 = trim($sheetdata[$i][4]); // gender or any other name
+                $filter_2 = trim($sheetdata[$i][5]);  // material or any other name
+                $variants = trim($sheetdata[$i][6]); //size
+                $price = (float)$sheetdata[$i][7]; // sell price
+                $g_price = (float)$sheetdata[$i][8]; // whole price
+                $s_price = (float)$sheetdata[$i][9]; // customer price
+                $product_quantity = (int)$sheetdata[$i][10];
+                $product_rate = (float)$sheetdata[$i][11]; // supplier price
+
+                // echo "<pre>";var_dump($variants);exit;
+
+                //GET BRAND NAME
+                $this->db->select('brand_id');
+                $this->db->from('brand');
+                $this->db->where('brand_name', $brand_id);
+                $brandName = $brand_id;
+                $brandIsFound = $this->db->get()->row();
+                if (!$brandIsFound) {
+                    // check if brand name is empty
+                    if (empty($brand_id)) {
+                        // check if there is a brand with the name Default
+                        $defaultBrand = $this->db->select('brand_id')->from('brand')->where('brand_name', 'Default')->get()->row();
+                        if (!$defaultBrand) {
+                            // create a new brand with the name Default
+                            $brand_id = 'Default';
+                        } else {
+                            $brand_id = $defaultBrand->brand_id;
+                            $brandIsFound = true;
+                        }
+                    }
+                    if (!$brandIsFound) {
+                        // create new brand with that name
+                        $new_brand_id = $this->auth->generator(15);
+                        $brand_data = array(
+                            'brand_id'   => $new_brand_id,
+                            'brand_name' => $brand_id,
+                            'brand_image' => null,
+                            'website'    => '',
+                            'status'     => 1
+                        );
+                        $this->Brands->brand_entry($brand_data);
+                        $brand_id = $new_brand_id;
+                    }
+                } else {
+                    $brand_id = $brandIsFound->brand_id;
+                }
+
+                // check if category_id is not found
+                $category_name = $category_id;
+                $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_name', $category_id)->get()->row();
+                if (!$categoryIsFound) {
+                    // check if new category name is empty
+                    if (empty($category_id)) {
+                        // check if there is a category with the name Default
+                        $defaultCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'Default')->get()->row();
+                        if (!$defaultCategory) {
+                            // create a new category with the name default
+                            $category_id = 'Default';
+                        } else {
+                            $category_id = $defaultCategory->category_id;
+                            $categoryIsFound = true;
+                        }
+                    }
+
+                    if (!$categoryIsFound) {
+                        // create new category with that name
+                        $new_category_id = generator(15);
+                        $category_data = array(
+                            'category_id' => $new_category_id,
+                            'category_name' => $category_id,
+                            'top_menu' => 1,
+                            'menu_pos' => 1,
+                            'cat_favicon' => 'my-assets/image/category.png',
+                            'parent_category_id' => '',
+                            'cat_image' => 'my-assets/image/category.png',
+                            'cat_type' => 1,
+                            'status' => 1
+                        );
+                        $this->Categories->category_entry($category_data);
+                        $category_id = $new_category_id;
+                    }
+                } else {
+                    $category_id = $categoryIsFound->category_id;
+                }
+
+                // check if size variant is exists
+                $variantIsFound = $this->db->select('variant_id')->from('variant')->where('variant_name', $variants)->get()->row();
+                if (!$variantIsFound) {
+                    // check if new variant name is empty
+                    if (empty($variants)) {
+                        // check if there is a variant with the name Default
+                        $defaultVariant = $this->db->select('variant_id')->from('variant')->where('variant_name', 'Default')->get()->row();
+                        if (!$defaultVariant) {
+                            // create a new variant with the name default
+                            $variants = 'Default';
+                        } else {
+                            $variants = $defaultVariant->variant_id;
+                            $variantIsFound = true;
+                        }
+                    }
+
+                    if (!$variantIsFound) {
+                        // create new varient size and then attach it`s id to product
+                        $variant_id = $this->auth->generator(15);
+                        $variant_data = array(
+                            'variant_id' => $variant_id,
+                            'variant_name' => $variants,
+                            'variant_type' => 'size',
+                            'color_code' => '#000000',
+                            'status' => 1
+                        );
+
+                        $result = $this->Variants->variant_entry($variant_data);
+                        $variants = $variant_id;
+                    }
+
+                    if ($result) {
+                        // add this size variant to only current category
+                        // check if varient was added to category before
+                        $variant_category_added = $this->db->select('variant_id')->from('category_variant')->where('category_id', $category_id)->where('variant_id', $variants)->get()->num_rows();
+                        if (!$variant_category_added) {
+                            $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variants) . ", now(), now())");
+                        }
+                    }
+                } else {
+                    $variants = $variantIsFound->variant_id;
+                }
+
+                // get first filter and material filter id
+                $filter_1_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', $sheetdata[0][4])->get()->row();
+                if (!$filter_1_type_id) {
+                    // first filter type is not found
+                    // then create one
+                    $filter_type_data = array(
+                        'fil_type_name' => $sheetdata[0][4]
+                    );
+                    $this->db->insert('filter_types', $filter_type_data);
+                    $filter_1_type_id = $this->db->insert_id();
+                } else {
+                    $filter_1_type_id = $filter_1_type_id->fil_type_id;
+                }
+                // check for filter_1 item
+                $filter_1_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', $filter_1)->get()->row();
+                if (!$filter_1_item_id) {
+                    // check if name is empty then set as default
+                    if (empty($filter_1_item_id)) {
+                        $defaultFilter_1 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', 'Default')->get()->row();
+                        if (!$defaultFilter_1) {
+                            // if not found then create one
+                            $filter_1 = 'Default';
+                        } else {
+                            $filter_1 = $defaultFilter_1->item_id;
+                            $filter_1_item_id = $defaultFilter_1->item_id;
+                        }
+                    }
+
+                    if (!$filter_1_item_id) {
+                        // create new filter item
+                        $filter_item_data = [
+                            'item_name' => $filter_1,
+                            'type_id' => $filter_1_type_id,
+                        ];
+                        $this->db->insert('filter_items', $filter_item_data);
+                        $filter_1 = $this->db->insert_id();
+                    }
+                } else {
+                    $filter_1 = $filter_1_item_id->item_id;
+                }
+
+                // get second filter and material filter id
+                $filter_2_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', $sheetdata[0][5])->get()->row();
+                if (!$filter_2_type_id) {
+                    // second filter type is not found
+                    // then create one
+                    $filter_type_data_2 = array(
+                        'fil_type_name' => $sheetdata[0][5]
+                    );
+                    $this->db->insert('filter_types', $filter_type_data_2);
+                    $filter_2_type_id = $this->db->insert_id();
+                } else {
+                    $filter_2_type_id = $filter_2_type_id->fil_type_id;
+                }
+                // check for filter_2 item
+                $filter_2_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', $filter_2)->get()->row();
+                if (!$filter_2_item_id) {
+                    // check if name is empty then set as default
+                    if (empty($filter_2_item_id)) {
+                        $defaultFilter_2 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', 'Default')->get()->row();
+                        if (!$defaultFilter_2) {
+                            // if not found then create one
+                            $filter_2 = 'Default';
+                        } else {
+                            $filter_2 = $defaultFilter_2->item_id;
+                            $filter_2_item_id = $defaultFilter_2->item_id;
+                        }
+                    }
+
+                    if (!$filter_2_item_id) {
+                        // create new filter item
+                        $filter_item_data_2 = [
+                            'item_name' => $filter_2,
+                            'type_id' => $filter_2_type_id,
+                        ];
+                        $this->db->insert('filter_items', $filter_item_data_2);
+                        $filter_2 = $this->db->insert_id();
+                    }
+                } else {
+                    $filter_2 = $filter_2_item_id->item_id;
+                }
+
+                $product_name = $brandName . ' - ' . $product_model;
+                //$product_name .= ' - Full'; //for assembly
+
+                $excel = array(
+                    'brand_id' => $brand_id,
+                    'product_model' => $product_model,
+                    'category_id' => $category_id,
+                    'price' => $price,
+                    'g_price' => $g_price,
+                    's_price' => $s_price,
+                    'filter_1' => $filter_1,
+                    'filter_2' => $filter_2,
+                    'product_name' => $product_name,
+                    'variants' => $variants,
+                );
+
+                $product_id = $this->generator(8);
+                $product_details = array(
+                    'product_id' => $product_id,
+                    'brand_id' => $excel['brand_id'],
+                    'product_model' => $excel['product_model'],
+                    'category_id' => $excel['category_id'],
+                    'price' => $excel['price'],
+                    'product_name' => $excel['product_name'],
+                    'variants' => $excel['variants'],
+                    'open_quantity' => $product_quantity,
+                    'open_rate' => $product_rate,
+                    'supplier_price' => $product_rate,
+                    'pricing' => 1,
+                    'product_model_only' => $product_model_only,
+                    'product_color' => $product_color,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    //'assembly' => 1, //for assembly
+                );
+                // echo "<pre>";
+                // var_dump('si => ' . $variants, 'cat => ' . $category_id, 'bra => ' . $brand_id, 'gen => ' . $filter_1_type_id. ' -- itm => ' . $filter_1, 'mat => ' .$filter_2_type_id . '  -- itm => ' . $filter_2);
+                // print_r($sheetdata[0]);
+                // print_r($sheetdata[$i]);
+                // print_r($product_details);
+                // exit;
+                $this->db->insert('product_information', $product_details);
+                //opening balance
+                if ($product_quantity > 0 && $product_rate > 0) {
+                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+                    if (!empty($find_active_fiscal_year)) {
+                        //Stock opening Details
+                        $cogs_price       += ($product_rate * $product_quantity);
+                        $store = array(
+                            'transfer_id'   => $this->auth->generator(15),
+                            'voucher_no'    => $voucher_no,
+                            'store_id'      => $store_id,
+                            'product_id'    => $product_id,
+                            'variant_id'    => $variants,
+                            'variant_color' => NULL,
+                            'date_time'     => $voucher_date,
+                            'quantity'      => $product_quantity,
+                            'status'        => 3
+                        );
+                        $this->db->insert('transfer', $store);
+                        // stock
+                        $stock = array(
+                            'store_id'     => $store_id,
+                            'product_id'   => $product_id,
+                            'variant_id'   => $variants,
+                            'variant_color' => NULL,
+                            'quantity'     => $product_quantity,
+                            'warehouse_id' => '',
+                        );
+                        $this->db->insert('purchase_stock_tbl', $stock);
+                    }
+                }
+                if ($category_name == 'SUNGLASSES') {
+                    $data = array(
+                        't_p_s_id' => $this->auth->generator(15),
+                        'product_id' => $product_id,
+                        'tax_id' => '52C2SKCKGQY6Q9J',
+                        'tax_percentage' => '14',
+                    );
+
+                    $this->db->insert('tax_product_service', $data);
+                }
+
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 1,
+                    'product_price' => $excel['g_price'],
+                );
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 2,
+                    'product_price' => $excel['s_price'],
+                );
+                $this->db->insert_batch('pricing_types_product', $price_types_list);
+                //GENDER
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 1,
+                    'filter_item_id' => $filter_1
+                );
+                //MATERIAL
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 2,
+                    'filter_item_id' => $filter_2
+                );
+                $this->db->insert_batch('filter_product', $filter_list);
+
+                $this->db->select('*');
+                $this->db->from('product_information');
+                $this->db->where('status', 1);
+                $query = $this->db->get();
+                foreach ($query->result() as $row) {
+                    //$json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
+                    $json_product[] = array('label' => $row->product_name, 'value' => $row->product_id);
+                }
+                $cache_file = './my-assets/js/admin_js/json/product.json';
+                $productList = json_encode($json_product);
+                file_put_contents($cache_file, $productList);
+                if ($product_quantity > 0 && $product_rate > 0) {
+                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+                    if (!empty($find_active_fiscal_year)) {
+                        $this->load->model('accounting/account_model');
+                        //$store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
+                        $createdate   = date('Y-m-d H:i:s');
+                        $receive_by   = $this->session->userdata('user_id');
+                        $date         = $createdate;
+                        //1st Inventory-Openning total price debit
+                        $store_debit = array(
+                            'fy_id'     => $find_active_fiscal_year->id,
+                            'VNo'       => $voucher_no,
+                            'Vtype'     => 'Inventory-Openning',
+                            'VDate'     => $date,
+                            'COAID' => 1141, //Main Warehouse
+                            'Narration' => 'Inventory-Openning total price debited at Main warehouse',
+                            //                    'COAID'     => $store_head->HeadCode, //Main Warehouse
+                            //                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
+                            'Debit'     => $cogs_price,
+                            'Credit'    => 0, //purchase price asbe
+                            'IsPosted'  => 1,
+                            'CreateBy'  => $receive_by,
+                            'CreateDate' => $createdate,
+                            'store_id'  => $store_id,
+                            'IsAppove'  => 1
+                        );
+
+                        //2nd Inventory-Openning COGS Credit
+                        $COGSCredit = array(
+                            'fy_id'     => $find_active_fiscal_year->id,
+                            'VNo'       => $voucher_no,
+                            'Vtype'     => 'Inventory-Openning',
+                            'VDate'     => $date,
+                            'COAID'     => 4111,
+                            'Narration' => 'Inventory-Openning total price credited at COGS',
+                            'Debit'     => 0,
+                            'Credit'    => $cogs_price,
+                            'IsPosted'  => 1,
+                            'CreateBy'  => $receive_by,
+                            'CreateDate' => $createdate,
+                            'store_id'  => $store_id,
+                            'IsAppove'  => 1
+                        );
+                        $this->db->insert('acc_transaction', $store_debit);
+                        $this->db->insert('acc_transaction', $COGSCredit);
+                    }
+                }
+            }
+            $this->session->set_userdata(array('message' => display('successfully_added')));
+            redirect('dashboard/Cproduct/manage_product');
+        }
+    }
+
+    public function viewpro()
+    {
         $product_id = $this->input->post('proid');
         $viewdata = $this->cfiltration_model->get_assembly_products($product_id);
         $tabledata = '';
@@ -2056,14 +2686,22 @@ class Cproduct extends MX_Controller {
                         <thead>
                             <tr>
                              <th class="col-sm-6 text-center">' . display('product_name') . '  </th>
-                             <th class="col-sm-3 text-center">' . display('supplier_price') . ' </th>
-                             <th class="col-sm-3 text-center"> ' . display('sell_price') . ' </th>
+                             <!-- <th class="col-sm-3 text-center">' . display('supplier_price') . ' </th>
+                             <th class="col-sm-3 text-center"> ' . display('sell_price') . ' </th> -->
+                             <th class="col-sm-6 text-center">' . display('whole_price') . ' </th>
                             </tr>
                         </thead>
                         <tbody >';
 
         if (isset($viewdata) && !empty($viewdata)) {
             foreach ($viewdata as $key => $value) {
+                $pricing = $this->db->select('*')->from('pricing_types_product')->where('product_id', $value['product_id'])->get()->result_array();
+                $wholePrice = 0;
+                foreach ($pricing as $pri) {
+                    if ($pri['pri_type_id'] == 1) {
+                        $wholePrice = $pri['product_price'];
+                    }
+                }
                 $tabledata .= '
                         <tr>
                         <td class="col-sm-6">
@@ -2075,25 +2713,25 @@ class Cproduct extends MX_Controller {
                         </div>
                         </div>
                         </td>
-                        <td class="col-sm-3">
+                        <td class="col-sm-6">
                         <div class="col-sm-12">
                         <div class="form-group row">
-                        <input type="text" name="" value="' . $value['supplier_price'] . '" id="" class="form-control"  min="0" readonly="" />
+                        <input type="text" name="" value="' . $wholePrice . '" id="" class="form-control"  min="0" readonly="" />
+                        <input type="hidden" name="" value="' . $value['supplier_price'] . '" id="" class="form-control"  min="0" readonly="" />
                         </div>
                         </div>
                         </td>
-                        <td class="col-sm-3">
+                        <!-- <td class="col-sm-3">
                         <div class="col-sm-12">
                         <div class="form-group row">
-                        <input type="text" name="" value="' . $value['price'] . '" id="" class="form-control"  min="0" readonly="" />
+                        <input type="hidden" name="" value="' . $value['price'] . '" id="" class="form-control"  min="0" readonly="" />
                         </div>
                         </div>
-                        </td>         
+                        </td> -->        
                         </tr>';
             }
         }
         $tabledata .= '</tbody> </table>';
         echo json_encode($tabledata);
     }
-
 }
