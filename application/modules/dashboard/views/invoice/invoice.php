@@ -57,8 +57,8 @@
                                 <?php echo display('new_invoice') ?></a>
                         <?php }
                         if ($this->permission->check_label('pos_sale')->read()->access()) { ?>
-                            <a href="<?php echo base_url('dashboard/Cinvoice/pos_invoice') ?>" class="btn btn-primary m-b-5 m-r-2"><i class="ti-align-justify"> </i>
-                                <?php echo display('pos_invoice') ?></a>
+                            <!-- <a href="<?php echo base_url('dashboard/Cinvoice/pos_invoice') ?>" class="btn btn-primary m-b-5 m-r-2"><i class="ti-align-justify"> </i>
+                                <?php echo display('pos_invoice') ?></a> -->
                         <?php } ?>
                     <?php endif ?>
                 </div>
