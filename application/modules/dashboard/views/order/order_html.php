@@ -334,7 +334,7 @@
                                                             <h3><?php echo display(isset($is_order) ? 'order_to' : 'invoice_to'); ?> : <?php echo html_escape($customer_name); ?></h3>
                                                             <div class="line-height" style=" margin-top: 15px;">
                                                                 <p>
-                                                                    <?php echo display('client_code'); ?>  : <?php echo html_escape($customer_id); ?>
+                                                                    <?php echo display('client_code'); ?>  : <?php echo html_escape($customer_no); ?>
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('client_phone'); ?>  : <?php echo html_escape($customer_mobile) ?>
