@@ -14,7 +14,7 @@ class Lsupplier {
 	}
 	//Supplier List
 	public function supplier_list()
-	{
+	{ 
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Suppliers');
 		$suppliers_list = $CI->Suppliers->supplier_list();
@@ -222,7 +222,7 @@ class Lsupplier {
 		if(!empty($ledger)){
 			foreach($ledger as $index=>$value){
 				$ledger[$index]['final_date'] = $CI->occational->dateConvert($ledger[$index]['date']);
-				if(!empty($ledger[$index]['invoice_no'])or  $ledger[$index]['invoice_no']=="NA")
+				if(!empty($ledger[$index]['deposit_no'])or  $ledger[$index]['deposit_no']=="NA")
 				{
 					$ledger[$index]['credit'] =$ledger[$index]['amount'];
 					$ledger[$index]['balance']=$balance-$ledger[$index]['amount'];

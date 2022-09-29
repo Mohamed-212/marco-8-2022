@@ -142,6 +142,17 @@
                                     placeholder="<?php echo display('previous_balance') ?>">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="balance_type" class="col-sm-3 col-form-label"><?php echo display('balance_type') ?></label>
+                            <div class="col-sm-6">
+                                <select class="form-control select2 width_100p" id="balance_type" name="balance_type">
+                                    <option value="1"><?php echo display('credit') ?></option>
+                                    <option value="2"><?php echo display('debit') ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        
                         <div class="form-group row">
                             <label for="example-text-input" class="col-sm-4 col-form-label"></label>
                             <div class="col-sm-6">

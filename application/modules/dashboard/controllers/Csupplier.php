@@ -8,7 +8,7 @@ class Csupplier extends MX_Controller
     function __construct()
     {
         parent::__construct();
-        $this->load->library('auth');
+        $this->load->library('auth'); 
         $this->load->library('dashboard/lsupplier');
         $this->load->library('session');
         $this->load->model('dashboard/Suppliers');
@@ -43,8 +43,6 @@ class Csupplier extends MX_Controller
     //Insert Product and uload
     public function insert_supplier()
     {
-
-
         $this->permission->check_label('add_supplier')->create()->redirect();
 
         $this->load->library('form_validation');
