@@ -244,11 +244,14 @@ function bank_paymet(val) {
     if (val == 2) {
         var style = 'block';
         document.getElementById('bank_id').setAttribute("required", true);
+        document.getElementById('cmbDebit').removeAttribute("required");
         $(".bankpayment").addClass("form-control");
-
+        document.getElementById('box_div').style.display = 'none';
     } else {
         var style = 'none';
         document.getElementById('bank_id').removeAttribute("required");
+        document.getElementById('cmbDebit').setAttribute("required", true);
+        document.getElementById('box_div').style.display = 'block';
     }
 
     document.getElementById('bank_div').style.display = style;

@@ -377,10 +377,12 @@ class Accounting extends MX_Controller
           $this->session->set_flashdata('exception',  display('please_try_again'));
         }
       }
+
       $data['title']        = display('supplier_payment');
       $data['supplier_list'] =  $this->account_model->get_supplier();
       $data['voucher_no']   = $this->account_model->Spayment();
       $data['bank_list']    = $this->account_model->payment_info();
+      $data['crcc']      = $this->account_model->Cracc();
       $content = $this->parser->parse('accounting/supplier_payment_form', $data, true);
       $this->template_lib->full_admin_html_view($content);
     } else {

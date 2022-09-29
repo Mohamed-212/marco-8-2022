@@ -772,7 +772,7 @@ class Account_model extends CI_Model
       'VNo' => $voucher_no,
       'Vtype' => $Vtype,
       'VDate' => $VDate,
-      'COAID' => 1111,
+      'COAID' => $cAID,
       'Narration' => 'Paid to ' . $supinfo->supplier_name,
       'Debit' => 0,
       'Credit' => $Damnt,
