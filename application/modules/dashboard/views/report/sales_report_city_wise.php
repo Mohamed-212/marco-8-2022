@@ -59,7 +59,7 @@ $this->session->unset_userdata('error_message');
 			<?php echo form_open('dashboard/Admin_dashboard/retrieve_sales_report_store_wise',array('class' => '','id' => 'validate' ));?>
 			<?php 
 				date_default_timezone_set(DEF_TIMEZONE);
-				 $today = date('d-m-Y'); ?>
+				 $today = date('Y-m-d'); ?>
 
 			<div class="form-group row">
 				<label for="store_id" class="col-sm-2 col-form-label"><?php echo display('store')?>:</label>

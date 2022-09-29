@@ -709,7 +709,7 @@ class Reports extends CI_Model
 
     public function retrieve_sales_report_store_wise($store_id, $start_date = null, $end_date = null)
     {
-        $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('$start_date') AND DATE('$end_date')";
         $this->db->select("a.*,b.store_name");
         $this->db->from('invoice a');
         $this->db->join('store_set b', 'a.store_id = b.store_id');
@@ -718,6 +718,24 @@ class Reports extends CI_Model
             $this->db->where($dateRange, NULL, FALSE);
         }
         $this->db->order_by('a.date', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    //=============sales report employee wise=================
+
+    public function retrieve_sales_report_employee_wise($employee_id, $start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
+        $this->db->select("a.*,b.first_name,b.last_name");
+        $this->db->from('invoice a');
+        $this->db->join('employee_history b', 'a.employee_id = b.id');
+        $this->db->where('a.employee_id', $employee_id);
+        if ($dateRange) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
         return $query->result_array();

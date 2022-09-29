@@ -551,6 +551,24 @@ class Lreport
         return $reportList;
     }
 
+    public function retrieve_sales_report_employee_wise($employee_id, $start_date = null, $end_date = null)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('hrm/Hrm_model');
+        $employee_list = $CI->Hrm_model->employee_list();
+        $sales_reports = $CI->Reports->retrieve_sales_report_employee_wise($employee_id, $start_date, $end_date);
+        $data = [
+            'sales_reports' => $sales_reports,
+            'employees' => $employee_list,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'employee_id' => $employee_id,
+        ];
+        $reportList = $CI->parser->parse('dashboard/report/sales_report_employee_wise', $data, true);
+        return $reportList;
+    }
+
     // Retrieve todays_sales_report
     public function todays_sales_report($links = null, $per_page = null, $page = null)
     {

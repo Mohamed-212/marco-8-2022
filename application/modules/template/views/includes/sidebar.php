@@ -844,7 +844,7 @@
                         href="<?php echo base_url('dashboard/Creport/stock_report_store_wise') ?>"><?php echo display('stock_report_store_wise') ?></a>
                 </li>
                 <?php }
-//                        if ($this->permission->check_label('stock_adjustment')->create()->access()) { ?>
+//                        if ($this->permission->check_label('stock_adjustment')->create()->access()) { ?>     
 <!--                <li class="--><?php //echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?><!--">-->
 <!--                    <a-->
 <!--                        href="--><?php //echo base_url('dashboard/Cstock_adjustment/stock_adjustment') ?><!--">--><?php //echo display('stock_adjustment') ?><!--</a>-->
@@ -906,7 +906,25 @@
 
         <!-- Report menu start -->
         <?php if ($this->permission->module('report')->access()) { ?>
-        <li class="treeview <?php if ($this->uri->segment(3) == ("retrieve_dateWise_SalesReports") || $this->uri->segment(3) == ("todays_sales_report") || $this->uri->segment(3) == ("todays_purchase_report") || $this->uri->segment(3) == ("sales_report_store_wise") || $this->uri->segment(3) == ("retrieve_sales_report_store_wise") || $this->uri->segment(3) == ("transfer_report") || $this->uri->segment(3) == ("product_sales_reports_date_wise") || $this->uri->segment(3) == ("total_profit_report") || $this->uri->segment(3) == ("retrieve_dateWise_profit_report") || $this->uri->segment(3) == ("tax_report_product_wise") || $this->uri->segment(3) == ("tax_report_invoice_wise") || $this->uri->segment(3) == ("store_to_store_transfer") || $this->uri->segment(3) == ('retrieve_dateWise_PurchaseReports') || $this->uri->segment(3) == ('expriy_report_index') || $this->uri->segment(3) == ("unpaid_installment")) {
+        <li class="treeview <?php if ($this->uri->segment(3) == ("retrieve_dateWise_SalesReports") 
+        || $this->uri->segment(3) == ("todays_sales_report") 
+        || $this->uri->segment(3) == ("todays_purchase_report") 
+        || $this->uri->segment(3) == ("sales_report_store_wise") 
+        || $this->uri->segment(3) == ("retrieve_sales_report_store_wise") 
+        || $this->uri->segment(3) == ("sales_report_employee_wise") 
+        || $this->uri->segment(3) == ("retrieve_sales_report_employee_wise") 
+        || $this->uri->segment(3) == ("sales_report_city_wise") 
+        || $this->uri->segment(3) == ("retrieve_sales_report_city_wise") 
+        || $this->uri->segment(3) == ("transfer_report") 
+        || $this->uri->segment(3) == ("product_sales_reports_date_wise") 
+        || $this->uri->segment(3) == ("total_profit_report") 
+        || $this->uri->segment(3) == ("retrieve_dateWise_profit_report") 
+        || $this->uri->segment(3) == ("tax_report_product_wise") 
+        || $this->uri->segment(3) == ("tax_report_invoice_wise") 
+        || $this->uri->segment(3) == ("store_to_store_transfer") 
+        || $this->uri->segment(3) == ('retrieve_dateWise_PurchaseReports') 
+        || $this->uri->segment(3) == ('expriy_report_index') 
+        || $this->uri->segment(3) == ("unpaid_installment")) {
                                         echo "active";
                                     } else {
                                         echo " ";
@@ -931,8 +949,22 @@
                     <a
                         href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_store_wise') ?>"><?php echo display('sales_report_store_wise') ?></a>
                 </li>
-                <?php }
-                        if ($this->permission->check_label('purchase_report')->access()) { ?>
+                <?php } ?>
+
+                <?php  if ($this->permission->check_label('sales_report_store_wise')->access()) : ?>
+                <li class="<?php echo (($this->uri->segment(3) == 'sales_report_employee_wise' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_employee_wise') ?>"><?php echo display('sales_report_employee_wise') ?></a>
+                </li>
+                <?php endif ?>
+           
+                <?php  if ($this->permission->check_label('sales_report_store_wise')->access()) : ?>
+                    <li class="<?php echo (($this->uri->segment(3) == 'sales_report_city_wise' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_city_wise') ?>"><?php echo display('sales_report_city_wise') ?></a>
+                </li>
+                <?php endif ?>
+                    <?php    if ($this->permission->check_label('purchase_report')->access()) { ?>
                 <li
                     class="<?php echo (($this->uri->segment(3) == 'todays_purchase_report' || $this->uri->segment(3) == ('retrieve_dateWise_PurchaseReports') ? 'active' : '')) ?>">
                     <a
