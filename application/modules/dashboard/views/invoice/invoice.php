@@ -194,7 +194,7 @@
                                                         <?php echo html_escape($invoice['customer_name']) ?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
 
                                                 </td>
-                                                <td><?php echo html_escape($invoice['final_date']) ?></td>
+                                                <td><?php echo date('d-m-Y', strtotime($invoice['created_at'])) ?></td>
                                                 <td class="text-right">
                                                     <?php echo (($position == 0) ? $currency . ' ' . $invoice['total_amount'] : $invoice['total_amount'] . ' ' . $currency) ?>
                                                 </td>
