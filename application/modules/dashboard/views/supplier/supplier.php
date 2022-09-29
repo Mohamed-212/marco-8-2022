@@ -68,7 +68,7 @@
 		                    <table id="dataTableExample2" class="table table-bordered table-striped table-hover">
 								<thead>
 									<tr>
-										<th><?php echo display('supplier_id') ?></th>
+										<th><?php echo display('supplier_no') ?></th>
 										<th><?php echo display('supplier_name') ?></th>
 										<th><?php echo display('address') ?></th>
 										<th><?php echo display('email') ?></th>
@@ -83,7 +83,7 @@
 								?>
 								{suppliers_list}
 									<tr>
-										<td>{supplier_id}</td>
+										<td>{supplier_no}</td>
 										<td width="15%">
 											<a href="<?php echo base_url().'dashboard/Csupplier/supplier_ledger/{supplier_id}'; ?>">
                                                  {supplier_name} <i class="fa fa-user pull-right" aria-hidden="true"></i>
