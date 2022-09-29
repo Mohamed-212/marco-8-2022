@@ -392,7 +392,7 @@ class Invoices extends CI_Model {
                     'shipping_method' => $this->input->post('shipping_method', TRUE),
                     'invoice_details' => $this->input->post('invoice_details', TRUE),
                     'status' => 5,
-                    'created_at' => date("Y-m-d H:i:s"),
+                    'created_at' => date("Y-m-d H:i:s", strtotime($this->input->post('invoice_date', TRUE))),
                     'order_id' => $order_id,
                     'quotation_id' => $quotation_id,
                 );
