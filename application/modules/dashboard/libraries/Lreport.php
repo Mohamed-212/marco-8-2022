@@ -569,6 +569,45 @@ class Lreport
         return $reportList;
     }
 
+    public function retrieve_sales_report_city_wise($cities, $start_date = null, $end_date = null)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/States');
+        $CI->load->model('hrm/Hrm_model');
+        $country_list = $CI->States->get_country_list();
+        // get employees with that cities
+        $query = $CI->db->select('e.id')->from('employee_history e');
+        foreach ($cities as $city) {
+            $query->or_where('FIND_IN_SET("'.$city.'", e.cities) >', 0);
+        }
+        $employee_ids = $query->get()->result();
+        
+        $sales_reports = [];
+
+        foreach ($employee_ids as $empId) {
+            $sales_reports[] = $CI->Reports->retrieve_sales_report_employee_wise($empId->id, $start_date, $end_date);
+        }
+        // echo "<pre>";var_dump($sales_reports);exit;
+        
+        $country = $CI->input->post('country',TRUE);
+        $states = [];
+        if ($country) {
+            $states = $CI->States->get_states_by_country($country);
+        }
+
+        $data = [
+            'sales_reports' => $sales_reports[0],
+            'countries' => $country_list,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'cities' => $cities,
+            'states' => $states,
+        ];
+        $reportList = $CI->parser->parse('dashboard/report/sales_report_city_wise', $data, true);
+        return $reportList;
+    }
+
     // Retrieve todays_sales_report
     public function todays_sales_report($links = null, $per_page = null, $page = null)
     {

@@ -29,6 +29,7 @@ class Admin_dashboard extends MX_Controller
         $this->load->library('dashboard/luser');
 
         $this->load->model('hrm/Hrm_model');
+        $this->load->model('dashboard/States');
     }
 
     //Default index page loading
@@ -277,10 +278,10 @@ class Admin_dashboard extends MX_Controller
 
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $store_list = $this->Stores->store_list();
+        $country_list = $this->States->get_country_list();
         $data = [
             'title' => display('sales_report_city_wise'),
-            'stores' => $store_list
+            'countries' => $country_list
         ];
 
         $content = $this->parser->parse('dashboard/report/sales_report_city_wise', $data, true);
@@ -293,11 +294,11 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $store_id = $this->input->post('store_id',TRUE);
+        $cities = $this->input->post('cities',TRUE);
         $start_date = $this->input->post('start_date',TRUE);
         $end_date = $this->input->post('end_date',TRUE);
 
-        $content = $this->lreport->retrieve_sales_report_city_wise($store_id, $start_date, $end_date);
+        $content = $this->lreport->retrieve_sales_report_city_wise($cities, $start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
 
     }
