@@ -197,6 +197,7 @@ class Suppliers extends CI_Model {
                                         'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $supplier_id . ')',
                                         'Debit' => $previous_balance,
                                         'Credit' =>0,
+                                        'is_opening' => 1,
                                         'IsPosted' => 1,
                                         'CreateBy' => $receive_by,
                                         'CreateDate' => $createdate,
