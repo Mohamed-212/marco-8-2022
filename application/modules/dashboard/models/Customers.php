@@ -166,7 +166,8 @@ class Customers extends CI_Model {
 										'amount' => $previous_balance,
 										'payment_type' => 1,
 										'description' => 'ITP',
-										'status' => 1
+										'status' => 1,
+										'cl_created_at' => date('Y-m-d H:i:s', strtotime('1988-01-01')),
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -214,7 +215,8 @@ class Customers extends CI_Model {
 										'customer_id' => $customer_id,
 										'date' => $date,
 										'amount' => $previous_balance,
-										'status' => 1
+										'status' => 1,
+										'cl_created_at' => date('Y-m-d H:i:s', strtotime('1988-01-01')),
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -386,13 +388,15 @@ class Customers extends CI_Model {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
 			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
-			$from_addon = "AND STR_TO_DATE(customer_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')";
+			// $from_addon = "AND STR_TO_DATE(customer_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')";
+			$from_addon = "AND DATE(customer_ledger.cl_created_at) >= DATE('" . $newformat1. "')";
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
 			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
-			$to_addon = "AND STR_TO_DATE(customer_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')";
+			// $to_addon = "AND STR_TO_DATE(customer_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')";
+			$to_addon = "AND DATE(customer_ledger.cl_created_at) <= DATE('" . $newformat2. "')";
 		}
 		$this->db->reset_query();
 		$query = $this->db->query("SELECT * FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 $from_addon $to_addon;");
@@ -416,13 +420,15 @@ class Customers extends CI_Model {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
 			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
-			$from_addon = "AND  customer_ledger.date >= $newformat1";
+			// $from_addon = "AND  customer_ledger.date >= $newformat1";
+			$from_addon = "AND DATE(customer_ledger.cl_created_at) >= DATE('" . $newformat1. "')";
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
 			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
-			$to_addon = "AND customer_ledger.date >= $newformat2";
+			// $to_addon = "AND customer_ledger.date >= $newformat2";
+			$to_addon = "AND DATE(customer_ledger.cl_created_at) <= DATE('" . $newformat2. "')";
 		}
 		$this->db->reset_query();
 		$query = $this->db->query("SELECT SUM(amount) as total_credit FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 AND customer_ledger.receipt_no IS NULL $from_addon $to_addon;
@@ -441,13 +447,15 @@ class Customers extends CI_Model {
 			$time1 = strtotime($from_date);
 			$newformat1 = date('Y-m-d',$time1);
 			// $this->db->where('customer_ledger.date >= "' . $newformat1 . '"', null, false);
-			$from_addon = "AND  customer_ledger.date >= $newformat1";
+			// $from_addon = "AND  customer_ledger.date >= $newformat1";
+			$from_addon = "AND DATE(customer_ledger.cl_created_at) >= DATE('" . $newformat1. "')";
 		}
 		if (!empty($to_date)) {
 			$time2 = strtotime($to_date);
 			$newformat2 = date('Y-m-d',$time2);
 			// $this->db->where('customer_ledger.date <= ', "'$newformat2'", false);
-			$to_addon = "AND customer_ledger.date >= $newformat2";
+			// $to_addon = "AND customer_ledger.date >= $newformat2";
+			$to_addon = "AND DATE(customer_ledger.cl_created_at) <= DATE('" . $newformat2. "')";
 		}
 		$this->db->reset_query();
 		$query = $this->db->query("SELECT SUM(amount) as total_debit FROM customer_ledger WHERE customer_ledger.customer_id = '$customer_id' AND customer_ledger.status = 1 AND customer_ledger.receipt_no IS NOT NULL $from_addon $to_addon;
