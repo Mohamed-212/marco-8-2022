@@ -140,7 +140,7 @@
 								?>
 								<?php foreach($purchaseData as $purchase){ ?>
 									<tr>
-										<td><?php echo html_escape($purchase['final_date']);?></td>
+										<td><?php echo html_escape(date('d-m-Y', strtotime($purchase['date_time'])));?></td>
 										<td>
 											<a href="<?php echo base_url().'dashboard/Cpurchase/purchase_details_data/'.$purchase["purchase_id"]; ?>"><?php echo html_escape($purchase['invoice_no']) ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
 											</a>
@@ -202,7 +202,7 @@
 								?>
 								
 									<tr>
-										<td><?php echo html_escape($sales['final_date']); ?></td>
+										<td><?php echo html_escape(date('d-m-Y', strtotime($sales['date_time']))); ?></td>
 										<td>
 											<a href="<?php echo base_url().'dashboard/Cinvoice/invoice_inserted_data/'.$sales['invoice_id']; ?>"><?php echo html_escape($sales['invoice_id']) ?>
 												 <i class="fa fa-tasks pull-right" aria-hidden="true"></i>

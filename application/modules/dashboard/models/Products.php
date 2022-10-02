@@ -389,7 +389,7 @@ class Products extends CI_Model {
 
     // Product Purchase Report
     public function product_purchase_info($product_id) {
-        $this->db->select('a.*,b.*,c.supplier_name, d.variant_name');
+        $this->db->select('a.*, a.created_at as date_time,b.*,c.supplier_name, d.variant_name');
         $this->db->from('product_purchase a');
         $this->db->join('product_purchase_details b', 'b.purchase_id = a.purchase_id', 'left');
         $this->db->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left');
@@ -407,6 +407,7 @@ class Products extends CI_Model {
     public function invoice_data($product_id) {
         $this->db->select('
                 a.*,
+                a.created_at as date_time,
                 b.*,
                 sum(b.quantity) as t_qty,
                 sum(b.total_price) - (b.discount * sum(b.quantity)) as total_price,
