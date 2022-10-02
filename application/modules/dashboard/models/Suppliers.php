@@ -128,10 +128,11 @@ class Suppliers extends CI_Model {
                                         'invoice_no'    =>  NULL,
                                         'deposit_no'    =>  NULL,
                                         'amount'        =>  $previous_balance,
-                                        'description'   =>  $description,
+                                        'description'   =>  $this->input->post('details', true),
                                         'payment_type'  =>  1,
-                                        'date'          =>  $date,
-                                        'status'        =>  1
+                                        'date'          =>  date('Y-m-d'),
+                                        'status'        =>  1,
+                                        'sl_created_at' => date('Y-m-d H:i:s')
                                     );
                                     $this->db->insert('supplier_ledger', $data);
 
@@ -179,10 +180,11 @@ class Suppliers extends CI_Model {
                                         'invoice_no'    =>  NULL,
                                         'deposit_no'    =>  $deposit_no,
                                         'amount'        =>  $previous_balance,
-                                        'description'   =>  $description,
+                                        'description'   =>  $this->input->post('details', true),
                                         'payment_type'  =>  1,
-                                        'date'          =>  $date,
+                                        'date'          =>  date('Y-m-d'),
                                         'status'        =>  1,
+                                        'sl_created_at' => date('Y-m-d H:i:s')
 
                                     );
                                     $this->db->insert('supplier_ledger', $data);

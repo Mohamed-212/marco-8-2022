@@ -292,9 +292,10 @@ class Purchases extends CI_Model {
                     'invoice_no' => $this->input->post('invoice_no', TRUE),
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'amount' => $this->input->post('grand_total_price', TRUE),
-                    'date' => $this->input->post('purchase_date', TRUE),
+                    'date' => date('d-m-Y', strtotime($this->input->post('purchase_date', TRUE))),
                     'description' => $this->input->post('purchase_details', FALSE),
-                    'status' => 1
+                    'status' => 1,
+                    'sl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                 );
                 $this->db->insert('supplier_ledger', $ledger);
                 //Product Purchase Details
@@ -814,9 +815,10 @@ class Purchases extends CI_Model {
                 'invoice_no' => $this->input->post('invoice_no', TRUE),
                 'supplier_id' => $this->input->post('supplier_id', TRUE),
                 'amount' => $this->input->post('grand_total_price', TRUE),
-                'date' => $this->input->post('purchase_date', TRUE),
+                'date' => date('d-m-Y', strtotime($this->input->post('purchase_date', TRUE))),
                 'description' => $this->input->post('purchase_details', FALSE),
-                'status' => 1
+                'status' => 1,
+                'sl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
             );
             $this->db->insert('supplier_ledger', $ledger);
             //Product Purchase Details
@@ -1111,9 +1113,10 @@ class Purchases extends CI_Model {
                     'invoice_no' => $this->input->post('invoice_no', TRUE),
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'amount' => $this->input->post('grand_total_price', TRUE),
-                    'date' => $this->input->post('purchase_date', TRUE),
+                    'date' => date('d-m-Y', strtotime($this->input->post('purchase_date', TRUE))),
                     'description' => $this->input->post('purchase_details', FALSE),
-                    'status' => 1
+                    'status' => 1,
+                    'sl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                 );
                 $this->db->insert('supplier_ledger', $ledger);
                 //Product Purchase Details
@@ -1635,9 +1638,10 @@ class Purchases extends CI_Model {
                 'invoice_no' => $this->input->post('invoice_no', TRUE),
                 'supplier_id' => $this->input->post('supplier_id', TRUE),
                 'amount' => $this->input->post('grand_total_price', TRUE),
-                'date' => $this->input->post('purchase_date', TRUE),
+                'date' => date('d-m-Y', strtotime($this->input->post('purchase_date', TRUE))),
                 'description' => $this->input->post('purchase_details', FALSE),
-                'status' => 1
+                'status' => 1,
+                'sl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
             );
             $this->db->insert('supplier_ledger', $ledger);
             //Product Purchase Details
