@@ -335,34 +335,50 @@ class Invoices extends CI_Model {
                 }
                 // create customer head END
                 //Full or partial Payment record.
-                if ($this->input->post('paid_amount', TRUE) > 0) {
+                if ((float)$this->input->post('paid_amount', TRUE) > 0) {
                     //Insert to customer_ledger Table 
                     $data2 = array(
                         'transaction_id' => generator(15),
                         'customer_id' => $customer_id,
                         'invoice_no' => $invoice_id,
-                        'receipt_no' => $this->auth->generator(15),
                         'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
-                        'description' => 'ITP',
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
 
-                //Insert to customer ledger Table 
-                $data2 = array(
-                    'transaction_id' => generator(15),
-                    'customer_id' => $customer_id,
-                    'invoice_no' => $invoice_id,
-                    'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
-                    'amount' => $this->input->post('grand_total_price', TRUE),
-                    'status' => 1,
-                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
-                );
-                $this->db->insert('customer_ledger', $data2);
+                // if ($this->input->post('is_installment', true) == 1 && (float)$this->input->post('due_amount', TRUE) > 0) {
+                //     $data2 = array(
+                //         'transaction_id' => generator(15),
+                //         'customer_id' => $customer_id,
+                //         'invoice_no' => $invoice_id,
+                //         'receipt_no' => $this->auth->generator(15),
+                //         'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
+                //         'amount' => $this->input->post('due_amount', TRUE),
+                //         'status' => 1,
+                //         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                //     );
+                //     $this->db->insert('customer_ledger', $data2);
+                // }
+
+                // if ($this->input->post('is_installment', true) == 0) {
+                    // Insert to customer ledger Table 
+                    $data2 = array(
+                        'transaction_id' => generator(15),
+                        'customer_id' => $customer_id,
+                        'invoice_no' => $invoice_id,
+                        'receipt_no' => $this->auth->generator(15),
+                        'description' => 'ITP',
+                        'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
+                        'amount' => $this->input->post('grand_total_price', TRUE),
+                        'status' => 1,
+                        'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                    );
+                    $this->db->insert('customer_ledger', $data2);
+                // }
 
                 //Data inserting into invoice table
                 (($this->input->post('total_cgst', true) && $this->input->post('is_quotation', true) == 0) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
