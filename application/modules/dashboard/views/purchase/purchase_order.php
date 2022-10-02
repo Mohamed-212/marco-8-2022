@@ -90,7 +90,7 @@
                                                 <?php echo html_escape($purchase['pur_order_no'])?><i class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                             </a>
 										</td>
-										<td><?php echo html_escape($purchase['purchase_date'])?></td>
+										<td><?php echo html_escape(date('d-m-Y', strtotime($purchase['purchase_date'])))?></td>
 										<td>
 											<?php echo html_escape($purchase['store_name'])?>
 										 </td>

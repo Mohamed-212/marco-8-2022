@@ -97,8 +97,8 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <?php $date = date('Y-m-d'); ?>
-                                        <input type="text" tabindex="3" class="form-control datepicker"
+                                        <?php $date = date('d-m-Y'); ?>
+                                        <input type="text" tabindex="3" class="form-control datepicker2"
                                                name="purchase_date" value="<?php echo $date; ?>" id="date" required
                                                autocomplete="off" />
                                     </div>
@@ -158,7 +158,7 @@
                                        
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" tabindex="3" class="form-control datepicker"
+                                        <input type="text" tabindex="3" class="form-control datepicker2"
                                                name="expire_date" id="expire_date"
                                                placeholder="<?php echo display('enter_expire_date'); ?>" 
                                                autocomplete="off" />
@@ -174,7 +174,7 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" tabindex="3" class="form-control datepicker"
+                                        <input type="text" tabindex="3" class="form-control datepicker2"
                                                name="supply_date" id="supply_date"
                                                placeholder="<?php echo display('enter_supply_date'); ?>" required
                                                autocomplete="off" />
@@ -361,7 +361,7 @@
                                         </td>
                                         <td class="text-right">
                                             <input type="text" id="expiry_date_1" name="expiry_date[1]"
-                                                   class="form-control datepicker"
+                                                   class="form-control datepicker2"
                                                    placeholder="<?php echo display('enter_expire_date') ?>" />
                                         </td>
                                         <td class="text-right">
@@ -509,3 +509,10 @@
 </div>
 <!-- Add New Purchase End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_purchase_order_form.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
