@@ -3,6 +3,7 @@
     var products_with_no_quantity = "<?=display('products_with_no_quantity')?>";
     var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
     var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
+    var add_order_only = true;
 </script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
@@ -125,9 +126,9 @@
                                     <div class="col-sm-8">
                                         <?php
                                         date_default_timezone_set(DEF_TIMEZONE);
-                                        $date = date('m-d-Y');
+                                        $date = date('d-m-Y');
                                         ?>
-                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date" id="date" required value="<?php echo html_escape($date); ?>" />
+                                        <input class="form-control datepicker2" type="text" size="50" name="invoice_date" id="date" required value="<?php echo html_escape($date); ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -612,7 +613,7 @@
                                                         </label>
                                                         <div class="col-sm-8">
                                                             <select class="form-control" name="payment_id" id="payment_id">
-                                                                <option value=""></option>
+                                                                <option value="000"></option>
                                                                 <?php
                                                                 if ($payment_info) {
                                                                     foreach ($payment_info as $payment_method) {
@@ -716,3 +717,10 @@
     </section>
 </div>
 <!-- Invoice Report End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

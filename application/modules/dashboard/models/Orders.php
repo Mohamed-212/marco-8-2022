@@ -63,7 +63,8 @@ class Orders extends CI_Model
             $this->db->where('a.employee_id', $filter['employee_id']);
         }
         if (!empty($filter['date'])) {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+            // $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+            $this->db->where("DATE(a.create_at) = DATE('" . date('Y-m-d', strtotime($filter['date'])) . "')");
         }
         if (!empty($filter['invoice_status'])) {
             $this->db->where('a.status', $filter['invoice_status']);
@@ -76,7 +77,7 @@ class Orders extends CI_Model
     public function get_order_list($filter, $start, $limit)
     {
         // $this->db->select('a.*,b.*,c.order');
-        $this->db->select('a.*, a.status as order_status,b.*');
+        $this->db->select('a.*, a.created_at as date_time, a.status as order_status,b.*');
         $this->db->from('order a');
         // $this->db->from('order a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
@@ -88,10 +89,12 @@ class Orders extends CI_Model
             $this->db->where('a.customer_id', $filter['customer_id']);
         }
         if ($filter['from_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')>=DATE('" . $filter['date'] . "')");
+            // $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')>=DATE('" . $filter['date'] . "')");
+            $this->db->where("DATE(a.created_at)>=DATE('" . date('Y-m-d', strtotime($filter['from_date'])) . "')");
         }
         if ($filter['to_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
+            // $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['date'] . "')");
+            $this->db->where("DATE(a.created_at) <= DATE('" . date('Y-m-d', strtotime($filter['to_date'])) . "')");
         }
         if ($filter['invoice_status'] != '') {
             $this->db->where('a.status', $filter['invoice_status']);
@@ -114,7 +117,7 @@ class Orders extends CI_Model
     //order List
     public function order_list($filter = [], $page, $per_page)
     {
-        $this->db->select('a.*,b.customer_name, IFNULL(c.invoice_status,0) as invoice_status');
+        $this->db->select('a.*, a.created_at as date_time,,b.customer_name, IFNULL(c.invoice_status,0) as invoice_status');
         $this->db->from('order a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id', 'left');
         $this->db->join('invoice c', 'c.order_id = a.order_id', 'left');
@@ -126,7 +129,8 @@ class Orders extends CI_Model
             $this->db->like('b.customer_name', $filter['customer_name'], 'both');
         }
         if (!empty($filter['order_date'])) {
-            $this->db->where('a.date', date('m-d-Y', strtotime($filter['order_date'])));
+            // $this->db->where('a.date', date('m-d-Y', strtotime($filter['order_date'])));
+            $this->db->where("DATE(a.create_at) = DATE('" . date('Y-m-d', strtotime($filter['date'])) . "')");
         }
         if (!empty($filter['invoice_status'])) {
             if (($filter['invoice_status'] == '3')) {
@@ -740,7 +744,8 @@ class Orders extends CI_Model
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
-                        'status' => 1
+                        'status' => 1,
+                        // 'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                     );
                     $this->db->insert('order_customer_ledger', $data2);
                 }
@@ -787,8 +792,10 @@ class Orders extends CI_Model
                     'shipping_method' => $this->input->post('shipping_method', TRUE),
                     'details' => $this->input->post('invoice_details', TRUE),
                     'status' => 1,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'pricing_type' => $pricing_type
+                    // 'created_at' => date("Y-m-d H:i:s"),
+                    'pricing_type' => $pricing_type,
+                    'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+
                 );
                 $this->db->insert('order', $data);
 
