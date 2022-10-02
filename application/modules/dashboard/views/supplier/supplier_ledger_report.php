@@ -79,13 +79,13 @@
                         <div class="form-group">
                             <label for="from_date"><?php echo display('from_date') ?><span
                                     class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
+                            <input type="text" class="form-control datepicker2" autocomplete="off"
                                    placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=$from_date?>" required>
                         </div>
                         <div class="form-group">
                             <label for="to_date"><?php echo display('to_date') ?><span
                                     class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
+                            <input type="text" class="form-control datepicker2" autocomplete="off"
                                    placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=$to_date?>" required>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
@@ -245,9 +245,9 @@
                                                     <td><a
                                                             href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_details_data/{purchase_id}'; ?>"><?php echo $ledger['invoice_no']; ?>
                                                             <i class="fa fa-tasks pull-right" aria-hidden="true"></i></a></td>
-                                                    <td><?php echo html_escape($ledger['final_date']); ?></td>
+                                                    <td><?php echo html_escape(date('d-m-Y', strtotime($ledger['sl_created_at']))); ?></td>
                                                     <td class="text-right">
-                                                        <?php $total_sup_debit -= ((empty($ledger['debit'])) ? 0 : $ledger['debit']);
+                                                        <?php $total_sup_debit += ((empty($ledger['debit'])) ? 0 : $ledger['debit']);
                                                         echo (($position == 0) ? $currency . " " . ((empty($ledger['debit'])) ? 0 : $ledger['debit']) : ((empty($ledger['debit'])) ? 0 : $ledger['debit']) . " " . $currency)
                                                         ?>
                                                     </td>
@@ -277,7 +277,7 @@
                                                 <th class="text-center" colspan="4">Total</th>
                                                 <td class="text-center"><?php echo html_escape($total_sup_debit); ?></td>
                                                 <td class="text-center"><?php echo html_escape($total_sup_credit); ?></td>
-                                                <td class="text-center"><?php echo html_escape($total_sup_debit + $total_sup_credit); ?></td>
+                                                <td class="text-center"><?php echo html_escape($total_sup_debit - $total_sup_credit); ?></td>
                                                 <td class="text-center"></td>
                                             </tr>
                                         </tfoot>
@@ -293,4 +293,11 @@
 ?>
     </section>
 </div>
-<!-- Supplier Ledger End 
+<!-- Supplier Ledger End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

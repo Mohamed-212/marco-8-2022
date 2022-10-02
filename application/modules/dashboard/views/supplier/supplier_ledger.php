@@ -136,3 +136,10 @@
 	</section>
 </div>
 <!-- Supplier Ledger End  -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

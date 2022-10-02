@@ -395,13 +395,15 @@ class Suppliers extends CI_Model {
         $this->db->where('supplier_ledger.supplier_id', $supplier_id);
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('m-d-Y', $time1);
-            $this->db->where('supplier_ledger.date >=', $newformat1);
+            $newformat1 = date('Y-m-d', $time1);
+            // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')");
+            $this->db->where("DATE(supplier_ledger.sl_created_at) >= DATE('" . date('Y-m-d', strtotime($newformat1)). "')");
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('m-d-Y', $time2);
-            $this->db->where('supplier_ledger.date <=', $newformat2);
+            $newformat2 = date('Y-m-d', $time2);
+            // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')");
+            $this->db->where("DATE(supplier_ledger.sl_created_at) <= DATE('" . date('Y-m-d', strtotime($newformat2)). "')");
         }
         $this->db->order_by('supplier_ledger.invoice_no', 'desc');
         $query = $this->db->get();
@@ -442,12 +444,12 @@ class Suppliers extends CI_Model {
         $this->db->where(array('supplier_id' => $supplier_id, 'deposit_no' => NULL, 'status' => 1));
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('Y-m-d', $time1);
+            $newformat1 = date('m-d-Y', $time1);
             $this->db->where('date >=', $newformat1);
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('Y-m-d', $time2);
+            $newformat2 = date('m-d-Y', $time2);
             $this->db->where('date <=', $newformat2);
         }
         $query = $this->db->get();
@@ -459,12 +461,12 @@ class Suppliers extends CI_Model {
         $this->db->from('supplier_ledger');
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('Y-m-d', $time1);
+            $newformat1 = date('m-d-Y', $time1);
             $this->db->where('date >=', $newformat1);
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('Y-m-d', $time2);
+            $newformat2 = date('m-d-Y', $time2);
             $this->db->where('date <=', $newformat2);
         }
         $this->db->where('deposit_no IS NOT NULL');
@@ -486,12 +488,14 @@ class Suppliers extends CI_Model {
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
             $newformat1 = date('Y-m-d', $time1);
-            $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')");
+            // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')");
+            $this->db->where("DATE(supplier_ledger.sl_created_at) >= DATE('" . date('Y-m-d', strtotime($newformat1)). "')");
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
             $newformat2 = date('Y-m-d', $time2);
-            $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')");
+            // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')");
+            $this->db->where("DATE(supplier_ledger.sl_created_at) <= DATE('" . date('Y-m-d', strtotime($newformat2)). "')");
         }
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -502,12 +506,14 @@ class Suppliers extends CI_Model {
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
             $newformat1 = date('Y-m-d', $time1);
-            $this->db->where('date >=', $newformat1);
+            // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')");
+            $this->db->where("DATE(supplier_ledger.sl_created_at) >= DATE('" . date('Y-m-d', strtotime($newformat1)). "')");
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
             $newformat2 = date('Y-m-d', $time2);
-            $this->db->where('date <=', $newformat2);
+            // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')");
+            $this->db->where("DATE(supplier_ledger.sl_created_at) <= DATE('" . date('Y-m-d', strtotime($newformat2)). "')");
         }
         $this->db->where(array('supplier_id' => $supplier_id, 'status' => 1, 'deposit_no' => NULL));
         $query = $this->db->get();
