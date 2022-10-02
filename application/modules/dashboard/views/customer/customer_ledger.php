@@ -75,13 +75,13 @@
                         <div class="form-group">
                             <label for="from_date"><?php echo display('from_date') ?><span
                                     class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
+                            <input type="text" class="form-control datepicker2" autocomplete="off"
                                 placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=$this->input->post('from_date', TRUE);?>" required>
                         </div>
                         <div class="form-group">
                             <label for="to_date"><?php echo display('to_date') ?><span
                                     class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
+                            <input type="text" class="form-control datepicker2" autocomplete="off"
                                 placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=$this->input->post('to_date', TRUE);?>" required>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
@@ -203,7 +203,7 @@
 									?>
 										<?php foreach ($ledger as $v_ledger) { ?>
 											<tr>
-												<td><?php echo html_escape($v_ledger['final_date']); ?></td>
+												<td><?php echo empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) ? '' : html_escape(date('d-m-Y', strtotime($v_ledger['cl_created_at']))); ?></td>
 												<td>
 													<?php if ($this->permission->check_label('new_sale')->access()) {
 														if ($v_ledger['invoice_no'] != 'NA') { ?>
@@ -241,3 +241,10 @@
 	</section>
 </div>
 <!-- Customer Ledger End  -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
