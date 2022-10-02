@@ -112,7 +112,7 @@
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo html_escape($purchase['final_date']) ?></td>
+                                                <td><?php echo html_escape(date('d-m-Y', strtotime($purchase['date_time']))) ?></td>
                                                 <td class="text-right">
                                                     <?php echo html_escape(($position == 0) ? $currency . ' ' . $purchase['grand_total_amount'] : $purchase['grand_total_amount'] . ' ' . $currency) ?>
                                                 </td>

@@ -95,7 +95,7 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <?php $date = date('m-d-Y'); ?>
-                                        <input type="text" tabindex="3" class="form-control datepicker"
+                                        <input type="text" tabindex="3" class="form-control datepicker2"
                                                name="purchase_date" value="<?php echo $date; ?>" id="date" required />
                                     </div>
                                 </div>
@@ -332,7 +332,7 @@
                                         </td>
                                         <td class="text-right">
                                             <input type="text" id="expiry_date_1" name="expiry_date[1]"
-                                                   class="form-control datepicker"
+                                                   class="form-control datepicker2"
                                                    placeholder="<?php echo display('enter_expire_date') ?>" />
                                         </td>
                                         <td class="text-right">
@@ -573,3 +573,10 @@
 
 <!-- Add New Purchase End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_purchase_form.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

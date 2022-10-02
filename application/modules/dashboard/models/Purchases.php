@@ -22,10 +22,10 @@ class Purchases extends CI_Model {
 
     //purchase List
     public function purchase_list() {
-        $this->db->select('a.*,b.supplier_name');
+        $this->db->select('a.*, a.created_at as date_time,b.supplier_name');
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
-        $this->db->order_by('a.purchase_date', 'desc');
+        $this->db->order_by('date_time', 'desc');
         $this->db->order_by('purchase_id', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
@@ -277,7 +277,7 @@ class Purchases extends CI_Model {
                     'purchase_expences' => $this->input->post('purchase_expences', TRUE),
                     'user_id' => $this->session->userdata('user_id'),
                     'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
+                    'created_at' => date('Y-m-d h:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                     'file' => isset($upload_data['file']) && isset($upload_data['file']['file_name']) ? 'my-assets/attachments/' . $upload_data['file']['file_name'] : null,
                 );
                 $this->db->insert('product_purchase', $data);
@@ -421,7 +421,7 @@ class Purchases extends CI_Model {
                             'product_id' => $product_id,
                             'variant_id' => $variant,
                             'variant_color' => $variant_color,
-                            'date_time' => $this->input->post('purchase_date', TRUE),
+                            'date_time' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                             'quantity' => $product_quantity,
                             'status' => 3
                         );
@@ -439,6 +439,7 @@ class Purchases extends CI_Model {
                                     'variant_color' => $variant_color,
                                     'quantity' => $product_quantity,
                                     'warehouse_id' => '',
+                                    'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                                 );
                                 $this->db->insert('purchase_stock_tbl', $stock);
                                 // insert
@@ -806,7 +807,8 @@ class Purchases extends CI_Model {
                 'purchase_details' => $this->input->post('purchase_details', TRUE),
                 'purchase_expences' => $this->input->post('purchase_expences', TRUE),
                 'user_id' => $this->session->userdata('user_id'),
-                'status' => 1
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
             );
             $this->db->insert('product_purchase', $data);
             //Add Product To Supplier Ledger
@@ -883,6 +885,7 @@ class Purchases extends CI_Model {
                             'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
                             'quantity' => $product_quantity,
                             'warehouse_id' => '',
+                            'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                         );
                         $this->db->insert('purchase_stock_tbl', $stock);
                         // insert
