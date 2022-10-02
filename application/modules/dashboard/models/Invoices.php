@@ -65,7 +65,8 @@ class Invoices extends CI_Model {
             $this->db->where('a.employee_id', $filter['employee_id']);
         }
         if (!empty($filter['date'])) {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+            // $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+            $this->db->where("DATE(a.created_at) = DATE('" . date('Y-m-d', strtotime($filter['date'])) . "')");
         }
         if (!empty($filter['invoice_status'])) {
             $this->db->where('a.invoice_status', $filter['invoice_status']);
@@ -78,7 +79,7 @@ class Invoices extends CI_Model {
 
     //Invoice List
     public function get_invoice_list($filter, $start, $limit) {
-        $this->db->select('a.*,b.*,c.order');
+        $this->db->select('a.*, a.created_at as date_time,b.*,c.order');
         $this->db->from('invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
         $this->db->join('order c', 'c.order_id = a.order_id', 'left');
@@ -89,10 +90,10 @@ class Invoices extends CI_Model {
             $this->db->where('a.customer_id', $filter['customer_id']);
         }
         if ($filter['from_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')>=DATE('" . $filter['from_date'] . "')");
+            $this->db->where("DATE(a.created_at)>=DATE('" . date('Y-m-d', strtotime($filter['from_date'])) . "')");
         }
         if ($filter['to_date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')<=DATE('" . $filter['to_date'] . "')");
+            $this->db->where("DATE(a.created_at)<=DATE('" . date('Y-m-d', strtotime($filter['to_date'])) . "')");
         }
         if ($filter['invoice_status'] != '') {
             $this->db->where('a.invoice_status', $filter['invoice_status']);

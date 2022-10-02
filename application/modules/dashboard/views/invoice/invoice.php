@@ -89,13 +89,13 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"><?php echo display('start_date') ?>:</label>
-                                <input type="text" class="form-control datepicker " name="from_date" id="from_date" value="<?php echo set_value('from_date', @$_GET['from_date']) ?>" placeholder='<?php echo display('start_date') ?>' autocomplete="off">
+                                <input type="text" class="form-control datepicker2 " name="from_date" id="from_date" value="<?php echo set_value('from_date', @$_GET['from_date']) ?>" placeholder='<?php echo display('start_date') ?>' autocomplete="off">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"><?php echo display('end_date') ?>:</label>
-                                <input type="text" class="form-control datepicker " name="to_date" id="to_date" value="<?php echo set_value('to_date', @$_GET['to_date']) ?>" placeholder='<?php echo display('end_date') ?>' autocomplete="off">
+                                <input type="text" class="form-control datepicker2 " name="to_date" id="to_date" value="<?php echo set_value('to_date', @$_GET['to_date']) ?>" placeholder='<?php echo display('end_date') ?>' autocomplete="off">
                             </div>
                         </div>
                         <?php /* ?>
@@ -194,7 +194,7 @@
                                                         <?php echo html_escape($invoice['customer_name']) ?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
 
                                                 </td>
-                                                <td><?php echo date('d-m-Y', strtotime($invoice['created_at'])) ?></td>
+                                                <td><?php echo date('d-m-Y', strtotime($invoice['date_time'])) ?></td>
                                                 <td class="text-right">
                                                     <?php echo (($position == 0) ? $currency . ' ' . $invoice['total_amount'] : $invoice['total_amount'] . ' ' . $currency) ?>
                                                 </td>
@@ -385,3 +385,10 @@
 </div>
 <!-- Manage Invoice End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/invoice.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
