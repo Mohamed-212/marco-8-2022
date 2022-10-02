@@ -296,6 +296,7 @@ class Cinstallment extends MX_Controller
                                         $this->db->insert('invoice_installment', $installment_data);
                                     }
 
+                                    // $this->db->reset_query();
                                     $this->db->select('*');
                                     $this->db->from('invoice');
                                     $this->db->where('invoice_id', $invoice_id);
@@ -305,6 +306,7 @@ class Cinstallment extends MX_Controller
                                     //Delete old customer ledger data
                                     $this->db->where('invoice_no', $invoice_id);
                                     $result = $this->db->delete('customer_ledger');
+                                    // echo "<pre>";
                                     //Insert customer ledger data where payment_amount > 0
                                     if ($payment_amount[$index] > 0) {
                                         //Insert to customer_ledger Table
@@ -321,6 +323,7 @@ class Cinstallment extends MX_Controller
                                             'cl_created_at' => date('Y-m-d H:i:s'),
                                         );
                                         $this->db->insert('customer_ledger', $data1);
+                                        // print_r($data1);
                                     }
                                     //Update to customer ledger Table
                                     $data2 = array(
@@ -330,10 +333,12 @@ class Cinstallment extends MX_Controller
                                         'receipt_no' => $this->auth->generator(15),
                                         'description' => 'ITP',
                                         'date' => date('Y-m-d'),
-                                        'amount' => $invoice[0]['total_amount'],
+                                        'amount' => (float)$invoice[0]['total_amount'],
                                         'status' => 1,
                                         'cl_created_at' => date('Y-m-d H:i:s'),
                                     );
+                                    // print_r($data2);
+                                    // exit;
                                     $this->db->insert('customer_ledger', $data2);
 
                                     //update invoice paid amount

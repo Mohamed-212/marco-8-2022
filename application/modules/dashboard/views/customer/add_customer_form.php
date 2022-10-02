@@ -208,11 +208,11 @@
                         <div class="form-group row">
                             <input type="hidden" hidden id="contact_info" name="contact_info" value="" />
                             <div class="col-sm-12">
-                                <div class="card-body" style="margin-top: 35px;" x-init="addOne">
+                                <div class="card-body" style="margin-top: 35px;">
                                     <div class="row">
                                         <div class="col-sm-11">
                                             <div class="form-group row">
-                                                <label class="col-sm-3 col-form-label">
+                                                <label class="col-sm-3 col-form-label" x-show="infos.length">
                                                     <b><?php echo display('contact_info') ?>:</b>
                                                 </label>
                                             </div>

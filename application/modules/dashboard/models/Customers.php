@@ -167,7 +167,7 @@ class Customers extends CI_Model {
 										'payment_type' => 1,
 										'description' => 'ITP',
 										'status' => 1,
-										'cl_created_at' => date('Y-m-d H:i:s', strtotime('1988-01-01')),
+										'cl_created_at' => date('Y-m-d H:i:s'),
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -216,7 +216,7 @@ class Customers extends CI_Model {
 										'date' => $date,
 										'amount' => $previous_balance,
 										'status' => 1,
-										'cl_created_at' => date('Y-m-d H:i:s', strtotime('1988-01-01')),
+										'cl_created_at' => date('Y-m-d H:i:s'),
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
