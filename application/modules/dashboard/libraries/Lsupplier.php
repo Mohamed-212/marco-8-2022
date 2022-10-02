@@ -218,6 +218,8 @@ class Lsupplier {
 		$ledger 	     =$CI->Suppliers->suppliers_ledger($supplier_id,$from_date,$to_date);
 		$summary 	     =$CI->Suppliers->suppliers_transection_summary($supplier_id,$from_date,$to_date);
 		$suppliers_list  =$CI->Suppliers->supplier_list();
+		// echo "<pre>";var_dump($ledger, $summary);exit;
+
 		$balance=0;
 		if(!empty($ledger)){
 			foreach($ledger as $index=>$value){
@@ -238,6 +240,7 @@ class Lsupplier {
 				}
 			}
 		}
+
 		$currency_details = $CI->Soft_settings->retrieve_currency_info();
 		$data=array(
 			'title' 	     =>display('supplier_ledger'),

@@ -126,7 +126,7 @@ class Suppliers extends CI_Model {
                                         'transaction_id' =>  $transaction_id,
                                         'supplier_id'   =>  $supplier_id,
                                         'invoice_no'    =>  NULL,
-                                        'deposit_no'    =>  NULL,
+                                        'deposit_no'    =>  $deposit_no,
                                         'amount'        =>  $previous_balance,
                                         'description'   =>  $this->input->post('details', true),
                                         'payment_type'  =>  1,
@@ -178,7 +178,7 @@ class Suppliers extends CI_Model {
                                         'transaction_id' =>  $transaction_id,
                                         'supplier_id'   =>  $supplier_id,
                                         'invoice_no'    =>  NULL,
-                                        'deposit_no'    =>  $deposit_no,
+                                        'deposit_no'    =>  null,
                                         'amount'        =>  $previous_balance,
                                         'description'   =>  $this->input->post('details', true),
                                         'payment_type'  =>  1,
@@ -442,12 +442,12 @@ class Suppliers extends CI_Model {
         $this->db->where(array('supplier_id' => $supplier_id, 'deposit_no' => NULL, 'status' => 1));
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('m-d-Y', $time1);
+            $newformat1 = date('Y-m-d', $time1);
             $this->db->where('date >=', $newformat1);
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('m-d-Y', $time2);
+            $newformat2 = date('Y-m-d', $time2);
             $this->db->where('date <=', $newformat2);
         }
         $query = $this->db->get();
@@ -459,12 +459,12 @@ class Suppliers extends CI_Model {
         $this->db->from('supplier_ledger');
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('m-d-Y', $time1);
+            $newformat1 = date('Y-m-d', $time1);
             $this->db->where('date >=', $newformat1);
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('m-d-Y', $time2);
+            $newformat2 = date('Y-m-d', $time2);
             $this->db->where('date <=', $newformat2);
         }
         $this->db->where('deposit_no IS NOT NULL');
@@ -481,7 +481,8 @@ class Suppliers extends CI_Model {
         $result = array();
         $this->db->select_sum('amount', 'total_credit');
         $this->db->from('supplier_ledger');
-        $this->db->where(array('supplier_id' => $supplier_id, 'deposit_no' => NULL, 'status' => 1));
+        $this->db->where(array('supplier_id' => $supplier_id, 'status' => 1));
+        $this->db->where('deposit_no IS NOT NULL');
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
             $newformat1 = date('Y-m-d', $time1);
@@ -508,8 +509,7 @@ class Suppliers extends CI_Model {
             $newformat2 = date('Y-m-d', $time2);
             $this->db->where('date <=', $newformat2);
         }
-        $this->db->where('deposit_no IS NOT NULL');
-        $this->db->where(array('supplier_id' => $supplier_id, 'status' => 1));
+        $this->db->where(array('supplier_id' => $supplier_id, 'status' => 1, 'deposit_no' => NULL));
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

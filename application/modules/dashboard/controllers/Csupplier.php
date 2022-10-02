@@ -152,8 +152,8 @@ class Csupplier extends MX_Controller
 
     public function supplier_ledger($supplier_id)
     {
-        $content = $this->lsupplier->supplier_ledger($supplier_id);
         $this->supplier_id = $supplier_id;
+        $content = $this->lsupplier->supplier_ledger_report($supplier_id, null, null);
         $this->template_lib->full_admin_html_view($content);
     }
 

@@ -208,7 +208,7 @@
     <?php
     if (!empty($supplier_openning_info)) {
         ?>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td class="text-center">1</td>
                                                 <td><?php echo html_escape($supplier_openning_info->Vtype) ?></td>
                                                 <td><?php echo $supplier_openning_info->ID ?></td>
@@ -221,7 +221,7 @@
                                                 </td>
                                                 <td class="text-right"><?=$supplier_openning_info->Debit-$supplier_openning_info->Credit?></td>
                                                 <td><?php echo html_escape($supplier_openning_info->Narration) ?></td>
-                                            </tr>
+                                            </tr> -->
                                             <?php
                                         }
                                         ?>
@@ -247,7 +247,7 @@
                                                             <i class="fa fa-tasks pull-right" aria-hidden="true"></i></a></td>
                                                     <td><?php echo html_escape($ledger['final_date']); ?></td>
                                                     <td class="text-right">
-                                                        <?php $total_sup_debit += ((empty($ledger['debit'])) ? 0 : $ledger['debit']);
+                                                        <?php $total_sup_debit -= ((empty($ledger['debit'])) ? 0 : $ledger['debit']);
                                                         echo (($position == 0) ? $currency . " " . ((empty($ledger['debit'])) ? 0 : $ledger['debit']) : ((empty($ledger['debit'])) ? 0 : $ledger['debit']) . " " . $currency)
                                                         ?>
                                                     </td>
@@ -277,7 +277,7 @@
                                                 <th class="text-center" colspan="4">Total</th>
                                                 <td class="text-center"><?php echo html_escape($total_sup_debit); ?></td>
                                                 <td class="text-center"><?php echo html_escape($total_sup_credit); ?></td>
-                                                <td class="text-center"><?php echo html_escape($total_sup_debit - $total_sup_credit); ?></td>
+                                                <td class="text-center"><?php echo html_escape($total_sup_debit + $total_sup_credit); ?></td>
                                                 <td class="text-center"></td>
                                             </tr>
                                         </tfoot>
