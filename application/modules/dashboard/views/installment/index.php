@@ -72,7 +72,7 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label"><?php echo display('date') ?>:</label>
-                                <input type="text" class="form-control datepicker " name="date"
+                                <input type="text" class="form-control datepicker2 " name="date"
                                        value="<?php echo set_value('date', @$_GET['date']) ?>"
                                        placeholder='<?php echo display('date') ?>' autocomplete="off">
                             </div>
@@ -136,7 +136,7 @@
                                                             class="fa fa-user pull-right" aria-hidden="true"></i></a>
 
                                             </td>
-                                            <td><?php echo html_escape($invoice['final_date']) ?></td>
+                                            <td><?php echo html_escape(date('d-m-Y', strtotime($invoice['date_time']))) ?></td>
                                             <td class="text-right">
                                                 <?php echo (($position == 0) ? $currency . ' ' . $invoice['paid_amount'] : $invoice['paid_amount'] . ' ' . $currency) ?>
                                             </td>
@@ -168,3 +168,10 @@
 </div>
 <!-- Manage Invoice End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/invoice.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

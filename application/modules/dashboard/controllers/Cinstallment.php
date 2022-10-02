@@ -50,7 +50,7 @@ class Cinstallment extends MX_Controller
     //Invoice List
     public function get_invoice_list($filter, $start, $limit)
     {
-        $this->db->select('a.*,b.*,c.order');
+        $this->db->select('a.*, a.created_at as date_time,b.*,c.order');
         $this->db->from('invoice a');
         $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
         $this->db->join('order c', 'c.order_id = a.order_id', 'left');
@@ -62,7 +62,7 @@ class Cinstallment extends MX_Controller
             $this->db->where('a.customer_id', $filter['customer_id']);
         }
         if ($filter['date'] != '') {
-            $this->db->where("STR_TO_DATE(a.date, '%m-%d-%Y')=DATE('" . $filter['date'] . "')");
+            $this->db->where("DATE(a.created_at)=DATE('" . date('Y-m-d', strtotime($filter['date'])) . "')");
         }
         $this->db->order_by('a.invoice', 'desc');
         $this->db->limit($limit, $start);
@@ -270,7 +270,7 @@ class Cinstallment extends MX_Controller
                                 //update installment with values
                                 $this->db->where('id', $installment['id']);
                                 $update_installment = array(
-                                    'payment_date' => $payment_date[$index],
+                                    'payment_date' => date('Y-m-d', strtotime($payment_date[$index])),
                                     'payment_amount' => $payment_amount[$index],
                                     'status' => $status[$index],
                                     'payment_type' => $payment_type[$index],
@@ -291,6 +291,7 @@ class Cinstallment extends MX_Controller
                                             'invoice_id' => $invoice_id,
                                             'amount' => ($amount[$index] - $payment_amount[$index]),
                                             'due_date' => date('Y-m-d', strtotime($due_date[count($due_date)-1] . ' + 1 months')),
+                                            'due_date_datetime' => date('Y-m-d H:i:s', strtotime($due_date[count($due_date)-1] . ' + 1 months')),
                                         );
                                         $this->db->insert('invoice_installment', $installment_data);
                                     }
@@ -316,7 +317,8 @@ class Cinstallment extends MX_Controller
                                             'amount' => $invoice[0]['paid_amount'] + $payment_amount[$index],
                                             'payment_type' => 1,
                                             'description' => 'ITP',
-                                            'status' => 1
+                                            'status' => 1,
+                                            'cl_created_at' => date('Y-m-d H:i:s'),
                                         );
                                         $this->db->insert('customer_ledger', $data1);
                                     }
@@ -327,7 +329,8 @@ class Cinstallment extends MX_Controller
                                         'invoice_no' => $invoice_id,
                                         'date' => date('Y-m-d'),
                                         'amount' => $invoice[0]['total_amount'],
-                                        'status' => 1
+                                        'status' => 1,
+                                        'cl_created_at' => date('Y-m-d H:i:s'),
                                     );
                                     $this->db->insert('customer_ledger', $data2);
 

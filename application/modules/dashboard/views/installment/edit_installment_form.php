@@ -409,16 +409,16 @@
                                                     <input type="text" name="amount[]" class="form-control" readonly value="<?php echo html_escape($value['amount']) ?>">
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="text" class="form-control datepicker" name="due_date[]" value="<?php echo html_escape($value['due_date']) ?>" readonly>
+                                                    <input type="text" class="form-control datepicker2" name="due_date[]" value="<?php echo html_escape($value['due_date']) ?>" readonly>
                                                 </td>
                                                 <td class="text-center">
                                                     <input type="number" name="payment_amount[]" class="form-control" value="<?php echo html_escape($value['payment_amount']) ?>" placeholder="0.00" <?php echo html_escape($readonly) ?>>
                                                 </td>
                                                 <td class="text-center">
-                                                    <input type="text" class="form-control datepicker" name="payment_date[]" readonly value="<?php if ($value['status']) {
-                                                                                                                                                    echo html_escape($value['payment_date']);
+                                                    <input type="text" class="form-control datepicker2" name="payment_date[]" readonly value="<?php if ($value['status']) {
+                                                                                                                                                    echo html_escape(date('d-m-Y', strtotime($value['payment_date'])));
                                                                                                                                                 } else {
-                                                                                                                                                    echo set_value('date', date("Y-m-d"));
+                                                                                                                                                    echo set_value('date', date("d-m-Y"));
                                                                                                                                                 } ?>">
                                                 </td>
                                                 <td class="text-center">
@@ -527,5 +527,12 @@
 
             window.print();
         });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
     });
 </script>

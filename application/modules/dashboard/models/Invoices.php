@@ -341,11 +341,12 @@ class Invoices extends CI_Model {
                         'customer_id' => $customer_id,
                         'invoice_no' => $invoice_id,
                         'receipt_no' => $this->auth->generator(15),
-                        'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
+                        'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
-                        'status' => 1
+                        'status' => 1,
+                        'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -355,9 +356,10 @@ class Invoices extends CI_Model {
                     'transaction_id' => generator(15),
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
-                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
+                    'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('grand_total_price', TRUE),
-                    'status' => 1
+                    'status' => 1,
+                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                 );
                 $this->db->insert('customer_ledger', $data2);
 
@@ -407,7 +409,8 @@ class Invoices extends CI_Model {
                         $installment_data = array(
                             'invoice_id' => $invoice_id,
                             'amount' => $installment_amount[$i],
-                            'due_date' => date('Y-m-d', strtotime($installment_due_date[$i])),
+                            'due_date' => date('d-m-Y', strtotime($installment_due_date[$i])),
+                            'due_date_datetime' => date('Y-m-d H:i:s', strtotime($installment_due_date[$i])),
                         );
                         $this->db->insert('invoice_installment', $installment_data);
                     }
@@ -871,6 +874,7 @@ class Invoices extends CI_Model {
                             'tax_amount' => $cgst_tax,
                             'tax_id' => $cgst_tax_id,
                             'date' => $this->input->post('invoice_date', TRUE),
+                            'tcs_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                         );
                         if (!empty($cgst[$i])) {
                             $result = $this->db->select('*')
@@ -902,6 +906,7 @@ class Invoices extends CI_Model {
                             'tax_amount' => $sgst_tax,
                             'tax_id' => $sgst_tax_id,
                             'date' => $this->input->post('invoice_date', TRUE),
+                            'tcs_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                         );
                         if (!empty($sgst[$i])) {
                             $result = $this->db->select('*')
@@ -933,6 +938,7 @@ class Invoices extends CI_Model {
                             'tax_amount' => $igst_tax,
                             'tax_id' => $igst_tax_id,
                             'date' => $this->input->post('invoice_date', TRUE),
+                            'tcs_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                         );
                         if (!empty($igst[$i])) {
                             $result = $this->db->select('*')
@@ -971,6 +977,7 @@ class Invoices extends CI_Model {
                             'tax_id' => $cgst_tax_id,
                             'variant_id' => $variant_id,
                             'date' => $this->input->post('invoice_date', TRUE),
+                            'tcd_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                         );
                         if (!empty($cgst[$i])) {
 
@@ -1010,6 +1017,7 @@ class Invoices extends CI_Model {
                             'tax_id' => $sgst_tax_id,
                             'variant_id' => $variant_id,
                             'date' => $this->input->post('invoice_date', TRUE),
+                            'tcd_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                         );
                         if (!empty($sgst[$i])) {
                             $result = $this->db->select('*')
@@ -1047,6 +1055,7 @@ class Invoices extends CI_Model {
                             'tax_id' => $igst_tax_id,
                             'variant_id' => $variant_id,
                             'date' => $this->input->post('invoice_date', TRUE),
+                            'tcd_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                         );
                         if (!empty($igst[$i])) {
                             $result = $this->db->select('*')
@@ -1151,11 +1160,12 @@ class Invoices extends CI_Model {
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
                     'receipt_no' => $this->auth->generator(15),
-                    'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
+                    'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('paid_amount', TRUE),
                     'payment_type' => 1,
                     'description' => 'ITP',
-                    'status' => 1
+                    'status' => 1,
+                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),                    
                 );
                 $this->db->insert('customer_ledger', $data2);
             }
@@ -1165,9 +1175,10 @@ class Invoices extends CI_Model {
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
                 'invoice_no' => $invoice_id,
-                'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
+                'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                 'amount' => $this->input->post('grand_total_price', TRUE),
-                'status' => 1
+                'status' => 1,
+                'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
             );
             $this->db->insert('customer_ledger', $data2);
 
@@ -1190,7 +1201,7 @@ class Invoices extends CI_Model {
                 'shipping_method' => $this->input->post('shipping_method', TRUE),
                 'invoice_details' => $this->input->post('invoice_details', TRUE),
                 'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
+                'created_at' => date('Y-m-d h:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                 'order_id' => $order_id,
                 'quotation_id' => $quotation_id,
             );
@@ -1203,7 +1214,7 @@ class Invoices extends CI_Model {
             $account_no = $this->input->post('account_no', TRUE);
             $payment_amount = $this->input->post('grand_total_price', TRUE);
 
-            if (!empty($bank_id) && !empty($account_no)) {
+            if (!empty($bank_id)) {
                 $bank_paydata = array(
                     'bank_payment_id' => generator(15),
                     'terminal_id' => ($terminal ? $terminal : ''),
@@ -1343,6 +1354,7 @@ class Invoices extends CI_Model {
                         'tax_amount' => $cgst_tax,
                         'tax_id' => $cgst_tax_id,
                         'date' => $this->input->post('invoice_date', TRUE),
+                        'tcs_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                     );
                     if (!empty($cgst[$i])) {
                         $result = $this->db->select('*')
@@ -1374,6 +1386,7 @@ class Invoices extends CI_Model {
                         'tax_amount' => $sgst_tax,
                         'tax_id' => $sgst_tax_id,
                         'date' => $this->input->post('invoice_date', TRUE),
+                        'tcs_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                     );
                     if (!empty($sgst[$i])) {
                         $result = $this->db->select('*')
@@ -1405,6 +1418,7 @@ class Invoices extends CI_Model {
                         'tax_amount' => $igst_tax,
                         'tax_id' => $igst_tax_id,
                         'date' => $this->input->post('invoice_date', TRUE),
+                        'tcs_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                     );
                     if (!empty($igst[$i])) {
                         $result = $this->db->select('*')
@@ -1442,6 +1456,7 @@ class Invoices extends CI_Model {
                         'tax_id' => $cgst_tax_id,
                         'variant_id' => $variant_id,
                         'date' => $this->input->post('invoice_date', TRUE),
+                        'tcd_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                     );
                     if (!empty($cgst[$i])) {
 
@@ -1481,6 +1496,7 @@ class Invoices extends CI_Model {
                         'tax_id' => $sgst_tax_id,
                         'variant_id' => $variant_id,
                         'date' => $this->input->post('invoice_date', TRUE),
+                        'tcd_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                     );
                     if (!empty($sgst[$i])) {
                         $result = $this->db->select('*')
@@ -1518,6 +1534,7 @@ class Invoices extends CI_Model {
                         'tax_id' => $igst_tax_id,
                         'variant_id' => $variant_id,
                         'date' => $this->input->post('invoice_date', TRUE),
+                        'tcd_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE)))
                     );
                     if (!empty($igst[$i])) {
                         $result = $this->db->select('*')
