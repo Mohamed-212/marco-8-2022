@@ -77,13 +77,13 @@
                         <div class="form-group">
                             <label for="from_date"><?php echo display('from_date') ?><span
                                     class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
+                            <input type="text" class="form-control datepicker2" autocomplete="off"
                                 placeholder="<?php echo display('from_date'); ?>" name="from_date" required>
                         </div>
                         <div class="form-group">
                             <label for="to_date"><?php echo display('to_date') ?><span
                                     class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
+                            <input type="text" class="form-control datepicker2" autocomplete="off"
                                 placeholder="<?php echo display('to_date'); ?>" name="to_date" required>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
@@ -285,3 +285,10 @@
     </section>
 </div>
 <!-- Customer Ledger End  -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
