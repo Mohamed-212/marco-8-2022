@@ -117,9 +117,9 @@
                                     <div class="col-sm-8">
                                         <?php
                                         date_default_timezone_set(DEF_TIMEZONE);
-                                        $date = date('m-d-Y');
+                                        $date = date('d-m-Y');
                                         ?>
-                                        <input class="form-control datepicker" type="text" size="50" name="invoice_date" id="date" required value="<?php echo html_escape($date); ?>" />
+                                        <input class="form-control datepicker2" type="text" size="50" name="invoice_date" id="date" required value="<?php echo html_escape($date); ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -580,3 +580,10 @@
     </section>
 </div>
 <!-- Invoice Report End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

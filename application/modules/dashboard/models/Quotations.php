@@ -987,7 +987,7 @@ class Quotations extends CI_Model
 					'shipping_method' => $this->input->post('shipping_method', TRUE),
 					'details' => $this->input->post('details', TRUE),
 					'status' => 1,
-					'created_at' => date("Y-m-d H:i:s"),
+					'created_at' => date("Y-m-d H:i:s", strtotime($this->input->post('invoice_date', TRUE))),
 					'pricing_type' => $pricing_type
 				);
 				$this->db->insert('quotation', $data);

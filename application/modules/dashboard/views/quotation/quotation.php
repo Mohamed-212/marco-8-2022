@@ -93,7 +93,7 @@
                                             <a
                                                 href="<?php echo base_url() . 'dashboard/Ccustomer/customerledger/' . $quotation['customer_id']; ?>"><?php echo html_escape($quotation['customer_name']) ?></a>
                                         </td>
-                                        <td><?php echo html_escape($quotation['date']) ?></td>
+                                        <td><?php echo html_escape(date('d-m-Y', strtotime($quotation['created_at']))) ?></td>
                                         <!-- <td>
                                             <?php echo html_escape(date('Y-m-d', strtotime($quotation['expire_date']))) ?>
                                         </td> -->
@@ -174,3 +174,10 @@
     </section>
 </div>
 <!-- Manage quotation End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

@@ -363,7 +363,7 @@
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('date'); ?> : <span dir="ltr" style="text-transform: uppercase;">
-                                                                    <?php echo html_escape(date('Y - M - d', strtotime($invoice_all_data[0]['date_time']))) ?>
+                                                                    <?php echo html_escape(date('d - M - Y', strtotime($invoice_all_data[0]['date_time']))) ?>
                                                                     </span>
                                                                 </p>
                                                                 <p>
