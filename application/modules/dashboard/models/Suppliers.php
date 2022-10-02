@@ -115,22 +115,113 @@ class Suppliers extends CI_Model {
                                 $createdate = date('Y-m-d H:i:s');
                                 $date = $createdate;
 
-                                $opening_balance_credit = array(
-                                    'fy_id' => $find_active_fiscal_year->id,
-                                    'VNo' => 'OP-' . $headcode,
-                                    'Vtype' => 'Sales',
-                                    'VDate' => $date,
-                                    'COAID' => 3,
-                                    'Narration' => 'Opening balance credired from "Owners Equity And Capital" from: ' . $headname->HeadName,
-                                    'Debit' => 0,
-                                    'Credit' => $previous_balance,
-                                    'is_opening' => 1,
-                                    'IsPosted' => 1,
-                                    'CreateBy' => $receive_by,
-                                    'CreateDate' => $createdate,
-                                    'IsAppove' => 1
-                                );
-                                $this->db->insert('acc_transaction', $opening_balance_credit);
+                                $deposit_no     = $this->auth->generator(10);
+                                $transaction_id = $this->auth->generator(15);
+                        
+                                //Data ready for transferring to customer_ledger
+                                $balance_type=$this->input->post('balance_type', TRUE);
+								if($balance_type==1)
+								{
+                                    $data = array(
+                                        'transaction_id' =>  $transaction_id,
+                                        'supplier_id'   =>  $supplier_id,
+                                        'invoice_no'    =>  NULL,
+                                        'deposit_no'    =>  NULL,
+                                        'amount'        =>  $previous_balance,
+                                        'description'   =>  $description,
+                                        'payment_type'  =>  1,
+                                        'date'          =>  $date,
+                                        'status'        =>  1
+                                    );
+                                    $this->db->insert('supplier_ledger', $data);
+
+                                    // add acc trans
+                                    $customer_credit = array(
+                                        'fy_id' => $find_active_fiscal_year->id,
+                                        'VNo'   =>'OP-'.$headcode,
+                                        'Vtype' => 'Sales',
+                                        'VDate' => $date,
+                                        'COAID' => $headcode, // account payable game 11
+                                        'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $supplier_id . ')',
+                                        'Debit' => 0,
+                                        'Credit' =>$previous_balance,
+                                        'is_opening' => 1,
+                                        'IsPosted' => 1,
+                                        'CreateBy' => $receive_by,
+                                        'CreateDate' => $createdate,
+                                        'IsAppove' => 1
+                                        
+                                    );
+                                    $this->db->insert('acc_transaction', $customer_credit);
+
+                                    $opening_balance_credit = array(
+                                        'fy_id' => $find_active_fiscal_year->id,
+                                        'VNo' => 'OP-' . $headcode,
+                                        'Vtype' => 'Sales',
+                                        'VDate' => $date,
+                                        'COAID' => 3,
+                                        'Narration' => 'Opening balance credired from "Owners Equity And Capital" from: ' . $headname->HeadName,
+                                        'Debit' =>$previous_balance,
+                                        'Credit' => 0,
+                                        'is_opening' => 1,
+                                        'IsPosted' => 1,
+                                        'CreateBy' => $receive_by,
+                                        'CreateDate' => $createdate,
+                                        'IsAppove' => 1
+                                    );
+                                    $this->db->insert('acc_transaction', $opening_balance_credit);
+                                }
+                                else
+                                {
+                                    $data = array(
+                                        'transaction_id' =>  $transaction_id,
+                                        'supplier_id'   =>  $supplier_id,
+                                        'invoice_no'    =>  NULL,
+                                        'deposit_no'    =>  $deposit_no,
+                                        'amount'        =>  $previous_balance,
+                                        'description'   =>  $description,
+                                        'payment_type'  =>  1,
+                                        'date'          =>  $date,
+                                        'status'        =>  1,
+
+                                    );
+                                    $this->db->insert('supplier_ledger', $data);
+
+                                    // add acc trans
+                                    $customer_credit = array(
+                                        'fy_id' => $find_active_fiscal_year->id,
+                                        'VNo'   =>'OP-'.$headcode,
+                                        'Vtype' => 'Sales',
+                                        'VDate' => $date,
+                                        'COAID' => $headcode, // account payable game 11
+                                        'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $supplier_id . ')',
+                                        'Debit' => $previous_balance,
+                                        'Credit' =>0,
+                                        'is_opening' => 1,
+                                        'IsPosted' => 1,
+                                        'CreateBy' => $receive_by,
+                                        'CreateDate' => $createdate,
+                                        'IsAppove' => 1
+                                    );
+                                    $this->db->insert('acc_transaction', $customer_credit);
+
+                                    $opening_balance_credit = array(
+                                        'fy_id' => $find_active_fiscal_year->id,
+                                        'VNo' => 'OP-' . $headcode,
+                                        'Vtype' => 'Sales',
+                                        'VDate' => $date,
+                                        'COAID' => 3,
+                                        'Narration' => 'Opening balance credired from "Owners Equity And Capital" from: ' . $headname->HeadName,
+                                        'Debit' => 0,
+                                        'Credit' => $previous_balance,
+                                        'is_opening' => 1,
+                                        'IsPosted' => 1,
+                                        'CreateBy' => $receive_by,
+                                        'CreateDate' => $createdate,
+                                        'IsAppove' => 1
+                                    );
+                                    $this->db->insert('acc_transaction', $opening_balance_credit);
+                                }
                             }
                         }
                     }
@@ -374,7 +465,8 @@ class Suppliers extends CI_Model {
             $newformat2 = date('m-d-Y', $time2);
             $this->db->where('date <=', $newformat2);
         }
-        $this->db->where(array('supplier_id' => $supplier_id, 'invoice_no' => NULL, 'status' => 1));
+        $this->db->where('deposit_no IS NOT NULL');
+        $this->db->where(array('supplier_id' => $supplier_id, 'status' => 1));
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
@@ -390,32 +482,32 @@ class Suppliers extends CI_Model {
         $this->db->where(array('supplier_id' => $supplier_id, 'deposit_no' => NULL, 'status' => 1));
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('m-d-Y', $time1);
-            $this->db->where('date >=', $newformat1);
+            $newformat1 = date('Y-m-d', $time1);
+            $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')>=DATE('" . $newformat1. "')");
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('m-d-Y', $time2);
-            $this->db->where('date <=', $newformat2);
+            $newformat2 = date('Y-m-d', $time2);
+            $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')");
         }
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $result[] = $query->result_array();
         }
-
         $this->db->select_sum('amount', 'total_debit');
         $this->db->from('supplier_ledger');
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
-            $newformat1 = date('m-d-Y', $time1);
+            $newformat1 = date('Y-m-d', $time1);
             $this->db->where('date >=', $newformat1);
         }
         if (!empty($to_date)) {
             $time2 = strtotime($to_date);
-            $newformat2 = date('m-d-Y', $time2);
+            $newformat2 = date('Y-m-d', $time2);
             $this->db->where('date <=', $newformat2);
         }
-        $this->db->where(array('supplier_id' => $supplier_id, 'invoice_no' => NULL, 'status' => 1));
+        $this->db->where('deposit_no IS NOT NULL');
+        $this->db->where(array('supplier_id' => $supplier_id, 'status' => 1));
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {

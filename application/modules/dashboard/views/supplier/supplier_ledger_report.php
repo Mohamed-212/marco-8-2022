@@ -219,8 +219,7 @@
                                                 <td class="text-right">
                                             <?php echo (($position == 0) ? $currency . " " . $supplier_openning_info->Credit : $supplier_openning_info->Credit . " " . $currency) ?>
                                                 </td>
-                                                <td class="text-right"></td>
-                                                <td></td>
+                                                <td class="text-right"><?=$supplier_openning_info->Debit-$supplier_openning_info->Credit?></td>
                                                 <td><?php echo html_escape($supplier_openning_info->Narration) ?></td>
                                             </tr>
                                             <?php
