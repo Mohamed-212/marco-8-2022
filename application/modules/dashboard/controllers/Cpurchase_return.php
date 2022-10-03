@@ -387,6 +387,21 @@ class Cpurchase_return extends MX_Controller {
                         $total_price_with_vat = $grand_total;
                         $discount_value = $total_discount;
                         $total_price_before_discount = $total_without_discount;
+                        // add to supplier ledger
+                        $data = array(
+                            'transaction_id' =>  $this->auth->generator(15),
+                            'supplier_id'   =>  $supplier_id,
+                            'invoice_no'    =>  NULL,
+                            'deposit_no'    =>  null,
+                            'amount'        =>  $total_price_with_vat,
+                            'description'   =>  $this->input->post('return_details', true),
+                            'payment_type'  =>  1,
+                            'date'          =>  date('Y-m-d'),
+                            'status'        =>  1,
+                            'sl_created_at' => date('Y-m-d H:i:s')
+
+                        );
+                        $this->db->insert('supplier_ledger', $data);
                         //1st, debit supplier with total price with vat
                         $supplierDebit = array(
                             'fy_id' => $find_active_fiscal_year->id,
