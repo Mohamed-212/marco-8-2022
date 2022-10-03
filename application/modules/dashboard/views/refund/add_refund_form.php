@@ -1,8 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Customer js php -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer_add_refund.js.php"></script>
 <!-- Product invoice js -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
+<!-- <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script> -->
 <!-- Invoice js -->
 
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_refund_form.js'; ?>"></script>
@@ -30,27 +30,27 @@
         <?php
         $message = $this->session->userdata('message');
         if (isset($message)) {
-            ?>
+        ?>
             <div class="alert alert-info alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <?php echo $message ?>
             </div>
-            <?php
+        <?php
             $this->session->unset_userdata('message');
         }
         $error_message = $this->session->userdata('error_message');
         if (isset($error_message)) {
-            ?>
+        ?>
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <?php echo $error_message ?>
             </div>
-            <?php
+        <?php
             $this->session->unset_userdata('error_message');
         }
         ?>
 
-       
+
         <!--Add return -->
         <form action="<?= base_url() ?>dashboard/Crefund/new_return" method="get">
 
@@ -65,15 +65,27 @@
                         <div class="panel-body">
 
                             <div class="row">
+                                <div class="col-sm-6" id="payment_from_1">
+                                    <div class="form-group row">
+                                        <label for="customer_name" class="col-sm-4 col-form-label"><?php echo display('customer_name') ?> <i class="text-danger">*</i></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" size="100" value="<?php echo html_escape($customer['customer_name']); ?>" name="customer_name" required class="customerSelection form-control" placeholder='<?php echo display('customer_name_or_phone'); ?>' id="customer_name" autocomplete="off" />
+                                            <input id="SchoolHiddenId" value="<?php echo html_escape($customer['customer_id']) ?>" class="customer_hidden_value" type="hidden" name="customer_id" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><?php echo display('invoice_no') ?>:</label>
                                         <div class="col-sm-8">
-                                            <input type="text" class="form-control" name="invoice_no" id="invoice_no"
-                                                value="<?php echo set_value('invoice_no', @$_GET['invoice_no']) ?>"
-                                                placeholder='<?php echo display('invoice_no') ?>' >
-                                            <input type="hidden" class="form-control" name="invoice_id" id="invoice_id"
-                                                value="">
+                                            <!-- <input type="text" class="form-control" name="invoice_no" id="invoice_no" value="<?php echo set_value('invoice_no', @$_GET['invoice_no']) ?>" placeholder='<?php echo display('invoice_no') ?>'>
+                                            <input type="hidden" class="form-control" name="invoice_id" id="invoice_id" value=""> -->
+                                            <select class="form-control" name="invoice_no" id="invoice_no">
+                                                <option value=""></option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -84,58 +96,92 @@
                                         <label for="payment_id" class="col-sm-4 col-form-label"><?php echo display('bank_list') ?>
                                             <i class="text-danger">*</i></label>
                                         <div class="col-sm-8">
-                                             <select class="form-control" name="payment_id" id="payment_id">
-                                                                <option value=""></option>
-                                                                <?php
-                                                                if ($payment_info) {
-                                                                    foreach ($payment_info as $payment_method) {
-                                                                ?>
-                                                                        <option value="<?php echo html_escape($payment_method->HeadCode); ?>">
-                                                                            <?php echo html_escape($payment_method->HeadName); ?>
-                                                                        </option>
-                                                                <?php
-                                                                    }
-                                                                }
-                                                                ?>
+                                            <select class="form-control" name="payment_id" id="payment_id">
+                                                <option value=""></option>
+                                                <?php
+                                                if ($payment_info) {
+                                                    foreach ($payment_info as $payment_method) {
+                                                ?>
+                                                        <option value="<?php echo html_escape($payment_method->HeadCode); ?>">
+                                                            <?php echo html_escape($payment_method->HeadName); ?>
+                                                        </option>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="table-responsive mt_10">
-                            <table class="table table-bordered table-hover" id="normalinvoice">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('size') ?> <i class="text-danger">*</i></th>
-                                       
-                                        <th class="text-center"><?php echo display('status') ?></th>
-                                      
-                                        <th class="text-center"><?php echo display('available_quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody id="addinvoiceItem">
-                                  
-                                </tbody>
-                                <tfoot>
+                                <table class="table table-bordered table-hover" id="normalinvoice">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
+                                            <th class="text-center" width="130"><?php echo display('size') ?> <i class="text-danger">*</i></th>
 
-                                   
-                                   
+                                            <th class="text-center"><?php echo display('status') ?></th>
 
-                                </tfoot>
-                            </table>
+                                            <th class="text-center"><?php echo display('available_quantity') ?> <i class="text-danger">*</i></th>
+                                            <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="addinvoiceItem">
+
+                                    </tbody>
+                                    <tfoot>
+
+
+
+
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- view -->
+
+                            <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form_2.js'; ?>"></script>
+                            <div style="text-align: center;">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
                         </div>
-                <!-- view -->
-                
-                <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form_2.js'; ?>"></script>
-                <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
-            
+
         </form>
     </section>
 </div>
 <!-- Invoice Report End -->
+<script>
+    $(document).ready(function() {
+        // $(document).on('change', '#SchoolHiddenId', function() {
+        //     var val = $(this).val();
+        //     alert(val);
+        //     if (!val) {
+        //         return;
+        //     }
+
+        //     var csrf_test_name = $('#CSRF_TOKEN').val();
+        //     // var opts = "";
+        //     // $.ajax({
+        //     //     url: base_url + 'dashboard/Crefund/get_invoice_by_customer',
+        //     //     method: 'post',
+        //     //     dataType: 'json',
+        //     //     data: {
+        //     //         customer_id: val,
+        //     //         csrf_test_name: csrf_test_name,
+        //     //     },
+        //     //     success: function(data) {
+        //     //         for (i = 0; i < data.length; i++) {
+        //     //             console.log(data[i]['product_name']);
+        //     //             opts +=
+        //     //                 "<option value='" +
+        //     //                 data[i]['product_id'] +
+        //     //                 "'>" +
+        //     //                 data[i]['product_name'] +
+        //     //                 '</option>';
+        //     //         }
+        //     //     },
+        //     // });
+        // });
+    });
+</script>

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 var productArr={};
 	$("#invoice_no").on('change', function(){
-		var invoice_no = $("#invoice_no").val();
+		var invoice_no = $(this).val();
 		var csrf_test_name = $("#CSRF_TOKEN").val();
 	    $.ajax({
         url: base_url + "dashboard/Crefund/get_invoice_products",
@@ -9,11 +9,12 @@ var productArr={};
         dataType: "json",
         data: {
             invoice_no: invoice_no,
+            invoice_id: invoice_no,
             csrf_test_name: csrf_test_name
         },
         success: function (data) {
           $('#normalinvoice').find('tbody').empty()
-          $("#invoice_id").val(data[0]['invoice_id']);
+          // $("#invoice_id").val(data[0]['invoice_id']);
           for (i = 0; i < data.length; i++) {
             $('#normalinvoice').find('tbody').append("<tr>")
             $('#normalinvoice').find('tbody').append("<td><input class='form-control' id='product_name_"+i+"' value='"+data[i]['product_name']+"' name='product_name[]' readonly=''></td>");

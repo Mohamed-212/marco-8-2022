@@ -113,6 +113,10 @@ class Crefund extends MX_Controller {
         
         $result = $this->db->query($sql);
         $invoice_id=$result->result_array()[0]['invoice_id'];
+
+        if (!empty($this->input->post('invoice_id', TRUE))) {
+            $invoice_id = $this->input->post('invoice_id', TRUE);
+        }
        
         $sql="select v.variant_name,b.*,I.variant_id,I.invoice_id,(I.quantity - I.return_quantity) as quantity from invoice_details I join variant v on v.variant_id=I.variant_id join product_information b on b.product_id = I.product_id where quantity > 0 and I.invoice_id='".$invoice_id."';";
         $sql14 = $this->db->query($sql);
@@ -537,5 +541,16 @@ class Crefund extends MX_Controller {
 
     }
 
+    public function get_invoice_by_customer()
+    {
+        $customer_id  = $this->input->post('customer_id', TRUE);
+
+        $result = $this->Invoices->get_invoice_list(['customer_id' => $customer_id], 0, 1000);
+
+        // var_dump($result);exit;
+
+        // header('content-type: application/json');
+        echo json_encode($result);
+    }
   
 }
