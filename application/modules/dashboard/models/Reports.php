@@ -445,7 +445,8 @@ class Reports extends CI_Model
                            h.store_name,
                            h.store_id
                             ");
-        $wh = "date_format( str_to_date( b.date_time, '%m-%d-%Y') , '%m-%d-%Y' ) Between '" . date("m-d-Y", strtotime($from_date)) . "' AND'" . date("m-d-Y", strtotime($to_date)) . "'";
+        // $wh = "date_format( str_to_date( b.date_time, '%m-%d-%Y') , '%m-%d-%Y' ) Between '" . date("m-d-Y", strtotime($from_date)) . "' AND'" . date("m-d-Y", strtotime($to_date)) . "'";
+        $wh = "date_format( str_to_date( b.date_time, '%Y-%m-%d' ) , '%Y-%m-%d' ) Between DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
         $this->db->from('transfer b');
         $this->db->join('product_information a', 'a.product_id = b.product_id', 'left');
         $this->db->join('product_purchase e', 'b.store_id = e.store_id', 'left');
@@ -499,7 +500,8 @@ class Reports extends CI_Model
                            ga.variant_name as variant_color_name,
                            h.store_name,
                            h.store_id");
-        $wh = "date_format( str_to_date( e.created_at, '%Y-%m-%d') , '%Y-%m-%d' ) Between '" . $from_date . "' AND'" . $to_date . "'";
+        // $wh = "date_format( str_to_date( e.created_at, '%Y-%m-%d') , '%Y-%m-%d' ) Between '" . $from_date . "' AND'" . $to_date . "'";
+        $wh = "date_format( str_to_date( e.created_at, '%Y-%m-%d' ) , '%Y-%m-%d' ) Between DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
         $this->db->from('product_information a');
         $this->db->join('purchase_stock_tbl b', 'b.product_id = a.product_id', 'left');
         $this->db->join('product_purchase e', 'b.store_id = e.store_id', 'left');
@@ -592,7 +594,7 @@ class Reports extends CI_Model
 			h.store_name,
 			h.store_id,
 			");
-        $wh = "date_format( str_to_date( date_time, '%m-%d-%Y' ) , '%Y-%m-%d' ) Between '" . $from_date . "' AND'" . $to_date . "'";
+        $wh = "date_format( str_to_date( date_time, '%Y-%m-%d' ) , '%Y-%m-%d' ) Between DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
         $this->db->from('product_information a');
         $this->db->join('transfer b', 'b.product_id = a.product_id', 'left');
         $this->db->join('product_category c', 'c.category_id = a.category_id');

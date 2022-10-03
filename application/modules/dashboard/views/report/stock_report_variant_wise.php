@@ -69,8 +69,8 @@
 
         <?php
         date_default_timezone_set(DEF_TIMEZONE);
-        $today = date('Y-m-d');
-        $this_month = date('Y-m-01');
+        $today = date('d-m-Y');
+        $this_month = date('01-m-Y');
         ?>
 
         <!-- Stock report supplier wise -->
@@ -127,7 +127,7 @@
                             <label for="from_date"
                                 class="col-sm-2 col-form-label"><?php echo display('start_date') ?>:</label>
                             <div class="col-sm-4">
-                                <input type="text" name="from_date" class="form-control datepicker1" id="from_date"
+                                <input type="text" name="from_date" class="form-control datepicker2" id="from_date"
                                     value="<?php echo $getID = $this->input->get('from_date', TRUE) ? $this->input->get('from_date', TRUE) : $this_month; ?>"
                                     placeholder="<?php echo
                                                                                                                                                                                                                                                             display('start_date') ?>">
@@ -138,7 +138,7 @@
                             <label for="to_date"
                                 class="col-sm-2 col-form-label"><?php echo display('end_date') ?>:</label>
                             <div class="col-sm-4">
-                                <input type="text" name="to_date" class="form-control datepicker1" id="to_date"
+                                <input type="text" name="to_date" class="form-control datepicker2" id="to_date"
                                     value="<?php echo $getID = $this->input->get('to_date', TRUE) ? $this->input->get('to_date', TRUE) : $today; ?>"
                                     placeholder="<?php echo display('end_date') ?>">
                             </div>
@@ -177,7 +177,7 @@
                                 <h4><?php echo display('address') ?> : {address} </h4>
                                 <h4><?php echo display('mobile') ?> : {mobile} </h4>
                                 {/company_info}
-                                <h4> <?php echo display('print_date') ?>: <?php echo date("m/d/Y h:i:s"); ?> </h4>
+                                <h4> <?php echo display('print_date') ?>: <?php echo date("d/m/Y h:i:s"); ?> </h4>
                                 <h4 class="uppercase"><b><?php echo ucfirst(@$stok_report[0]['store_name']) ?></b></h4>
                             </div>
                             <?php
@@ -254,3 +254,10 @@
 </div>
 <!-- Stock List Supplier Wise End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/stock_report_variant_wise.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

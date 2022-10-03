@@ -222,6 +222,7 @@ class Creport extends MX_Controller
         $config["base_url"] = base_url('dashboard/Creport/stock_report_store_wise/');
         $config["reuse_query_string"] = true;
         $config["total_rows"] = $this->Reports->stock_report_variant_bydate_count($from_date, $to_date, $store_id, $product_id);
+        // echo "<pre>";var_dump($config);exit;
         $config["per_page"] = 20;
         $config["uri_segment"] = 4;
         $config["num_links"] = 5;

@@ -314,9 +314,9 @@ class Lreport
 
 
         if (empty($store_id)) {
-            $from_date = date('m-01-Y');
+            $from_date = date('d-m-Y');
 
-            $to_date = date('m-d-Y');
+            $to_date = date('d-m-Y');
             $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
             $store_id = $result->store_id;
         }
