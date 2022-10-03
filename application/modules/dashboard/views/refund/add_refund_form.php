@@ -81,8 +81,8 @@
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label"><?php echo display('invoice_no') ?>:</label>
                                         <div class="col-sm-8">
-                                            <!-- <input type="text" class="form-control" name="invoice_no" id="invoice_no" value="<?php echo set_value('invoice_no', @$_GET['invoice_no']) ?>" placeholder='<?php echo display('invoice_no') ?>'>
-                                            <input type="hidden" class="form-control" name="invoice_id" id="invoice_id" value=""> -->
+                                            <!-- <input type="text" class="form-control" name="invoice_no" id="invoice_no" value="<?php echo set_value('invoice_no', @$_GET['invoice_no']) ?>" placeholder='<?php echo display('invoice_no') ?>'> -->
+                                            <input type="hidden" class="form-control" name="invoice_id" id="invoice_id" value="">
                                             <select class="form-control" name="invoice_no" id="invoice_no">
                                                 <option value=""></option>
                                             </select>
@@ -153,35 +153,41 @@
 <!-- Invoice Report End -->
 <script>
     $(document).ready(function() {
-        // $(document).on('change', '#SchoolHiddenId', function() {
-        //     var val = $(this).val();
-        //     alert(val);
-        //     if (!val) {
-        //         return;
-        //     }
+        $(document).on('change', '#invoice_no', function() {
+            var val = $(this).val();
+            
+            // alert(val);
+            $('option#invid').each(function(inx, el) {
+                if ($(this).val() == val) {
+                    $('#invoice_id').val($(this).attr('data-invoice-id'));
+                }
+            });
+            // if (!val) {
+            //     return;
+            // }
 
-        //     var csrf_test_name = $('#CSRF_TOKEN').val();
-        //     // var opts = "";
-        //     // $.ajax({
-        //     //     url: base_url + 'dashboard/Crefund/get_invoice_by_customer',
-        //     //     method: 'post',
-        //     //     dataType: 'json',
-        //     //     data: {
-        //     //         customer_id: val,
-        //     //         csrf_test_name: csrf_test_name,
-        //     //     },
-        //     //     success: function(data) {
-        //     //         for (i = 0; i < data.length; i++) {
-        //     //             console.log(data[i]['product_name']);
-        //     //             opts +=
-        //     //                 "<option value='" +
-        //     //                 data[i]['product_id'] +
-        //     //                 "'>" +
-        //     //                 data[i]['product_name'] +
-        //     //                 '</option>';
-        //     //         }
-        //     //     },
-        //     // });
-        // });
+            // var csrf_test_name = $('#CSRF_TOKEN').val();
+            // // var opts = "";
+            // // $.ajax({
+            // //     url: base_url + 'dashboard/Crefund/get_invoice_by_customer',
+            // //     method: 'post',
+            // //     dataType: 'json',
+            // //     data: {
+            // //         customer_id: val,
+            // //         csrf_test_name: csrf_test_name,
+            // //     },
+            // //     success: function(data) {
+            // //         for (i = 0; i < data.length; i++) {
+            // //             console.log(data[i]['product_name']);
+            // //             opts +=
+            // //                 "<option value='" +
+            // //                 data[i]['product_id'] +
+            // //                 "'>" +
+            // //                 data[i]['product_name'] +
+            // //                 '</option>';
+            // //         }
+            // //     },
+            // // });
+        });
     });
 </script>

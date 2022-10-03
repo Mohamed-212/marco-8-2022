@@ -9,7 +9,7 @@ var productArr={};
         dataType: "json",
         data: {
             invoice_no: invoice_no,
-            invoice_id: invoice_no,
+            // invoice_id: invoice_no,
             csrf_test_name: csrf_test_name
         },
         success: function (data) {

@@ -35,7 +35,7 @@ $(function() {
                 success: function(data) {
                     var obj = JSON.parse(data);
                     for (var i = 0;i < obj.length; i++) {
-                        opts += '<option value="' + obj[i].invoice_id + '">' + obj[i].invoice + '</option>';
+                        opts += '<option id="invid" data-invoice-id="' + obj[i].invoice_id + '" value="' + obj[i].invoice.replace('Inv-', '') + '">' + obj[i].invoice.replace('Inv-', '') + '</option>';
                     }
                     $('#invoice_no').html(opts);
                     $('#invoice_no').trigger('change');
