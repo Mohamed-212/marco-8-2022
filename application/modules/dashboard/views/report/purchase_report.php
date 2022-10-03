@@ -34,7 +34,7 @@
 		            <div class="panel-body"> 
 		                <?php echo form_open('dashboard/Admin_dashboard/retrieve_dateWise_PurchaseReports',array('class' => 'form-inline'))?>
 		                <?php 
-							date_default_timezone_set(DEF_TIMEZONE); $today = date('Y-m-d'); 
+							date_default_timezone_set(DEF_TIMEZONE); $today = date('d-m-Y'); 
 						?>
 		                    <div class="form-group">
 		                        <label class="" for="from_date"><?php echo display('start_date') ?></label>

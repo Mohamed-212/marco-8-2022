@@ -94,7 +94,7 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <?php $date = date('m-d-Y'); ?>
+                                        <?php $date = date('d-m-Y'); ?>
                                         <input type="text" tabindex="3" class="form-control datepicker2"
                                                name="purchase_date" value="<?php echo $date; ?>" id="date" required />
                                     </div>

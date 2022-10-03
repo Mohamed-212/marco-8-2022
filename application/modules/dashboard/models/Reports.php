@@ -939,11 +939,12 @@ class Reports extends CI_Model
     //Retrieve todays_purchase_report
     public function todays_purchase_report($per_page = null, $page = null)
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
         $this->db->select("a.*,b.supplier_id,b.supplier_name");
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
-        $this->db->where('a.purchase_date', $today);
+        // $this->db->where('a.purchase_date', $today);
+        $this->db->where('DATE(a.created_at) = DATE("'.$today.'")', null, false);
         $this->db->order_by('a.purchase_id', 'desc');
         $this->db->limit($per_page, $page);
         $query = $this->db->get();
@@ -953,11 +954,12 @@ class Reports extends CI_Model
     //Retrieve todays_purchase_report count
     public function todays_purchase_report_count()
     {
-        $today = date('m-d-Y');
+        $today = date('Y-m-d');
         $this->db->select("a.*,b.supplier_id,b.supplier_name");
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
-        $this->db->where('a.purchase_date', $today);
+        // $this->db->where('a.purchase_date', $today);
+        $this->db->where('DATE(a.created_at) = DATE("'.$today.'")', null, false);
         $this->db->order_by('a.purchase_id', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
