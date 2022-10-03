@@ -345,6 +345,7 @@ class Lorder {
         $CI->load->model('dashboard/Orders');
 		
 		$order_detail = $CI->Orders->retrieve_order_html_data($order_id);
+        // echo "<pre>";var_dump($order_detail);exit;
 		$order_no=($CI->db->select('order')->from('order')->where('order_id',$order_detail[0]['order_id'])->get()->row())->order;
 		$quotation_no = $CI->db->select('q.quotation as quotation_no')->from('invoice a')->where('a.quotation_id',$order_detail[0]['quotation_id'])->join('quotation q','q.quotation_id = a.quotation_id','left')->get()->result();
 
@@ -422,6 +423,8 @@ class Lorder {
 			'shipping_method'  =>@$shipping_method[0]['method_name'],
 			'paid_amount'	   =>$order_detail[0]['paid_amount'],
 			'due_amount'	   =>$order_detail[0]['due_amount'],
+            'product_type'	   =>$order_detail[0]['product_type'],
+            'order_detail_all' => $order_detail[0],
 			'invoice_details'  =>$order_detail[0]['details'],
 			'subTotal_quantity'=>$subTotal_quantity,
 			'invoice_all_data' =>$all_details,
@@ -570,6 +573,7 @@ class Lorder {
             'service_charge' 	  =>$order_detail[0]['service_charge'],
             'paid_amount'		  =>$order_detail[0]['paid_amount'],
             'due_amount'		  =>$order_detail[0]['due_amount'],
+            'product_type'	      =>$order_detail[0]['product_type'],
             'details'			  =>$order_detail[0]['details'],
             'subTotal_quantity'	  =>$subTotal_quantity,
             'order_all_data' 	  =>$order_detail,

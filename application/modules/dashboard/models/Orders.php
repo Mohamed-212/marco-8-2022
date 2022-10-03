@@ -655,7 +655,7 @@ class Orders extends CI_Model
     // create new order
     public function order_entry($order_id = null, $orderNo = null)
     {
-        if (check_module_status('accounting') == 1) {
+        // if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
                 $invoice_id = $order_id ? $order_id : generator(15);
@@ -665,6 +665,7 @@ class Orders extends CI_Model
                 $product_id = $this->input->post('product_id', TRUE);
                 $pricing_type = $this->input->post('pri_type', TRUE);
                 $payment_id = $this->input->post('payment_id', TRUE);
+                $product_type = $this->input->post('product_type', TRUE);
 
                 //Stock availability check
                 $result = array();
@@ -795,7 +796,7 @@ class Orders extends CI_Model
                     // 'created_at' => date("Y-m-d H:i:s"),
                     'pricing_type' => $pricing_type,
                     'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
-
+                    'product_type' => $product_type
                 );
                 $this->db->insert('order', $data);
 
@@ -1472,522 +1473,523 @@ class Orders extends CI_Model
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
             }
-        } else {
-            //Invoice entry info
-            $invoice_id = $order_id ? $order_id : generator(15);
-            $quantity = $this->input->post('product_quantity', TRUE);
-            $available_quantity = $this->input->post('available_quantity', TRUE);
-            $product_id = $this->input->post('product_id', TRUE);
-            $pricing_type = $this->input->post('pri_type', TRUE);
-            $payment_id = $this->input->post('payment_id', TRUE);
+        // }
+        //  else {
+        //     //Invoice entry info
+        //     $invoice_id = $order_id ? $order_id : generator(15);
+        //     $quantity = $this->input->post('product_quantity', TRUE);
+        //     $available_quantity = $this->input->post('available_quantity', TRUE);
+        //     $product_id = $this->input->post('product_id', TRUE);
+        //     $pricing_type = $this->input->post('pri_type', TRUE);
+        //     $payment_id = $this->input->post('payment_id', TRUE);
 
-            //Stock availability check
-            $result = array();
-            foreach ($available_quantity as $k => $v) {
-                if ($v < $quantity[$k]) {
-                    $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
-                    redirect('dashboard/Corder');
-                }
-            }
+        //     //Stock availability check
+        //     $result = array();
+        //     foreach ($available_quantity as $k => $v) {
+        //         if ($v < $quantity[$k]) {
+        //             $this->session->set_userdata(array('error_message' => display('you_can_not_buy_greater_than_available_cartoon')));
+        //             redirect('dashboard/Corder');
+        //         }
+        //     }
 
-            //Product existing check
-            if ($product_id == null) {
-                $this->session->set_userdata(array('error_message' => display('please_select_product')));
-                redirect('dashboard/Corder');
-            }
+        //     //Product existing check
+        //     if ($product_id == null) {
+        //         $this->session->set_userdata(array('error_message' => display('please_select_product')));
+        //         redirect('dashboard/Corder');
+        //     }
 
-            //payment account existing check
-            // if ($payment_id == null && $order_id) {
-            //     $this->session->set_userdata(array('error_message' => display('please_select_payment')));
-            //     redirect('dashboard/Corder/create_invoice_form/' . $order_id);
-            // }
+        //     //payment account existing check
+        //     // if ($payment_id == null && $order_id) {
+        //     //     $this->session->set_userdata(array('error_message' => display('please_select_payment')));
+        //     //     redirect('dashboard/Corder/create_invoice_form/' . $order_id);
+        //     // }
 
-            //Customer existing check
-            if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
-                $this->session->set_userdata(array('error_message' => display('please_select_customer')));
-                redirect(base_url() . 'dashboard/Corder');
-            }
+        //     //Customer existing check
+        //     if (($this->input->post('customer_name_others', TRUE) == null) && ($this->input->post('customer_id', TRUE) == null)) {
+        //         $this->session->set_userdata(array('error_message' => display('please_select_customer')));
+        //         redirect(base_url() . 'dashboard/Corder');
+        //     }
 
-            //Customer data Existence Check.
-            if ($this->input->post('customer_id', TRUE)) {
-                $customer_id = $this->input->post('customer_id', TRUE);
-            }
-            // else {
-            //     $customer_id = generator(15);
-            //     //Customer  basic information adding.
-            //     $data = array(
-            //         'customer_id' => $customer_id,
-            //         'customer_name' => $this->input->post('customer_name_others', TRUE),
-            //         'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
-            //         'customer_mobile' => $this->input->post('customer_mobile_no', TRUE),
-            //         'customer_email' => "NONE",
-            //         'status' => 1
-            //     );
-            //     $this->Customers->customer_entry($data);
-            //     //Previous balance adding -> Sending to customer model to adjust the data.
-            //     $this->Customers->previous_balance_add(0, $customer_id);
-            // }
+        //     //Customer data Existence Check.
+        //     if ($this->input->post('customer_id', TRUE)) {
+        //         $customer_id = $this->input->post('customer_id', TRUE);
+        //     }
+        //     // else {
+        //     //     $customer_id = generator(15);
+        //     //     //Customer  basic information adding.
+        //     //     $data = array(
+        //     //         'customer_id' => $customer_id,
+        //     //         'customer_name' => $this->input->post('customer_name_others', TRUE),
+        //     //         'customer_address_1' => $this->input->post('customer_name_others_address', TRUE),
+        //     //         'customer_mobile' => $this->input->post('customer_mobile_no', TRUE),
+        //     //         'customer_email' => "NONE",
+        //     //         'status' => 1
+        //     //     );
+        //     //     $this->Customers->customer_entry($data);
+        //     //     //Previous balance adding -> Sending to customer model to adjust the data.
+        //     //     $this->Customers->previous_balance_add(0, $customer_id);
+        //     // }
 
-            // create customer head start
-            // if (check_module_status('accounting') == 1) {
-            //     $this->load->model('accounting/account_model');
-            //     $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
-            //     if (!empty($check_customer)) {
-            //         $customer_data = $data = array(
-            //             'customer_id' => $customer_id,
-            //             'customer_name' => $check_customer->customer_name,
-            //         );
-            //     } else {
-            //         $customer_data = $data = array(
-            //             'customer_id' => $customer_id,
-            //             'customer_name' => $this->input->post('customer_id', TRUE)
-            //         );
-            //     }
-            //     $this->account_model->insert_customer_head($customer_data);
-            // }
-            // create customer head END
-            //Full or partial Payment record.
-            // if ($this->input->post('paid_amount', TRUE) > 0) {
-            //Insert to customer_ledger Table 
-            // $data2 = array(
-            //     'transaction_id' => generator(15),
-            //     'customer_id' => $customer_id,
-            //     'invoice_no' => $invoice_id,
-            //     'receipt_no' => $this->auth->generator(15),
-            //     'date' => $this->input->post('invoice_date', TRUE),
-            //     'amount' => $this->input->post('paid_amount', TRUE),
-            //     'payment_type' => 1,
-            //     'description' => 'ITP',
-            //     'status' => 1
-            // );
-            // $this->db->insert('order_customer_ledger', $data2);
-            // }
+        //     // create customer head start
+        //     // if (check_module_status('accounting') == 1) {
+        //     //     $this->load->model('accounting/account_model');
+        //     //     $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+        //     //     if (!empty($check_customer)) {
+        //     //         $customer_data = $data = array(
+        //     //             'customer_id' => $customer_id,
+        //     //             'customer_name' => $check_customer->customer_name,
+        //     //         );
+        //     //     } else {
+        //     //         $customer_data = $data = array(
+        //     //             'customer_id' => $customer_id,
+        //     //             'customer_name' => $this->input->post('customer_id', TRUE)
+        //     //         );
+        //     //     }
+        //     //     $this->account_model->insert_customer_head($customer_data);
+        //     // }
+        //     // create customer head END
+        //     //Full or partial Payment record.
+        //     // if ($this->input->post('paid_amount', TRUE) > 0) {
+        //     //Insert to customer_ledger Table 
+        //     // $data2 = array(
+        //     //     'transaction_id' => generator(15),
+        //     //     'customer_id' => $customer_id,
+        //     //     'invoice_no' => $invoice_id,
+        //     //     'receipt_no' => $this->auth->generator(15),
+        //     //     'date' => $this->input->post('invoice_date', TRUE),
+        //     //     'amount' => $this->input->post('paid_amount', TRUE),
+        //     //     'payment_type' => 1,
+        //     //     'description' => 'ITP',
+        //     //     'status' => 1
+        //     // );
+        //     // $this->db->insert('order_customer_ledger', $data2);
+        //     // }
 
-            //Insert to customer ledger Table 
-            // $data2 = array(
-            //     'transaction_id' => generator(15),
-            //     'customer_id' => $customer_id,
-            //     'invoice_no' => $invoice_id,
-            //     'date' => $this->input->post('invoice_date', TRUE),
-            //     'amount' => $this->input->post('grand_total_price', TRUE),
-            //     'status' => 1
-            // );
-            // $this->db->insert('order_customer_ledger', $data2);
+        //     //Insert to customer ledger Table 
+        //     // $data2 = array(
+        //     //     'transaction_id' => generator(15),
+        //     //     'customer_id' => $customer_id,
+        //     //     'invoice_no' => $invoice_id,
+        //     //     'date' => $this->input->post('invoice_date', TRUE),
+        //     //     'amount' => $this->input->post('grand_total_price', TRUE),
+        //     //     'status' => 1
+        //     // );
+        //     // $this->db->insert('order_customer_ledger', $data2);
 
-            //Data inserting into invoice table
-            (($this->input->post('total_cgst', true) && $this->input->post('is_quotation', true) == 0) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
-            (($this->input->post('total_sgst', true)) ? $total_sgsti = $this->input->post('total_sgst', true) : $total_sgsti = 0);
-            (($this->input->post('total_igst', true)) ? $total_igsti = $this->input->post('total_igst', true) : $total_igsti = 0);
-            $tota_vati = $total_cgsti + $total_sgsti + $total_igsti;
-            $installment_month_no = $this->input->post('month_no', true);
-            $data = array(
-                // 'order_id' => $invoice_id,
-                // 'customer_id' => $customer_id,
-                // 'date' => $this->input->post('invoice_date', TRUE),
-                // 'total_amount' => $this->input->post('grand_total_price', TRUE),
-                // 'order' => $orderNo,
-                // 'total_discount' => $this->input->post('total_discount', TRUE),
-                // 'product_discount' => $this->input->post('invoice_discount', TRUE),
-                // 'user_id' => $this->session->userdata('user_id'),
-                // 'store_id' => $this->input->post('store_id', TRUE),
-                // 'paid_amount' => $this->input->post('paid_amount', TRUE),
-                // 'due_amount' => $this->input->post('due_amount', TRUE),
-                // 'service_charge' => $this->input->post('service_charge', TRUE),
-                // 'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
-                // 'shipping_method' => $this->input->post('shipping_method', TRUE),
-                // 'details' => $this->input->post('invoice_details', TRUE),
-                // 'status' => 1,
-                // 'created_at' => date('Y-m-d h:i:s')
-                'order_id' => $invoice_id,
-                'customer_id' => $customer_id,
-                'date' => $this->input->post('invoice_date', TRUE),
-                'total_amount' => $this->input->post('grand_total_price', TRUE),
-                'order' => $orderNo,
-                'total_discount' => $this->input->post('total_discount', TRUE),
-                'total_vat' => $tota_vati,
-                'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
-                'employee_id' => $this->input->post('employee_id', true),
-                'is_installment' => $this->input->post('is_installment', true),
-                'month_no' => $installment_month_no,
-                'due_day' => $this->input->post('due_day', true),
-                'order_discount' => $this->input->post('invoice_discount', TRUE),
-                'percentage_discount' => $this->input->post('percentage_discount', TRUE),
-                'user_id' => $this->session->userdata('user_id'),
-                'store_id' => $this->input->post('store_id', TRUE),
-                'paid_amount' => $this->input->post('paid_amount', TRUE),
-                'due_amount' => $this->input->post('due_amount', TRUE),
-                'service_charge' => $this->input->post('service_charge', TRUE),
-                'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
-                'shipping_method' => $this->input->post('shipping_method', TRUE),
-                'details' => $this->input->post('invoice_details', TRUE),
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'pricing_type' => $pricing_type
-            );
-            $this->db->insert('order', $data);
+        //     //Data inserting into invoice table
+        //     (($this->input->post('total_cgst', true) && $this->input->post('is_quotation', true) == 0) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
+        //     (($this->input->post('total_sgst', true)) ? $total_sgsti = $this->input->post('total_sgst', true) : $total_sgsti = 0);
+        //     (($this->input->post('total_igst', true)) ? $total_igsti = $this->input->post('total_igst', true) : $total_igsti = 0);
+        //     $tota_vati = $total_cgsti + $total_sgsti + $total_igsti;
+        //     $installment_month_no = $this->input->post('month_no', true);
+        //     $data = array(
+        //         // 'order_id' => $invoice_id,
+        //         // 'customer_id' => $customer_id,
+        //         // 'date' => $this->input->post('invoice_date', TRUE),
+        //         // 'total_amount' => $this->input->post('grand_total_price', TRUE),
+        //         // 'order' => $orderNo,
+        //         // 'total_discount' => $this->input->post('total_discount', TRUE),
+        //         // 'product_discount' => $this->input->post('invoice_discount', TRUE),
+        //         // 'user_id' => $this->session->userdata('user_id'),
+        //         // 'store_id' => $this->input->post('store_id', TRUE),
+        //         // 'paid_amount' => $this->input->post('paid_amount', TRUE),
+        //         // 'due_amount' => $this->input->post('due_amount', TRUE),
+        //         // 'service_charge' => $this->input->post('service_charge', TRUE),
+        //         // 'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
+        //         // 'shipping_method' => $this->input->post('shipping_method', TRUE),
+        //         // 'details' => $this->input->post('invoice_details', TRUE),
+        //         // 'status' => 1,
+        //         // 'created_at' => date('Y-m-d h:i:s')
+        //         'order_id' => $invoice_id,
+        //         'customer_id' => $customer_id,
+        //         'date' => $this->input->post('invoice_date', TRUE),
+        //         'total_amount' => $this->input->post('grand_total_price', TRUE),
+        //         'order' => $orderNo,
+        //         'total_discount' => $this->input->post('total_discount', TRUE),
+        //         'total_vat' => $tota_vati,
+        //         'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
+        //         'employee_id' => $this->input->post('employee_id', true),
+        //         'is_installment' => $this->input->post('is_installment', true),
+        //         'month_no' => $installment_month_no,
+        //         'due_day' => $this->input->post('due_day', true),
+        //         'order_discount' => $this->input->post('invoice_discount', TRUE),
+        //         'percentage_discount' => $this->input->post('percentage_discount', TRUE),
+        //         'user_id' => $this->session->userdata('user_id'),
+        //         'store_id' => $this->input->post('store_id', TRUE),
+        //         'paid_amount' => $this->input->post('paid_amount', TRUE),
+        //         'due_amount' => $this->input->post('due_amount', TRUE),
+        //         'service_charge' => $this->input->post('service_charge', TRUE),
+        //         'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
+        //         'shipping_method' => $this->input->post('shipping_method', TRUE),
+        //         'details' => $this->input->post('invoice_details', TRUE),
+        //         'status' => 1,
+        //         'created_at' => date("Y-m-d H:i:s"),
+        //         'pricing_type' => $pricing_type
+        //     );
+        //     $this->db->insert('order', $data);
 
-            // insert installment
-            if ($this->input->post('is_installment', true) == 1) {
-                $installment_amount = $this->input->post('amount', TRUE);
-                $installment_due_date = $this->input->post('due_date', TRUE);
-                for ($i = 0; $i < $installment_month_no; $i++) {
-                    $installment_data = array(
-                        'invoice_id' => $invoice_id,
-                        'amount' => $installment_amount[$i],
-                        'due_date' => $installment_due_date[$i],
-                    );
-                    $this->db->insert('order_invoice_installment', $installment_data);
-                }
-            }
+        //     // insert installment
+        //     if ($this->input->post('is_installment', true) == 1) {
+        //         $installment_amount = $this->input->post('amount', TRUE);
+        //         $installment_due_date = $this->input->post('due_date', TRUE);
+        //         for ($i = 0; $i < $installment_month_no; $i++) {
+        //             $installment_data = array(
+        //                 'invoice_id' => $invoice_id,
+        //                 'amount' => $installment_amount[$i],
+        //                 'due_date' => $installment_due_date[$i],
+        //             );
+        //             $this->db->insert('order_invoice_installment', $installment_data);
+        //         }
+        //     }
 
 
-            //Insert payment method
-            $terminal = $this->input->post('terminal', TRUE);
-            $bank_id = $this->input->post('bank_id', TRUE);
-            $account_no = $this->input->post('account_no', TRUE);
-            $payment_amount = $this->input->post('grand_total_price', TRUE);
+        //     //Insert payment method
+        //     $terminal = $this->input->post('terminal', TRUE);
+        //     $bank_id = $this->input->post('bank_id', TRUE);
+        //     $account_no = $this->input->post('account_no', TRUE);
+        //     $payment_amount = $this->input->post('grand_total_price', TRUE);
 
-            // if (!empty($bank_id) && !empty($account_no)) {
-            //     $bank_paydata = array(
-            //         'bank_payment_id' => generator(15),
-            //         'terminal_id' => ($terminal ? $terminal : ''),
-            //         'bank_id' => $bank_id,
-            //         'account_no' => $account_no,
-            //         'amount' => $payment_amount,
-            //         'invoice_id' => $invoice_id,
-            //         'date' => $this->input->post('invoice_date', TRUE),
-            //     );
-            //     $this->db->insert('order_bank_payment', $bank_paydata);
-            // }
+        //     // if (!empty($bank_id) && !empty($account_no)) {
+        //     //     $bank_paydata = array(
+        //     //         'bank_payment_id' => generator(15),
+        //     //         'terminal_id' => ($terminal ? $terminal : ''),
+        //     //         'bank_id' => $bank_id,
+        //     //         'account_no' => $account_no,
+        //     //         'amount' => $payment_amount,
+        //     //         'invoice_id' => $invoice_id,
+        //     //         'date' => $this->input->post('invoice_date', TRUE),
+        //     //     );
+        //     //     $this->db->insert('order_bank_payment', $bank_paydata);
+        //     // }
 
-            //Invoice details info
-            $rate = $this->input->post('product_rate', TRUE);
-            $p_id = $this->input->post('product_id', TRUE);
-            $total_amount = $this->input->post('total_price', TRUE);
-            $discount = $this->input->post('discount', TRUE);
-            $variants = $this->input->post('variant_id', TRUE);
-            // $pricing = $this->input->post('pricing', TRUE);
-            $color_variants = $this->input->post('color_variant', TRUE);
-            $batch_no = $this->input->post('batch_no', TRUE);
-            $cogs_price = 0;
+        //     //Invoice details info
+        //     $rate = $this->input->post('product_rate', TRUE);
+        //     $p_id = $this->input->post('product_id', TRUE);
+        //     $total_amount = $this->input->post('total_price', TRUE);
+        //     $discount = $this->input->post('discount', TRUE);
+        //     $variants = $this->input->post('variant_id', TRUE);
+        //     // $pricing = $this->input->post('pricing', TRUE);
+        //     $color_variants = $this->input->post('color_variant', TRUE);
+        //     $batch_no = $this->input->post('batch_no', TRUE);
+        //     $cogs_price = 0;
 
-            //Invoice details for invoice
-            for ($i = 0, $n = count($quantity); $i < $n; $i++) {
-                $product_quantity = $quantity[$i];
-                $product_rate = $rate[$i];
-                $product_id = $p_id[$i];
-                $discount_rate = $discount[$i];
-                $total_price = $total_amount[$i];
-                //  $pricing_id = $pricing[$i];
-                $variant_id = $variants[$i];
-                $variant_color = $color_variants[$i];
-                $batch = $batch_no[$i];
-                $supplier_rate = $this->supplier_rate($product_id);
-                $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity);
+        //     //Invoice details for invoice
+        //     for ($i = 0, $n = count($quantity); $i < $n; $i++) {
+        //         $product_quantity = $quantity[$i];
+        //         $product_rate = $rate[$i];
+        //         $product_id = $p_id[$i];
+        //         $discount_rate = $discount[$i];
+        //         $total_price = $total_amount[$i];
+        //         //  $pricing_id = $pricing[$i];
+        //         $variant_id = $variants[$i];
+        //         $variant_color = $color_variants[$i];
+        //         $batch = $batch_no[$i];
+        //         $supplier_rate = $this->supplier_rate($product_id);
+        //         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity);
 
-                $invoice_details = array(
-                    'order_details_id' => generator(15),
-                    'order_id' => $invoice_id,
-                    'product_id' => $product_id,
-                    //  'pricing_id' => $pricing_id,
-                    'variant_id' => $variant_id,
-                    'variant_color' => $variant_color,
-                    'batch_no' => $batch,
-                    'store_id' => $this->input->post('store_id', TRUE),
-                    'quantity' => $product_quantity,
-                    'rate' => $product_rate,
-                    'supplier_rate' => $supplier_rate[0]['supplier_price'],
-                    'total_price' => $total_price,
-                    'discount' => $discount_rate,
-                    'status' => 1
-                );
+        //         $invoice_details = array(
+        //             'order_details_id' => generator(15),
+        //             'order_id' => $invoice_id,
+        //             'product_id' => $product_id,
+        //             //  'pricing_id' => $pricing_id,
+        //             'variant_id' => $variant_id,
+        //             'variant_color' => $variant_color,
+        //             'batch_no' => $batch,
+        //             'store_id' => $this->input->post('store_id', TRUE),
+        //             'quantity' => $product_quantity,
+        //             'rate' => $product_rate,
+        //             'supplier_rate' => $supplier_rate[0]['supplier_price'],
+        //             'total_price' => $total_price,
+        //             'discount' => $discount_rate,
+        //             'status' => 1
+        //         );
 
-                if (!empty($quantity)) {
-                    $this->db->select('*');
-                    $this->db->from('order_details');
-                    $this->db->where('order_id', $invoice_id);
-                    $this->db->where('product_id', $product_id);
-                    $this->db->where('variant_id', $variant_id);
-                    if (!empty($variant_color)) {
-                        $this->db->where('variant_color', $variant_color);
-                    }
-                    $query = $this->db->get();
-                    $result = $query->num_rows();
+        //         if (!empty($quantity)) {
+        //             $this->db->select('*');
+        //             $this->db->from('order_details');
+        //             $this->db->where('order_id', $invoice_id);
+        //             $this->db->where('product_id', $product_id);
+        //             $this->db->where('variant_id', $variant_id);
+        //             if (!empty($variant_color)) {
+        //                 $this->db->where('variant_color', $variant_color);
+        //             }
+        //             $query = $this->db->get();
+        //             $result = $query->num_rows();
 
-                    if ($result > 0) {
-                        $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
-                        $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
-                        $this->db->where('order_id', $invoice_id);
-                        $this->db->where('product_id', $product_id);
-                        $this->db->where('variant_id', $variant_id);
-                        if (!empty($variant_color)) {
-                            $this->db->where('variant_color', $variant_color);
-                        }
-                        $this->db->update('order_details');
-                    } else {
-                        $this->db->insert('order_details', $invoice_details);
-                    }
+        //             if ($result > 0) {
+        //                 $this->db->set('quantity', 'quantity+' . $product_quantity, FALSE);
+        //                 $this->db->set('total_price', 'total_price+' . $total_price, FALSE);
+        //                 $this->db->where('order_id', $invoice_id);
+        //                 $this->db->where('product_id', $product_id);
+        //                 $this->db->where('variant_id', $variant_id);
+        //                 if (!empty($variant_color)) {
+        //                     $this->db->where('variant_color', $variant_color);
+        //                 }
+        //                 $this->db->update('order_details');
+        //             } else {
+        //                 $this->db->insert('order_details', $invoice_details);
+        //             }
 
-                    // stock 
-                    $store_id = $this->input->post('store_id', TRUE);
-                    $check_stock = $this->check_stock($store_id, $product_id, $variant_id, $variant_color);
-                    if (empty($check_stock)) {
-                        // insert
-                        $stock = array(
-                            'store_id' => $store_id,
-                            'product_id' => $product_id,
-                            'variant_id' => $variant_id,
-                            'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                            'quantity' => $product_quantity,
-                            'warehouse_id' => '',
-                        );
-                        $this->db->insert('order_invoice_stock_tbl', $stock);
-                        // insert
-                    } else {
-                        //update
-                        $stock = array(
-                            'quantity' => $check_stock->quantity + $product_quantity
-                        );
-                        if (!empty($store_id)) {
-                            $this->db->where('store_id', $store_id);
-                        }
-                        if (!empty($product_id)) {
-                            $this->db->where('product_id', $product_id);
-                        }
-                        if (!empty($variant_id)) {
-                            $this->db->where('variant_id', $variant_id);
-                        }
-                        if (!empty($variant_color)) {
-                            $this->db->where('variant_color', $variant_color);
-                        }
-                        $this->db->update('order_invoice_stock_tbl', $stock);
-                        //update
-                    }
-                    // stock
-                }
-            }
+        //             // stock 
+        //             $store_id = $this->input->post('store_id', TRUE);
+        //             $check_stock = $this->check_stock($store_id, $product_id, $variant_id, $variant_color);
+        //             if (empty($check_stock)) {
+        //                 // insert
+        //                 $stock = array(
+        //                     'store_id' => $store_id,
+        //                     'product_id' => $product_id,
+        //                     'variant_id' => $variant_id,
+        //                     'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
+        //                     'quantity' => $product_quantity,
+        //                     'warehouse_id' => '',
+        //                 );
+        //                 $this->db->insert('order_invoice_stock_tbl', $stock);
+        //                 // insert
+        //             } else {
+        //                 //update
+        //                 $stock = array(
+        //                     'quantity' => $check_stock->quantity + $product_quantity
+        //                 );
+        //                 if (!empty($store_id)) {
+        //                     $this->db->where('store_id', $store_id);
+        //                 }
+        //                 if (!empty($product_id)) {
+        //                     $this->db->where('product_id', $product_id);
+        //                 }
+        //                 if (!empty($variant_id)) {
+        //                     $this->db->where('variant_id', $variant_id);
+        //                 }
+        //                 if (!empty($variant_color)) {
+        //                     $this->db->where('variant_color', $variant_color);
+        //                 }
+        //                 $this->db->update('order_invoice_stock_tbl', $stock);
+        //                 //update
+        //             }
+        //             // stock
+        //         }
+        //     }
 
-            //Tax information
-            $cgst = $this->input->post('cgst', TRUE);
-            $sgst = $this->input->post('sgst', TRUE);
-            $igst = $this->input->post('igst', TRUE);
-            $cgst_id = $this->input->post('cgst_id', TRUE);
-            $sgst_id = $this->input->post('sgst_id', TRUE);
-            $igst_id = $this->input->post('igst_id', TRUE);
+        //     //Tax information
+        //     $cgst = $this->input->post('cgst', TRUE);
+        //     $sgst = $this->input->post('sgst', TRUE);
+        //     $igst = $this->input->post('igst', TRUE);
+        //     $cgst_id = $this->input->post('cgst_id', TRUE);
+        //     $sgst_id = $this->input->post('sgst_id', TRUE);
+        //     $igst_id = $this->input->post('igst_id', TRUE);
 
-            //Tax collection summary for three start
-            //CGST tax info
-            if (!empty($cgst)) {
-                for ($i = 0, $n = count(@$cgst); $i < $n; $i++) {
-                    $cgst_tax = $cgst[$i];
-                    $cgst_tax_id = $cgst_id[$i];
-                    $cgst_summary = array(
-                        'order_tax_collection_id' => $this->auth->generator(15),
-                        'order_id' => $invoice_id,
-                        'tax_amount' => $cgst_tax,
-                        'tax_id' => $cgst_tax_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
-                    );
-                    if (!empty($cgst[$i])) {
-                        $result = $this->db->select('*')
-                            ->from('order_tax_col_summary')
-                            ->where('order_id', $invoice_id)
-                            ->where('tax_id', $cgst_tax_id)
-                            ->get()
-                            ->num_rows();
-                        if ($result > 0) {
-                            $this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
-                            $this->db->where('order_id', $invoice_id);
-                            $this->db->where('tax_id', $cgst_tax_id);
-                            $this->db->update('order_tax_col_summary');
-                        } else {
-                            $this->db->insert('order_tax_col_summary', $cgst_summary);
-                        }
-                    }
-                }
-            }
-            //SGST tax info
-            if (!empty($sgst)) {
-                for ($i = 0, $n = count($sgst); $i < $n; $i++) {
-                    $sgst_tax = $sgst[$i];
-                    $sgst_tax_id = $sgst_id[$i];
+        //     //Tax collection summary for three start
+        //     //CGST tax info
+        //     if (!empty($cgst)) {
+        //         for ($i = 0, $n = count(@$cgst); $i < $n; $i++) {
+        //             $cgst_tax = $cgst[$i];
+        //             $cgst_tax_id = $cgst_id[$i];
+        //             $cgst_summary = array(
+        //                 'order_tax_collection_id' => $this->auth->generator(15),
+        //                 'order_id' => $invoice_id,
+        //                 'tax_amount' => $cgst_tax,
+        //                 'tax_id' => $cgst_tax_id,
+        //                 'date' => $this->input->post('invoice_date', TRUE),
+        //             );
+        //             if (!empty($cgst[$i])) {
+        //                 $result = $this->db->select('*')
+        //                     ->from('order_tax_col_summary')
+        //                     ->where('order_id', $invoice_id)
+        //                     ->where('tax_id', $cgst_tax_id)
+        //                     ->get()
+        //                     ->num_rows();
+        //                 if ($result > 0) {
+        //                     $this->db->set('tax_amount', 'tax_amount+' . $cgst_tax, FALSE);
+        //                     $this->db->where('order_id', $invoice_id);
+        //                     $this->db->where('tax_id', $cgst_tax_id);
+        //                     $this->db->update('order_tax_col_summary');
+        //                 } else {
+        //                     $this->db->insert('order_tax_col_summary', $cgst_summary);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     //SGST tax info
+        //     if (!empty($sgst)) {
+        //         for ($i = 0, $n = count($sgst); $i < $n; $i++) {
+        //             $sgst_tax = $sgst[$i];
+        //             $sgst_tax_id = $sgst_id[$i];
 
-                    $sgst_summary = array(
-                        'order_tax_collection_id' => $this->auth->generator(15),
-                        'order_id' => $invoice_id,
-                        'tax_amount' => $sgst_tax,
-                        'tax_id' => $sgst_tax_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
-                    );
-                    if (!empty($sgst[$i])) {
-                        $result = $this->db->select('*')
-                            ->from('order_tax_col_summary')
-                            ->where('order_id', $invoice_id)
-                            ->where('tax_id', $sgst_tax_id)
-                            ->get()
-                            ->num_rows();
-                        if ($result > 0) {
-                            $this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
-                            $this->db->where('order_id', $invoice_id);
-                            $this->db->where('tax_id', $sgst_tax_id);
-                            $this->db->update('order_tax_col_summary');
-                        } else {
-                            $this->db->insert('order_tax_col_summary', $sgst_summary);
-                        }
-                    }
-                }
-            }
-            if (!empty($igst)) {
-                //IGST tax info
-                for ($i = 0, $n = count($igst); $i < $n; $i++) {
-                    $igst_tax = $igst[$i];
-                    $igst_tax_id = $igst_id[$i];
+        //             $sgst_summary = array(
+        //                 'order_tax_collection_id' => $this->auth->generator(15),
+        //                 'order_id' => $invoice_id,
+        //                 'tax_amount' => $sgst_tax,
+        //                 'tax_id' => $sgst_tax_id,
+        //                 'date' => $this->input->post('invoice_date', TRUE),
+        //             );
+        //             if (!empty($sgst[$i])) {
+        //                 $result = $this->db->select('*')
+        //                     ->from('order_tax_col_summary')
+        //                     ->where('order_id', $invoice_id)
+        //                     ->where('tax_id', $sgst_tax_id)
+        //                     ->get()
+        //                     ->num_rows();
+        //                 if ($result > 0) {
+        //                     $this->db->set('tax_amount', 'tax_amount+' . $sgst_tax, FALSE);
+        //                     $this->db->where('order_id', $invoice_id);
+        //                     $this->db->where('tax_id', $sgst_tax_id);
+        //                     $this->db->update('order_tax_col_summary');
+        //                 } else {
+        //                     $this->db->insert('order_tax_col_summary', $sgst_summary);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     if (!empty($igst)) {
+        //         //IGST tax info
+        //         for ($i = 0, $n = count($igst); $i < $n; $i++) {
+        //             $igst_tax = $igst[$i];
+        //             $igst_tax_id = $igst_id[$i];
 
-                    $igst_summary = array(
-                        'order_tax_collection_id' => generator(15),
-                        'order_id' => $invoice_id,
-                        'tax_amount' => $igst_tax,
-                        'tax_id' => $igst_tax_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
-                    );
-                    if (!empty($igst[$i])) {
-                        $result = $this->db->select('*')
-                            ->from('order_tax_col_summary')
-                            ->where('order_id', $invoice_id)
-                            ->where('tax_id', $igst_tax_id)
-                            ->get()
-                            ->num_rows();
+        //             $igst_summary = array(
+        //                 'order_tax_collection_id' => generator(15),
+        //                 'order_id' => $invoice_id,
+        //                 'tax_amount' => $igst_tax,
+        //                 'tax_id' => $igst_tax_id,
+        //                 'date' => $this->input->post('invoice_date', TRUE),
+        //             );
+        //             if (!empty($igst[$i])) {
+        //                 $result = $this->db->select('*')
+        //                     ->from('order_tax_col_summary')
+        //                     ->where('order_id', $invoice_id)
+        //                     ->where('tax_id', $igst_tax_id)
+        //                     ->get()
+        //                     ->num_rows();
 
-                        if ($result > 0) {
-                            $this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
-                            $this->db->where('order_id', $invoice_id);
-                            $this->db->where('tax_id', $igst_tax_id);
-                            $this->db->update('order_tax_col_summary');
-                        } else {
-                            $this->db->insert('order_tax_col_summary', $igst_summary);
-                        }
-                    }
-                }
-            }
-            //Tax collection summary for three end
-            //Tax collection details for three start
-            //CGST tax info
-            if (!empty($cgst)) {
-                for ($i = 0, $n = count($cgst); $i < $n; $i++) {
-                    $cgst_tax = $cgst[$i];
-                    $cgst_tax_id = $cgst_id[$i];
-                    $product_id = $p_id[$i];
-                    $variant_id = $variants[$i];
-                    $cgst_details = array(
-                        'order_tax_col_de_id' => generator(15),
-                        'order_id' => $invoice_id,
-                        'amount' => $cgst_tax,
-                        'product_id' => $product_id,
-                        'tax_id' => $cgst_tax_id,
-                        'variant_id' => $variant_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
-                    );
-                    if (!empty($cgst[$i])) {
+        //                 if ($result > 0) {
+        //                     $this->db->set('tax_amount', 'tax_amount+' . $igst_tax, FALSE);
+        //                     $this->db->where('order_id', $invoice_id);
+        //                     $this->db->where('tax_id', $igst_tax_id);
+        //                     $this->db->update('order_tax_col_summary');
+        //                 } else {
+        //                     $this->db->insert('order_tax_col_summary', $igst_summary);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     //Tax collection summary for three end
+        //     //Tax collection details for three start
+        //     //CGST tax info
+        //     if (!empty($cgst)) {
+        //         for ($i = 0, $n = count($cgst); $i < $n; $i++) {
+        //             $cgst_tax = $cgst[$i];
+        //             $cgst_tax_id = $cgst_id[$i];
+        //             $product_id = $p_id[$i];
+        //             $variant_id = $variants[$i];
+        //             $cgst_details = array(
+        //                 'order_tax_col_de_id' => generator(15),
+        //                 'order_id' => $invoice_id,
+        //                 'amount' => $cgst_tax,
+        //                 'product_id' => $product_id,
+        //                 'tax_id' => $cgst_tax_id,
+        //                 'variant_id' => $variant_id,
+        //                 'date' => $this->input->post('invoice_date', TRUE),
+        //             );
+        //             if (!empty($cgst[$i])) {
 
-                        $result = $this->db->select('*')
-                            ->from('order_tax_col_details')
-                            ->where('order_id', $invoice_id)
-                            ->where('tax_id', $cgst_tax_id)
-                            ->where('product_id', $product_id)
-                            ->where('variant_id', $variant_id)
-                            ->get()
-                            ->num_rows();
-                        if ($result > 0) {
-                            $this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
-                            $this->db->where('order_id', $invoice_id);
-                            $this->db->where('tax_id', $cgst_tax_id);
-                            $this->db->where('variant_id', $variant_id);
-                            $this->db->update('order_tax_col_details');
-                        } else {
-                            $this->db->insert('order_tax_col_details', $cgst_details);
-                        }
-                    }
-                }
-            }
+        //                 $result = $this->db->select('*')
+        //                     ->from('order_tax_col_details')
+        //                     ->where('order_id', $invoice_id)
+        //                     ->where('tax_id', $cgst_tax_id)
+        //                     ->where('product_id', $product_id)
+        //                     ->where('variant_id', $variant_id)
+        //                     ->get()
+        //                     ->num_rows();
+        //                 if ($result > 0) {
+        //                     $this->db->set('amount', 'amount+' . $cgst_tax, FALSE);
+        //                     $this->db->where('order_id', $invoice_id);
+        //                     $this->db->where('tax_id', $cgst_tax_id);
+        //                     $this->db->where('variant_id', $variant_id);
+        //                     $this->db->update('order_tax_col_details');
+        //                 } else {
+        //                     $this->db->insert('order_tax_col_details', $cgst_details);
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            //SGST tax info
-            if (!empty($sgst)) {
-                for ($i = 0, $n = count($sgst); $i < $n; $i++) {
-                    $sgst_tax = $sgst[$i];
-                    $sgst_tax_id = $sgst_id[$i];
-                    $product_id = $p_id[$i];
-                    $variant_id = $variants[$i];
-                    $sgst_summary = array(
-                        'order_tax_col_de_id' => generator(15),
-                        'order_id' => $invoice_id,
-                        'amount' => $sgst_tax,
-                        'product_id' => $product_id,
-                        'tax_id' => $sgst_tax_id,
-                        'variant_id' => $variant_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
-                    );
-                    if (!empty($sgst[$i])) {
-                        $result = $this->db->select('*')
-                            ->from('order_tax_col_details')
-                            ->where('order_id', $invoice_id)
-                            ->where('tax_id', $sgst_tax_id)
-                            ->where('product_id', $product_id)
-                            ->where('variant_id', $variant_id)
-                            ->get()
-                            ->num_rows();
-                        if ($result > 0) {
-                            $this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
-                            $this->db->where('order_id', $invoice_id);
-                            $this->db->where('tax_id', $sgst_tax_id);
-                            $this->db->where('variant_id', $variant_id);
-                            $this->db->update('order_tax_col_details');
-                        } else {
-                            $this->db->insert('order_tax_col_details', $sgst_summary);
-                        }
-                    }
-                }
-            }
-            // IGST tax info
-            if (!empty($igst)) {
-                for ($i = 0, $n = count($igst); $i < $n; $i++) {
-                    $igst_tax = $igst[$i];
-                    $igst_tax_id = $igst_id[$i];
-                    $product_id = $p_id[$i];
-                    $variant_id = $variants[$i];
-                    $igst_summary = array(
-                        'order_tax_col_de_id' => generator(15),
-                        'order_id' => $invoice_id,
-                        'amount' => $igst_tax,
-                        'product_id' => $product_id,
-                        'tax_id' => $igst_tax_id,
-                        'variant_id' => $variant_id,
-                        'date' => $this->input->post('invoice_date', TRUE),
-                    );
-                    if (!empty($igst[$i])) {
-                        $result = $this->db->select('*')
-                            ->from('order_tax_col_details')
-                            ->where('order_id', $invoice_id)
-                            ->where('tax_id', $igst_tax_id)
-                            ->where('product_id', $product_id)
-                            ->where('variant_id', $variant_id)
-                            ->get()
-                            ->num_rows();
-                        if ($result > 0) {
-                            $this->db->set('amount', 'amount+' . $igst_tax, FALSE);
-                            $this->db->where('order_id', $invoice_id);
-                            $this->db->where('tax_id', $igst_tax_id);
-                            $this->db->where('variant_id', $variant_id);
-                            $this->db->update('order_tax_col_details');
-                        } else {
-                            $this->db->insert('order_tax_col_details', $igst_summary);
-                        }
-                    }
-                }
-            }
-            //Tax collection details for three end
+        //     //SGST tax info
+        //     if (!empty($sgst)) {
+        //         for ($i = 0, $n = count($sgst); $i < $n; $i++) {
+        //             $sgst_tax = $sgst[$i];
+        //             $sgst_tax_id = $sgst_id[$i];
+        //             $product_id = $p_id[$i];
+        //             $variant_id = $variants[$i];
+        //             $sgst_summary = array(
+        //                 'order_tax_col_de_id' => generator(15),
+        //                 'order_id' => $invoice_id,
+        //                 'amount' => $sgst_tax,
+        //                 'product_id' => $product_id,
+        //                 'tax_id' => $sgst_tax_id,
+        //                 'variant_id' => $variant_id,
+        //                 'date' => $this->input->post('invoice_date', TRUE),
+        //             );
+        //             if (!empty($sgst[$i])) {
+        //                 $result = $this->db->select('*')
+        //                     ->from('order_tax_col_details')
+        //                     ->where('order_id', $invoice_id)
+        //                     ->where('tax_id', $sgst_tax_id)
+        //                     ->where('product_id', $product_id)
+        //                     ->where('variant_id', $variant_id)
+        //                     ->get()
+        //                     ->num_rows();
+        //                 if ($result > 0) {
+        //                     $this->db->set('amount', 'amount+' . $sgst_tax, FALSE);
+        //                     $this->db->where('order_id', $invoice_id);
+        //                     $this->db->where('tax_id', $sgst_tax_id);
+        //                     $this->db->where('variant_id', $variant_id);
+        //                     $this->db->update('order_tax_col_details');
+        //                 } else {
+        //                     $this->db->insert('order_tax_col_details', $sgst_summary);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     // IGST tax info
+        //     if (!empty($igst)) {
+        //         for ($i = 0, $n = count($igst); $i < $n; $i++) {
+        //             $igst_tax = $igst[$i];
+        //             $igst_tax_id = $igst_id[$i];
+        //             $product_id = $p_id[$i];
+        //             $variant_id = $variants[$i];
+        //             $igst_summary = array(
+        //                 'order_tax_col_de_id' => generator(15),
+        //                 'order_id' => $invoice_id,
+        //                 'amount' => $igst_tax,
+        //                 'product_id' => $product_id,
+        //                 'tax_id' => $igst_tax_id,
+        //                 'variant_id' => $variant_id,
+        //                 'date' => $this->input->post('invoice_date', TRUE),
+        //             );
+        //             if (!empty($igst[$i])) {
+        //                 $result = $this->db->select('*')
+        //                     ->from('order_tax_col_details')
+        //                     ->where('order_id', $invoice_id)
+        //                     ->where('tax_id', $igst_tax_id)
+        //                     ->where('product_id', $product_id)
+        //                     ->where('variant_id', $variant_id)
+        //                     ->get()
+        //                     ->num_rows();
+        //                 if ($result > 0) {
+        //                     $this->db->set('amount', 'amount+' . $igst_tax, FALSE);
+        //                     $this->db->where('order_id', $invoice_id);
+        //                     $this->db->where('tax_id', $igst_tax_id);
+        //                     $this->db->where('variant_id', $variant_id);
+        //                     $this->db->update('order_tax_col_details');
+        //                 } else {
+        //                     $this->db->insert('order_tax_col_details', $igst_summary);
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     //Tax collection details for three end
 
-            return $invoice_id;
-        }
+        //     return $invoice_id;
+        // }
     }
 
     //update_order
@@ -3048,6 +3050,7 @@ class Orders extends CI_Model
 			c.*,
 			d.product_id,
 			d.product_name,
+            d.category_id,
 			d.product_details,
 			d.product_model,
             d.image_thumb,

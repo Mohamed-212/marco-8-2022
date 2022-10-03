@@ -3,6 +3,11 @@
     var products_with_no_quantity = "<?=display('products_with_no_quantity')?>";
     var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
     var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
+    var accessories_category_id = 'a';
+    <?php
+        $access = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
+        echo "accessories_category_id = '" . $access->category_id . "';";
+    ?>
 </script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
@@ -256,6 +261,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="currency" class="col-sm-4 col-form-label"><?php echo display('product_type') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select name="product_type" id="product_type" class="form-control " required="">
+                                            <option value="1" selected><?php echo display('normal') ?></option>
+                                            <option value="2"><?php echo display('assemply') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row ">
                             <div class="col-sm-12">
@@ -336,6 +354,8 @@
                                             <input type="hidden" name="colorv[]" id="color1" value="">
                                             <input type="hidden" name="sizev[]" id="size1" value="">
                                             <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
+                                            <input type="hidden" hidden name="category_id" id="category_id_1" value="" />
+                                            <input type="hidden" hidden name="product_model" id="product_model_1" value="" />
 
                                             <div id="viewassembly1" class="text-center hidden">
                                                 <a style="color: blue" href="" data-toggle="modal" data-target="#viewprom" onclick="viewpro(1)">view products </a>

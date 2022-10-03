@@ -417,7 +417,7 @@
 
                                                                     foreach ($invoice_all_data as $invoice) {
                                                                 ?>
-                                                                        <tr>
+                                                                        <tr class="<?=$invoice['category_id'] == 'NZUN74MS3GP8QAV' && $order_detail_all['product_type'] == 2 ? 'print-none' : ''?>">
                                                                             <td><?php echo html_escape($invoice['sl']); ?></td>
                                                                             <!-- <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td> -->
 <!--                                                                            <td class='hide-me'>-->
@@ -673,7 +673,7 @@
                                                                             <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
                                                                         <td class="grand_total">
                                                                             <?php
-                                                                                $totalQuantity = 0;
+                                                                                $total_quantity = 0;
                                                                                 foreach ($invoice_all_data as $inv) {
                                                                                     if ($inv['category_id'] == 'NZUN74MS3GP8QAV' && $product_type == 2) {
                                                                                         continue;

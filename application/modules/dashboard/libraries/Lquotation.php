@@ -459,6 +459,7 @@ class Lquotation {
 			'paid_amount'	   =>$invoice_detail[0]['paid_amount'],
 			'due_amount'	   =>$invoice_detail[0]['due_amount'],
 			'invoice_details'  =>$invoice_detail[0]['details'],
+			'product_type'	   =>$invoice_detail[0]['product_type'],
 			'subTotal_quantity'=>$subTotal_quantity,
 			'invoice_all_data' =>$all_details,
 			'isTaxed'          =>$isTaxed,
