@@ -229,6 +229,7 @@ class Lorder {
 			'total_amount'		=>	$order_detail[0]['total_amount'],
 			'paid_amount'		=>	$order_detail[0]['paid_amount'],
 			'due_amount'		=>	$order_detail[0]['due_amount'],
+            'product_type'		=>	$order_detail[0]['product_type'],
 			'total_discount'	=>	$order_detail[0]['total_discount'],
 			'product_discount'=>	$order_detail[0]['product_discount'],
 			'service_charge'	=>	$order_detail[0]['service_charge'],

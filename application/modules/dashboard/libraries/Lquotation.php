@@ -121,6 +121,7 @@ class Lquotation {
 			'total_amount'		=>	$quotation_detail[0]['total_amount'],
 			'paid_amount'		=>	$quotation_detail[0]['paid_amount'],
 			'due_amount'		=>	$quotation_detail[0]['due_amount'],
+			'product_type'		=>	$quotation_detail[0]['product_type'],
 			'total_discount'	=>	$quotation_detail[0]['total_discount'],
 			'service_charge'	=>	$quotation_detail[0]['service_charge'],
 			'details'			=>	!empty($quotation_detail[0]['details']) ? $quotation_detail[0]['details'] : $quotation_detail[0]['quotation_details'],

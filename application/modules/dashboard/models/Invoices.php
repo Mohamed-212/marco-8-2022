@@ -4460,7 +4460,21 @@ class Invoices extends CI_Model {
         return $this->db->select('*')->from('pad_print_setting')->where('id', 1)->get()->row();
     }
 
-    public function get_pri_type_rate($product_id, $pri_type_id) {
+    public function get_pri_type_rate($product_id, $pri_type_id, $product_type = null) {
+
+        if ($product_type == 2) {
+            // product is assemply
+            // then if accessories return zero
+            $this->db->select("category_id");
+            $this->db->from('product_information');
+            $this->db->where('product_id', $product_id);
+            $pro = $this->db->get()->row();
+
+            if ($pro->category_id == 'NZUN74MS3GP8QAV') {
+                return "0";
+            }
+        }
+
         if ($pri_type_id == 0) {
             $this->db->select("price,onsale,onsale_price");
             $this->db->from('product_information');

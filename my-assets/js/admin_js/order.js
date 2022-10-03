@@ -507,7 +507,7 @@ function add_month() {
                     '</div>' +
                     '<div class="col-sm-4" style="float: none">' +
                     '<div class="form-group">' +
-                    '<input class="form-control" style="text-align: center;" type="date" value="' + date + '" name="due_date[]" readonly>' +
+                    '<input class="form-control" style="text-align: center;" type="text" value="' + date + '" name="due_date[]" readonly>' +
                     '</div>' +
                     '</div>' +
                     '</div>';
@@ -577,6 +577,8 @@ function get_pri_type_rate() {
         var sl = index + 1;
         var pri_type_id = $("#pri_type").val();
         var product_id = $(".product_id_" + sl).val();
+        var product_type = $("#product_type").val();
+        // alert(product_type);
 
         $.ajax({
             type: "post",
@@ -586,6 +588,7 @@ function get_pri_type_rate() {
                 csrf_test_name: csrf_test_name,
                 product_id: product_id,
                 pri_type_id: pri_type_id,
+                product_type: product_type,
             },
             success: function (result) {
                 var res = JSON.parse(result);
@@ -605,6 +608,8 @@ function get_pri_type_rate1(sl) {
 
     var pri_type_id = $("#pri_type").val();
     var product_id = $(".product_id_" + sl).val();
+    var product_type = $("#product_type").val();
+    // alert(product_type + 'wewewe');
 
     $.ajax({
         type: "post",
@@ -614,11 +619,13 @@ function get_pri_type_rate1(sl) {
             csrf_test_name: csrf_test_name,
             product_id: product_id,
             pri_type_id: pri_type_id,
+            product_type: product_type,
         },
         success: function (result) {
             var res = JSON.parse(result);
-
+            
             $("#price_item_" + sl).val(res[1]);
+            
             quantity_calculate(sl);
 
         },

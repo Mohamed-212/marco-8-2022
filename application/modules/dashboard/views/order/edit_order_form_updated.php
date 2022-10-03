@@ -3,6 +3,11 @@
     var products_with_no_quantity = "<?= display('products_with_no_quantity') ?>";
     var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
     var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
+    var accessories_category_id = 'a';
+    <?php
+        $access = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
+        echo "accessories_category_id = '" . $access->category_id . "';";
+    ?>
 </script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
@@ -148,6 +153,19 @@
                                             endforeach;
                                             ?>
                                             <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> >Sell Price</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="currency" class="col-sm-4 col-form-label"><?php echo display('product_type') ?>
+                                        <i class="text-danger">*</i>
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select name="product_type" id="product_type" class="form-control " required="">
+                                            <option value="1" <?=$product_type == 1 ? 'selected' : ''?> ><?php echo display('normal') ?></option>
+                                            <option value="2" <?=$product_type == 2 ? 'selected' : ''?> ><?php echo display('assemply') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -722,3 +740,10 @@
 <!--dashboard/assets/js/edit_quotation_form.js.php"></script>-->
 <?php //$this->load->view('quotation/edit_quotation_form_js'); 
 ?>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

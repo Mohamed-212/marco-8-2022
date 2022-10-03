@@ -1586,7 +1586,8 @@ class Cinvoice extends MX_Controller
     {
         $product_id = urldecode($this->input->post('product_id', TRUE));
         $pri_type_id = urldecode($this->input->post('pri_type_id', TRUE));
-        $rate = $this->Invoices->get_pri_type_rate($product_id, $pri_type_id);
+        $product_type = urldecode($this->input->post('product_type', TRUE));
+        $rate = $this->Invoices->get_pri_type_rate($product_id, $pri_type_id, $product_type);
         $result[1] = $rate; //stock
         echo json_encode($result);
     }
