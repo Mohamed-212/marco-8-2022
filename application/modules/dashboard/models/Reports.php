@@ -1128,7 +1128,8 @@ class Reports extends CI_Model
     //Retrieve all Report
     public function retrieve_dateWise_PurchaseReports($start_date, $end_date)
     {
-        $dateRange = "STR_TO_DATE(a.purchase_date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        // $dateRange = "STR_TO_DATE(a.purchase_date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
 
         $this->db->select("a.*,b.supplier_id,b.supplier_name");
         $this->db->from('product_purchase a');

@@ -38,12 +38,12 @@
 						?>
 		                    <div class="form-group">
 		                        <label class="" for="from_date"><?php echo display('start_date') ?></label>
-		                        <input type="text" name="from_date" class="form-control datepicker" id="from_date" placeholder="<?php echo display('start_date') ?>"  autocomplete="off" required>
+		                        <input type="text" name="from_date" class="form-control datepicker2" id="from_date" placeholder="<?php echo display('start_date') ?>"  autocomplete="off" required>
 		                    </div> 
 
 		                    <div class="form-group">
 		                        <label class="" for="to_date"><?php echo display('end_date') ?></label>
-		                        <input type="text" name="to_date" class="form-control datepicker" id="to_date" placeholder="<?php echo display('end_date') ?>" value="<?php echo $today?>" autocomplete="off" required>
+		                        <input type="text" name="to_date" class="form-control datepicker2" id="to_date" placeholder="<?php echo display('end_date') ?>" value="<?php echo $today?>" autocomplete="off" required>
 		                    </div>  
 
 		                    <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
@@ -83,18 +83,20 @@
 									</thead>
 									<tbody>
 									<?php if($purchase_report) { ?>
-										{purchase_report}
+										<?php foreach ($purchase_report as $repo) : ?>
+										<!-- {purchase_report} -->
 											<tr>
-												<td>{prchse_date}</td>
+												<td><?=date('d-m-Y', strtotime($repo['created_at']))?></td>
 												<td>
-													<a href="<?php echo base_url().'dashboard/cpurchase/purchase_details_data/{purchase_id}'; ?>">
-														{invoice_no} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+													<a href="<?php echo base_url().'dashboard/cpurchase/purchase_details_data/'. $repo["purchase_id"]; ?>" >
+													 <?=$repo['invoice_no']?><i class="fa fa-tasks pull-right" aria-hidden="true"></i>
 													</a>
 												</td>
-												<td>{supplier_name}</td>
-												<td class="text-right"><?php echo (($position==0)?"$currency {grand_total_amount}":"{grand_total_amount} $currency") ?></td>
+												<td><?=$repo['supplier_name']?></td>
+												<td class="text-right"><?php echo (($position==0)?"$currency {$repo['grand_total_amount']}":"{$repo['grand_total_amount']} $currency") ?></td>
 											</tr>
-										{/purchase_report}
+										<!-- {/purchase_report} -->
+										<?php endforeach ?>
 									<?php } ?>
 									</tbody>
 									<tfoot>
@@ -119,3 +121,10 @@
 	</section>
 </div>
 <!-- Purchase Report End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
