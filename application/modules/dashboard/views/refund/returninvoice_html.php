@@ -333,7 +333,7 @@
                                                             <h3><?php echo display('invoice_to'); ?> : <?php echo html_escape($customer['customer_name']); ?></h3>
                                                             <div class="line-height" style=" margin-top: 15px;">
                                                                 <p>
-                                                                    <?php echo display('client_code'); ?>  : <?php echo html_escape($customer['customer_id']); ?>
+                                                                    <?php echo display('client_code'); ?>  : <?php echo html_escape($customer['customer_no']); ?>
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('client_phone'); ?>  : <?php echo html_escape($customer['customer_mobile']) ?>
@@ -359,7 +359,7 @@
                                                                     <?php echo display('sl'); ?> : <?php echo html_escape($sl); ?>
                                                                 </p>
                                                                 <p>
-                                                                    <?php echo display('date'); ?> : <?php echo html_escape($createdate) ?>
+                                                                    <?php echo display('date'); ?> : <?php echo html_escape(date('d - M - Y', strtotime($createdate))) ?>
                                                                 </p>
                                                                 <p>
                                                                    <?php echo display('employee'); ?> : <?= $receive_by ?>
