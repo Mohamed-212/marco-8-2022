@@ -36,12 +36,12 @@
 		                <?php echo form_open('dashboard/Admin_dashboard/tax_report_invoice_wise',array('class' => 'form-inline'))?>
 		                    <div class="form-group">
 		                        <label for="from_date"><?php echo display('start_date') ?>:</label>
-		                        <input type="text" name="from_date" class="form-control datepicker" id="from_date" placeholder="<?php echo display('start_date') ?>"  autocomplete="off">
+		                        <input type="text" name="from_date" class="form-control datepicker2" id="from_date" placeholder="<?php echo display('start_date') ?>"  autocomplete="off">
 		                    </div> 
 
 		                    <div class="form-group">
 		                        <label for="to_date"><?php echo display('end_date') ?>:</label>
-		                        <input type="text" name="to_date" class="form-control datepicker" id="to_date" placeholder="<?php echo display('end_date') ?>" autocomplete="off">
+		                        <input type="text" name="to_date" class="form-control datepicker2" id="to_date" placeholder="<?php echo display('end_date') ?>" autocomplete="off">
 		                    </div>  
 
 		                    <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
@@ -105,3 +105,10 @@
 	</section>
 </div>
  <!-- Tax Report Product Wise End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

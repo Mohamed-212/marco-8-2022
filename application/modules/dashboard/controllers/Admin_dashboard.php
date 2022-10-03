@@ -389,8 +389,8 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('tax_report_invoice_wise')->read()->redirect();
 
-        $from_date = date("m-d-Y", strtotime($this->input->post('from_date', TRUE)));
-        $to_date = date("m-d-Y", strtotime($this->input->post('to_date', TRUE)));
+        $from_date = date("Y-m-d", strtotime($this->input->post('from_date', TRUE)));
+        $to_date = date("Y-m-d", strtotime($this->input->post('to_date', TRUE)));
         
         $content = $this->lreport->tax_report_invoice_wise($from_date,$to_date);
         $this->template_lib->full_admin_html_view($content);
