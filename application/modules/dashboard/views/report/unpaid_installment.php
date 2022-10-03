@@ -49,11 +49,11 @@
                         </div>
 						<div class="form-group" style="margin: 0 20px;">
 							<label for="from_date" class=""><?php echo display('from_date') ?><span class="text-danger">*</span>:</label>
-							<input type="text" class="form-control datepicker" autocomplete="off" placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=date('Y-m-d', strtotime('first day of this month', strtotime(date('Y-m-d'))))?>" required>
+							<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=date('d-m-Y', strtotime('first day of this month', strtotime(date('d-m-Y'))))?>" required>
 						</div>
 						<div class="form-group" style="margin: 0 20px;">
 							<label for="to_date" class=""><?php echo display('to_date') ?><span class="text-danger">*</span>:</label>
-							<input type="text" class="form-control datepicker" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=date('Y-m-d', strtotime('last day of this month', strtotime(date('Y-m-d'))))?>" required>
+							<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=date('d-m-Y', strtotime('last day of this month', strtotime(date('d-m-Y'))))?>" required>
 						</div>
 						<div class="form-group">
 							<button type="submit" class="btn btn-success"><?php echo display('submit') ?></button>
@@ -99,7 +99,7 @@
 														<?= $d->amount ?>
 													</a>
 												</td>
-												<td><?= $d->due_date ?></td>
+												<td><?= date('d-m-Y', strtotime($d->due_date_datetime)) ?></td>
 											</tr>
 										<?php endforeach ?>
 
@@ -122,3 +122,10 @@
 	</section>
 </div>
 <!-- Stock List End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
