@@ -106,6 +106,8 @@ function add_products_model(){
         var assembly = 'assembly' + current_count;
         var viewassembly = "viewassembly" + current_count;
         var discount = 'discount_' + current_count;
+        var category_id = 'category_id_' + current_count;
+        var product_model = 'product_model_' + current_count;
         $.ajax({
             type: "POST",
             url: base_url + "dashboard/Cinvoice/retrieve_product_data",
@@ -128,6 +130,8 @@ function add_products_model(){
                 $('#' + variant_color).html(obj.colorhtml);
 //$('#'+pricing).html(obj.pricinghtml);
                 $('#' + discount).val(obj.discount);
+                $("#" + category_id).val(obj.category_id);
+                $('#' + product_model).val(obj.product_model);
                 $("#" + size).val(obj.size);
                 $("#" + color).val(obj.color);
                 $("#" + assembly).val(obj.assembly);
@@ -142,6 +146,33 @@ function add_products_model(){
                     $("#" + viewassembly).addClass("hidden");
                 }
                 get_pri_type_rate1(current_count);
+
+                if (obj.category_id == accessories_category_id) {
+                    // this item is accessories
+                    // set price to zero if type is assemply
+                    if ($('#product_type').val() == '2') {
+                        $('#price_item_' + current_count).val(0);
+                    }
+                    // get all items with same name sum quantity
+                    var totalQuantity = 0;
+                    $('[name="product_name"]').each(function() {
+                        var itemName = $(this).val();
+                        var counter = $(this).attr('id').replace('product_name_', '');
+                        var itemCategoryId = $('#category_id_' + counter).val();
+                        var itemProductModel = $('#product_model_' + counter).val();
+                        var itemQuantity = $('#total_qntt_' + counter).val();
+                        itemName = itemName.replace(itemProductModel, '');
+                        if (itemCategoryId != accessories_category_id) {
+                            if (itemName.indexOf(obj.product_name.replace(obj.product_model, '')) > -1) {
+                                totalQuantity += parseInt(itemQuantity);
+                            }
+                            // console.log(current_count, itemName.indexOf(obj.product_name.replace(obj.product_model, '')), itemName, counter, itemCategoryId);
+                        }
+                    }).promise().then(function() {
+                        $('#total_qntt_' + current_count).val(totalQuantity).trigger('keyup');
+                        console.log(totalQuantity);
+                    });
+                }
             },
         });
     });
@@ -227,7 +258,7 @@ function addInputField(divName) {
                 count +
                 '" value=""><input type="hidden" class="baseUrl" value="' +
                 base_url +
-                '" /> <div id="viewassembly' +
+                '" /> <input type="hidden" hidden name="category_id[]" id="category_id_' + count + '" /> <input type="hidden" hidden name="product_model[]" id="product_model_' + count + '" /> <div id="viewassembly' +
                 count +
                 '" class="text-center hidden"><a  style="color: blue" href="" data-toggle="modal" data-target="#viewprom" onclick="viewpro(' +
                 count +

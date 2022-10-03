@@ -30,6 +30,8 @@ function invoice_productList(cName) {
     var assembly = 'assembly' + cName;
     var viewassembly = "viewassembly" + cName;
     var discount = 'discount_' + cName;
+    var category_id = 'category_id_' + cName;
+    var product_model = 'product_model_' + cName;
     var product_name = $("#product_name_" + cName).val();
 
     $(".productSelection").autocomplete(
@@ -86,6 +88,8 @@ function invoice_productList(cName) {
                         $('#' + variant_color).html(obj.colorhtml);
 //$('#'+pricing).html(obj.pricinghtml);
                         $('#' + discount).val(obj.discount);
+                        $('#' + category_id).val(obj.category_id);
+                        $('#' + product_model).val(obj.product_model);
                         $("#" + size).val(obj.size);
                         $("#" + color).val(obj.color);
                         $("#" + assembly).val(obj.assembly);
@@ -102,6 +106,33 @@ function invoice_productList(cName) {
                             $("#" + viewassembly).addClass("hidden");
                         }
                         get_pri_type_rate1(cName);
+
+                        if (obj.category_id == accessories_category_id) {
+                            // this item is accessories
+                            // set price to zero if type is assemply
+                            if ($('#product_type').val() == '2') {
+                                $('#price_item_' + cName).val(0);
+                            }
+                            // get all items with same name sum quantity
+                            var totalQuantity = 0;
+                            $('[name="product_name"]').each(function() {
+                                var itemName = $(this).val();
+                                var counter = $(this).attr('id').replace('product_name_', '');
+                                var itemCategoryId = $('#category_id_' + counter).val();
+                                var itemProductModel = $('#product_model_' + counter).val();
+                                var itemQuantity = $('#total_qntt_' + counter).val();
+                                itemName = itemName.replace(itemProductModel, '');
+                                if (itemCategoryId != accessories_category_id) {
+                                    if (itemName.indexOf(obj.product_name.replace(obj.product_model, '')) > -1) {
+                                        totalQuantity += parseInt(itemQuantity);
+                                    }
+                                    // console.log(cName, itemName.indexOf(obj.product_name.replace(obj.product_model, '')), itemName, counter, itemCategoryId);
+                                }
+                            }).promise().then(function() {
+                                $('#total_qntt_' + cName).val(totalQuantity).trigger('keyup');
+                                console.log(totalQuantity);
+                            });
+                        }
 
                     }
                 });

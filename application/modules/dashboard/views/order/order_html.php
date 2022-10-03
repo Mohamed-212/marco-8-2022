@@ -675,6 +675,9 @@
                                                                             <?php
                                                                                 $totalQuantity = 0;
                                                                                 foreach ($invoice_all_data as $inv) {
+                                                                                    if ($inv['category_id'] == 'NZUN74MS3GP8QAV' && $product_type == 2) {
+                                                                                        continue;
+                                                                                    }
                                                                                     $total_quantity += (int)$inv['quantity'];
                                                                                 }
                                                                                 echo $total_quantity;

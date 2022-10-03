@@ -269,6 +269,7 @@ class Invoices extends CI_Model {
                 $available_quantity = $this->input->post('available_quantity', TRUE);
                 $product_id = $this->input->post('product_id', TRUE);
                 $payment_id = $this->input->post('payment_id', TRUE);
+                $product_type = $this->input->post('product_type', TRUE);
 
                 //Stock availability check
                 $result = array();
@@ -427,6 +428,7 @@ class Invoices extends CI_Model {
                     'created_at' => date("Y-m-d H:i:s", strtotime($this->input->post('invoice_date', TRUE))),
                     'order_id' => $order_id,
                     'quotation_id' => $quotation_id,
+                    'product_type' => $product_type,
                 );
                 $this->db->insert('invoice', $data);
 
@@ -1123,6 +1125,7 @@ class Invoices extends CI_Model {
             $quantity = $this->input->post('product_quantity', TRUE);
             $available_quantity = $this->input->post('available_quantity', TRUE);
             $product_id = $this->input->post('product_id', TRUE);
+            $product_type = $this->input->post('product_type', TRUE);
 
             //Stock availability check
             $result = array();
@@ -1234,6 +1237,7 @@ class Invoices extends CI_Model {
                 'created_at' => date('Y-m-d h:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                 'order_id' => $order_id,
                 'quotation_id' => $quotation_id,
+                'product_type' => $product_type
             );
             $this->db->insert('invoice', $data);
 
@@ -2204,6 +2208,7 @@ class Invoices extends CI_Model {
             $quantity = $this->input->post('product_quantity', TRUE);
             $available_quantity = $this->input->post('available_quantity', TRUE);
             $product_id = $this->input->post('product_id', TRUE);
+            $product_type = $this->input->post('product_type', TRUE);
 
             //Stock availability check
             $result = array();
@@ -2308,7 +2313,8 @@ class Invoices extends CI_Model {
                 'shipping_charge' => $this->input->post('shipping_charge', TRUE) ? $this->input->post('shipping_charge', TRUE) : 0,
                 'shipping_method' => $this->input->post('shipping_method', TRUE),
                 'invoice_details' => $this->input->post('invoice_details', TRUE),
-                'status' => 1
+                'status' => 1,
+                'product_type' => $product_type,
             );
             $this->db->insert('invoice', $data);
 
@@ -4111,7 +4117,7 @@ class Invoices extends CI_Model {
 
     //Get total product
     public function get_total_product($product_id) {
-        $this->db->select('assembly,pricing,product_name,product_id,supplier_price,price,supplier_id,unit,variants,default_variant,product_model,onsale,onsale_price,unit.unit_short_name');
+        $this->db->select('assembly,pricing,category_id,product_name,product_id,supplier_price,price,supplier_id,unit,variants,default_variant,product_model,onsale,onsale_price,unit.unit_short_name');
         $this->db->from('product_information');
         $this->db->join('unit', 'unit.unit_id = product_information.unit', 'left');
         $this->db->where(array('product_id' => $product_id, 'status' => 1));
@@ -4233,6 +4239,7 @@ class Invoices extends CI_Model {
             'unit' => @$product_information->unit_short_name,
             'assembly' => @$product_information->assembly,
             'pricing_types' => $pricing_types,
+            'category_id' => $product_information->category_id,
         );
 
         return $data2;

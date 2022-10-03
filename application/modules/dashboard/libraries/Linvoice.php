@@ -196,6 +196,7 @@ class Linvoice {
 		$CI->load->model('dashboard/Products');
 		
 		$invoice_detail = $CI->Invoices->retrieve_invoice_html_data($invoice_id);
+		// echo "<pre>";var_dump($invoice_detail);exit;
         $invoice_detail[0]['invoice_discount'] = $invoice_detail[0]['total_invoice_discount'];
 		$order_no=$CI->db->select('b.order as order_no')->from('invoice a')->where('a.order_id',$invoice_detail[0]['order_id'])->join('order b','a.order_id = b.order_id','left')->get()->result();
 		$quotation_no = $CI->db->select('q.quotation as quotation_no')->from('invoice a')->where('a.quotation_id',$invoice_detail[0]['quotation_id'])->join('quotation q','q.quotation_id = a.quotation_id','left')->get()->result();
@@ -272,6 +273,7 @@ class Linvoice {
 			'shipping_method'  =>@$shipping_method[0]['method_name'],
 			'paid_amount'	   =>$invoice_detail[0]['paid_amount'],
 			'due_amount'	   =>$invoice_detail[0]['due_amount'],
+			'product_type'     => $invoice_detail[0]['product_type'],
 			'invoice_details'  =>$invoice_detail[0]['invoice_details'],
 			'subTotal_quantity'=>$subTotal_quantity,
 			'invoice_all_data' =>$all_details,
