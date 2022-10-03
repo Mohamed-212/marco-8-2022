@@ -1005,7 +1005,7 @@ class Reports extends CI_Model
     public function tax_report_product_wise($from_date = null, $to_date = null)
     {
 
-        $today = date("m-d-Y");
+        $today = date("Y-m-d");
         $this->db->select("
 			a.amount,
 			a.date,
@@ -1018,11 +1018,11 @@ class Reports extends CI_Model
         $this->db->join('tax c', 'c.tax_id = a.tax_id');
 
         if (empty($from_date)) {
-            $this->db->where('a.date', $today);
+            $this->db->where('DATE(a.tcd_created_at) = DATE("'.$today.'")');
         } else {
-            $this->db->where("a.date BETWEEN '$from_date' AND  '$to_date'");
+            $this->db->where("DATE(a.tcd_created_at) BETWEEN DATE('$from_date') AND DATE('$to_date')");
         }
-        $this->db->order_by('a.date', 'asc');
+        $this->db->order_by('a.tcd_created_at', 'asc');
         $query = $this->db->get();
         return $query->result_array();
     }
