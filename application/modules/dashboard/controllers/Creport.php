@@ -23,7 +23,7 @@ class Creport extends MX_Controller
     public function index()
     {
 
-        $today = date('m-d-Y');
+        $today = date('d-m-Y');
         $product_id = $this->input->post('product_id', TRUE) ? $this->input->post('product_id', TRUE) : "";
         $date = $this->input->post('stock_date', TRUE) ? $this->input->post('stock_date', TRUE) : $today;
         #

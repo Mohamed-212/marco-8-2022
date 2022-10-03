@@ -114,7 +114,7 @@
                                 {/company_info}
 
                                 <h4> <?php echo display('stock_date') ?> : {date} </h4>
-                                <h4> <?php echo display('print_date') ?>: <?php echo date("m/d/Y h:i:s"); ?> </h4>
+                                <h4> <?php echo display('print_date') ?>: <?php echo date("d/m/Y h:i:s"); ?> </h4>
                             </div>
 
                             <div class="table-responsive mt_10">
