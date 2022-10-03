@@ -1085,7 +1085,8 @@ class Reports extends CI_Model
     //Retrieve all Report
     public function retrieve_dateWise_SalesReports($start_date = false, $end_date = false, $empId = false, $city = false)
     {
-        $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        // $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
 
         $ids = [];
         if ($city) {
@@ -1118,7 +1119,7 @@ class Reports extends CI_Model
             $this->db->where_in('employee_id', $arr);
         }
 
-        $this->db->order_by('a.date', 'desc');
+        $this->db->order_by('a.created_at', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
         return $query->result_array();
