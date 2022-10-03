@@ -816,7 +816,7 @@ class Reports extends CI_Model
     //Retrieve store_to_store_transfer
     public function store_to_store_transfer($from_date = false, $to_date = false, $from_store = false, $to_store = false)
     {
-        $today = date("m-d-Y");
+        $today = date("Y-m-d");
         $this->db->select("
 			a.*,
 			b.store_name,
@@ -840,7 +840,9 @@ class Reports extends CI_Model
         }
 
         if (!empty($from_date) && !empty($to_date)) {
-            $dateRange = "STR_TO_DATE(a.date_time, '%m-%d-%Y') BETWEEN DATE('$from_date') AND DATE('$to_date')";
+            // $dateRange = "STR_TO_DATE(a.date_time, '%m-%d-%Y') BETWEEN DATE('$from_date') AND DATE('$to_date')";
+            $dateRange = "DATE(a.date_time) BETWEEN DATE('".date('Y-m-d', strtotime($from_date))."') AND DATE('".date('Y-m-d', strtotime($to_date))."')";
+            $this->db->where($dateRange, null, false);
         }
 
         $this->db->where('a.status', 1);

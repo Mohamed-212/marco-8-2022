@@ -39,7 +39,7 @@
 		                <?php echo form_open('dashboard/Admin_dashboard/store_to_store_transfer',array('method' => 'GET'))?>
 		               		<?php 
 							date_default_timezone_set(DEF_TIMEZONE); 
-							$today = date('Y-m-d'); ?>
+							$today = date('d-m-Y'); ?>
 
 							<div class="col-sm-3">
 								<label for="from_store" class="col-form-label"><?php echo display('store') ?>:</label>
@@ -62,9 +62,9 @@
 							<div class="col-sm-4">
 								<label for="from_date" class="col-form-label"><?php echo display('date') ?>:</label>
 								<div class="input-group">
-									<input type="text" name="from_date" class="form-control datepicker" id="from_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off"  value="<?php echo set_value('from_date') ?>">
+									<input type="text" name="from_date" class="form-control datepicker2" id="from_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off"  value="<?php echo set_value('from_date') ?>">
 									<div class="input-group-addon">to</div>
-									<input type="text" name="to_date" class="form-control datepicker" id="to_date" value="<?php echo $today?>" placeholder="<?php echo display('end_date') ?>" autocomplete="off"  value="<?php echo set_value('to_date') ?>">
+									<input type="text" name="to_date" class="form-control datepicker2" id="to_date" value="<?php echo $today?>" placeholder="<?php echo display('end_date') ?>" autocomplete="off"  value="<?php echo set_value('to_date') ?>">
 								</div>
 							</div>
 							<div class="col-sm-2">
@@ -125,3 +125,10 @@
 	</section>
 </div>
 <!-- Store To Store End -->
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
