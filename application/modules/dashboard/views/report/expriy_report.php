@@ -65,14 +65,14 @@
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label"><?php echo display('from_date') ?></label>
-                                    <input type="text" class="form-control datepicker" name="from_date" value=""
+                                    <input type="text" class="form-control datepicker2" name="from_date" value=""
                                         placeholder='<?php echo display('expire_date_from') ?>' autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label"><?php echo display('to_date') ?></label>
-                                    <input type="text" class="form-control datepicker" name="to_date" value=""
+                                    <input type="text" class="form-control datepicker2" name="to_date" value=""
                                         placeholder='<?php echo display('expire_date_till') ?>' autocomplete="off">
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                         <td><?php echo html_escape($product['product_name']) ?></td>
                                         <td><?php echo html_escape($product['batch_no']) ?></td>
                                         <td><?php echo html_escape($product['quantity']) ?></td>
-                                        <td><?php echo ($product['expiry_date'] != '') ? html_escape($product['expiry_date']) : 'N/A' ?>
+                                        <td><?php echo ($product['expiry_date'] != '') ? html_escape(date('d-m-Y', strtotime($product['expiry_date']))) : 'N/A' ?>
                                         </td>
                                         <?php
                                                 if ($product['expiry_date'] != '') {
@@ -148,3 +148,10 @@
         <!-- Loyalty Point Settings End -->
     </section>
 </div>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>

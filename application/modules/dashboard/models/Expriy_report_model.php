@@ -17,12 +17,12 @@ class Expriy_report_model extends CI_Model {
         }
         if(!empty($filter['from_date'])&&empty($filter['to_date'])){
         	$end_date  =date("Y-m-d");
-        	$start_date=$filter["from_date"];
+        	$start_date=date('Y-m-d', strtotime($filter["from_date"]));
         	$date_range="DATE(product_purchase_details.expiry_date) BETWEEN '$start_date' AND '$end_date'";
            	$this->db->where($date_range);
         }elseif (!empty($filter['from_date'])&&!empty($filter['to_date'])) {
-        	$end_date  =$filter['to_date'];
-        	$start_date=$filter["from_date"];
+        	$end_date  = date('Y-m-d', strtotime($filter['to_date']));
+        	$start_date=date('Y-m-d', strtotime($filter["from_date"]));
         	$date_range="DATE(product_purchase_details.expiry_date) BETWEEN '$start_date' AND '$end_date'";
            	$this->db->where($date_range);
         }
@@ -45,12 +45,12 @@ class Expriy_report_model extends CI_Model {
         }
         if(!empty($filter['from_date'])&&empty($filter['to_date'])){
         	$end_date  =date("Y-m-d");
-        	$start_date=$filter["from_date"];
+        	$start_date=date('Y-m-d', strtotime($filter["from_date"]));
         	$date_range="DATE(product_purchase_details.expiry_date) BETWEEN '$start_date' AND '$end_date'";
            	$this->db->where($date_range);
         }elseif (!empty($filter['from_date'])&&!empty($filter['to_date'])) {
-        	$end_date  =$filter['to_date'];
-        	$start_date=$filter["from_date"];
+        	$end_date  = date('Y-m-d', strtotime($filter['to_date']));
+        	$start_date=date('Y-m-d', strtotime($filter["from_date"]));
         	$date_range="DATE(product_purchase_details.expiry_date) BETWEEN '$start_date' AND '$end_date'";
            	$this->db->where($date_range);
         }
