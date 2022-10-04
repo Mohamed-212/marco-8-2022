@@ -24,6 +24,25 @@ class Cinvoice extends MX_Controller
     //Add new invoice
     public function new_invoice()
     {
+        // $products = $this->db->select('*')->from('product_information')->get()->result();
+        // // echo "<pre>";
+        // // var_dump($products);exit;
+        // foreach ($products as $product) {
+        //     $productModel = explode('-', $product->product_model);
+        //     $modelOnly = trim($productModel[0]);
+        //     $colorOnly = trim($productModel[1]);
+        //     $colorOnly .= isset($productModel[2]) ? '-' . trim($productModel[2]) : '';
+
+        //     $this->db->where('product_id', $product->product_id)
+        //         ->update('product_information', [
+        //             'product_color' => $colorOnly,
+        //             'product_model_only' => $modelOnly,
+        //             'product_model' => trim($product->product_model),
+        //         ]);
+        // }
+
+        // exit;
+
         $this->permission->check_label('new_sale')->create()->redirect();
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
@@ -1623,7 +1642,7 @@ class Cinvoice extends MX_Controller
     {
 
         $data = [
-            'title'	=>display('invoice_images'),
+            'title'    => display('invoice_images'),
         ];
 
         $invoice_no = $this->input->post('invoice_no', true);
