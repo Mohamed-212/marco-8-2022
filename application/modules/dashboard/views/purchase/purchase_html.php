@@ -226,10 +226,10 @@
                                                                 <tr>
                                                                     <td>
                                                                         <!-- <div class="col-sm-12 r_cominfo_div"> -->
-                                                                            <img src="<?php if (isset($Soft_settings[0]['invoice_logo'])) {
+                                                                            <!-- <img src="<?php if (isset($Soft_settings[0]['invoice_logo'])) {
                                                                                             echo base_url() . $Soft_settings[0]['invoice_logo'];
                                                                                         } ?>" class="img img-responsive inv_logo" alt="logo">
-                                                                            <br>
+                                                                            <br> -->
                                                                             <span class="label label-success-outline m-r-15 p-10"><?php echo display('billing_from') ?></span>
                                                                             <address class="mt_10">
                                                                                 <strong>
