@@ -219,7 +219,10 @@ class Cstore extends MX_Controller
         $batch_no     = $this->input->post('batch_no', TRUE);
         $transfer_by  = $this->session->userdata('user_id');
         $t_store_id   = $this->input->post('t_store_id', TRUE);
-        $date_time    = date("Y-m-d H:i:s");
+        $txtTNo   = $this->input->post('txtTNo', TRUE);
+        $txtRemarks   = $this->input->post('txtRemarks', TRUE);
+        $trans_date   = $this->input->post('trans_date', TRUE);
+        $date_time    = !empty($trans_date) ? date('Y-m-d H:i:s', strtotime($trans_date)) : date("Y-m-d H:i:s");
         $status       = 1;
 
         $data  = [];
@@ -264,6 +267,8 @@ class Cstore extends MX_Controller
                 'batch_no'     => $batch_no[$key],
                 'quantity'     => $quantity[$key],
                 'transfer_by'  => $transfer_by,
+                'transfer_no'  => $txtTNo,
+                'notes'      => $txtRemarks,
             );
 
             // stock1
@@ -339,6 +344,7 @@ class Cstore extends MX_Controller
             // stock2
 
         }
+
         $result = $this->Stores->store_transfer($data, $data1, $transfer_details);
 
         if ($result == TRUE) {
