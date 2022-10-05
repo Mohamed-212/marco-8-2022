@@ -144,17 +144,17 @@
                                                     <option value=""></option>
                                                 </select>
                                             </div>
-                                            <div id="color_variant_area_1">
+                                            <div id="color_variant_area_1" style="visibility: hidden;">
                                                 <select name="color_variant[1]" id="color_variant_1" value=""
                                                     class="form-control color_variant width_100p">
                                                     <option value=""></option>
                                                 </select>
                                             </div>
-                                        </td>
+                                        </td> 
                                         <td class="text-center">
                                             <div>
                                                 <select name="batch_no[1]" id="batch_no_1"
-                                                    class="form-control batch_no width_100p" required>
+                                                    class="form-control batch_no width_100p" data-tags="true" required>
                                                     <option value=""></option>
                                                 </select>
                                             </div>

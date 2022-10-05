@@ -219,7 +219,7 @@ class Cstore extends MX_Controller
         $batch_no     = $this->input->post('batch_no', TRUE);
         $transfer_by  = $this->session->userdata('user_id');
         $t_store_id   = $this->input->post('t_store_id', TRUE);
-        $date_time    = date("m-d-Y");
+        $date_time    = date("Y-m-d H:i:s");
         $status       = 1;
 
         $data  = [];
@@ -265,6 +265,8 @@ class Cstore extends MX_Controller
                 'quantity'     => $quantity[$key],
                 'transfer_by'  => $transfer_by,
             );
+
+            echo "<pre>";var_dump($data, $data1, $transfer_details);exit;
 
 
 
