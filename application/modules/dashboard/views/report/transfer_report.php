@@ -76,20 +76,21 @@
 		                            </tr>
 		                        </thead>
 		                        <tbody>
-		                        <?php
+								<?php
 		                        	if ($store_to_store_transfer) {
 		                        ?>
-		                            {store_to_store_transfer}
+		                            <?php foreach ($store_to_store_transfer as $tr) : $tr = (object)$tr;?>
 									<tr>
-										<td>{date_time}</td>
-										<td>{store_name}</td>
-										<td>{t_store_name}</td>
-										<td>{product_name}</td>
-										<td>{variant_name}</td>
-										<td>{quantity}</td>
+										<td><?=date('d-m-Y', strtotime($tr->date_time))?></td>
+										<td><?=$tr->store_name?></td>
+										<td><?=$tr->t_store_name?></td>
+										<td><?=$tr->product_name?></td>
+										<td><?=$tr->variant_name?></td>
+										<td><?=$tr->quantity?></td>
 									</tr>
-									{/store_to_store_transfer}
+									
 								<?php
+								endforeach;
 									}
 								?>
 		                        </tbody>
@@ -221,17 +222,18 @@
 		                        <?php
 		                        	if ($warehouse_to_warehouse_transfer) {
 		                        ?>
-		                            {warehouse_to_warehouse_transfer}
+		                            <?php foreach ($warehouse_to_warehouse_transfer as $tr) : $tr = (object)$tr;?>
 									<tr>
-										<td>{date_time}</td>
-										<td>{wearhouse_name}</td>
-										<td>{t_wearhouse_name}</td>
-										<td>{product_name}</td>
-										<td>{variant_name}</td>
-										<td>{quantity}</td>
+										<td><?=date('d-m-Y', strtotime($tr->date_time))?></td>
+										<td><?=$tr->wearhouse_name?></td>
+										<td><?=$tr->t_wearhouse_name?></td>
+										<td><?=$tr->product_name?></td>
+										<td><?=$tr->variant_name?></td>
+										<td><?=$tr->quantity?></td>
 									</tr>
-									{/warehouse_to_warehouse_transfer}
+									
 								<?php
+								endforeach;
 									}
 								?>
 		                        </tbody>

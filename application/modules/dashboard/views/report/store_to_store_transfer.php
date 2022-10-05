@@ -39,7 +39,7 @@
 		                <?php echo form_open('dashboard/Admin_dashboard/store_to_store_transfer',array('method' => 'GET'))?>
 		               		<?php 
 							date_default_timezone_set(DEF_TIMEZONE); 
-							$today = date('d-m-Y'); ?>
+							$today = date('Y-m-d'); ?>
 
 							<div class="col-sm-3">
 								<label for="from_store" class="col-form-label"><?php echo display('store') ?>:</label>
@@ -104,7 +104,7 @@
 		                        	foreach ($store_to_store_transfer as $report) {
 		                        ?>
 									<tr>
-										<td><?php echo html_escape($report['date_time'])?></td>
+										<td><?php echo html_escape(date('d-m-Y', strtotime($report['date_time'])))?></td>
 										<td><?php echo html_escape($report['store_name'])?></td>
 										<td><?php echo html_escape($report['t_store_name'])?></td>
 										<td><?php echo html_escape($report['product_name'].'-('.$report['product_model'].')')?></td>

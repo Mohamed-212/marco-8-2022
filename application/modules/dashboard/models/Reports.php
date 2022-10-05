@@ -912,7 +912,7 @@ class Reports extends CI_Model
     //Retrieve store_to_warehouse_transfer
     public function warehouse_to_warehouse_transfer($from_date, $to_date, $wearhouse, $t_wearhouse)
     {
-        $today = date("m-d-Y");
+        $today = date("Y-m-d");
         $this->db->select("
 			a.*,
 			b.wearhouse_name,
@@ -927,8 +927,8 @@ class Reports extends CI_Model
         $this->db->join('variant d', 'd.variant_id = a.variant_id');
         $this->db->join('wearhouse_set e', 'e.wearhouse_id = a.t_warehouse_id');
         if (!empty($wearhouse)) {
-            $this->db->where('a.date_time >=', $from_date);
-            $this->db->where('a.date_time <=', $to_date);
+            $this->db->where('DATE(a.date_time) >= DATE('. date('Y-m-d', strtotime($from_date)) . ')', null, false);
+            $this->db->where('DATE(a.date_time) <= DATE('. date('Y-m-d', strtotime($to_date)) . ')', null, false);
             $this->db->where('a.warehouse_id', $wearhouse);
             $this->db->where('a.t_warehouse_id', $t_wearhouse);
         }
