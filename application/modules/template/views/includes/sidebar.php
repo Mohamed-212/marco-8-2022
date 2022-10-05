@@ -924,7 +924,9 @@
         || $this->uri->segment(3) == ("store_to_store_transfer") 
         || $this->uri->segment(3) == ('retrieve_dateWise_PurchaseReports') 
         || $this->uri->segment(3) == ('expriy_report_index') 
-        || $this->uri->segment(3) == ("unpaid_installment")) {
+        || $this->uri->segment(3) == ("unpaid_installment")
+        || $this->uri->segment(3) == ("products_balance")
+        ) {
                                         echo "active";
                                     } else {
                                         echo " ";
@@ -1010,6 +1012,10 @@
                 <li class="<?php echo (($this->uri->segment(3) == 'unpaid_installment' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Creport/unpaid_installment') ?>"><?php echo display('unpaid_installment') ?></a>
+                </li>
+                <li class="<?php echo (($this->uri->segment(3) == 'products_balance' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Creport/products_balance') ?>"><?php echo display('products_balance') ?></a>
                 </li>
             </ul>
         </li>

@@ -1024,21 +1024,52 @@ class Lreport
         return $reportList;
     }
 
-    public function get_store_transfer_report($from_date, $to_date, $from_store_id, $to_store_id)
+    public function get_products_balance($from_date = null, $to_date = null, $store_id = null, $product_id = null)
     {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Customers');
         $CI->load->model('dashboard/Soft_settings');
         $CI->load->library('dashboard/occational');
 
-        $product_report = $CI->Reports->retrieve_product_search_sales_report($from_date, $to_date);
+        $store_list = $CI->Stores->store_list();
 
-        if (!empty($product_report)) {
+        $store_list[] = [
+            'store_id' => 's1',
+            'store_name' => display('damaged')
+        ];
+        $store_list[] = [
+            'store_id' => 's2',
+            'store_name' => display('no warranty')
+        ];
+        $products_balance = $CI->Reports->products_balance($from_date, $to_date, $store_id, $product_id);
+
+       
+        if (!empty($products_balance)) {
             $i = 0;
-            foreach ($product_report as $k => $v) {
+            foreach ($products_balance as $k => $v) {
                 $i++;
-                $product_report[$k]['sl'] = $i;
+                $products_balance[$k]['sl'] = $i;
             }
         }
+
+        $product_name = $CI->db->select('product_name')->from('product_information')->where('product_id', $product_id)->get()->row()->product_name;
+
+        $data = array(
+            'title' => display('products_balance'),
+            'products_balance' => $products_balance,
+            'store_list' => $store_list,
+            'date_from' => $from_date,
+            'date_to' => $to_date,
+            'store_id' => $store_id,
+            'product_id' => $product_id,
+            'product_name' => $product_name
+        );
+        // echo "<pre>";print_r($data['products_balance']);exit;
+
+
+        $reportList = $CI->parser->parse('dashboard/report/products_balance', $data, true);
+        return $reportList;
     }
 }

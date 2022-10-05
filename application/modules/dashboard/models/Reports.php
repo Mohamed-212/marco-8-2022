@@ -6,6 +6,14 @@ class Reports extends CI_Model
     {
         parent::__construct();
         $this->load->database();
+        $this->load->model(array(
+            'dashboard/Suppliers',
+            'dashboard/Purchases',
+            'dashboard/Stores',
+            'dashboard/Variants',
+            'dashboard/Soft_settings',
+            'template/Template_model',
+        ));
     }
 
     //Count stock report
@@ -81,7 +89,7 @@ class Reports extends CI_Model
             $query->where('c.customer_id', $customer_id);
         }
 
-        if ($from_date) {            
+        if ($from_date) {
             $from_date = date('Y-m-d', strtotime($from_date));
         } else {
             // get report for current month only
@@ -89,7 +97,7 @@ class Reports extends CI_Model
         }
 
         if ($to_date) {
-            $to_date = date('Y-m-d', strtotime($to_date));            
+            $to_date = date('Y-m-d', strtotime($to_date));
         } else {
             // get report for current month only
             $to_date = date('Y-m-d', strtotime('last day of this month', strtotime(date('Y-m-d'))));
@@ -711,7 +719,7 @@ class Reports extends CI_Model
 
     public function retrieve_sales_report_store_wise($store_id, $start_date = null, $end_date = null)
     {
-        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
         $this->db->select("a.*,b.store_name");
         $this->db->from('invoice a');
         $this->db->join('store_set b', 'a.store_id = b.store_id');
@@ -729,7 +737,7 @@ class Reports extends CI_Model
 
     public function retrieve_sales_report_employee_wise($employee_id, $start_date = null, $end_date = null)
     {
-        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
         $this->db->select("a.*,b.first_name,b.last_name");
         $this->db->from('invoice a');
         $this->db->join('employee_history b', 'a.employee_id = b.id');
@@ -844,7 +852,7 @@ class Reports extends CI_Model
 
         if (!empty($from_date) && !empty($to_date)) {
             // $dateRange = "STR_TO_DATE(a.date_time, '%m-%d-%Y') BETWEEN DATE('$from_date') AND DATE('$to_date')";
-            $dateRange = "DATE(a.date_time) BETWEEN DATE('".date('Y-m-d', strtotime($from_date))."') AND DATE('".date('Y-m-d', strtotime($to_date))."')";
+            $dateRange = "DATE(a.date_time) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
             $this->db->where($dateRange, null, false);
         }
 
@@ -930,8 +938,8 @@ class Reports extends CI_Model
         $this->db->join('variant d', 'd.variant_id = a.variant_id');
         $this->db->join('wearhouse_set e', 'e.wearhouse_id = a.t_warehouse_id');
         if (!empty($wearhouse)) {
-            $this->db->where('DATE(a.date_time) >= DATE('. date('Y-m-d', strtotime($from_date)) . ')', null, false);
-            $this->db->where('DATE(a.date_time) <= DATE('. date('Y-m-d', strtotime($to_date)) . ')', null, false);
+            $this->db->where('DATE(a.date_time) >= DATE(' . date('Y-m-d', strtotime($from_date)) . ')', null, false);
+            $this->db->where('DATE(a.date_time) <= DATE(' . date('Y-m-d', strtotime($to_date)) . ')', null, false);
             $this->db->where('a.warehouse_id', $wearhouse);
             $this->db->where('a.t_warehouse_id', $t_wearhouse);
         }
@@ -949,7 +957,7 @@ class Reports extends CI_Model
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
         // $this->db->where('a.purchase_date', $today);
-        $this->db->where('DATE(a.created_at) = DATE("'.$today.'")', null, false);
+        $this->db->where('DATE(a.created_at) = DATE("' . $today . '")', null, false);
         $this->db->order_by('a.purchase_id', 'desc');
         $this->db->limit($per_page, $page);
         $query = $this->db->get();
@@ -964,7 +972,7 @@ class Reports extends CI_Model
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
         // $this->db->where('a.purchase_date', $today);
-        $this->db->where('DATE(a.created_at) = DATE("'.$today.'")', null, false);
+        $this->db->where('DATE(a.created_at) = DATE("' . $today . '")', null, false);
         $this->db->order_by('a.purchase_id', 'desc');
         $this->db->limit('500');
         $query = $this->db->get();
@@ -1021,7 +1029,7 @@ class Reports extends CI_Model
         $this->db->join('tax c', 'c.tax_id = a.tax_id');
 
         if (empty($from_date)) {
-            $this->db->where('DATE(a.tcd_created_at) = DATE("'.$today.'")');
+            $this->db->where('DATE(a.tcd_created_at) = DATE("' . $today . '")');
         } else {
             $this->db->where("DATE(a.tcd_created_at) BETWEEN DATE('$from_date') AND DATE('$to_date')");
         }
@@ -1046,7 +1054,7 @@ class Reports extends CI_Model
 
         if (empty($from_date)) {
             // $this->db->where('a.date', $today);
-            $this->db->where('DATE(a.tcs_created_at) = DATE("'.$today.'")');
+            $this->db->where('DATE(a.tcs_created_at) = DATE("' . $today . '")');
         } else {
             // $this->db->where("a.date BETWEEN '$from_date' AND '$to_date'");
             $this->db->where("DATE(a.tcs_created_at) BETWEEN DATE('$from_date') AND DATE('$to_date')");
@@ -1095,7 +1103,7 @@ class Reports extends CI_Model
     public function retrieve_dateWise_SalesReports($start_date = false, $end_date = false, $empId = false, $city = false)
     {
         // $dateRange = "STR_TO_DATE(a.date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
-        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
 
         $ids = [];
         if ($city) {
@@ -1138,7 +1146,7 @@ class Reports extends CI_Model
     public function retrieve_dateWise_PurchaseReports($start_date, $end_date)
     {
         // $dateRange = "STR_TO_DATE(a.purchase_date, '%m-%d-%Y') BETWEEN DATE('$start_date') AND DATE('$end_date')";
-        $dateRange = "DATE(a.created_at) BETWEEN DATE('".date('Y-m-d', strtotime($start_date))."') AND DATE('".date('Y-m-d', strtotime($end_date))."')";
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
 
         $this->db->select("a.*,b.supplier_id,b.supplier_name");
         $this->db->from('product_purchase a');
@@ -1289,5 +1297,92 @@ class Reports extends CI_Model
         ];
 
         return $data;
+    }
+
+    public function products_balance($from_date = null, $to_date = null, $store_id = null, $product_id = null)
+    {
+        $this->db->select('a.*')
+            ->from('product_information a');
+
+
+
+        if ($store_id) {
+            $this->db->reset_query();
+            $this->db->select('a.*')
+                ->from('purchase_stock_tbl b')
+                ->where('b.store_id', $store_id)
+                ->join('product_information a', 'a.product_id = b.product_id');
+        }
+
+        if ($product_id) {
+            $this->db->where('a.product_id', $product_id);
+        }
+
+        $products = $this->db->get();
+
+        // echo "<pre>";
+        // var_dump(count($products->result()), $store_id, $product_id);
+        // exit;
+
+        if (!$products) {
+            return redirect(base_url() . 'dashboard/Creport/products_balance');
+        }
+        $products = $products->result_array();
+
+        $store_list = $this->Stores->store_list();
+
+        $p_list = [];
+        // echo "<pre>";
+
+        foreach ($products as $product) {
+            $size_id = explode(',', $product['variants']);
+            if (is_array($size_id)) {
+                $size_id = $size_id[0];
+            } else {
+                $size_id = $product['variants'];
+            }
+
+            foreach ($store_list as $st) {
+                if ($product['assembly'] == 1) {
+                    $product['stores'][$st['store_id']] = $this->Purchases->check_variant_wise_stock2($product['product_id'], $st['store_id'], $size_id, null, $from_date, $to_date);
+                } else {
+                    $product['stores'][$st['store_id']] = $this->Purchases->check_variant_wise_stock($product['product_id'], $st['store_id'], $size_id, null, $from_date, $to_date);
+                }
+            }
+            // return stores
+            $product['stores']['s1'] = $this->get_return_products_count($product['product_id'], $size_id, '1', $from_date, $to_date); // damaged
+            $product['stores']['s2'] = $this->get_return_products_count($product['product_id'], $size_id, '2', $from_date, $to_date); // warrinty
+
+            $p_list[] = $product;
+        }
+
+        // echo"<pre>";var_dump($p_list);exit;
+
+
+
+        // echo "<pre>";
+        // var_dump($products);
+        // exit;
+
+
+
+        return $p_list;
+    }
+
+    public function get_return_products_count($product_id, $variant, $status, $date_from = null, $date_to = null)
+    {
+        $count = $this->db->select('SUM(quantity) as count')->from('product_return')->where('product_id', $product_id)->where('variant_id', $variant)->where('status', $status);
+
+        if ($date_from) {
+            $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+        }
+
+        if ($date_to) {
+            $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+        }
+
+        $count = $count->get();
+
+        return $count ? (int)(($count->row())->count) : 0;
     }
 }

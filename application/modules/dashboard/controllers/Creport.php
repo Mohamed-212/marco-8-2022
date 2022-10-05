@@ -385,16 +385,21 @@ class Creport extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function store_transfer_report()
+    public function products_balance()
     {
         $this->load->library('lreport');
 
-        $from_date = $this->input->post('from_date', true);
-        $to_date = $this->input->post('to_date', true);
-        $from_store_id = $this->input->post('from_store_id', true);
-        $to_store_id = $this->input->post('to_store_id', true);
+        $from_date = $this->input->post('date_from', true);
+        $to_date = $this->input->post('date_to', true);
+        $store_id = $this->input->post('store_id', true);
+        $product_id = $this->input->post('product_id', true);
+        $product_name = $this->input->post('product_name', true);
 
-        $content = $this->lreport->get_store_transfer_report($from_date, $to_date, $from_store_id, $to_store_id);
+        if (empty($product_name)) {
+            $product_id = null;
+        }
+
+        $content = $this->lreport->get_products_balance($from_date, $to_date, $store_id, $product_id);
         $this->template_lib->full_admin_html_view($content);
     }
 }
