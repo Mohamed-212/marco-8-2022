@@ -823,13 +823,16 @@ class Reports extends CI_Model
 			c.product_name,
 			c.product_model,
 			d.variant_name,
-			e.store_name as t_store_name
+			e.store_name as t_store_name,
+            td.transfer_no,
+            td.notes
 			");
         $this->db->from('transfer a');
         $this->db->join('store_set b', 'b.store_id = a.store_id');
         $this->db->join('product_information c', 'c.product_id = a.product_id');
         $this->db->join('variant d', 'd.variant_id = a.variant_id');
         $this->db->join('store_set e', 'e.store_id = a.t_store_id');
+        $this->db->join('transfer_details td', 'c.product_id = td.product_id');
 
 
         if (!empty($from_store)) {

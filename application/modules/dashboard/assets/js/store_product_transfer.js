@@ -103,7 +103,7 @@ function addPurchaseOrderField(divName) {
       ']" id="color_variant_' +
       count +
       '" value="" class="form-control color_variant width_100p" ><option value=""></option></select></div></td>' +
-      '<td class="text-center"><div><select name="batch_no[]" required id="batch_no_' +
+      '<td class="text-center"><div><select style="visibility: hidden;" name="batch_no[]" required id="batch_no_' +
       count +
       '" class="form-control batch_no width_100p"><option value=""></option></select></div></td>' +
       '<td class="text-right">' +

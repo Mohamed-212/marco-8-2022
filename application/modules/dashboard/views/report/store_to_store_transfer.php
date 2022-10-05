@@ -91,11 +91,13 @@
 		                        <thead>
 		                            <tr>
 		                                <th><?php echo display('date') ?></th>
+										<th><?php echo display('transfer_no') ?></th>
 										<th><?php echo display('store') ?></th>
 										<th><?php echo display('to_store') ?></th>
 										<th><?php echo display('product') ?></th>
 										<th><?php echo display('variant') ?></th>
 										<th><?php echo display('quantity') ?></th>
+										<th><?php echo display('remark') ?></th>
 		                            </tr>
 		                        </thead>
 		                        <tbody>
@@ -105,11 +107,13 @@
 		                        ?>
 									<tr>
 										<td><?php echo html_escape(date('d-m-Y', strtotime($report['date_time'])))?></td>
+										<td><?php echo html_escape($report['transfer_no'])?></td>
 										<td><?php echo html_escape($report['store_name'])?></td>
 										<td><?php echo html_escape($report['t_store_name'])?></td>
-										<td><?php echo html_escape($report['product_name'].'-('.$report['product_model'].')')?></td>
+										<td><?php echo html_escape($report['product_name'])?></td>
 										<td><?php echo html_escape($report['variant_name'])?></td>
 										<td><?php echo abs($report['quantity'])?></td>
+										<td><textarea class="form-control" readonly><?php echo html_escape($report['notes'])?></textarea></td>
 									</tr>
 								<?php
 									}
