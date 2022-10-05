@@ -270,7 +270,9 @@ class Cpurchase extends MX_Controller {
     // Retrieve Purchase Data
     public function retrieve_product_data() {
         $product_id = $this->input->post('product_id', TRUE);
-        $product_info = $this->Purchases->get_total_product($product_id);
+        $store_id = $this->input->post('store_id', TRUE);
+
+        $product_info = $this->Purchases->get_total_product($product_id, $store_id);
         echo json_encode($product_info);
     }
 

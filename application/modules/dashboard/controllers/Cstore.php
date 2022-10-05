@@ -266,10 +266,6 @@ class Cstore extends MX_Controller
                 'transfer_by'  => $transfer_by,
             );
 
-            echo "<pre>";var_dump($data, $data1, $transfer_details);exit;
-
-
-
             // stock1
             $check_stock1 = $this->check_stock($store_id, $product, $variant_id[$key], $variant_color[$key]);
             if (!empty($check_stock1)) {

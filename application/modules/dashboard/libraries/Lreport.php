@@ -1023,4 +1023,22 @@ class Lreport
         $reportList = $CI->parser->parse('dashboard/report/product_report', $data, true);
         return $reportList;
     }
+
+    public function get_store_transfer_report($from_date, $to_date, $from_store_id, $to_store_id)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Soft_settings');
+        $CI->load->library('dashboard/occational');
+
+        $product_report = $CI->Reports->retrieve_product_search_sales_report($from_date, $to_date);
+
+        if (!empty($product_report)) {
+            $i = 0;
+            foreach ($product_report as $k => $v) {
+                $i++;
+                $product_report[$k]['sl'] = $i;
+            }
+        }
+    }
 }

@@ -3,9 +3,11 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Purchases extends CI_Model {
+class Purchases extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model(array(
             'dashboard/Products'
@@ -13,7 +15,8 @@ class Purchases extends CI_Model {
     }
 
     //Count purchase
-    public function count_purchase() {
+    public function count_purchase()
+    {
         $this->db->select('a.*,b.supplier_name');
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
@@ -21,7 +24,8 @@ class Purchases extends CI_Model {
     }
 
     //purchase List
-    public function purchase_list() {
+    public function purchase_list()
+    {
         $this->db->select('a.*, a.created_at as date_time,b.supplier_name');
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
@@ -37,11 +41,12 @@ class Purchases extends CI_Model {
     }
 
     //Select All Supplier List
-    public function select_all_supplier() {
+    public function select_all_supplier()
+    {
         $query = $this->db->select('*')
-                ->from('supplier_information')
-                ->where('status', '1')
-                ->get();
+            ->from('supplier_information')
+            ->where('status', '1')
+            ->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }
@@ -49,10 +54,11 @@ class Purchases extends CI_Model {
     }
 
     //Select All currency List
-    public function select_all_currency() {
+    public function select_all_currency()
+    {
         $query = $this->db->select('*')
-                ->from('currency_info')
-                ->get();
+            ->from('currency_info')
+            ->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }
@@ -60,7 +66,8 @@ class Purchases extends CI_Model {
     }
 
     // Get default currency info
-    public function get_def_currency() {
+    public function get_def_currency()
+    {
         $this->db->select('*');
         $this->db->from('currency_info');
         $this->db->where('default_status', 1);
@@ -69,7 +76,8 @@ class Purchases extends CI_Model {
     }
 
     //Purchase Search  List
-    public function purchase_by_search($supplier_id) {
+    public function purchase_by_search($supplier_id)
+    {
         $this->db->select('a.*,b.supplier_name');
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
@@ -81,7 +89,8 @@ class Purchases extends CI_Model {
         return false;
     }
 
-    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null) {
+    public function check_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
+    {
         $this->db->select('stock_id,quantity');
         $this->db->from('purchase_stock_tbl');
         if (!empty($store_id)) {
@@ -101,7 +110,8 @@ class Purchases extends CI_Model {
     }
 
     //NUMBER GENERATOR
-    public function number_generator() {
+    public function number_generator()
+    {
         $this->db->select('invoice', 'invoice_no');
         $query = $this->db->get('product_purchase');
         $result = $query->result_array();
@@ -117,7 +127,8 @@ class Purchases extends CI_Model {
     }
 
     //Purchase entry
-    public function purchase_entry() {
+    public function purchase_entry()
+    {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -137,7 +148,7 @@ class Purchases extends CI_Model {
                 $vat = $this->input->post('vat', TRUE);
                 $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
-                $cat_id = $this->input->post('category_id', TRUE);                
+                $cat_id = $this->input->post('category_id', TRUE);
                 //start for total discount
                 //إجمالي الخصم على مستوى الفاتورة
                 $total_discount = floatval($this->input->post('total_purchase_dis', TRUE));
@@ -208,12 +219,12 @@ class Purchases extends CI_Model {
                 }
                 //Variant id required check
                 $result = array();
-//                foreach ($p_id as $k => $v) {
-//                    if (empty($variant_id[$k])) {
-//                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-//                        redirect('dashboard/Cpurchase');
-//                    }
-//                }
+                //                foreach ($p_id as $k => $v) {
+                //                    if (empty($variant_id[$k])) {
+                //                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+                //                        redirect('dashboard/Cpurchase');
+                //                    }
+                //                }
                 //proof of purchase expense 
                 $cost_sectors = $this->input->post('bank_id', TRUE);
                 if (!empty($cost_sectors)) {
@@ -244,14 +255,11 @@ class Purchases extends CI_Model {
                 $this->upload->initialize($config);
                 $upload_data = ['file' => null];
 
-                if ( ! $this->upload->do_upload('file'))
-                {
-                        $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
-                        redirect(base_url('dashboard/Cpurchase'));
-                }
-                else
-                {
-                        $upload_data = array('file' => $this->upload->data());
+                if (!$this->upload->do_upload('file')) {
+                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
+                    redirect(base_url('dashboard/Cpurchase'));
+                } else {
+                    $upload_data = array('file' => $this->upload->data());
                 }
 
                 //Add Product To Purchase Table
@@ -970,7 +978,8 @@ class Purchases extends CI_Model {
     }
 
     //Purchase order entry
-    public function purchase_order_receive_entry() {
+    public function purchase_order_receive_entry()
+    {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -1013,7 +1022,7 @@ class Purchases extends CI_Model {
                 //End for total Expense & VAT
                 //
                 //
-               ///// حساب ضريبة القيمة المضافة على النظارات الشمسية //////
+                ///// حساب ضريبة القيمة المضافة على النظارات الشمسية //////
                 //قيمة ضريبة النظارات الشمسية
                 $t_price = $this->input->post('total_price', TRUE);
                 $sunglasses_VAT = floatval($this->input->post('sunglasses_vat', TRUE));
@@ -1032,7 +1041,7 @@ class Purchases extends CI_Model {
                 $value_vat_sunglasses = $total_sunglasses_price * ($sunglasses_VAT / 100);
                 ///// توزيع الضريبة على إجمالي النظارات لمعرفة نسبة الزيادة
                 $ratio_sunglasses = 0;
-                if($total_sunglasses_price > 0){
+                if ($total_sunglasses_price > 0) {
                     $ratio_sunglasses = $value_vat_sunglasses / $total_sunglasses_price;
                 }
                 //
@@ -1051,12 +1060,12 @@ class Purchases extends CI_Model {
                 //
                 //Variant id required check
                 $result = array();
-//                foreach ($p_id as $k => $v) {
-//                    if (empty($variant_id[$k])) {
-//                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-//                        redirect('dashboard/Cpurchase');
-//                    }
-//                }
+                //                foreach ($p_id as $k => $v) {
+                //                    if (empty($variant_id[$k])) {
+                //                        $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+                //                        redirect('dashboard/Cpurchase');
+                //                    }
+                //                }
                 //proof of purchase expense 
                 $cost_sectors = $this->input->post('bank_id', TRUE);
                 if (!empty($cost_sectors)) {
@@ -1175,7 +1184,7 @@ class Purchases extends CI_Model {
                         $rate3 = $total_price_after_exp / $product_quantity;
                         //End for total Expense & VAT
                         //
-                        
+
 
                         $i_vat_rate = $vat_rate[$key];
                         $i_vat = $vat[$key];
@@ -1793,7 +1802,8 @@ class Purchases extends CI_Model {
     }
 
     //Retrieve purchase Edit Data
-    public function retrieve_purchase_editdata($purchase_id) {
+    public function retrieve_purchase_editdata($purchase_id)
+    {
         $this->db->select('a.*,b.*,c.product_id,c.product_name,c.product_model,d.supplier_id,d.supplier_name');
         $this->db->from('product_purchase a');
         $this->db->join('product_purchase_details b', 'b.purchase_id =a.purchase_id');
@@ -1809,7 +1819,8 @@ class Purchases extends CI_Model {
     }
 
     //Update Purchase
-    public function update_purchase($npurchase_id = false, $ninvoice_no = false) {
+    public function update_purchase($npurchase_id = false, $ninvoice_no = false)
+    {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -2046,42 +2057,42 @@ class Purchases extends CI_Model {
                 // Reverse purchase transections start
                 $previous_purchases = $this->db->select('*')->from('acc_transaction')->where('VNo', 'p-' . $purchase_id)->get()->result_array();
                 if (count($previous_purchases) > 0) {
-//                    $transection_reverse = array();
-//                    foreach ($previous_purchases as $key => $purchases) {
-//                        $ID = $purchases['ID'];
-//                        $fy_id = $purchases['fy_id'];
-//                        $VNo = $purchases['VNo'];
-//                        $Vtype = $purchases['Vtype'];
-//                        $VDate = $purchases['VDate'];
-//                        $COAID = $purchases['COAID'];
-//                        $Narration = $purchases['Narration'];
-//                        $Debit = $purchases['Debit'];
-//                        $Credit = $purchases['Credit'];
-//                        $IsPosted = $purchases['IsPosted'];
-//                        $is_opening = $purchases['is_opening'];
-//                        $store_id = $purchases['store_id'];
-//                        $CreateBy = $this->session->userdata('user_id');
-//                        $createdate = date('Y-m-d H:i:s');
-//                        $UpdateBy = $this->session->userdata('user_id');
-//                        $IsAppove = $purchases['IsAppove'];
-//
-//                        $transection_reverse[] = array(
-//                            'fy_id' => $fy_id,
-//                            'VNo' => $VNo,
-//                            'Vtype' => $Vtype,
-//                            'VDate' => $createdate,
-//                            'COAID' => $COAID,
-//                            'Narration' => 'Purchase reverse transection ' . $Narration,
-//                            'Debit' => $Credit,
-//                            'Credit' => $Debit,
-//                            'IsPosted' => $IsPosted,
-//                            'CreateBy' => $CreateBy,
-//                            'CreateDate' => $createdate,
-//                            'store_id' => $store_id,
-//                            'IsAppove' => 1
-//                        );
-//                    }
-//                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
+                    //                    $transection_reverse = array();
+                    //                    foreach ($previous_purchases as $key => $purchases) {
+                    //                        $ID = $purchases['ID'];
+                    //                        $fy_id = $purchases['fy_id'];
+                    //                        $VNo = $purchases['VNo'];
+                    //                        $Vtype = $purchases['Vtype'];
+                    //                        $VDate = $purchases['VDate'];
+                    //                        $COAID = $purchases['COAID'];
+                    //                        $Narration = $purchases['Narration'];
+                    //                        $Debit = $purchases['Debit'];
+                    //                        $Credit = $purchases['Credit'];
+                    //                        $IsPosted = $purchases['IsPosted'];
+                    //                        $is_opening = $purchases['is_opening'];
+                    //                        $store_id = $purchases['store_id'];
+                    //                        $CreateBy = $this->session->userdata('user_id');
+                    //                        $createdate = date('Y-m-d H:i:s');
+                    //                        $UpdateBy = $this->session->userdata('user_id');
+                    //                        $IsAppove = $purchases['IsAppove'];
+                    //
+                    //                        $transection_reverse[] = array(
+                    //                            'fy_id' => $fy_id,
+                    //                            'VNo' => $VNo,
+                    //                            'Vtype' => $Vtype,
+                    //                            'VDate' => $createdate,
+                    //                            'COAID' => $COAID,
+                    //                            'Narration' => 'Purchase reverse transection ' . $Narration,
+                    //                            'Debit' => $Credit,
+                    //                            'Credit' => $Debit,
+                    //                            'IsPosted' => $IsPosted,
+                    //                            'CreateBy' => $CreateBy,
+                    //                            'CreateDate' => $createdate,
+                    //                            'store_id' => $store_id,
+                    //                            'IsAppove' => 1
+                    //                        );
+                    //                    }
+                    //                    $reverse = $this->db->insert_batch('acc_transaction', $transection_reverse);
 
                     $this->db->where('VNo', 'p-' . $purchase_id);
                     $this->db->delete('acc_transaction');
@@ -2632,7 +2643,8 @@ class Purchases extends CI_Model {
         }
     }
 
-    public function get_conversion_rate($currency_id) {
+    public function get_conversion_rate($currency_id)
+    {
         $this->db->select('*');
         $this->db->from('currency_info');
         $this->db->where('currency_id ', $currency_id);
@@ -2642,7 +2654,8 @@ class Purchases extends CI_Model {
     }
 
     //Get total product
-    public function get_total_product($product_id) {
+    public function get_total_product($product_id, $store_id = null)
+    {
 
         $this->db->select('*');
         $this->db->from('product_information');
@@ -2682,21 +2695,42 @@ class Purchases extends CI_Model {
             }
         }
 
-        $purchase = $this->db->select("SUM(quantity) as totalPurchaseQnty")
-            ->from('product_purchase_details')
-            ->where('product_id', $product_id)
-            ->get()
-            ->row();
-        $sales = $this->db->select("SUM(quantity) as totalSalesQnty")
-            ->from('invoice_stock_tbl')
-            ->where('product_id', $product_id)
-            ->get()
-            ->row();
-        $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        // $this->db->reset_query();
+        // $this->db->select("SUM(quantity) as totalPurchaseQnty")
+        //     ->from('product_purchase_details')
+        //     ->where('product_id', $product_id);
+        // if (!empty($store_id)) {
+        //     $this->db->where('store_id', $store_id);
+        // }
+        // $purchase = $this->db
+        //     ->get()
+        //     ->row();
+        // $this->db->reset_query();
+        // $this->db->select("SUM(quantity) as totalSalesQnty")
+        //     ->from('invoice_stock_tbl')
+        //     ->where('product_id', $product_id);
+        // if (!empty($store_id)) {
+        //     $this->db->where('store_id', $store_id);
+        // }
+        // $sales = $this->db
+        //     ->get()
+        //     ->row();
+        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
         // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
 
+        // get stock from wise variant
+        $varies = explode(',', $product_information->variants);
+        $size_id = $varies[0];
+        $color_id = isset($varies[1]) ? $varies[1] : null;
+        if ($product_information->assembly == 1) {
+            $stock = $this->Purchases->check_variant_wise_stock2($product_id, $store_id, $size_id, $color_id);
+        } else {
+            $stock = $this->Purchases->check_variant_wise_stock($product_id, $store_id, $size_id, $color_id);
+        }
+
+
         $data2 = array(
-            'total_product' => @$stock,
+            'total_product' => $stock,
             'product_id' => $product_information->product_id,
             'supplier_price' => $product_information->supplier_price,
             'variant' => $html,
@@ -2710,7 +2744,8 @@ class Purchases extends CI_Model {
     }
 
     //Retrieve company Edit Data
-    public function retrieve_company() {
+    public function retrieve_company()
+    {
         $this->db->select('*');
         $this->db->from('company_information');
         $this->db->limit('1');
@@ -2722,7 +2757,8 @@ class Purchases extends CI_Model {
     }
 
     // Delete purchase Item
-    public function delete_purchase($purchase_id) {
+    public function delete_purchase($purchase_id)
+    {
         //reduce stock first
         $purchase_history = $this->db->select('*')->from('product_purchase_details')->where('purchase_id', $purchase_id)->get()->result_array();
         if (count($purchase_history) > 0) {
@@ -2768,7 +2804,8 @@ class Purchases extends CI_Model {
         return true;
     }
 
-    public function purchase_search_list($cat_id, $company_id) {
+    public function purchase_search_list($cat_id, $company_id)
+    {
         $this->db->select('a.*,b.sub_category_name,c.category_name');
         $this->db->from('purchases a');
         $this->db->join('purchase_sub_category b', 'b.sub_category_id = a.sub_category_id');
@@ -2783,7 +2820,8 @@ class Purchases extends CI_Model {
     }
 
     //Retrieve purchase_details_data
-    public function purchase_details_data($purchase_id) {
+    public function purchase_details_data($purchase_id)
+    {
         $this->db->select('a.*,b.*,c.*,d.product_id,d.product_name,d.image_thumb,e.unit_short_name,d.product_model,f.variant_name');
         $this->db->from('product_purchase a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id', 'left');
@@ -2800,7 +2838,8 @@ class Purchases extends CI_Model {
     }
 
     //This function will check the product & supplier relationship.
-    public function product_supplier_check($product_id, $supplier_id) {
+    public function product_supplier_check($product_id, $supplier_id)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('product_id', $product_id);
@@ -2813,7 +2852,8 @@ class Purchases extends CI_Model {
     }
 
     //This function is used to Generate Key
-    public function generator($lenth) {
+    public function generator($lenth)
+    {
         $number = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "N", "M", "O", "P", "Q", "R", "S", "U", "V", "T", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
 
         for ($i = 0; $i < $lenth; $i++) {
@@ -2830,7 +2870,8 @@ class Purchases extends CI_Model {
     }
 
     // Get variant stock info
-    public function check_variant_wise_stock($product_id, $store_id, $variant_id, $variant_color = false) {
+    public function check_variant_wise_stock($product_id, $store_id, $variant_id, $variant_color = false)
+    {
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
         $this->db->where('product_id', $product_id);
@@ -2856,11 +2897,12 @@ class Purchases extends CI_Model {
 
         $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
         // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
-        
+
         return $stock;
     }
 
-    public function check_variant_wise_stock2($product_id, $store_id, $variant_id, $variant_color = false) {
+    public function check_variant_wise_stock2($product_id, $store_id, $variant_id, $variant_color = false)
+    {
 
         $this->db->select("parent_product_id,child_product_id");
         $this->db->from('assembly_products');
@@ -2889,7 +2931,8 @@ class Purchases extends CI_Model {
         return $stock;
     }
 
-    public function check_batch_no_wise_stock($product_id, $store_id, $variant_id, $variant_color = false, $batch_no) {
+    public function check_batch_no_wise_stock($product_id, $store_id, $variant_id, $variant_color = false, $batch_no)
+    {
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('product_purchase_details');
         $this->db->where('product_id', $product_id);
@@ -2927,7 +2970,8 @@ class Purchases extends CI_Model {
         return $stock;
     }
 
-    public function check_pos_batch_no_wise_stock($product_id, $store_id, $batch_no) {
+    public function check_pos_batch_no_wise_stock($product_id, $store_id, $batch_no)
+    {
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('product_purchase_details');
         $this->db->where('product_id', $product_id);
@@ -2955,11 +2999,12 @@ class Purchases extends CI_Model {
     }
 
     // check variant wise product price
-    public function check_variant_wise_price($product_id, $variant_id, $variant_color = false) {
+    public function check_variant_wise_price($product_id, $variant_id, $variant_color = false)
+    {
         $pinfo = $this->db->select('price, onsale, onsale_price, variant_price')
-                        ->from('product_information')
-                        ->where('product_id', $product_id)
-                        ->get()->row();
+            ->from('product_information')
+            ->where('product_id', $product_id)
+            ->get()->row();
 
         if ($pinfo->variant_price) {
 
@@ -2998,12 +3043,13 @@ class Purchases extends CI_Model {
         return $price_arr;
     }
 
-//////////////// pricing ///////////////
-    public function check_product_price($product_id, $pricing_id) {
+    //////////////// pricing ///////////////
+    public function check_product_price($product_id, $pricing_id)
+    {
         $pinfo = $this->db->select('pricing,price')
-                        ->from('product_information')
-                        ->where('product_id', $product_id)
-                        ->get()->row();
+            ->from('product_information')
+            ->where('product_id', $product_id)
+            ->get()->row();
 
         if ($pinfo->pricing == 1) {
 
@@ -3028,7 +3074,8 @@ class Purchases extends CI_Model {
         return $price_arr;
     }
 
-    public function get_next_pur_order_id() {
+    public function get_next_pur_order_id()
+    {
         $this->db->select_max('pur_order_id');
         $this->db->from('purchase_orders');
         $result = $this->db->get();
@@ -3040,7 +3087,8 @@ class Purchases extends CI_Model {
     }
 
     //purchase order List
-    public function get_purchase_order_list() {
+    public function get_purchase_order_list()
+    {
         $this->db->select('a.*,b.supplier_name, c.store_name');
         $this->db->from('purchase_orders a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id', 'left');
@@ -3052,7 +3100,8 @@ class Purchases extends CI_Model {
     }
 
     //Purchase Order entry
-    public function purchase_order_entry($purchase_id) {
+    public function purchase_order_entry($purchase_id)
+    {
         //Generator purchase id
         $p_id = $this->input->post('product_id', TRUE);
         $supplier_id = $this->input->post('supplier_id', TRUE);
@@ -3081,12 +3130,12 @@ class Purchases extends CI_Model {
 
         //Variant id required check
         $result = array();
-//        foreach ($p_id as $k => $v) {
-//            if (empty($variant_id[$k])) {
-//                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-//                redirect('dashboard/Cpurchase/purchase_order');
-//            }
-//        }
+        //        foreach ($p_id as $k => $v) {
+        //            if (empty($variant_id[$k])) {
+        //                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+        //                redirect('dashboard/Cpurchase/purchase_order');
+        //            }
+        //        }
         //Product Purchase Details
         $rate = $this->input->post('product_rate', TRUE);
         $t_price = $this->input->post('total_price', TRUE);
@@ -3184,7 +3233,8 @@ class Purchases extends CI_Model {
     }
 
     // Delete purchase Item
-    public function delete_purchase_order($purchase_order_id) {
+    public function delete_purchase_order($purchase_order_id)
+    {
         $this->db->trans_start();
         //Delete product_purchase table
         $this->db->where('pur_order_id', $purchase_order_id);
@@ -3201,7 +3251,8 @@ class Purchases extends CI_Model {
         }
     }
 
-    public function get_purchase_order_by_id($pur_order_id) {
+    public function get_purchase_order_by_id($pur_order_id)
+    {
 
         $this->db->select('a.*,b.*,c.product_id,c.product_name,c.product_model,c.category_id,d.supplier_id,d.supplier_name');
         $this->db->from('purchase_orders a');
@@ -3217,7 +3268,8 @@ class Purchases extends CI_Model {
         return false;
     }
 
-    public function get_po_shortinfo_by_id($pur_order_id) {
+    public function get_po_shortinfo_by_id($pur_order_id)
+    {
         $this->db->select('a.*,d.*');
         $this->db->from('purchase_orders a');
         $this->db->join('supplier_information d', 'd.supplier_id = a.supplier_id', 'left');
@@ -3229,7 +3281,8 @@ class Purchases extends CI_Model {
         return false;
     }
 
-    public function get_purchase_order_details($pur_order_id) {
+    public function get_purchase_order_details($pur_order_id)
+    {
         $this->db->select('a.*, b.*, c.variant_name, d.variant_name as variant_color,e.rc_quantity, e.rc_rate, e.rc_total_amount,,f.rt_quantity, f.rt_rate, f.rt_total_amount,g.unit_short_name');
         $this->db->from('purchase_order_details a');
         $this->db->join('product_information b', 'b.product_id=a.product_id', 'left');
@@ -3244,7 +3297,8 @@ class Purchases extends CI_Model {
     }
 
     // Purchase order update
-    public function purchase_order_receive($pur_order_id) {
+    public function purchase_order_receive($pur_order_id)
+    {
         $check_receive_status = $this->db->select('receive_status')->from('purchase_orders')->where('pur_order_id', $pur_order_id)->get()->row();
         if ($check_receive_status->receive_status == 0) {
             $p_id = $this->input->post('product_id', TRUE);
@@ -3326,7 +3380,8 @@ class Purchases extends CI_Model {
         }
     }
 
-    public function purchase_order_update($pur_order_id) {
+    public function purchase_order_update($pur_order_id)
+    {
         //Generator purchase id
         $pur_order_id = $pur_order_id;
         $pur_no = $this->db->select('pur_order_no')->from('purchase_orders')->where('pur_order_id', $pur_order_id)->get()->row();
@@ -3369,12 +3424,12 @@ class Purchases extends CI_Model {
         }
         //Variant id required check
         $result = array();
-//        foreach ($p_id as $k => $v) {
-//            if (empty($variants[$k])) {
-//                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
-//                redirect(base_url('dashboard/Cpurchase/purchase_order'));
-//            }
-//        }
+        //        foreach ($p_id as $k => $v) {
+        //            if (empty($variants[$k])) {
+        //                $this->session->set_userdata(array('error_message' => display('variant_is_required')));
+        //                redirect(base_url('dashboard/Cpurchase/purchase_order'));
+        //            }
+        //        }
         //Update Product Purchase Table
         $pdate = $this->input->post('purchase_date', TRUE);
         $edate = $this->input->post('expire_date', TRUE);
@@ -3459,7 +3514,8 @@ class Purchases extends CI_Model {
         return true;
     }
 
-    public function return_purchase_order() {
+    public function return_purchase_order()
+    {
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -3654,7 +3710,8 @@ class Purchases extends CI_Model {
     }
 
     // Product Return
-    public function purchase_order_return($pur_order_id) {
+    public function purchase_order_return($pur_order_id)
+    {
         $this->return_purchase_order();
 
         $p_id = $this->input->post('product_id', TRUE);
@@ -3712,7 +3769,8 @@ class Purchases extends CI_Model {
         }
     }
 
-    public function check_batch_wise_product($product_id = null, $variant_id = null, $variant_color = null, $store_id = null) {
+    public function check_batch_wise_product($product_id = null, $variant_id = null, $variant_color = null, $store_id = null)
+    {
         $this->db->select('batch_no,expiry_date');
         $this->db->from('product_purchase_details');
         $this->db->where('product_id', $product_id);
@@ -3737,7 +3795,8 @@ class Purchases extends CI_Model {
         return $batchHtml;
     }
 
-    public function check_batch_wise_transfer_product($product_id = null, $variant_id = null, $variant_color = null, $store_id = null) {
+    public function check_batch_wise_transfer_product($product_id = null, $variant_id = null, $variant_color = null, $store_id = null)
+    {
         $this->db->select('a.batch_no,b.expiry_date');
         $this->db->from('transfer_details a');
         $this->db->join('product_purchase_details b', 'b.batch_no = a.batch_no', 'left');
@@ -3765,7 +3824,8 @@ class Purchases extends CI_Model {
     }
 
     //purchase return List
-    public function purchase_return_list() {
+    public function purchase_return_list()
+    {
         $this->db->select('a.*,b.supplier_name,c.invoice_no,c.invoice');
         $this->db->from('product_purchase_return a');
         $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
@@ -3781,7 +3841,8 @@ class Purchases extends CI_Model {
     }
 
     //Retrieve purchase_details_data
-    public function purchase_return_details_data($purchase_return_id) {
+    public function purchase_return_details_data($purchase_return_id)
+    {
 
         $this->db->select('a.*,b.*,c.*,d.product_id,d.product_name,d.product_model,f.variant_name,p.invoice_no');
         $this->db->from('product_purchase_return a');
@@ -3799,7 +3860,8 @@ class Purchases extends CI_Model {
     }
 
     //Retrieve purchase Edit Data
-    public function retrieve_purchase_return_editdata($purchase_id) {
+    public function retrieve_purchase_return_editdata($purchase_id)
+    {
         $this->db->select('a.*,b.*,c.product_id,c.product_name,c.product_model,d.supplier_id,d.supplier_name');
         $this->db->from('product_purchase_return a');
         $this->db->join('product_purchase_return_details b', 'b.return_id =a.purchase_return_id');
@@ -3814,7 +3876,8 @@ class Purchases extends CI_Model {
         return false;
     }
 
-    public function return_detail($purchase_return_id) {
+    public function return_detail($purchase_return_id)
+    {
         $this->db->select('a.*,b.product_name,b.product_model');
         $this->db->from('product_purchase_return_details a');
         $this->db->where('a.return_id', $purchase_return_id);
@@ -3826,14 +3889,15 @@ class Purchases extends CI_Model {
         return false;
     }
 
-    public function purchase_expense_detail($purchase_id) {
+    public function purchase_expense_detail($purchase_id)
+    {
         $purchase_expense_detail = $this->db->select('*')->from('proof_of_purchase_expese')->where('purchase_id', $purchase_id)->get()->result();
         return $purchase_expense_detail;
     }
 
-    public function total_purchase_expense($purchase_id) {
+    public function total_purchase_expense($purchase_id)
+    {
         $total_purchase_expense = $this->db->select('SUM(purchase_expense) as purchase_expense')->from('proof_of_purchase_expese')->where('purchase_id', $purchase_id)->get()->result_array();
         return $total_purchase_expense;
     }
-
 }

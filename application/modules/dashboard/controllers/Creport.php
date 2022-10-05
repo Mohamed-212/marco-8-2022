@@ -384,4 +384,17 @@ class Creport extends MX_Controller
         $content = $this->lreport->unpaid_installments($from_date, $to_date, $customer_id);
         $this->template_lib->full_admin_html_view($content);
     }
+
+    public function store_transfer_report()
+    {
+        $this->load->library('lreport');
+
+        $from_date = $this->input->post('from_date', true);
+        $to_date = $this->input->post('to_date', true);
+        $from_store_id = $this->input->post('from_store_id', true);
+        $to_store_id = $this->input->post('to_store_id', true);
+
+        $content = $this->lreport->get_store_transfer_report($from_date, $to_date, $from_store_id, $to_store_id);
+        $this->template_lib->full_admin_html_view($content);
+    }
 }
