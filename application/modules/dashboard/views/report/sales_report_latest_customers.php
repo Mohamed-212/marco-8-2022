@@ -132,7 +132,7 @@
 											foreach ($sales_reports as $invoice) :
 												$sl++;
 												$next = 0;
-												$total_sale += $invoice['total_amount'];
+												$total_sale += $invoice['balance'][0][0]['total_credit'] - $invoice['balance'][0][0]['total_debit'];
 										?>
 
 												<tr>
@@ -162,7 +162,7 @@
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="7" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+											<td colspan="3" align="right"><b><?php echo display('grand_total') ?>:</b></td>
 											<td align="center"><b><?php echo html_escape($total_sale); ?></td>
 										</tr>
 									</tfoot>
