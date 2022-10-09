@@ -915,6 +915,8 @@
         || $this->uri->segment(3) == ("retrieve_sales_report_employee_wise") 
         || $this->uri->segment(3) == ("sales_report_city_wise") 
         || $this->uri->segment(3) == ("retrieve_sales_report_city_wise") 
+        || $this->uri->segment(3) == ("sales_report_product_wise") 
+        || $this->uri->segment(3) == ("retrieve_sales_report_product_wise") 
         || $this->uri->segment(3) == ("transfer_report") 
         || $this->uri->segment(3) == ("product_sales_reports_date_wise") 
         || $this->uri->segment(3) == ("total_profit_report") 
@@ -943,6 +945,11 @@
                     class="<?php echo (($this->uri->segment(3) == 'todays_sales_report' || ($this->uri->segment(3) == 'retrieve_dateWise_SalesReports') ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Admin_dashboard/todays_sales_report') ?>"><?php echo display('sales_report') ?></a>
+                </li>
+                <li
+                    class="<?php echo (($this->uri->segment(3) == 'sales_report_product_wise' || ($this->uri->segment(3) == 'retrieve_sales_report_product_wise') ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_product_wise') ?>"><?php echo display('sales_report_product_wise') ?></a>
                 </li>
                 <?php }
                         if ($this->permission->check_label('sales_report_store_wise')->access()) { ?>

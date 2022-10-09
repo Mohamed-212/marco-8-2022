@@ -751,6 +751,67 @@ class Reports extends CI_Model
         return $query->result_array();
     }
 
+    //=============sales report product wise=================
+
+    public function retrieve_sales_report_product_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("invoice_id");
+        $this->db->from('invoice a');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        $result = [];
+        foreach ($query as $inv) {
+            $result[] = $this->get_invoice_details($inv['invoice_id']);
+        }
+
+        return $result;
+    }
+
+    public function retrieve_return_report_product_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time, inv.invoice, p.product_name");
+        $this->db->from('invoice_return a');
+        $this->db->join('invoice inv', 'inv.invoice_id = a.invoice_id');
+        $this->db->join('product_information p', 'p.product_id = a.product_id');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+        // echo "<pre>";var_dump($query);exit;
+
+        // $result = [];
+        // foreach ($query as $inv) {
+        //     $inv['invoice_all_data'] = $this->get_return_invoice_details('PVPRNKOHP7RWYV1');
+        //     $result[] = $inv;
+        // }
+
+        // echo "<pre>";var_dump($query);exit;
+
+        return $query;
+    }
+
 
     //Retrieve todays_sales_report
     public function todays_total_sales_report()
@@ -1384,5 +1445,113 @@ class Reports extends CI_Model
         $count = $count->get();
 
         return $count ? (int)(($count->row())->count) : 0;
+    }
+
+    public function get_invoice_details($invoice_id)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Soft_settings');
+        $CI->load->library('dashboard/occational');
+        $CI->load->model('dashboard/Shipping_methods');
+        $CI->load->model('hrm/Hrm_model');
+        $CI->load->model('dashboard/Products');
+
+        $invoice_detail = $CI->Invoices->retrieve_invoice_html_data($invoice_id);
+        // echo "<pre>";var_dump($invoice_detail);exit;
+        $invoice_detail[0]['invoice_discount'] = $invoice_detail[0]['total_invoice_discount'];
+        $order_no = $CI->db->select('b.order as order_no')->from('invoice a')->where('a.order_id', $invoice_detail[0]['order_id'])->join('order b', 'a.order_id = b.order_id', 'left')->get()->result();
+        $quotation_no = $CI->db->select('q.quotation as quotation_no')->from('invoice a')->where('a.quotation_id', $invoice_detail[0]['quotation_id'])->join('quotation q', 'q.quotation_id = a.quotation_id', 'left')->get()->result();
+
+        $cardpayments = $CI->Invoices->get_invoice_card_payments($invoice_id);
+        $shipping_method  = $CI->Shipping_methods->shipping_method_search_item($invoice_detail[0]['shipping_method']);
+        $subTotal_quantity = 0;
+        $subTotal_cartoon = 0;
+        $subTotal_discount = 0;
+        $isTaxed = 1;
+        if ($invoice_detail[0]['is_quotation'] > 0) {
+            $isTaxed = 0;
+        }
+        if (!empty($invoice_detail)) {
+            foreach ($invoice_detail as $k => $v) {
+                $invoice_detail[$k]['final_date'] = $CI->occational->dateConvert($invoice_detail[$k]['date']);
+                $subTotal_quantity = $subTotal_quantity + $invoice_detail[$k]['quantity'];
+            }
+            $i = 0;
+            $products = [];
+            foreach ($invoice_detail as $k => $v) {
+                $i++;
+                $invoice_detail[$k]['sl'] = $i;
+                $invoice_detail[$k]['product_price'] = ($CI->Products->get_product_model([
+                    'product_model' => $invoice_detail[0]['product_model'],
+                    'product_name' => $invoice_detail[0]['product_name'],
+                ]))->price;
+            }
+        }
+
+        $currency_details = $CI->Soft_settings->retrieve_currency_info();
+        $company_info      = $CI->Invoices->retrieve_company();
+
+        $created_at      = explode(' ', $invoice_detail[0]['date_time']);
+        $invoice_time = @$created_at[1];
+
+        $all_details = $invoice_detail;
+
+        $hide_discount = false;
+
+        $data = array(
+            'invoice_id'       => $invoice_detail[0]['invoice_id'],
+            'invoice_no'       => $invoice_detail[0]['invoice'],
+            'customer_id'      => $invoice_detail[0]['customer_id'],
+            'customer_no'      => $invoice_detail[0]['customer_no'],
+            'customer_name'       => $invoice_detail[0]['customer_name'],
+            'customer_mobile'  => $invoice_detail[0]['customer_mobile'],
+            'customer_email'   => $invoice_detail[0]['customer_email'],
+            'store_id'           => (empty($invoice_detail[0]['store_id']) ? '' : $invoice_detail[0]['store_id']),
+            'vat_no'           => $invoice_detail[0]['vat_no'],
+            'cr_no'               => $invoice_detail[0]['cr_no'],
+            'customer_address' => $invoice_detail[0]['customer_address_1'],
+            'final_date'       => $invoice_detail[0]['final_date'],
+            'invoice_time'       => $invoice_time,
+            'total_amount'       => $invoice_detail[0]['total_amount'],
+            'total_discount'   => $invoice_detail[0]['total_discount'],
+            'invoice_discount' => $invoice_detail[0]['invoice_discount'],
+            'percentage_discount' => $invoice_detail[0]['percentage_discount'],
+            'service_charge'   => $invoice_detail[0]['service_charge'],
+            'shipping_charge'  => $invoice_detail[0]['shipping_charge'],
+            'shipping_method'  => @$shipping_method[0]['method_name'],
+            'paid_amount'       => $invoice_detail[0]['paid_amount'],
+            'due_amount'       => $invoice_detail[0]['due_amount'],
+            'product_type'     => $invoice_detail[0]['product_type'],
+            'invoice_details'  => $invoice_detail[0]['invoice_details'],
+            'subTotal_quantity' => $subTotal_quantity,
+            'invoice_all_data' => $all_details,
+            'isTaxed'          => $isTaxed,
+            'order_no'         => $order_no,
+            'quotation_no'     => $quotation_no,
+            'company_info'       => $company_info,
+            'currency'            => $currency_details[0]['currency_icon'],
+            'position'            => $currency_details[0]['currency_position'],
+            'ship_customer_short_address' => $invoice_detail[0]['ship_customer_short_address'],
+            'ship_customer_name' => $invoice_detail[0]['ship_customer_name'],
+            'ship_customer_mobile' => $invoice_detail[0]['ship_customer_mobile'],
+            'ship_customer_email' => $invoice_detail[0]['ship_customer_email'],
+            'cardpayments'         => $cardpayments,
+            'hide_discount' => $hide_discount
+        );
+        $data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
+
+        return $data;
+    }
+
+    public function get_return_invoice_details($invoice_id)
+    {
+        $invoice_return = $this->db->select('*')->from('invoice_return ir')
+            ->join('invoice_details ind', 'ind.invoice_id = ir.invoice_id', 'left')
+            ->join('product_information pi', 'pi.product_id = ind.product_id')
+            ->where('return_invoice_id', $invoice_id)->get()->result_array();
+        // echo "<pre>";var_dump($invoice_return);exit;
+
+        return $invoice_return;
     }
 }
