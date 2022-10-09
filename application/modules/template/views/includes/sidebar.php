@@ -961,6 +961,11 @@
                     <a
                         href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_customer_wise') ?>"><?php echo display('sales_report_customer_wise') ?></a>
                 </li>
+                <li
+                    class="<?php echo (($this->uri->segment(3) == 'sales_report_summary_wise' || ($this->uri->segment(3) == 'retrieve_sales_report_summary_wise') ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_summary_wise') ?>"><?php echo display('sales_report_summary_wise') ?></a>
+                </li>
                 <?php }
                         if ($this->permission->check_label('sales_report_store_wise')->access()) { ?>
                 <li
