@@ -901,7 +901,7 @@ class Reports extends CI_Model
         foreach ($query as $q) {
             $q['total_quantity'] = 0;
             $q['total_quantity'] = ($this->db->select('SUM(quantity) as total_quantity')->from('invoice_details')->where('invoice_id', $q['invoice_id'])->get()->row())->total_quantity;
-            
+
             $customers[$q['customer_id']]++;
             $result[] = $q;
         }
@@ -923,7 +923,7 @@ class Reports extends CI_Model
             $this->db->where($dateRange, NULL, FALSE);
         }
         // $this->db->order_by('a.created_at', 'desc');
-        $this->db->order_by('a.customer_id', 'asc'); 
+        $this->db->order_by('a.customer_id', 'asc');
         $this->db->limit('500');
         $query = $this->db->get();
 
@@ -977,7 +977,7 @@ class Reports extends CI_Model
             $q['total_quantity'] = ($this->db->select('SUM(quantity) as total_quantity')->from('invoice_details')->where('invoice_id', $q['invoice_id'])->get()->row())->total_quantity;
 
             $q['return'] = ($this->db->select('*')->from('invoice_return irt')->where('irt.invoice_id', $q['invoice_id'])->get()->result_array());
-            
+
             $customers[$q['customer_id']]++;
             $result[] = $q;
         }
@@ -999,7 +999,7 @@ class Reports extends CI_Model
             $this->db->where($dateRange, NULL, FALSE);
         }
         // $this->db->order_by('a.created_at', 'desc');
-        $this->db->order_by('a.customer_id', 'asc'); 
+        $this->db->order_by('a.customer_id', 'asc');
         $this->db->limit('500');
         $query = $this->db->get();
 
@@ -1020,6 +1020,38 @@ class Reports extends CI_Model
         }
 
         $result['customers'] = $customers;
+        return $result;
+    }
+
+    public function retrieve_sales_report_latest_customers($start_date = null, $end_date = null)
+    {
+        $this->load->model('dashboard/Customers');
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time");
+        $this->db->from('customer_information a');
+        if ($start_date && $end_date) {
+            // $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit(10);
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [];
+        // $customers = [];
+        foreach ($query as $q) {
+            $q['balance'] = $this->Customers->customer_transection_summary($q['customer_id'], $start_date, $end_date);
+            $result[] = $q;
+        }
+
         return $result;
     }
 

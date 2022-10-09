@@ -1039,6 +1039,11 @@
                     <a
                         href="<?php echo base_url('dashboard/Creport/products_balance') ?>"><?php echo display('products_balance') ?></a>
                 </li>
+                <li
+                    class="<?php echo (($this->uri->segment(3) == 'sales_report_latest_customers' || ($this->uri->segment(3) == 'retrieve_sales_report_latest_customers') ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_latest_customers') ?>"><?php echo display('sales_report_latest_customers') ?></a>
+                </li>
             </ul>
         </li>
         <?php } ?>
