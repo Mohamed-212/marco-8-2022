@@ -331,6 +331,20 @@ class Admin_dashboard extends MX_Controller
     }
 
     #============Invoice wise sales report==============#
+    public function sales_report_invoice_wise()
+    {
+
+        $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $data = [
+            'title' => display('sales_report_invoice_wise'),
+        ];
+
+        $content = $this->parser->parse('dashboard/report/sales_report_invoice_wise', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+
+    }
+
     public function retrieve_sales_report_invoice_wise()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();

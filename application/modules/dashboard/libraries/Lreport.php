@@ -632,15 +632,15 @@ class Lreport
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Stores');
         $sales_reports = $CI->Reports->retrieve_sales_report_invoice_wise($start_date, $end_date);
-        $return_reports = $CI->Reports->retrieve_return_report_product_wise($start_date, $end_date);
+        $return_reports = $CI->Reports->retrieve_return_report_invoice_wise($start_date, $end_date);
         $data = [
             'sales_reports' => $sales_reports,
             'return_reports' => $return_reports,
             'start_date' => $start_date,
             'end_date' => $end_date
         ];
-        echo "<pre>";var_dump($sales_reports);exit;
-        $reportList = $CI->parser->parse('dashboard/report/sales_report_product_wise', $data, true);
+        // echo "<pre>";var_dump($sales_reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/sales_report_invoice_wise', $data, true);
         return $reportList;
     }
 

@@ -815,8 +815,10 @@ class Reports extends CI_Model
     public function retrieve_sales_report_invoice_wise($start_date = null, $end_date = null)
     {
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
-        $this->db->select("a.*, a.created_at as date_time");
+        $this->db->select("a.*, a.created_at as date_time, c.customer_name, e.first_name, e.last_name");
         $this->db->from('invoice a');
+        $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
+        $this->db->join('employee_history e', 'e.id = a.employee_id', 'left');
         if ($start_date && $end_date) {
             $this->db->where($dateRange, NULL, FALSE);
         }
@@ -831,7 +833,46 @@ class Reports extends CI_Model
 
         $query = $query->result_array();
 
-        return $query;
+        $result = [];
+        foreach ($query as $q) {
+            $q['total_quantity'] = 0;
+            $q['total_quantity'] = ($this->db->select('SUM(quantity) as total_quantity')->from('invoice_details')->where('invoice_id', $q['invoice_id'])->get()->row())->total_quantity;
+            // var_dump($q['total_quantity']);exit;
+            $result[] = $q;
+        }
+
+        return $result;
+    }
+
+    public function retrieve_return_report_invoice_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("SUM(a.return_quantity) as total_return_quantity, SUM(a.total_discount) as total_total_discount, SUM(a.total_return) as total_total_return, SUM(a.rate) as total_rate, a.*, a.created_at as date_time, c.customer_name, e.first_name, e.last_name");
+        $this->db->from('invoice_return a');
+        $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
+        $this->db->join('employee_history e', 'e.id = a.employee_id', 'left');
+        $this->db->group_by('invoice_id');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [];
+        foreach ($query as $q) {
+            $q['invoice'] = ($this->db->select('invoice')->from('invoice')->where('invoice_id', $q['invoice_id'])->get()->row())->invoice;
+            $result[] = $q;
+        }
+
+        return $result;
     }
 
 
