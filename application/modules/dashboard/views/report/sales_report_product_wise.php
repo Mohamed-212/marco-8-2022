@@ -192,12 +192,12 @@
 
 														</td>
 														<td colspan="3"><?php if (!empty($invoice['total_price'])) {
-																echo (($position == 0) ?
-																	$currency . " " .
-																	($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
-																	: ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
-																	. " " . $currency);
-															} ?></td>
+																			echo (($position == 0) ?
+																				$currency . " " .
+																				($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
+																				: ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
+																				. " " . $currency);
+																		} ?></td>
 													</tr>
 												<?php endforeach ?>
 
@@ -225,6 +225,11 @@
 								</table>
 							</div>
 
+							<div class="panel-heading">
+								<div class="panel-title">
+									<h4><?php echo display('return_invoice') ?>:</h4>
+								</div>
+							</div>
 							<div class="table-responsive mt_10">
 								<table id="" class="table table-bordered table-striped table-hover">
 									<thead>
@@ -245,10 +250,10 @@
 									</thead>
 									<tbody>
 										<!-- <pre>
-											<?php var_dump($return_reports);?>
+											<?php var_dump($return_reports); ?>
 										</pre> -->
 										<?php
-										$total_sale = 0;
+										$total_return_sales = 0;
 										$total_paid = 0;
 										$total_due  = 0;
 										$totalPrice = 0;
@@ -257,76 +262,76 @@
 											$invoice = '';
 											foreach ($return_reports as $sales_report) :
 												$next = 0;
-												$totalPrice = $sales_report['total_return'] - ( $sales_report['total_discount'] * $sales_report['return_quantity'] );
-												$total_sale += $totalPrice;
+												$totalPrice = $sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['return_quantity']);
+												$total_return_sales += $totalPrice;
 										?>
-												<?php if ($invoice != $sales_report['invoice']) : $invoice = $sales_report['invoice'];?>
-												<tr>
-													<td align="center"><?php echo $sl++; ?></td>
-													<td align="center">
-														<a href="<?php echo base_url() . 'dashboard/Crefund/return_invoice/' . $sales_report['return_invoice_id']; ?>">
-															<?php echo html_escape($sales_report['invoice']) ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
-														</a>
-													</td>
-													<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($sales_report['date_time']))) ?></td>
-												</tr>
-												<?php endif ?>
+												<?php if ($invoice != $sales_report['invoice']) : $invoice = $sales_report['invoice']; ?>
 													<tr>
-														<td></td>
-														<td></td>
-														<td></td>
-														<td>
-															<?= $sales_report['product_name'] ?>
+														<td align="center"><?php echo $sl++; ?></td>
+														<td align="center">
+															<a href="<?php echo base_url() . 'dashboard/Crefund/return_invoice/' . $sales_report['return_invoice_id']; ?>">
+																<?php echo html_escape($sales_report['invoice']) ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+															</a>
 														</td>
-														<td>
-															<?= $sales_report['return_quantity'] ?>
-														</td>
-														<td><?= $sales_report['rate'] ?></td>
-														<td><?php echo (($position == 0) ? $currency . " " . $sales_report['total_discount'] : $sales_report['total_discount'] . " " . $currency) ?>
-														</td>
+														<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($sales_report['date_time']))) ?></td>
+													</tr>
+												<?php endif ?>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td>
+														<?= $sales_report['product_name'] ?>
+													</td>
+													<td>
+														<?= $sales_report['return_quantity'] ?>
+													</td>
+													<td><?= $sales_report['rate'] ?></td>
+													<td><?php echo (($position == 0) ? $currency . " " . $sales_report['total_discount'] : $sales_report['total_discount'] . " " . $currency) ?>
+													</td>
+													<?php
+													$item_tax = $this->db->select('*')->from('tax_product_service')->where('product_id', $sales_report['product_id'])->where('tax_id', '52C2SKCKGQY6Q9J')->get()->row();
+													?>
+
+
+													<td class='hide-me'><?php if (!empty($item_tax)) {
+																			echo $item_tax->tax_percentage . '%';
+																		} else {
+																			echo '0%';
+																		} ?></td>
+
+													<td class='hide-me'>
 														<?php
-														$item_tax = $this->db->select('*')->from('tax_product_service')->where('product_id', $sales_report['product_id'])->where('tax_id', '52C2SKCKGQY6Q9J')->get()->row();
+														if (!empty($item_tax)) {
+															echo ($item_tax->tax_percentage / 100) * $sales_report['rate'];
+															// echo ($item_tax->tax_percentage / 100) * ($sales_report['total_return']) . ' ww';
+															// echo (($position == 0) ? $currency . " " . ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100) : ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100) . " " . $currency);
+														} else {
+															echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
+														}
 														?>
 
-
-														<td class='hide-me'><?php if (!empty($item_tax)) {
-																				echo $item_tax->tax_percentage . '%';
-																			} else {
-																				echo '0%';
-																			} ?></td>
-
-														<td class='hide-me'>
-															<?php
-															if (!empty($item_tax)) {
-															echo ($item_tax->tax_percentage / 100) * $sales_report['rate'];	
-																// echo ($item_tax->tax_percentage / 100) * ($sales_report['total_return']) . ' ww';
-																// echo (($position == 0) ? $currency . " " . ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100) : ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100) . " " . $currency);
-															} else {
-																echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
-															}
-															?>
-
-														</td>
-														<td colspan="3"><?php /*if (!empty($sales_report['total_return'])) {
+													</td>
+													<td colspan="3"><?php /*if (!empty($sales_report['total_return'])) {
 																echo (($position == 0) ?
 																	$currency . " " .
 																	($sales_report['total_return'] - (($sales_report['total_discount'] * $sales_report['quantity']) - ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100)))
 																	: ($sales_report['total_return'] - (($sales_report['total_discount'] * $sales_report['quantity']) - ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100)))
 																	. " " . $currency);
-															} */?>
-															<?=$totalPrice?>	
-														</td>
-													</tr>
-												<?php endforeach ?>
+															} */ ?>
+														<?= $totalPrice ?>
+													</td>
+												</tr>
+											<?php endforeach ?>
 
-												<?php if ($next == count($sales_report)) : ?>
-													<tr>
-														<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-														<td align="center"><b><?php echo html_escape($sales_report['total_amount']); ?></td>
-														<td align="center"><b><?php echo html_escape($sales_report['paid_amount']); ?></td>
-														<td align="center"><b><?php echo html_escape($sales_report['due_amount']); ?></td>
-													</tr>
-												<?php endif ?>
+											<?php if ($next == count($sales_report)) : ?>
+												<tr>
+													<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+													<td align="center"><b><?php echo html_escape($sales_report['total_amount']); ?></td>
+													<td align="center"><b><?php echo html_escape($sales_report['paid_amount']); ?></td>
+													<td align="center"><b><?php echo html_escape($sales_report['due_amount']); ?></td>
+												</tr>
+											<?php endif ?>
 										<?php
 										}
 										?>
@@ -334,11 +339,24 @@
 									<tfoot>
 										<tr>
 											<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-											<td align="center"><b><?php echo html_escape($total_sale); ?></td>
+											<td align="center"><b><?php echo html_escape($total_return_sales); ?></td>
 											<td align="center"><b><?php echo html_escape($total_paid); ?></td>
 											<td align="center"><b><?php echo html_escape($total_due); ?></td>
 										</tr>
 									</tfoot>
+								</table>
+							</div>
+
+							<div class="table-responsive mt_10">
+								<table id="" class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+											<th class="text-center"><?php echo display('grand_total') ?></th>
+										</tr>
+									</thead>
+									<tbody>
+										<td align="center"><b><?php echo html_escape($total_sale - $total_return_sales); ?></td>
+									</tbody>
 								</table>
 							</div>
 						</div>

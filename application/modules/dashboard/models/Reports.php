@@ -812,6 +812,28 @@ class Reports extends CI_Model
         return $query;
     }
 
+    public function retrieve_sales_report_invoice_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time");
+        $this->db->from('invoice a');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        return $query;
+    }
+
 
     //Retrieve todays_sales_report
     public function todays_total_sales_report()

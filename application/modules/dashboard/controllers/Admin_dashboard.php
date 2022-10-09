@@ -317,7 +317,7 @@ class Admin_dashboard extends MX_Controller
 
     }
 
-    #============Date wise sales report==============#
+    #============Product wise sales report==============#
     public function retrieve_sales_report_product_wise()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
@@ -326,6 +326,19 @@ class Admin_dashboard extends MX_Controller
         $end_date = $this->input->post('end_date',TRUE);
 
         $content = $this->lreport->retrieve_sales_report_product_wise($start_date, $end_date);
+        $this->template_lib->full_admin_html_view($content);
+
+    }
+
+    #============Invoice wise sales report==============#
+    public function retrieve_sales_report_invoice_wise()
+    {
+        $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $start_date = $this->input->post('start_date',TRUE);
+        $end_date = $this->input->post('end_date',TRUE);
+
+        $content = $this->lreport->retrieve_sales_report_invoice_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
 
     }
