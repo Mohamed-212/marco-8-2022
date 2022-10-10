@@ -1073,6 +1073,8 @@ class Reports extends CI_Model
         return $query->result_array();
     }
 
+    /** Purchase reports */
+
     //Retrieve todays_total_purchase_report
     public function todays_total_purchase_report()
     {
@@ -1085,6 +1087,75 @@ class Reports extends CI_Model
         $this->db->where('DATE(created_at)', $today);
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    //=============sales report product wise=================
+
+    public function retrieve_purchase_report_product_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time, ppe.purchase_expense");
+        $this->db->from('product_purchase a');
+        $this->db->join('proof_of_purchase_expese ppe', 'ppe.purchase_id = a.purchase_id', 'left');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [];
+        foreach ($query as $inv) {
+            $inv['all_details'] = $this->get_purchase_details($inv['purchase_id']);
+
+            $result[] = $inv;
+        }
+
+        // echo "<pre>";
+        // var_dump($result);
+        // exit;
+
+        return $result;
+    }
+
+    public function retrieve_purchase_return_report_product_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time");
+        $this->db->from('product_purchase_return a');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [];
+        foreach ($query as $inv) {
+            $inv['all_details'] = $this->get_return_purchase_details($inv['purchase_return_id']);
+
+            $result[] = $inv;
+        }
+
+        // echo "<pre>";var_dump($result);exit;
+
+        return $result;
     }
 
     //Retrieve todays_total_discount_report
@@ -1799,5 +1870,15 @@ class Reports extends CI_Model
         // echo "<pre>";var_dump($invoice_return);exit;
 
         return $invoice_return;
+    }
+
+    public function get_purchase_details($purchase_id)
+    {
+        return $this->db->select('pd.*, p.product_name')->from('product_purchase_details pd')->join('product_information p', 'p.product_id = pd.product_id')->where('pd.purchase_id', $purchase_id)->get()->result_array();
+    }
+
+    public function get_return_purchase_details($purchase_id)
+    {
+        return $this->db->select('pd.*, p.product_name')->from('product_purchase_return_details pd')->join('product_information p', 'p.product_id = pd.product_id')->where('pd.return_id', $purchase_id)->get()->result_array();
     }
 }
