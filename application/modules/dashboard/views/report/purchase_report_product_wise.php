@@ -197,7 +197,7 @@
 
 							<div class="panel-heading">
 								<div class="panel-title">
-									<h4><?php echo display('return_invoice') ?>:</h4>
+									<h4><?php echo display('return_purchase') ?>:</h4>
 								</div>
 							</div>
 							<div class="table-responsive mt_10">
