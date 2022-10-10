@@ -548,6 +548,32 @@ class Admin_dashboard extends MX_Controller
 
     }
 
+    #============supplier wise purchase report==============#
+    public function purchase_report_latest_suppliers()
+    {
+
+        $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $data = [
+            'title' => display('purchase_report_latest_suppliers'),
+        ];
+
+        $content = $this->parser->parse('dashboard/report/purchase_report_latest_suppliers', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+
+    }
+
+    public function retrieve_purchase_report_latest_suppliers()
+    {
+        $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $start_date = $this->input->post('start_date',TRUE);
+        $end_date = $this->input->post('end_date',TRUE);
+
+        $content = $this->lreport->retrieve_purchase_report_latest_suppliers($start_date, $end_date);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     #==============Transfer Report============#
     public function transfer_report()
     {

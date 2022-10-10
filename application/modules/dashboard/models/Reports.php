@@ -1354,6 +1354,38 @@ class Reports extends CI_Model
         return $result;
     }
 
+    public function retrieve_purchase_report_latest_suppliers($start_date = null, $end_date = null)
+    {
+        $this->load->model('dashboard/Suppliers');
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time");
+        $this->db->from('supplier_information a');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+            // exit;
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        // $this->db->limit(10);
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [];
+        foreach ($query as $q) {
+            $q['balance'] = $this->Suppliers->suppliers_transection_summary($q['supplier_id'], null, null);
+            $result[] = $q;
+        }
+
+        return $result;
+    }
+
     //Retrieve todays_total_discount_report
     public function todays_total_discount_report()
     {

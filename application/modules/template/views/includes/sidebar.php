@@ -1064,6 +1064,11 @@
                     <a
                         href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_latest_customers') ?>"><?php echo display('sales_report_latest_customers') ?></a>
                 </li>
+                <li
+                    class="<?php echo (($this->uri->segment(3) == 'purchase_report_latest_suppliers' || $this->uri->segment(3) == ('retrieve_purchase_report_latest_suppliers') ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/purchase_report_latest_suppliers') ?>"><?php echo display('purchase_report_latest_suppliers') ?></a>
+                </li>
             </ul>
         </li>
         <?php } ?>
