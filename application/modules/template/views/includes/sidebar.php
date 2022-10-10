@@ -78,10 +78,10 @@
                         href="<?php echo base_url('dashboard/Cinvoice/manage_invoice') ?>"><?php echo display('manage_sale') ?></a>
                 </li>
                 <?php }?>
-                <!-- <li class="<?php echo (($this->uri->segment(3) == 'invoice_images' ? 'active' : '')) ?>">
+                <li class="<?php echo (($this->uri->segment(3) == 'invoice_images' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Cinvoice/invoice_images') ?>"><?php echo display('invoice_images') ?></a>
-                </li> -->
+                </li>
                 <?php if ($this->permission->check_label('pos_sale')->access()) { ?>
                 <!-- <li class="<?php echo (($this->uri->segment(3) == 'pos_invoice') ? 'active' : '') ?>">
                     <a

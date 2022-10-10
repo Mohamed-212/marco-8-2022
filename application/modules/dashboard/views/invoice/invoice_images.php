@@ -17,7 +17,18 @@
     </section>
 
     <section class="content">
-
+        <?php
+        $success_message = $this->session->userdata('success_message');
+        if (isset($success_message)) {
+        ?>
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $success_message ?>
+            </div>
+        <?php
+            $this->session->unset_userdata('success_message');
+        }
+        ?>
         <div class="row">
             <div class="col-sm-12">
 
@@ -35,12 +46,20 @@
                     </div>
                     <div class="panel-body">
                         <?php echo form_open("dashboard/Cinvoice/invoice_images", array('class' => '')); ?>
-                        <div class="form-group row">
-                            <label for="invoice_no" class="col-sm-4"><?php echo display('invoice_no') ?></label>
-                            <input type="text" class="form-control col-sm-8" autocomplete="off" placeholder="<?php echo display('invoice_no'); ?>" name="invoice_no" required>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="invoice_no" class="col-sm-4" style="display: inline"><?php echo display('invoice_no') ?></label>
+                                    <input type="text" class="form-control col-sm-8" style="display: inline" autocomplete="off" placeholder="<?php echo display('invoice_no'); ?>" name="invoice_no" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="fomr-group">
-                            <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+                        <div class="row" style="margin-top: 25px">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+                                </div>
+                            </div>
                         </div>
                         <?php echo form_close() ?>
                     </div>

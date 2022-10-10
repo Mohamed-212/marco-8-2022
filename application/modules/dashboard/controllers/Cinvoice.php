@@ -1640,6 +1640,8 @@ class Cinvoice extends MX_Controller
 
     public function invoice_images()
     {
+        $this->load->helper('download');
+        $this->load->library('zip');
 
         $data = [
             'title'    => display('invoice_images'),
@@ -1647,17 +1649,28 @@ class Cinvoice extends MX_Controller
 
         $invoice_no = $this->input->post('invoice_no', true);
 
+        $invoice_no = strpos($invoice_no, 'Inv-') > -1 ? $invoice_no : 'Inv-' . $invoice_no;
+
         // get invoice data
         $invoice = $this->db->select('invoice_id')->from('invoice')->where('invoice', $invoice_no)->get()->row();
         // get invoice details with items
         $details = $this->db->select('p.*')
             ->from('invoice_details d')
             ->join('product_information p', 'p.product_id = d.product_id', 'left')
+            ->where('d.invoice_id', $invoice->invoice_id)
             ->get()->result();
 
         if ($invoice) {
             $data['items'] = $details;
-            // echo "<pre>";print_r($details);exit;
+
+            foreach ($details as $inv) {
+                // force_download('./' . $inv->image_thumb, NULL);
+                $this->zip->read_file('./' . $inv->image_thumb);
+            }
+
+            $this->zip->download($invoice_no . '--' . microtime());
+
+            $this->session->set_userdata(array('success_message' => display('images_downloaded')));
         }
 
         $content = $this->parser->parse('dashboard/invoice/invoice_images', $data, true);
