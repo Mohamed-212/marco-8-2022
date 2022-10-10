@@ -1034,10 +1034,11 @@ class Reports extends CI_Model
         $this->db->select("a.*, a.created_at as date_time");
         $this->db->from('customer_information a');
         if ($start_date && $end_date) {
-            // $this->db->where($dateRange, NULL, FALSE);
+            $this->db->where($dateRange, NULL, FALSE);
+            // exit;
         }
         $this->db->order_by('a.created_at', 'desc');
-        $this->db->limit(10);
+        // $this->db->limit(10);
         $query = $this->db->get();
         // var_dump($query);exit;
 
@@ -1052,7 +1053,7 @@ class Reports extends CI_Model
         $result = [];
         // $customers = [];
         foreach ($query as $q) {
-            $q['balance'] = $this->Customers->customer_transection_summary($q['customer_id'], $start_date, $end_date);
+            $q['balance'] = $this->Customers->customer_transection_summary($q['customer_id']);
             $result[] = $q;
         }
 
