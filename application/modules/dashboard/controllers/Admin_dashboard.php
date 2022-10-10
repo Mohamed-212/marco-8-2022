@@ -520,6 +520,34 @@ class Admin_dashboard extends MX_Controller
 
     }
 
+    /** purchase report summary wise */
+    public function purchase_report_summary_wise()
+    {
+
+        $this->permission->check_label('purchase_report')->read()->redirect();
+
+        $data = [
+            'title' => display('purchase_report_summary_wise'),
+        ];
+
+        $content = $this->parser->parse('dashboard/report/purchase_report_summary_wise', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+
+    }
+
+    #============summary wise sales report==============#
+    public function retrieve_purchase_report_summary_wise()
+    {
+        $this->permission->check_label('purchase_report')->read()->redirect();
+
+        $start_date = $this->input->post('start_date',TRUE);
+        $end_date = $this->input->post('end_date',TRUE);
+
+        $content = $this->lreport->retrieve_purchase_report_summary_wise($start_date, $end_date);
+        $this->template_lib->full_admin_html_view($content);
+
+    }
+
     #==============Transfer Report============#
     public function transfer_report()
     {

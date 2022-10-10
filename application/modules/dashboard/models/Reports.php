@@ -1274,6 +1274,78 @@ class Reports extends CI_Model
         return $result;
     }
 
+    public function retrieve_purchase_report_summary_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*");
+        $this->db->from('product_purchase a');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.supplier_id', 'asc');
+        $query = $this->db->get();
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [
+            'total_quantity' => 0,
+            'total_paid' => 0
+        ];
+
+        foreach ($query as $q) {
+            $result['total_quantity'] += $q['total_items'];
+            $result['total_paid'] += $q['grand_total_amount'];
+        }
+
+        // echo "<pre>";var_dump($result);exit;
+
+        return $result;
+    }
+
+    public function retrieve_purchase_return_report_summary_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("SUM(a.quantity) as total_return_quantity, SUM(a.discount) as total_total_discount, SUM(a.total_return_amount) as total_total_return, SUM(a.rate) as total_rate, pd.*, pd.created_at as date_time, c.supplier_name");
+        // $this->db->select('pd.*, a.*');
+        $this->db->from('product_purchase_return pd');
+        $this->db->join('product_purchase_return_details a', 'a.return_id = pd.purchase_return_id', 'left');
+        $this->db->join('supplier_information c', 'c.supplier_id = pd.supplier_id', 'left');
+        $this->db->group_by('a.return_id');
+        // $this->db->limit('500');
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        // echo "<pre>";var_dump($query);exit;
+
+        $result = [
+            'total_quantity' => 0,
+            'total_paid' => 0
+        ];
+        // $customers = [];
+        foreach ($query as $q) {
+            $result['total_quantity'] += $q['total_return_quantity'];
+            $result['total_paid'] += $q['total_total_return'];
+
+            // $result[] = $q;
+        }
+
+        // echo "<pre>";var_dump($result);exit;
+
+        return $result;
+    }
+
     //Retrieve todays_total_discount_report
     public function todays_total_discount_report()
     {

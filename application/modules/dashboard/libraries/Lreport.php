@@ -861,6 +861,25 @@ class Lreport
         return $reportList;
     }
 
+    public function retrieve_purchase_report_summary_wise($start_date = null, $end_date = null)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Stores');
+        $purchase_reports = $CI->Reports->retrieve_purchase_report_summary_wise($start_date, $end_date);
+        $return_reports = $CI->Reports->retrieve_purchase_return_report_summary_wise($start_date, $end_date);
+        $data = [
+            'purchase_reports' => $purchase_reports,
+            'return_reports' => $return_reports,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'title' => display('purchase_report_summary_wise'),
+        ];
+        // echo "<pre>";var_dump($purchase_reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/purchase_report_summary_wise', $data, true);
+        return $reportList;
+    }
+
     //Total profit report
     public function total_profit_report($links, $per_page, $page)
     {
