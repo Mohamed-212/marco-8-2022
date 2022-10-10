@@ -140,7 +140,7 @@
 														<?= $sl ?>
 													</td>
 													<td>
-														<a href="<?= base_url() . '/' . $sl['customer_id'] ?>"><?= $invoice['customer_name'] ?></a>
+														<a href="<?= base_url() . '/dashboard/Ccustomer/customerledger/' . $invoice['customer_id'] ?>"><?= $invoice['customer_name'] ?></a>
 													</td>
 													<td>
 														<?php
