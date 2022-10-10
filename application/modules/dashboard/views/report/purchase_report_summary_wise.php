@@ -152,7 +152,7 @@
 											<td align="center"><b><?php echo display('grand_total') ?>:</b></td>
 											<td align="center">
 												<b>
-													<?= - $purchase_reports['total_paid'] + $return_reports['total_paid'] ?>
+													<?= $purchase_reports['total_paid'] - $return_reports['total_paid'] ?>
 												</b>
 											</td>
 											<td align="center">
