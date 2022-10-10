@@ -928,6 +928,14 @@
         || $this->uri->segment(3) == ('expriy_report_index') 
         || $this->uri->segment(3) == ("unpaid_installment")
         || $this->uri->segment(3) == ("products_balance")
+        || $this->uri->segment(3) == ('purchase_report_product_wise') 
+        || $this->uri->segment(3) == ('retrieve_purchase_report_product_wise') 
+        || $this->uri->segment(3) == ('purchase_report_invoice_wise') 
+        || $this->uri->segment(3) == ('retrieve_purchase_report_invoice_wise') 
+        || $this->uri->segment(3) == ('purchase_report_customer_wise') 
+        || $this->uri->segment(3) == ('retrieve_purchase_report_customer_wise') 
+        || $this->uri->segment(3) == ('purchase_report_summary_wise') 
+        || $this->uri->segment(3) == ('retrieve_purchase_report_summary_wise') 
         ) {
                                         echo "active";
                                     } else {
