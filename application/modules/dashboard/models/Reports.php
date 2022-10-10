@@ -783,10 +783,11 @@ class Reports extends CI_Model
     public function retrieve_return_report_product_wise($start_date = null, $end_date = null)
     {
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
-        $this->db->select("a.*, a.created_at as date_time, inv.invoice, p.product_name");
+        $this->db->select("a.*, a.created_at as date_time, inv.invoice, p.product_name, c.customer_name");
         $this->db->from('invoice_return a');
         $this->db->join('invoice inv', 'inv.invoice_id = a.invoice_id');
         $this->db->join('product_information p', 'p.product_id = a.product_id');
+        $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
         if ($start_date && $end_date) {
             $this->db->where($dateRange, NULL, FALSE);
         }

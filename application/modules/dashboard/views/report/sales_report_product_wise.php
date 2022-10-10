@@ -119,6 +119,7 @@
 											<th class="text-center"><?php echo display('sl') ?></th>
 											<th class="text-center"><?php echo display('invoice') ?></th>
 											<th class="text-center"><?php echo display('date') ?></th>
+											<th class="text-center"><?php echo display('customer_name') ?></th>
 											<th class="text-center"><?php echo display('product_name') ?></th>
 											<th class="text-center"><?php echo display('quantity') ?></th>
 											<th class="text-center"><?php echo display('price') ?></th>
@@ -149,15 +150,13 @@
 														</a>
 													</td>
 													<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($sales_report['invoice_all_data'][0]['date_time']))) ?></td>
-													<!-- <td align="center"><?php echo html_escape($sales_report['total_amount']) ?></td> -->
-													<!-- <td align="center"><?php echo html_escape($sales_report['paid_amount']) ?></td> -->
-													<!-- <td align="center"><?php echo html_escape($sales_report['due_amount']) ?></td> -->
-													<!-- <?php $total_sale += $sales_report['total_amount']; ?>
-													<?php $total_paid += $sales_report['paid_amount']; ?>
-													<?php $total_due += $sales_report['due_amount']; ?> -->
+													<td align="center">
+														<?= $sales_report['invoice_all_data'][0]['customer_name'] ?>
+													</td>
 												</tr>
 												<?php foreach ($sales_report['invoice_all_data'] as $invoice) : $next++; ?>
 													<tr>
+														<td></td>
 														<td></td>
 														<td></td>
 														<td></td>
@@ -237,6 +236,7 @@
 											<th class="text-center"><?php echo display('sl') ?></th>
 											<th class="text-center"><?php echo display('invoice') ?></th>
 											<th class="text-center"><?php echo display('date') ?></th>
+											<th class="text-center"><?php echo display('customer_name') ?></th>
 											<th class="text-center"><?php echo display('product_name') ?></th>
 											<th class="text-center"><?php echo display('quantity') ?></th>
 											<th class="text-center"><?php echo display('price') ?></th>
@@ -274,9 +274,13 @@
 															</a>
 														</td>
 														<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($sales_report['date_time']))) ?></td>
+														<td>
+															<?=$sales_report['customer_name']?>
+														</td>
 													</tr>
 												<?php endif ?>
 												<tr>
+													<td></td>
 													<td></td>
 													<td></td>
 													<td></td>
