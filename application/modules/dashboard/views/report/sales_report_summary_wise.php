@@ -100,8 +100,7 @@
 						<div id="printableArea" class="ml_2">
 							<link href="<?php echo MOD_URL . 'dashboard/assets/css/print.css'; ?>" rel="stylesheet" type="text/css" />
 
-							<?php if (@$sales_reports) : ?>
-								<p class="store_name"><?php echo html_escape($sales_reports[0]['store_name']) ?></p>
+							<?php if ($sales_reports) : ?>
 								<div class="store_div">
 									<?php if ($start_date) : ?>
 										<p class="mr_p8e"><?php echo display('report') ?> <?php echo display('from') ?> :
@@ -109,95 +108,66 @@
 										</p>
 										<p class="mr_p8e"><?php echo display('to') ?> : <strong><?php echo html_escape($end_date) ?></strong></p>
 									<?php endif; ?>
-									<p><?php echo display('total_invoice') ?> : <strong><?php echo count($sales_reports) ?></strong></p>
 								</div>
 							<?php endif; ?>
 							<div class="table-responsive mt_10">
 								<table id="" class="table table-bordered table-striped table-hover">
 									<thead>
 										<tr>
-											<!-- <th class="text-center"><?php echo display('invoice') ?></th> -->
-											<!-- <th class="text-center"><?php echo display('date') ?></th>
-											<th class="text-center"><?php echo display('quantity') ?></th>
-											<th class="text-center"><?php echo display('customer_name') ?></th>
-											<th class="text-center"><?php echo display('total_value') ?></th>
-											<th class="text-center"><?php echo display('total_discount') ?></th>
-											<th class="text-center"><?php echo display('total_vat') ?></th> -->
-											<th class="text-center"><?php echo display('grand_total') ?></th>
+											<th class="text-center">#</th>
+											<th class="text-center"><?php echo display('subtotal') ?></th>
 											<th class="text-center"><?php echo display('total_quantity') ?></th>
 										</tr>
 									</thead>
-									<tbody>
-										<?php
-										$total_sale = 0;
-										$total_paid = 0;
-										$total_due  = 0;
-										if (@$sales_reports) {
-											$sl = 1;
-											foreach ($sales_reports as $invoice) :
-												$next = 0;
-												$total_sale += $invoice['total_amount'];
-										?>
-
-												<tr>
-													<!-- <td>
-														<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $invoice['invoice_id']; ?>">
-															<?php echo html_escape($invoice['invoice']) ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
-														</a>
-													</td>
-													<td>
-														<?= date('d-m-Y', strtotime($invoice['date_time'])) ?>
-													</td>
-													<td>
-														<?= $invoice['total_quantity'] ?>
-													</td>
-													<td>
-														<?= $invoice['customer_name'] ?>
-													</td>
-													<td>
-														<?= $invoice['total_amount'] + $invoice['total_discount'] ?>
-													</td>
-													<td>
-														<?= $invoice['total_discount'] ?>
-													</td>
-													<td>
-														<?= $invoice['total_vat'] ?>
-													</td> -->
-													<td>
-														<?= $invoice['total_amount'] ?>
-													</td>
-													<td>
-														<?= $invoice['first_name'] . ' ' . $invoice['last_name'] ?>
-													</td>
-												</tr>
-										<?php
-											endforeach;
-										}
-										?>
+									<tbody style="text-align: center;">
+										<?php if ($sales_reports) : ?>
+											<tr style="border-left: 4px solid green;">
+												<td>
+													<?=display('Sales')?>
+												</td>
+												<td>
+													<?= $sales_reports['total_paid'] ?>
+												</td>
+												<td>
+													<?= $sales_reports['total_quantity'] ?>
+												</td>
+											</tr>
+										<?php endif ?>
+										<?php if ($return_reports) : ?>
+											<tr style="border-left: 4px solid red;">
+												<td>
+													<?=display('return')?>
+												</td>
+												<td>
+													<?= $return_reports['total_paid'] ?>
+												</td>
+												<td>
+													<?= $return_reports['total_quantity'] ?>
+												</td>
+											</tr>
+										<?php endif ?>
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="7" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-											<td align="center"><b><?php echo html_escape($total_sale); ?></td>
+											<td align="center"><b><?php echo display('grand_total') ?>:</b></td>
+											<td align="center">
+												<b>
+													<?= $sales_reports['total_paid'] - $return_reports['total_paid'] ?>
+												</b>
+											</td>
+											<td align="center">
+												<b>
+													<?= $sales_reports['total_quantity'] - $return_reports['total_quantity'] ?>
+												</b>
+											</td>
 										</tr>
 									</tfoot>
 								</table>
 							</div>
 
-							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover">
-									<thead>
-										<tr>
-											<th class="text-center"><?php echo display('grand_total') ?></th>
-										</tr>
-									</thead>
-									<tbody>
-										<td align="center"><b><?php echo html_escape($total_sale); ?></td>
-									</tbody>
-								</table>
-							</div>
+
 						</div>
-						<div class="text-center"><?php echo htmlspecialchars_decode(@$links) ?></div>
+						<!-- <div class="text-center"><?php echo htmlspecialchars_decode(@$links) ?></div> -->
 					</div>
 				</div>
 			</div>

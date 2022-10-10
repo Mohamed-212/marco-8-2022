@@ -389,11 +389,10 @@ class Admin_dashboard extends MX_Controller
 
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $data = [
-            'title' => display('sales_report_summary_wise'),
-        ];
+        $start_date = date('d-m-Y');
+        $end_date = date('d-m-Y');
 
-        $content = $this->parser->parse('dashboard/report/sales_report_summary_wise', $data, true);
+        $content = $this->lreport->retrieve_sales_report_summary_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
 
     }
