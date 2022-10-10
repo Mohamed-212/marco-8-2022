@@ -1089,7 +1089,7 @@ class Reports extends CI_Model
         return $query->result_array();
     }
 
-    //=============sales report product wise=================
+    //=============purchase report product wise=================
 
     public function retrieve_purchase_report_product_wise($start_date = null, $end_date = null)
     {
@@ -1124,6 +1124,62 @@ class Reports extends CI_Model
         // exit;
 
         return $result;
+    }
+
+    // purchase invoice wise
+    public function retrieve_purchase_report_invoice_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("a.*, a.created_at as date_time, c.supplier_name");
+        $this->db->from('product_purchase a');
+        $this->db->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left');
+        // $this->db->join('employee_history e', 'e.id = a.user_id', 'left');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        // $this->db->limit('500');
+        $query = $this->db->get();
+        // var_dump($query);exit;
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+
+        return $query;
+    }
+
+    public function retrieve_purchase_return_report_invoice_wise($start_date = null, $end_date = null)
+    {
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+        $this->db->select("SUM(prd.quantity) as total_return_quantity, SUM(prd.discount) as total_total_discount, SUM(prd.total_return_amount) as total_total_return, SUM(prd.rate) as total_rate, a.*, a.created_at as date_time, c.supplier_name");
+        $this->db->from('product_purchase_return a');
+        $this->db->join('product_purchase_return_details prd', 'prd.return_id = a.purchase_return_id', 'left');
+        $this->db->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left');
+        $this->db->group_by('purchase_id');
+        if ($start_date && $end_date) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->order_by('a.created_at', 'desc');
+        $this->db->limit('500');
+        $query = $this->db->get();
+
+        if (!$query) {
+            return [];
+        }
+
+        $query = $query->result_array();
+        // echo "<pre>";var_dump($query);exit;
+
+        // $result = [];
+        // foreach ($query as $q) {
+        //     $q['invoice'] = ($this->db->select('invoice')->from('invoice')->where('invoice_id', $q['invoice_id'])->get()->row())->invoice;
+        //     $result[] = $q;
+        // }
+
+        return $query;
     }
 
     public function retrieve_purchase_return_report_product_wise($start_date = null, $end_date = null)

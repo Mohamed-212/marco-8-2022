@@ -627,21 +627,22 @@ class Lreport
         return $reportList;
     }
 
-    public function retrieve_sales_report_invoice_wise($start_date = null, $end_date = null)
+    public function retrieve_purchase_report_invoice_wise($start_date = null, $end_date = null)
     {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Stores');
-        $sales_reports = $CI->Reports->retrieve_sales_report_invoice_wise($start_date, $end_date);
-        $return_reports = $CI->Reports->retrieve_return_report_invoice_wise($start_date, $end_date);
+        $reports = $CI->Reports->retrieve_purchase_report_invoice_wise($start_date, $end_date);
+        $return_reports = $CI->Reports->retrieve_purchase_return_report_invoice_wise($start_date, $end_date);
         $data = [
-            'sales_reports' => $sales_reports,
+            'reports' => $reports,
             'return_reports' => $return_reports,
             'start_date' => $start_date,
-            'end_date' => $end_date
+            'end_date' => $end_date,
+            'title' => display('purchase_report_invoice_wise'),
         ];
-        // echo "<pre>";var_dump($sales_reports);exit;
-        $reportList = $CI->parser->parse('dashboard/report/sales_report_invoice_wise', $data, true);
+        // echo "<pre>";var_dump($return_reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/purchase_report_invoice_wise', $data, true);
         return $reportList;
     }
 
@@ -821,6 +822,24 @@ class Lreport
         ];
         // echo "<pre>";var_dump($return_reports);exit;
         $reportList = $CI->parser->parse('dashboard/report/sales_report_product_wise', $data, true);
+        return $reportList;
+    }
+
+    public function retrieve_sales_report_invoice_wise($start_date = null, $end_date = null)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Stores');
+        $sales_reports = $CI->Reports->retrieve_sales_report_invoice_wise($start_date, $end_date);
+        $return_reports = $CI->Reports->retrieve_return_report_invoice_wise($start_date, $end_date);
+        $data = [
+            'sales_reports' => $sales_reports,
+            'return_reports' => $return_reports,
+            'start_date' => $start_date,
+            'end_date' => $end_date
+        ];
+        // echo "<pre>";var_dump($sales_reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/sales_report_invoice_wise', $data, true);
         return $reportList;
     }
 

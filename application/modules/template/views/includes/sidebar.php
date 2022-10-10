@@ -999,6 +999,11 @@
                     <a
                         href="<?php echo base_url('dashboard/Admin_dashboard/purchase_report_product_wise') ?>"><?php echo display('purchase_report_product_wise') ?></a>
                 </li>
+                <li
+                    class="<?php echo (($this->uri->segment(3) == 'purchase_report_invoice_wise' || $this->uri->segment(3) == ('retrieve_purchase_report_invoice_wise') ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/purchase_report_invoice_wise') ?>"><?php echo display('purchase_report_invoice_wise') ?></a>
+                </li>
                 <?php }
                         if ($this->permission->check_label('transfer_report')->access()) { ?>
                 <li class="<?php if ($this->uri->segment(3) == ("store_to_store_transfer") || $this->uri->segment(3) == ("store_to_warehouse_transfer") || $this->uri->segment(3) == ("warehouse_to_warehouse_transfer") || $this->uri->segment(3) == ("warehouse_to_store_transfer")) {
