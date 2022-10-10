@@ -2109,4 +2109,15 @@ class Reports extends CI_Model
     {
         return $this->db->select('pd.*, p.product_name')->from('product_purchase_return_details pd')->join('product_information p', 'p.product_id = pd.product_id')->where('pd.return_id', $purchase_id)->get()->result_array();
     }
+
+    public function stock_report_by_product_card($from_date = false, $to_date = false, $store_id = false, $product_id)
+    {
+        $p = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+
+        $default_store_id = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+        $default_store_id = $default_store_id->store_id;
+        $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $p->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
+
+        var_dump($product_id);exit;
+    }
 }

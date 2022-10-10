@@ -252,6 +252,27 @@ class Creport extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
+    public function stock_report_product_card()
+    {
+
+        // $this->permission->check_label('stock_report_product_card')->read()->redirect();
+
+        $today = date('Y-m-d');
+        $from_date = $this->input->get('from_date', TRUE);
+        $product_id = $this->input->get('product_id', TRUE);
+        $to_date = $this->input->get('to_date', TRUE);
+        $store_id = $this->input->get('store_id', TRUE);
+        if (empty($store_id)) {
+            $from_date = date('Y-m-01');
+            $to_date = date('Y-m-d');
+            $result = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+            $store_id = $result->store_id;
+        }
+        
+        $content = $this->lreport->stock_report_product_card($from_date, $to_date, $store_id, $product_id);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     //Get product by supplier
     public function get_product_by_supplier()
     {

@@ -843,7 +843,12 @@
                     <a
                         href="<?php echo base_url('dashboard/Creport/stock_report_store_wise') ?>"><?php echo display('stock_report_store_wise') ?></a>
                 </li>
-                <?php }
+                <?php }?>
+                <li class="<?php echo (($this->uri->segment(3) == 'stock_report_product_card' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Creport/stock_report_product_card') ?>"><?php echo display('stock_report_product_card') ?></a>
+                </li>
+                <?php
 //                        if ($this->permission->check_label('stock_adjustment')->create()->access()) { ?>     
 <!--                <li class="--><?php //echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?><!--">-->
 <!--                    <a-->

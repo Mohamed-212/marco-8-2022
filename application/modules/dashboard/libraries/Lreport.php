@@ -497,6 +497,49 @@ class Lreport
         return $reportList;
     }
 
+    // stock report product card
+    public function stock_report_product_card($from_date = false, $to_date = false, $store_id = false, $product_id)
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Suppliers');
+        $CI->load->model('dashboard/Products');
+        $CI->load->model('dashboard/Stores');
+        $CI->load->library('dashboard/occational');
+
+
+        if (empty($store_id)) {
+            $from_date = date('d-m-Y');
+
+            $to_date = date('d-m-Y');
+            $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+            $store_id = $result->store_id;
+        }
+
+        $stok_report = $CI->Reports->stock_report_by_product_card($from_date, $to_date, $store_id, $product_id);
+
+        $product_list = $CI->Products->product_list();
+        $store_list = $CI->Stores->store_list();
+
+        $data = array(
+            'title'          => display('stock_report_product_card'),
+            'stok_report'    => $stok_report,
+            'product_model'  => @$stok_report[0]['product_model'],
+            // 'links'          => $links,
+            // 'date'           => '',
+            // 'sub_total_in'   => $sub_total_in,
+            // 'sub_total_out'  => $sub_total_out,
+            // 'sub_total_stock' => $sub_total_stock,
+            'product_list'   => $product_list,
+            'store_list'     => $store_list,
+            // 'company_info'   => $company_info,
+            // 'currency'       => $currency_details[0]['currency_icon'],
+            // 'position'       => $currency_details[0]['currency_position'],
+        );
+        $reportList = $CI->parser->parse('dashboard/report/stock_report_product_card', $data, true);
+        return $reportList;
+    }
+
     // ===========================STORE WISE STOCK REPORT======================
     public function store_wise_product($links = null, $per_page = null, $page = null)
     {
