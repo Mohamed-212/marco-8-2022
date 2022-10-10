@@ -1095,9 +1095,10 @@ class Reports extends CI_Model
     public function retrieve_purchase_report_product_wise($start_date = null, $end_date = null)
     {
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
-        $this->db->select("a.*, a.created_at as date_time, ppe.purchase_expense");
+        $this->db->select("a.*, a.created_at as date_time, ppe.purchase_expense, s.supplier_name");
         $this->db->from('product_purchase a');
         $this->db->join('proof_of_purchase_expese ppe', 'ppe.purchase_id = a.purchase_id', 'left');
+        $this->db->join('supplier_information s', 's.supplier_id = a.supplier_id', 'left');
         if ($start_date && $end_date) {
             $this->db->where($dateRange, NULL, FALSE);
         }
@@ -1179,8 +1180,9 @@ class Reports extends CI_Model
     public function retrieve_purchase_return_report_product_wise($start_date = null, $end_date = null)
     {
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
-        $this->db->select("a.*, a.created_at as date_time");
+        $this->db->select("a.*, a.created_at as date_time, s.supplier_name");
         $this->db->from('product_purchase_return a');
+        $this->db->join('supplier_information s', 's.supplier_id = a.supplier_id', 'left');
         if ($start_date && $end_date) {
             $this->db->where($dateRange, NULL, FALSE);
         }

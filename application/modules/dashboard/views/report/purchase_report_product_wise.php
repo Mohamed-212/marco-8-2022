@@ -119,6 +119,7 @@
 											<th class="text-center"><?php echo display('sl') ?></th>
 											<th class="text-center"><?php echo display('invoice') ?></th>
 											<th class="text-center"><?php echo display('date') ?></th>
+											<th class="text-center"><?php echo display('supplier_name') ?></th>
 											<th class="text-center"><?php echo display('product_name') ?></th>
 											<th class="text-center"><?php echo display('quantity') ?></th>
 											<th class="text-center"><?php echo display('price') ?></th>
@@ -146,9 +147,11 @@
 														</a>
 													</td>
 													<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($report['date_time']))) ?></td>
+													<td align="center"><?php echo html_escape($report['supplier_name']) ?></td>
 												</tr>
 												<?php foreach ($report['all_details'] as $invoice) : $next++; ?>
 													<tr>
+														<td></td>
 														<td></td>
 														<td></td>
 														<td></td>
@@ -207,6 +210,7 @@
 											<th class="text-center"><?php echo display('sl') ?></th>
 											<th class="text-center"><?php echo display('invoice') ?></th>
 											<th class="text-center"><?php echo display('date') ?></th>
+											<th class="text-center"><?php echo display('supplier_name') ?></th>
 											<th class="text-center"><?php echo display('product_name') ?></th>
 											<th class="text-center"><?php echo display('quantity') ?></th>
 											<th class="text-center"><?php echo display('price') ?></th>
@@ -234,10 +238,12 @@
 														</a>
 													</td>
 													<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($report['date_time']))) ?></td>
+													<td align="center"><?php echo html_escape($report['supplier_name']) ?></td>
 												</tr>
 												<?php foreach ($report['all_details'] as $invoice) : $next++;
 													$total_return_amount += $invoice['total_return_amount']; ?>
 													<tr>
+														<td></td>
 														<td></td>
 														<td></td>
 														<td></td>
