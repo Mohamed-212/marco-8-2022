@@ -318,7 +318,7 @@ class Payroll extends MX_Controller
             'gdate' => $ab,
             'start_date' => $fdate,
             'end_date' => $edate,
-            // 'generate_by' => $this->session->userdata('fullname'),
+            // 'generate_by' => $this->session->userdata('user_name'),
             'generate_by' => $this->session->userdata('user_name'),
         ];
 
@@ -376,7 +376,7 @@ class Payroll extends MX_Controller
                     'total_working_minutes' => $worhour,
                     'working_period' => $workingper,
                     'salary_month' => $ab,
-                    // 'paid_by' => $this->session->userdata('fullname'),
+                    // 'paid_by' => $this->session->userdata('user_name'),
                     'paid_by' => $this->session->userdata('user_name'),
                 );
 //                    $empsalgen = array(
@@ -513,7 +513,7 @@ class Payroll extends MX_Controller
                 'emp_sal_pay_id' => $this->input->post('emp_sal_pay_id', true),
                 'payment_due' => 'paid',
                 'payment_date' => date('Y-m-d'),
-                'paid_by' => $this->session->userdata('fullname'),
+                'paid_by' => $this->session->userdata('user_name'),
             ];
 
             $emp_id = $this->input->post('employee_id', true);
@@ -532,7 +532,7 @@ class Payroll extends MX_Controller
                 'Debit' => 0,
                 'Credit' => $this->input->post('total_salary', true),
                 'IsPosted' => 1,
-                'CreateBy' => $this->session->userdata('fullname'),
+                'CreateBy' => $this->session->userdata('user_name'),
                 'CreateDate' => date('Y-m-d H:i:s'),
                 'IsAppove' => 1
             );
@@ -545,7 +545,7 @@ class Payroll extends MX_Controller
 //            'Debit' => $this->input->post('total_salary', true),
 //            'Credit' => 0,
 //            'IsPosted' => 1,
-//            'CreateBy' => $this->session->userdata('fullname'),
+//            'CreateBy' => $this->session->userdata('user_name'),
 //            'CreateDate' => date('Y-m-d H:i:s'),
 //            'IsAppove' => 1
 //        );
@@ -560,7 +560,7 @@ class Payroll extends MX_Controller
                 'Debit' => $this->input->post('total_salary', true),
                 'Credit' => 0,
                 'IsPosted' => 1,
-                'CreateBy' => $this->session->userdata('fullname'),
+                'CreateBy' => $this->session->userdata('user_name'),
                 'CreateDate' => date('Y-m-d H:i:s'),
                 'IsAppove' => 1
             );
