@@ -406,7 +406,7 @@
                                     ?>
                                             <tr>
                                                 <td class="text-center">
-                                                    <input type="text" name="amount[]" class="form-control" readonly value="<?php echo html_escape($value['amount']) ?>">
+                                                    <input type="text" name="amount[]" class="form-control" value="<?php echo html_escape($value['amount']) ?>">
                                                 </td>
                                                 <td class="text-center">
                                                     <input type="text" class="form-control datepicker2" name="due_date[]" value="<?php echo html_escape($value['due_date']) ?>" readonly>

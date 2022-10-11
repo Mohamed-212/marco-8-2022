@@ -172,6 +172,7 @@ class Payroll extends MX_Controller
         $check_exist = $this->payroll_model->check_exist($this->input->post('employee_id', true));
         if ($check_exist == 0) {
             $amount = $this->input->post('amount', TRUE);
+            echo "<pre>";var_dump($amount);
             foreach ($amount as $key => $value) {
                 $postData = [
                     'employee_id' => $this->input->post('employee_id', true),
@@ -185,6 +186,7 @@ class Payroll extends MX_Controller
                 $this->payroll_model->salary_setup_create($postData);
 
             }
+            exit;
             $this->session->set_flashdata('message', display('save_successfully'));
             redirect("hrm/payroll/manage_salary_setup");
         } else {
