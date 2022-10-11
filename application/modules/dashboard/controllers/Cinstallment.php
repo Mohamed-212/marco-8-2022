@@ -192,6 +192,33 @@ class Cinstallment extends MX_Controller
     {
         $this->permission->check_label('manage_installment')->update()->redirect();
 
+        $invoice_id = $this->input->post('invoice_id', TRUE);
+        echo "<pre>";
+
+        $inv = $this->db->select('*')->from('invoice')->where('invoice_id', $invoice_id)->limit(1)->get()->row();
+
+        $amount = $this->input->post('amount', TRUE);
+        $payment_amount = $this->input->post('payment_amount', TRUE);
+        $due_amount_total = 0;
+        $payment_amount_total = 0;
+        foreach ($amount as $am) {
+            $due_amount_total += $am;
+        }
+        foreach ($payment_amount as $pyamount) {
+            $payment_amount_total += $pyamount;
+        }
+        
+        if ((int)$due_amount_total != (int)$inv->due_amount) {
+            $this->session->set_userdata(array('error_message' => display('installment_total_amount_not_match')));
+            redirect('dashboard/cinstallment/manage_installment');
+        }
+
+        if ((int)$payment_amount_total > (int)$inv->due_amount) {
+            $this->session->set_userdata(array('error_message' => display('installment_total_payed_amount_not_match')));
+            redirect('dashboard/cinstallment/manage_installment');
+        }
+
+
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
@@ -277,7 +304,8 @@ class Cinstallment extends MX_Controller
                                     'account' => $account[$index],
                                     'check_no' => ($check_no[$index])? $check_no[$index] : null,
                                     'expiry_date' => ($expiry_date[$index])? $expiry_date[$index] : null,
-                                    'employee_id' => $employee_id[$index]
+                                    'employee_id' => $employee_id[$index],
+                                    'amount' => $amount[$index],
                                 );
                                 $this->db->update('invoice_installment', $update_installment);
 
@@ -388,8 +416,24 @@ class Cinstallment extends MX_Controller
                                 }
                             }
                         }
+                    } else {
+                        // var_dump($amount[$index]);
+                        $this->db->where('id', $installment['id']);
+                        $update_installment = array(
+                            'payment_date' => date('Y-m-d', strtotime($payment_date[$index])),
+                            'payment_amount' => $payment_amount[$index],
+                            'status' => $status[$index],
+                            'payment_type' => $payment_type[$index],
+                            'account' => $account[$index],
+                            'check_no' => ($check_no[$index])? $check_no[$index] : null,
+                            'expiry_date' => ($expiry_date[$index])? $expiry_date[$index] : null,
+                            'employee_id' => $employee_id[$index],
+                            'amount' => $amount[$index],
+                        );
+                        $this->db->update('invoice_installment', $update_installment);
                     }
                 }
+                // exit;
 
                 // get total payed and total un payed after latest update
                 $invoice_details = $this->db->select('a.paid_amount, a.due_amount')->from('invoice a')->where('invoice_id', $invoice_id)->get()->row();
