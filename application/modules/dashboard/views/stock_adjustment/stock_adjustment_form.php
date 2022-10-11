@@ -80,9 +80,9 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" tabindex="3" class="form-control datepicker"
+                                        <input type="text" tabindex="3" class="form-control datepicker2"
                                             autocomplete="off" name="date" placeholder="<?php echo display('date') ?>"
-                                            id="invoice_no" required />
+                                            id="invoice_no" required value="<?=date('d-m-Y')?>" />
                                     </div>
                                 </div>
                             </div>
@@ -134,9 +134,9 @@
                                                     <option value=""></option>
                                                 </select>
                                             </div>
-                                            <div id="color_variant_area_1">
+                                            <div id="color_variant_area_1" style="display: none;">
                                                 <select name="color_variant[1]" id="color_variant_1"
-                                                    class="form-control color_variant width_100p">
+                                                    class="form-control color_variant width_100p" >
                                                     <option value=""></option>
                                                 </select>
                                             </div>
@@ -194,3 +194,10 @@
 </div>
 
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/stock_adjustment_form.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+            dateFormat: "dd-mm-yy"
+        });
+    });
+</script>

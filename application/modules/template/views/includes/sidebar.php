@@ -848,6 +848,16 @@
                     <a
                         href="<?php echo base_url('dashboard/Creport/stock_report_product_card') ?>"><?php echo display('stock_report_product_card') ?></a>
                 </li>
+                <?php if ($this->permission->check_label('stock_adjustment')->create()->access()) : ?>
+                    <li class="<?php echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?>">
+                    <a
+                       href="<?php echo base_url('dashboard/Cstock_adjustment/stock_adjustment') ?>"><?php echo display('stock_adjustment') ?></a>
+                    </li>
+                    <li class="<?php echo (($this->uri->segment(3) == 'manage_stock_adjustment' ? 'active' : '')) ?>">
+                    <a
+                       href="<?php echo base_url('dashboard/Cstock_adjustment/manage_stock_adjustment') ?>"><?php echo display('manage_stock_adjustment') ?></a>
+                    </li>
+                <?php endif ?>
                 <?php
 //                        if ($this->permission->check_label('stock_adjustment')->create()->access()) { ?>     
 <!--                <li class="--><?php //echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?><!--">-->
