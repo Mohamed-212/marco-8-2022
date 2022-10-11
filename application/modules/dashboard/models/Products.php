@@ -477,4 +477,105 @@ class Products extends CI_Model {
 		$this->db->group_by('pr.product_id,pr.variant_id,pr.status');
 		return $this->db->get()->result_array();
 	}
+
+    // Get variant stock info
+    public function check_variant_wise_stock($product_id, $store_id, $variant_id, $variant_color = false, $date_from = null, $date_to = null)
+    {
+        $this->db->select("SUM(quantity) as totalPurchaseQnty");
+        $this->db->from('purchase_stock_tbl');
+        $this->db->where('product_id', $product_id);
+        $this->db->where('variant_id', $variant_id);
+        if (!empty($variant_color)) {
+            $this->db->where('variant_color', $variant_color);
+        }
+        if (!empty($store_id)) {
+            $this->db->where('store_id', $store_id);
+        }
+
+        if ($date_from) {
+            $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+        }
+
+        if ($date_to) {
+            $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+        }
+        
+        $purchase = $this->db->get()->row();
+
+        // var_dump($date_from, $date_to, $purchase, $store_id, $product_id);exit;
+
+        // dd($this->db->last_query());
+
+        $this->db->select("SUM(quantity) as totalSalesQnty");
+        $this->db->from('invoice_stock_tbl');
+        $this->db->where('product_id', $product_id);
+        $this->db->where('variant_id', $variant_id);
+        if (!empty($variant_color)) {
+            $this->db->where('variant_color', $variant_color);
+        }
+        if (!empty($store_id)) {
+            $this->db->where('store_id', $store_id);
+        }
+
+        if ($date_from) {
+            $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+        }
+
+        if ($date_to) {
+            $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+        }
+        $sales = $this->db->get()->row();
+
+        // $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+
+        // $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+        // $stock = ($purchase->totalPurchaseQnty + $product_information->open_quantity) - $sales->totalSalesQnty;
+
+        return [$purchase->totalPurchaseQnty, $sales->totalSalesQnty];
+    }
+
+    public function check_variant_wise_stock2($product_id, $store_id, $variant_id, $variant_color = false, $date_from = null, $date_to = null)
+    {
+
+        $this->db->select("parent_product_id,child_product_id");
+        $this->db->from('assembly_products');
+        $this->db->where('parent_product_id', $product_id);
+        $query = $this->db->get();
+        $product_list = $query->result();
+        $stock = 1000000000;
+        if (!empty($product_list)) {
+            foreach ($product_list as $product) {
+                $this->db->select("SUM(quantity) as totalPurchaseQnty");
+                $this->db->from('purchase_stock_tbl');
+                $this->db->where('product_id', $product->child_product_id);
+                if ($date_from) {
+                    $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+                }
+        
+                if ($date_to) {
+                    $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+                }
+                $purchase = $this->db->get()->row();
+
+                $this->db->select("SUM(quantity) as totalSalesQnty");
+                $this->db->from('invoice_stock_tbl');
+                $this->db->where('product_id', $product->child_product_id);
+                if ($date_from) {
+                    $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+                }
+        
+                if ($date_to) {
+                    $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+                }
+                $sales = $this->db->get()->row();
+                $stock1 = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
+                // if ($stock1 < $stock) {
+                //     $stock = $stock1;
+                // }
+                return [$purchase->totalPurchaseQnty, $sales->totalSalesQnty];
+            }
+        }
+
+        return [0, 0];
+    }
 }

@@ -1030,6 +1030,15 @@ class Cproduct extends MX_Controller
         // $stock = ($totalPurchase + $openQuantity) - $totalSales;
         $stock = ($totalPurchase - $totalSales);
 
+        $store_id = $details_info[0]['store_id'];
+        $size_id = $details_info[0]['variants'];
+
+        if ($details_info[0]['assembly'] == 1) {
+            $stockData = $this->Products->check_variant_wise_stock2($product_id, $store_id, $size_id);
+        } else {
+            $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $size_id);
+        }
+
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_details'),
@@ -1038,11 +1047,13 @@ class Cproduct extends MX_Controller
             'price' => $details_info[0]['price'],
             'purchaseTotalAmount' => number_format($totalPrcsAmnt, 2, '.', ','),
             'salesTotalAmount' => number_format($totaSalesAmt, 2, '.', ','),
-            'total_purchase' => $totalPurchase,
-            'total_sales' => $totalSales,
+            // 'total_purchase' => $totalPurchase,
+            // 'total_sales' => $totalSales,
+            'total_purchase' => $stockData[0],
+            'total_sales' => $stockData[1],
             'purchaseData' => $purchaseData,
             'salesData' => $salesData,
-            'stock' => $stock,
+            'stock' => $stockData[0] - $stockData[1],
             'product_statement' => 'dashboard/Cproduct/product_sales_supplier_rate/' . $product_id,
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
@@ -1087,7 +1098,20 @@ class Cproduct extends MX_Controller
         }
 
         $openQuantity = $details_info[0]['open_quantity'];
+        $store_id = $details_info[0]['store_id'];
+        $size_id = $details_info[0]['variants'];
+
+        if ($details_info[0]['assembly'] == 1) {
+            $stockData = $this->Products->check_variant_wise_stock2($product_id, $store_id, $size_id);
+        } else {
+            $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $size_id);
+        }
+
+        
         // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+        
+
+
         $stock = ($totalPurchase - $totalSales);
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
@@ -1097,11 +1121,14 @@ class Cproduct extends MX_Controller
             'price' => @$details_info[0]['price'],
             'purchaseTotalAmount' => number_format($totalPrcsAmnt, 2, '.', ','),
             'salesTotalAmount' => number_format($totaSalesAmt, 2, '.', ','),
-            'total_purchase' => $totalPurchase,
-            'total_sales' => $totalSales,
+            // 'total_purchase' => $totalPurchase,
+            // 'total_sales' => $totalSales,
+            'total_purchase' => $stockData[0],
+            'total_sales' => $stockData[1],
             'purchaseData' => $purchaseData,
             'salesData' => $salesData,
-            'stock' => $stock,
+            // 'stock' => $stock,
+            'stock' => $stockData[0] - $stockData[1],
             'product_list' => $products_list,
             'product_statement' => 'dashboard/Cproduct/product_sales_supplier_rate/' . $product_id,
             'currency' => $currency_details[0]['currency_icon'],
