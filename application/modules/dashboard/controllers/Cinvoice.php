@@ -1643,9 +1643,9 @@ class Cinvoice extends MX_Controller
         $this->load->helper('download');
         $this->load->library('zip');
 
-        $data = [
-            'title'    => display('invoice_images'),
-        ];
+
+
+        $invoices = $this->db->select('invoice_id, invoice')->from('invoice')->get()->result();
 
         $invoice_no = $this->input->post('invoice_no', true);
 
@@ -1659,6 +1659,11 @@ class Cinvoice extends MX_Controller
             ->join('product_information p', 'p.product_id = d.product_id', 'left')
             ->where('d.invoice_id', $invoice->invoice_id)
             ->get()->result();
+
+        $data = [
+            'title'    => display('invoice_images'),
+            'invoices' => $invoices
+        ];
 
         if ($invoice) {
             $data['items'] = $details;
