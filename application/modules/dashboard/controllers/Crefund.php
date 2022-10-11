@@ -285,6 +285,8 @@ class Crefund extends MX_Controller {
                         $bank_return= $return;
                 }
 
+                
+                
                 //1st debit (Sales return for Showroom sales) with total price before discount
                 $customer_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
@@ -439,6 +441,12 @@ class Crefund extends MX_Controller {
             }
             
             // $returninvoice_id=$this->db->insert_id();
+            // update invoice paid amount
+            $invoiceData = $this->db->select('*')->from('invoice')->where('invoice_id', $filter['invoice_id'])->limit(1)->get()->row();
+            $this->db->set('paid_amount', $invoiceData->paid_amount + $total_return+$tota_vat)
+                ->set('due_amount', $invoiceData->due_amount - $total_return+$tota_vat)
+                ->where('invoice_id', $filter['invoice_id'])
+                ->update('invoice');
         }
        
          
