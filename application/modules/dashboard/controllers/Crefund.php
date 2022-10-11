@@ -251,28 +251,38 @@ class Crefund extends MX_Controller {
                         for($i=0;$i<count($invoice_installment);$i++)
                         {
                             $temp+=$invoice_installment[$i]['amount'];
-
+                           
+                           
                             if($invoice_installment[$i]['status'])
                             {
                                 $return+=$invoice_installment[$i]['payment_amount'];
                             }
 
-                            if($temp <= $total_installment_return)
+                            if((int)$temp < (int)$total_installment_return)
                             {
                                 $sql="delete from invoice_installment where id='".$invoice_installment[$i]['id']."';";
                                 $result= $this->db->query($sql);
                             }
 
-                            if($temp > $total_installment_return)
+                            if((int)$temp == (int)$total_installment_return)
                             {
+                                $sql="delete from invoice_installment where id='".$invoice_installment[$i]['id']."';";
+                               $result= $this->db->query($sql);
+                                break;
+                            } 
+                        
+                            if((int)$temp > (int)$total_installment_return)
+                            {
+                                
                                 $total_installment_return=$temp-$total_installment_return;
+                                $return= $total_installment_return;
                                 $sql="update invoice_installment set amount='".$total_installment_return."' where id='".$invoice_installment[$i]['id']."';";
                                 $result= $this->db->query($sql);
                                 break;
                             }
+
                         }
-                        $bank_return= $total_installment_return;
-                        
+                        $bank_return= $return;
                 }
 
                 //1st debit (Sales return for Showroom sales) with total price before discount
