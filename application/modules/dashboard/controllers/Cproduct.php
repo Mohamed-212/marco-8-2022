@@ -562,7 +562,7 @@ class Cproduct extends MX_Controller
                 $onsale_price = null;
             }
 
-            
+
 
             $category_id = $this->input->post('category_id', TRUE);
             // check if category_id is not found
@@ -2543,7 +2543,24 @@ class Cproduct extends MX_Controller
                 // print_r($sheetdata[$i]);
                 // print_r($product_details);
                 // exit;
-                $this->db->insert('product_information', $product_details);
+
+                // check if product is already exists
+                $exists = $this->db->select('product_id')
+                    ->from('product_information')
+                    ->where('product_name', $product_details['product_name'])
+                    ->where('category_id', $product_details['category_id'])
+                    ->get()->result_array();
+
+                if (count($exists)) {
+                    // product is found then update
+                    $product_details['product_id'] = $exists[0]['product_id'];
+                    $this->db->set($product_details);
+                    $this->db->where('product_id', $exists[0]['product_id']);
+                    $this->db->update('product_information');
+
+                } else {
+                    $this->db->insert('product_information', $product_details);
+                }
                 //opening balance
                 if ($product_quantity > 0 && $product_rate > 0) {
                     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
