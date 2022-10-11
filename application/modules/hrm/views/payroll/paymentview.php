@@ -21,22 +21,19 @@
 
         <?php if (!empty($this->session->flashdata('message'))) { ?>
             <div class="alert alert-success alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?php echo $this->session->flashdata('message') ?>
             </div>
         <?php } ?>
         <?php if (!empty($this->session->flashdata('exception'))) { ?>
             <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?php echo $this->session->flashdata('exception') ?>
             </div>
         <?php } ?>
         <?php if (!empty(validation_errors())) { ?>
             <div class="alert alert-danger alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <?php echo validation_errors() ?>
             </div>
         <?php } ?>
@@ -51,51 +48,50 @@
                     <div class="panel-body">
                         <table width="100%" class="datatable table table-striped table-bordered table-hover">
                             <thead>
-                            <tr>
-                                <th><?php echo display('Sl') ?></th>
-                                <th><?php echo display('employee_name') ?></th>
-                                <th><?php echo display('salary_month') ?></th>
-                                <th><?php echo display('total_salary') ?></th>
-                                <th><?php echo display('total_working_minutes') ?></th>
-                                <th><?php echo display('working_period') ?></th>
-                                <th><?php echo display('payment_type') ?></th>
-                                <th><?php echo display('payment_date') ?></th>
-                                <th><?php echo display('paid_by') ?></th>
-                                <th><?php echo display('action') ?></th>
-                            </tr>
+                                <tr>
+                                    <th><?php echo display('Sl') ?></th>
+                                    <th><?php echo display('employee_name') ?></th>
+                                    <th><?php echo display('salary_month') ?></th>
+                                    <th><?php echo display('total_salary') ?></th>
+                                    <th><?php echo display('total_working_minutes') ?></th>
+                                    <th><?php echo display('working_period') ?></th>
+                                    <th><?php echo display('payment_type') ?></th>
+                                    <th><?php echo display('payment_date') ?></th>
+                                    <th><?php echo display('paid_by') ?></th>
+                                    <th><?php echo display('action') ?></th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <?php if (!empty($emp_pay)) { ?>
-                                <?php $sl = 1; ?>
-                                <?php foreach ($emp_pay as $que) { ?>
-                                    <tr class="<?php echo ($sl & 1)?"odd gradeX":"even gradeC" ?>">
-                                        <td><?php echo $sl; ?></td>
-                                        <td><?php echo html_escape($que->first_name).' '.html_escape($que->last_name); ?></td>
-                                        <td><?php echo html_escape($que->salary_month); ?></td>
-                                        <td><?php echo html_escape($que->total_salary); ?></td>
-                                        <td><?php echo html_escape($que->total_working_minutes); ?></td>
-                                        <td><?php echo html_escape($que->working_period); ?></td>
-                                        <td><?php echo html_escape($que->payment_due); ?></td>
-                                        <td><?php echo html_escape($que->payment_date); ?></td>
-                                        <td><?php echo html_escape($que->paid_by); ?></td>
-                                        <td>
-                                            <center>
-                                            <?php
-                                            if($que->payment_due =='paid'){?>
-                                                <a href='<?php echo base_url("hrm/payroll/payslip/$que->emp_sal_pay_id") ?>' class='btn btn-info btn-xs'><?php echo display('payslip') ?></a>
-                                            <?php }
-                                            else {?>
+                                <?php if (!empty($emp_pay)) { ?>
+                                    <?php $sl = 1; ?>
+                                    <?php foreach ($emp_pay as $que) { ?>
+                                        <tr class="<?php echo ($sl & 1) ? "odd gradeX" : "even gradeC" ?>">
+                                            <td><?php echo $sl; ?></td>
+                                            <td><?php echo html_escape($que->first_name) . ' ' . html_escape($que->last_name); ?></td>
+                                            <td><?php echo html_escape($que->salary_month); ?></td>
+                                            <td><?php echo html_escape($que->total_salary); ?></td>
+                                            <td><?php echo html_escape($que->total_working_minutes); ?></td>
+                                            <td><?php echo html_escape($que->working_period); ?></td>
+                                            <td><?php echo html_escape($que->payment_due); ?></td>
+                                            <td><?php echo html_escape($que->payment_date); ?></td>
+                                            <td><?php echo html_escape($que->paid_by); ?></td>
+                                            <td>
+                                                <center>
+                                                    <?php
+                                                    if ($que->payment_due == 'paid') { ?>
+                                                        <a href='<?php echo base_url("hrm/payroll/payslip/$que->emp_sal_pay_id") ?>' class='btn btn-info btn-xs'><?php echo display('payslip') ?></a>
+                                                    <?php } else { ?>
 
-                                                <a href='#' class='btn btn-success btn-xs' onclick='Payment(<?php echo $que->emp_sal_pay_id; ?>,"<?php echo $que->employee_id; ?>","<?php echo $que->total_salary; ?>","<?php echo $que->total_working_minutes; ?>","<?php echo $que->working_period; ?>","<?php echo $que->salary_month; ?>")'><?php echo display('pay_now') ?></a>
-                                            <?php  } ?>
-                                            </center>
-                                        </td>
-                                    </tr>
-                                    <?php $sl++; ?>
+                                                        <a href='#' class='btn btn-success btn-xs' onclick='Payment(<?php echo $que->emp_sal_pay_id; ?>,"<?php echo $que->employee_id; ?>","<?php echo $que->total_salary; ?>","<?php echo $que->total_working_minutes; ?>","<?php echo $que->working_period; ?>","<?php echo $que->salary_month; ?>")'><?php echo display('pay_now') ?></a>
+                                                    <?php  } ?>
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        <?php $sl++; ?>
+                                    <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
                             </tbody>
-                        </table>  <!-- /.table-responsive -->
+                        </table> <!-- /.table-responsive -->
                         <div class="text-right"><?php echo $links ?></div>
                     </div>
                 </div>
@@ -105,7 +101,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <strong><center> <?php echo display('payment')?></center></strong>
+                            <strong>
+                                <center> <?php echo display('payment') ?></center>
+                            </strong>
                         </div>
                         <div class="modal-body">
 
@@ -123,6 +121,23 @@
 
 
                                             <input name="emp_sal_pay_id" id="salType" type="hidden" value="">
+
+                                            <div class="form-group row">
+                                                <label for="ac" class="col-sm-4 col-form-label"><?php echo display('debit_account_head') ?><i class="text-danger">*</i></label>
+                                                <div class="col-sm-8">
+                                                    <select name="bank_head" id="bank_head" class="form-control" required="">
+                                                        <?php if (!empty($bank_list)) {
+                                                            foreach ($bank_list as $cracc) { ?>
+                                                                <option value="<?php echo html_escape($cracc->HeadCode) ?>">
+                                                                    <?php echo html_escape($cracc->HeadName) ?></option>
+                                                            <?php  }
+                                                        } else { ?>
+                                                            <option value='1111'> Cash in box general administration
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
 
                                             <div class="form-group row">
                                                 <label for="employee_id" class="col-sm-3 col-form-label"><?php echo display('employee_name') ?> </label>
@@ -162,7 +177,7 @@
 
                                             <div class="form-group text-center">
                                                 <button type="submit" class="btn btn-danger" data-dismiss="modal">&times; Cancel</button>
-                                                <button type="submit" class="btn btn-primary"><?php echo display('confirm')?></button>
+                                                <button type="submit" class="btn btn-primary"><?php echo display('confirm') ?></button>
                                             </div>
 
                                             <?php echo form_close() ?>

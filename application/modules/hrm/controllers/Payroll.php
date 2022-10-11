@@ -484,6 +484,14 @@ class Payroll extends MX_Controller
         $page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
         $data["links"] = $this->pagination->create_links();
         $data['emp_pay'] = $this->payroll_model->emp_paymentView($config["per_page"], $page);
+
+        $bank_list = $this->db->select('*')->from('acc_coa')->where('PHeadCode', 111)
+            ->or_where('PHeadCode', 112)
+            ->get()
+            ->result();
+        $data['bank_list'] = $bank_list;
+        // echo "<pre>";var_dump($bank_list);exit;
+
 //        $data['module'] = "hrm";
 //        $data['page'] = "payroll/paymentview";
 //        echo Modules::run('template/layout', $data);
@@ -522,12 +530,14 @@ class Payroll extends MX_Controller
 //        $coatransactionInfo = $this->db->select('HeadCode')->from('acc_coa')->where('HeadName', $c_acc)->get()->row();
 //        $COAID = $coatransactionInfo->HeadCode;
 
+            $bank_head = $this->input->post('bank_head', true);
+
             $cashinhand_credit = array(
                 'fy_id' => $find_active_fiscal_year->id,
                 'VNo' => $this->input->post('emp_sal_pay_id', true),
                 'Vtype' => 'Salary',
                 'VDate' => date('Y-m-d'),
-                'COAID' => 1111,
+                'COAID' => $bank_head,
                 'Narration' => 'Cash in hand Credit For Employee Salary for-  ' . $c_name->first_name . ' ' . $c_name->last_name,
                 'Debit' => 0,
                 'Credit' => $this->input->post('total_salary', true),
