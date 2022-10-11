@@ -318,7 +318,8 @@ class Payroll extends MX_Controller
             'gdate' => $ab,
             'start_date' => $fdate,
             'end_date' => $edate,
-            'generate_by' => $this->session->userdata('fullname'),
+            // 'generate_by' => $this->session->userdata('fullname'),
+            'generate_by' => $this->session->userdata('user_name'),
         ];
 
         $this->db->insert('salary_sheet_generate', $postData);
@@ -375,7 +376,8 @@ class Payroll extends MX_Controller
                     'total_working_minutes' => $worhour,
                     'working_period' => $workingper,
                     'salary_month' => $ab,
-                    'paid_by' => $this->session->userdata('fullname'),
+                    // 'paid_by' => $this->session->userdata('fullname'),
+                    'paid_by' => $this->session->userdata('user_name'),
                 );
 //                    $empsalgen = array(
 //                        'fy_id' => $find_active_fiscal_year->id,
