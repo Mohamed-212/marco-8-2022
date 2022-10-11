@@ -516,7 +516,7 @@ class Lreport
             $store_id = $result->store_id;
         }
 
-        $stok_report = $CI->Reports->stock_report_by_product_card($from_date, $to_date, $store_id, $product_id);
+        $stok_report = $product_id ? $CI->Reports->stock_report_by_product_card($from_date, $to_date, $store_id, $product_id) : [];
 
         $product_list = $CI->Products->product_list();
         $store_list = $CI->Stores->store_list();
@@ -524,7 +524,7 @@ class Lreport
         $data = array(
             'title'          => display('stock_report_product_card'),
             'stok_report'    => $stok_report,
-            'product_model'  => @$stok_report[0]['product_model'],
+            // 'product_info'  => $stok_report[0],
             // 'links'          => $links,
             // 'date'           => '',
             // 'sub_total_in'   => $sub_total_in,

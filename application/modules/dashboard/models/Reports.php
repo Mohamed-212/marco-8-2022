@@ -2112,12 +2112,78 @@ class Reports extends CI_Model
 
     public function stock_report_by_product_card($from_date = false, $to_date = false, $store_id = false, $product_id)
     {
-        $p = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
+
+        $product = $this->db->select('*')->from('product_information')->where('product_id', $product_id)->get()->row();
 
         $default_store_id = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
         $default_store_id = $default_store_id->store_id;
-        $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $p->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
+        $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $product->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
 
-        var_dump($product_id);exit;
+        // TODO change this
+        if (empty($first_purchase->quantity)) {
+            $first_purchase->quantity = $product->open_quantity;
+        }
+
+        $openQuantity = (int)$first_purchase->quantity;
+
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+
+        /**
+         * transfer || exports || in quantity
+         */
+        //  invoices
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        $this->db->select('a.created_at as date_time, a.invoice_id, a.invoice, b.quantity, b.rate')
+            ->from('invoice a')
+            ->join('invoice_details b', 'b.product_id = "' . $product_id . '" AND b.invoice_id = a.invoice_id')
+            ->where('a.store_id', $store_id);
+        if ($dateRange) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+
+        $invoices = $this->db->order_by('created_at', 'asc')
+            ->get()
+            ->result_array();
+        // purchase return
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        $this->db->select('a.created_at as date_time, a.purchase_return_id, b.quantity, b.rate')
+            ->from('product_purchase_return a')
+            ->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = "' . $product_id . '"')
+            ->where('a.store_id', $store_id);
+        if ($dateRange) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $purchase_return = $this->db->order_by('created_at', 'asc')
+            ->get()
+            ->result_array();
+
+        /**
+         * purchase || imports || out quantity
+         */
+        // purchases
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        $this->db->select('a.purchase_id, a.invoice, a.created_at as date_time, b.quantity, b.rate')
+            ->from('product_purchase a')
+            ->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = "' . $product_id . '"')
+            ->where('a.store_id', $store_id);
+        if ($dateRange) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $purchases = $this->db->order_by('created_at', 'asc')
+            ->get()
+            ->result_array();
+
+        // invoice return
+        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        $this->db->select('a.id, a.return_invoice_id, a.return_quantity, a.rate, a.created_at as date_time')
+            ->from('invoice_return a')
+            ->join('invoice b', 'b.invoice_id = a.invoice_id AND b.store_id = "' . $store_id . '"', 'left')
+            ->where('a.product_id', $product_id);
+        if ($dateRange) {
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $invoice_return = $this->db->get()->result_array();
+
+        return [$product, $openQuantity, $invoices, $purchase_return, $purchases, $invoice_return];
     }
 }
