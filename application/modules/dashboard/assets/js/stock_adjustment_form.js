@@ -43,14 +43,14 @@ var csrf_test_name=  $("#CSRF_TOKEN").val();
 	            minLength: 0,
 	            source: function( request, response ) {
 	            $.ajax( {
-	                url: base_url+'dashboard/Cstock_adjustment/product_search_by_store',
+	                url: base_url+'dashboard/Cinvoice/product_search_all_products',
 	                method: 'post',
 	                dataType: "json",
 	                data: {
 	                    csrf_test_name:csrf_test_name,
 	                    term: request.term,
 	                    store_id:$('#store_id').val(),
-	                    product_name:product_name,
+	                    product_name:request.term,
 	                },
 	                success: function( data ) {
 	                    response( data );
@@ -65,6 +65,8 @@ var csrf_test_name=  $("#CSRF_TOKEN").val();
 	            $(this).parent().parent().find(".autocomplete_hidden_value").val(ui.item.value); 
 	            var sl           =$(this).parent().parent().find(".sl").val(); 
 	            var id           =ui.item.value;
+                // var store_id = $('#store_id').val();
+                // var variant_idd = 
 	            var dataString   ='csrf_test_name='+csrf_test_name+'&product_id='+ id;
 	            var avl_qntt     ='avl_qntt_'+sl;
 	            var price_item   ='price_item_'+sl;
@@ -78,10 +80,36 @@ var csrf_test_name=  $("#CSRF_TOKEN").val();
 	                success: function(data)
 	                {
 	                    var obj = JSON.parse(data);
+                        // console.log(obj);
 	                    $('#'+price_item).val(obj.supplier_price);
 	                    $('#'+avl_qntt).val(obj.total_product);
 	                    $('#'+variant_id).html(obj.variant);
 	                    $('#'+color_variant).empty().append(obj.variant_color);
+                        // alert('asdash jkdashd');
+
+                        $.ajax({
+                            type: "post",
+                            async: false,
+                            url: base_url+'dashboard/Cpurchase/check_admin_2d_variant_info',
+                            data: {csrf_test_name:csrf_test_name, product_id: id, variant_id: obj.size, store_id: $('#store_id').val(), variant_color:null},
+                            success: function (result) {
+                
+                                var res = JSON.parse(result);
+                                if(res[0]=='yes'){
+                                    $('#'+avl_qntt).val(res[1]);
+                                    // $('#discount_'+sl).val(res[3]);
+                                    // $('#price_item_'+sl).val(res[2]).change();
+                                }else{
+                                    $('#'+avl_qntt).val(res[1]);
+                                    alert(display('product_is_not_available_in_this_store'));
+                                    return false; 
+                                }
+                
+                            },
+                            error: function () {
+                                alert('Request Failed, Please check and try again!');
+                            }
+                        });
 	                } 
 	            });
 

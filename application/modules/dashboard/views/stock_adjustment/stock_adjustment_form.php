@@ -63,9 +63,10 @@
                                         <select name="store_id" id="store_id" class="form-control store_id width_100p"
                                             required="">
                                             <option value=""></option>
+                                            
                                             <?php if (count($stores) > 0) {
                                                 foreach ($stores as $store) { ?>
-                                            <option value="<?php echo html_escape($store['store_id']) ?>">
+                                            <option value="<?php echo html_escape($store['store_id']) ?>" <?=$store['default_status'] == 1 ? 'selected' : '' ?> >
                                                 <?php echo html_escape($store['store_name']) ?></option>
                                             <?php }
                                             } ?>
