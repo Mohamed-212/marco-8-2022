@@ -1670,6 +1670,8 @@ class Cinvoice extends MX_Controller
 
             foreach ($details as $inv) {
                 // force_download('./' . $inv->image_thumb, NULL);
+                if (empty($inv->image_thumb)) continue;
+                
                 $this->zip->read_file('./' . $inv->image_thumb);
             }
 
