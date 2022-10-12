@@ -92,10 +92,11 @@ class Homes extends CI_Model
     //Best sales list
     public function best_sales()
     {
-        $this->db->select('a.*,b.category_name,c.brand_name');
+        $this->db->select('a.*,b.category_name,c.brand_name, pr.product_price as whole_price');
         $this->db->from('product_information a');
         $this->db->join('product_category b', 'a.category_id=b.category_id');
         $this->db->join('brand c', 'a.brand_id=c.brand_id', 'left');
+        $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         $this->db->where('best_sale', '1');
         $this->db->order_by('id', 'desc');
         $this->db->limit('6');
@@ -326,10 +327,11 @@ class Homes extends CI_Model
         $product_ids = array_column($product_ids, 'product_id');
         if (!empty($product_ids)) {
             $result = $this->db->select('
-    pi.*, pc.*,b.brand_name')
+    pi.*, pc.*,b.brand_name, pr.product_price as whole_price')
                 ->from('product_information as pi')
                 ->join('product_category as pc', 'pc.category_id = pi.category_id')
                 ->join('brand as b', 'b.brand_id=pi.brand_id')
+                ->join('pricing_types_product pr', 'pr.product_id = pi.product_id AND pr.pri_type_id = 1', 'left')
                 ->where_in('pi.product_id', $product_ids)
                 ->limit(15)
                 ->get()

@@ -73,7 +73,7 @@ if (!empty($block_list)) {
         if ($cat_pro) {
 
             if ($block['block_style'] == '1') {
-                include(dirname(__FILE__) . '/blocks/block_1.php');
+                // include(dirname(__FILE__) . '/blocks/block_1.php');
             } else {
                 include(dirname(__FILE__) . '/blocks/block_2.php');
             }

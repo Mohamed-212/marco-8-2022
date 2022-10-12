@@ -51,7 +51,8 @@
                                 if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                     $price_val = $product->onsale_price * $target_con_rate;
                                 }else{
-                                    $price_val = $product->price * $target_con_rate;
+                                    // $price_val = $product->price * $target_con_rate;
+                                    $price_val = $product->whole_price * $target_con_rate;
                                 }
 
                                 echo  (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1); ?>
@@ -66,7 +67,12 @@
             <?php } ?>
 
             <?php
-            $latest_products = $this->db->select('*')->from('product_information')->where('status','1')->order_by('id','desc')->limit(15)->get()->result();
+            $latest_products = $this->db->select('a.*, pr.product_price as whole_price')
+                ->from('product_information a')
+                ->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left')
+                ->where('a.status','1')
+                ->order_by('a.id','desc')
+                ->limit(15)->get()->result();
             if(!empty($latest_products)){
              ?>
             <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
@@ -115,7 +121,8 @@
                                 if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                     $price_val = $product->onsale_price * $target_con_rate;
                                 }else{
-                                    $price_val = $product->price * $target_con_rate;
+                                    // $price_val = $product->price * $target_con_rate;
+                                    $price_val = $product->whole_price * $target_con_rate;
                                 }
 
                                 echo  (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1); ?>
@@ -179,7 +186,8 @@
                                 </del>
                                 <?php 
                                 }else{
-                                    $price_val = $product->price * $target_con_rate;
+                                    // $price_val = $product->price * $target_con_rate;
+                                    $price_val = $product->whole_price * $target_con_rate;
                                 }
 
                                 echo  (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1);
