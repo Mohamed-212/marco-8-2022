@@ -32,6 +32,7 @@ class Corder extends MX_Controller
 
         $data['Soft_settings'] = $this->Soft_settings->retrieve_setting_editdata();
         $data['module'] = "web";
+        $data['order'] = true;
         $data['page'] = "customer/order/add_order_form";
         $this->parser->parse('customer/customer_html_template', $data);
 
