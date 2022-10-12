@@ -678,9 +678,10 @@ class Homes extends CI_Model
     //Product Details
     public function product_details($product_id)
     {
-        $this->db->select('*');
-        $this->db->from('product_information');
-        $this->db->where('product_id', $product_id);
+        $this->db->select('p.*, pr.product_price as whole_price');
+        $this->db->from('product_information p');
+        $this->db->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = 1', 'left');
+        $this->db->where('p.product_id', $product_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->row();

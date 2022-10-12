@@ -91,7 +91,12 @@ class Lproduct
         }
         // translation part end
         $productModelOnly = trim(preg_replace("/- C.*$/i", '', $product_info->product_model));
-        $varients = $CI->db->select('*')->from('product_information')->where('product_model LIKE', "%$productModelOnly%")->get()->result_array();
+        // $varients = $CI->db->select('*')->from('product_information')->where('product_model LIKE', "%$productModelOnly%")->get()->result_array();
+        $varients = $CI->db->select('p.*, pr.product_price as whole_price')
+            ->from('product_information p')
+            ->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = 1', 'left')
+            ->where('p.product_model_only', $product_info->product_model_only)
+            ->get()->result_array();
 
         $varientsArray = [];
         foreach ($varients as $product) {

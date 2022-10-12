@@ -201,7 +201,7 @@ function select_color_variant(product_id, variant_color, default_variant) {
   });
 }
 
-function select_color_variant2d(product_id, variant_color, default_variant) {
+function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr) {
   var variant_id = $('[name="select_size1"]:checked').val();
   var sst = parseInt($('#sst').val(), 10);
   if (!variant_id) {
@@ -234,8 +234,11 @@ function select_color_variant2d(product_id, variant_color, default_variant) {
       $('#variant_id').val(variant_id);
       $('#color_variant_id').val(default_variant);
 
+      $('.amount.var_amount').text(wholePriceAsStr);
+      $('#price').val(wholePrice);
+
       if (result[0] == "yes") {
-        $(".var_amount").html(result[1]);
+        // $(".var_amount").html(result[1]);
         $('#product_max_quantity').val(result[4]);
         if (parseInt(result[3]) > 0) {
           $(".regular_price").html(result[2]);

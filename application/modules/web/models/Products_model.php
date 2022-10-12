@@ -241,9 +241,10 @@ class Products_model extends CI_Model {
     //variant wise price
     public function check_variant_wise_price($product_id, $variant_id, $variant_color = false)
     {
-        $pinfo = $this->db->select('price, onsale, onsale_price, variant_price')
-                ->from('product_information')
-                ->where('product_id', $product_id)
+        $pinfo = $this->db->select('p.price, p.onsale, p.onsale_price, p.variant_price, pr.product_price as whole_price')
+                ->from('product_information p')
+                ->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = 1', 'left')
+                ->where('p.product_id', $product_id)
                 ->get()->row();
         if($pinfo->variant_price){
             $this->db->select('price');
@@ -262,18 +263,22 @@ class Products_model extends CI_Model {
             }else{
                  if(!empty($pinfo->onsale) && !empty($pinfo->onsale_price)){
                     $price_arr['price'] = $pinfo->onsale_price;
-                    $price_arr['regular_price'] = $pinfo->price;
+                    // $price_arr['regular_price'] = $pinfo->price;
+                    $price_arr['regular_price'] = $pinfo->whole_price;
                 }else{
-                    $price_arr['price'] = $price_arr['regular_price'] = $pinfo->price;
+                    // $price_arr['price'] = $price_arr['regular_price'] = $pinfo->price;
+                    $price_arr['regular_price'] = $pinfo->whole_price;
                 }
             }
         } else{
 
             if(!empty($pinfo->onsale) && !empty($pinfo->onsale_price)){
                 $price_arr['price'] = $pinfo->onsale_price;
-                $price_arr['regular_price'] = $pinfo->price;
+                // $price_arr['regular_price'] = $pinfo->price;
+                $price_arr['regular_price'] = $pinfo->whole_price;
             }else{
-                $price_arr['price'] = $price_arr['regular_price'] = $pinfo->price;
+                // $price_arr['price'] = $price_arr['regular_price'] = $pinfo->price;
+                $price_arr['price'] = $price_arr['regular_price'] = $pinfo->whole_price;
             }
         }
         return $price_arr;

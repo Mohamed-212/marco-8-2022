@@ -100,11 +100,13 @@ class Home extends MX_Controller
              $this->load->model('web/Products_model');
              $price_arr =  $this->Products_model->check_variant_wise_price($product_id, $variant, $variant_color);
              $final_price = $price_arr['price'];
+            // $final_price = $product_details->whole_price;
 
 
             if ($product_details->onsale) {
                 $onsale_price = $product_details->onsale_price;
-                $discount = $product_details->price - $final_price;
+                // $discount = $product_details->price - $final_price;
+                $discount = $product_details->whole_price - $final_price;
                 $discount = (($discount > 0)?$discount:0);
             }
 

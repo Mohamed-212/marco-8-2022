@@ -246,16 +246,19 @@ $theme = $CI->Themes->get_theme();
                                     <?php
                                     if ($target_con_rate > 1) {
                                         $price = $price * $target_con_rate;
-                                        echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                        // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
                                     }
 
                                     if ($target_con_rate <= 1) {
                                         $price = $price * $target_con_rate;
-                                        echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                        // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
                                     }
+
+                                    $getWholePrice = $this->db->select('product_price')->from('pricing_types_product')->where('product_id', $product_id)->where('pri_type_id', 1)->limit(1)->get()->row();
+                                    echo (($position1 == 0) ? $currency1 . " " . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . " " . $currency1);
                                     ?>
                                 </span>
-                                <input type="hidden" id="price" name="price" value="<?php echo html_escape($price) ?>">
+                                <input type="hidden" id="price" name="price" value="<?php echo html_escape($getWholePrice->product_price) ?>">
                             </ins>
                         <?php }  ?>
                     </div>
@@ -317,7 +320,7 @@ $theme = $CI->Themes->get_theme();
 
                                 <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
                                 <?php foreach ($varients as $product) : $vt = $product['color']; ?>
-                                    <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?=$variant?>', '<?=$variant?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
+                                    <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?=$variant?>', '<?=$variant?>', '<?=$product['whole_price']?>', '<?=(($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1)?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
                                     <label class="mr-1" for="id<?php echo html_escape($product['product_id']) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($product['color']) ?></span></label>
                                 <?php endforeach ?>
                             </div>
