@@ -2779,4 +2779,18 @@ class Cproduct extends MX_Controller
         $tabledata .= '</tbody> </table>';
         echo json_encode($tabledata);
     }
+
+    public function update_products_model_no()
+    {
+        $this->Products->update_products_model_no();
+
+        redirect('dashboard/Cproduct/manage_product/');
+    }
+
+    public function copy_products_to_website_products()
+    {
+        $this->Products->copy_products_to_website_products();
+        
+        redirect('dashboard/Cproduct/manage_product/');
+    }
 }

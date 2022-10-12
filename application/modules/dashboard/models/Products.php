@@ -606,4 +606,33 @@ class Products extends CI_Model {
 
         return [0, 0];
     }
+
+    public function update_products_model_no()
+    {
+        $products = $this->db->select('*')->from('product_information')->get()->result_array();
+
+        foreach ($products as $prod) {
+            $model_and_color = explode('-', $prod['product_model']);
+            $product_model_only = trim($model_and_color[0]);
+            $product_color = trim($model_and_color[1]) . (isset($model_and_color[2]) ? '/'.$model_and_color[2] : '');
+            $prod['product_model_only'] = $product_model_only;
+            $prod['product_color'] = $product_color;
+            $this->db->where('product_id', $prod['product_id'])
+                ->update('product_information', $prod);
+        }
+    }
+
+    public function copy_products_to_website_products()
+    {
+        ini_set('memory_limit', '5000000000M');
+        set_time_limit(5000000000);
+
+        $this->db->truncate('website_product_information');
+
+        $products = $this->db->select('*')->from('product_information')->get()->result_array();
+
+        foreach ($products as $prod) {
+            $this->website_product_entry($prod);
+        }
+    }
 }
