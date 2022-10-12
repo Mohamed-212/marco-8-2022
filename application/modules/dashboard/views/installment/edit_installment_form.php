@@ -173,7 +173,8 @@
             margin-bottom: 5px;
         }
 
-        #paid_amountt, #total-still {
+        #paid_amountt,
+        #total-still {
             background-color: #811fdb47;
             background-color: #811fdb47 !important;
             -webkit-print-color-adjust: exact;
@@ -182,21 +183,21 @@
             border-radius: 6px;
         }
     }
-    
+
 
     @media screen {
         .hideme {
             display: none;
         }
 
-        #paid_amountt, #total-still {
+        #paid_amountt,
+        #total-still {
             background-color: #811fdb47;
             /* font-weight: bold; */
             padding: 3px 5px;
             border-radius: 6px;
         }
     }
-    
 </style>
 
 <!-- Edit Invoice Start -->
@@ -292,7 +293,7 @@
 
                         <tr>
                             <td colspan="2" style="padding-left: 30px;padding-top: 50px;" id="total-still-td">
-                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?=(float)$customer_ledger[0][0]['total_credit'] - (float)$customer_ledger[1][0]['total_debit']?><span id="total-still" style="display: none;"></span>
+                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?= (float)$customer_ledger[0][0]['total_credit'] - (float)$customer_ledger[1][0]['total_debit'] ?><span id="total-still" style="display: none;"></span>
                             </td>
                         </tr>
                     </tbody>
@@ -338,6 +339,37 @@
             </div>
         </div>
         <div class="row">
+            <!-- Alert Message -->
+            <?php
+            $message = $this->session->userdata('message');
+            if (isset($message)) {
+            ?>
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $message ?>
+                </div>
+            <?php
+                $this->session->unset_userdata('message');
+            }
+            $error_message = $this->session->userdata('error_message');
+            if (isset($error_message)) {
+            ?>
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo $error_message ?>
+                </div>
+            <?php
+                $this->session->unset_userdata('error_message');
+            }
+            ?>
+
+
+            <?php if (!empty(validation_errors())) : ?>
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <?php echo validation_errors(); ?>
+                </div>
+            <?php endif; ?>
             <div class="col-sm-12">
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
@@ -532,7 +564,7 @@
 <script>
     $(document).ready(function() {
         $(".datepicker2").datepicker({
-			dateFormat: "dd-mm-yy"
-		});
+            dateFormat: "dd-mm-yy"
+        });
     });
 </script>

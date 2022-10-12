@@ -193,29 +193,44 @@ class Cinstallment extends MX_Controller
         $this->permission->check_label('manage_installment')->update()->redirect();
 
         $invoice_id = $this->input->post('invoice_id', TRUE);
-        echo "<pre>";
+        // echo "<pre>";
 
         $inv = $this->db->select('*')->from('invoice')->where('invoice_id', $invoice_id)->limit(1)->get()->row();
 
         $amount = $this->input->post('amount', TRUE);
+        $status = $this->input->post('status', TRUE);
         $payment_amount = $this->input->post('payment_amount', TRUE);
         $due_amount_total = 0;
         $payment_amount_total = 0;
-        foreach ($amount as $am) {
+        $new_payment_amount = 0;
+        // echo "<pre>";
+        foreach ($amount as $inx => $am) {
+            if ($status[$inx] != 1) continue;
+
+            // var_dump($am);
             $due_amount_total += $am;
         }
-        foreach ($payment_amount as $pyamount) {
+        foreach ($payment_amount as $iinx => $pyamount) {
             $payment_amount_total += $pyamount;
-        }
-        
-        if ((int)$due_amount_total != (int)$inv->due_amount) {
-            $this->session->set_userdata(array('error_message' => display('installment_total_amount_not_match')));
-            redirect('dashboard/cinstallment/manage_installment');
+            
+            if ($status[$iinx] == '2') {
+                // var_dump($status[$iinx], $pyamount);
+                $new_payment_amount += $pyamount;
+            }
         }
 
-        if ((int)$payment_amount_total > (int)$inv->due_amount) {
+        // var_dump($due_amount_total, $payment_amount_total, $new_payment_amount - $inv->paid_amount, $new_payment_amount, $inv->due_amount, $inv->paid_amount, $inv->total_amount);exit;
+
+        
+
+        if (((float)$due_amount_total + ((float)$new_payment_amount - (float)$inv->paid_amount)) != (float)$inv->due_amount) {
+            $this->session->set_userdata(array('error_message' => display('installment_total_amount_not_match')));
+            redirect('dashboard/cinstallment/installment_update_form/' . $invoice_id);
+        }
+
+        if ((float)$payment_amount_total > (float)$inv->due_amount) {
             $this->session->set_userdata(array('error_message' => display('installment_total_payed_amount_not_match')));
-            redirect('dashboard/cinstallment/manage_installment');
+            redirect('dashboard/cinstallment/installment_update_form/' . $invoice_id);
         }
 
 
@@ -255,31 +270,27 @@ class Cinstallment extends MX_Controller
                 $this->db->where('invoice_id', $invoice_id);
                 $installment_details = $this->db->get()->result_array();
 
-                $sql="SELECT SUM(ii.amount) as total_installment FROM `invoice_installment` ii join invoice i on i.invoice_id=ii.invoice_id where i.customer_id='".$customer_id."' and (ii.status !=2 or ii.`status` IS NULL) ;";
-                $result=$this->db->query($sql);
-                $total_installment=$result->result_array()[0]['total_installment'];
-                $total_from_balance=0;
+                $sql = "SELECT SUM(ii.amount) as total_installment FROM `invoice_installment` ii join invoice i on i.invoice_id=ii.invoice_id where i.customer_id='" . $customer_id . "' and (ii.status !=2 or ii.`status` IS NULL) ;";
+                $result = $this->db->query($sql);
+                $total_installment = $result->result_array()[0]['total_installment'];
+                $total_from_balance = 0;
 
                 foreach ($installment_details as $index => $installment) {
-                    
-                    if ($installment['status'] != 2 ) {
-                        if($payment_type[$index] == 5)
-                        {
-                            $total_from_balance+=$payment_amount[$index];
+
+                    if ($installment['status'] != 2) {
+                        if ($payment_type[$index] == 5) {
+                            $total_from_balance += $payment_amount[$index];
                         }
-                            
                     }
                 }
-               
-                $sql = "SELECT SUM(Debit) Debit, SUM(Credit) Credit, IsAppove, COAID FROM acc_transaction WHERE COAID LIKE '".$customer_head->HeadCode."%' AND IsAppove =1 GROUP BY IsAppove, COAID";
-                $result= $this->db->query($sql);
+
+                $sql = "SELECT SUM(Debit) Debit, SUM(Credit) Credit, IsAppove, COAID FROM acc_transaction WHERE COAID LIKE '" . $customer_head->HeadCode . "%' AND IsAppove =1 GROUP BY IsAppove, COAID";
+                $result = $this->db->query($sql);
                 $customer_balance  = $result->result_array()[0];
-                $balance=$total_installment-($customer_balance['Debit']-$customer_balance['Credit']);
+                $balance = $total_installment - ($customer_balance['Debit'] - $customer_balance['Credit']);
                 // dd([$total_from_balance,$total_installment,$balance,$customer_balance['Debit'],$customer_balance['Credit']]);
-                if($payment_type[$index] == 5)
-                {
-                    if($total_from_balance>$balance)
-                    {
+                if ($payment_type[$index] == 5) {
+                    if ($total_from_balance > $balance) {
                         $this->session->set_userdata(array('error_message' => display('balance_not_enough')));
                         redirect('dashboard/cinstallment/manage_installment');
                     }
@@ -287,13 +298,24 @@ class Cinstallment extends MX_Controller
 
                 foreach ($installment_details as $index => $installment) {
                     if ($installment['status'] != 2) {
-                        if ($payment_amount[$index] && $payment_date[$index]
+                        if (
+                            $payment_amount[$index] && $payment_date[$index]
                             && $payment_type[$index] && $account[$index]
-                            && $employee_id[$index]) {
+                            && $employee_id[$index]
+                        ) {
                             if (($payment_type[$index] == '3' || $payment_type[$index] == '4') && empty($check_no[$index]) && empty($expiry_date[$index])) {
                                 $this->session->set_userdata(array('error_message' => display('enter_check_number_if_payment_type_is_check_or_wire_transfer')));
                                 redirect('dashboard/cinstallment/manage_installment');
                             } else {
+                                // check payment due amount
+                                // var_dump($due_amount_total, $inv->due_amount, $payment_amount[$index], (float)$due_amount_total != ((float)$inv->due_amount - (float)$payment_amount[$index]));exit;
+                                // if ((float)$due_amount_total != ((float)$inv->due_amount - (float)$payment_amount[$index])) {
+                                //     $this->session->set_userdata(array('error_message' => display('installment_total_amount_not_match')));
+                                //     redirect('dashboard/cinstallment/installment_update_form/' . $invoice_id);
+                                //     break;
+                                //     return;
+                                // }
+
                                 //update installment with values
                                 $this->db->where('id', $installment['id']);
                                 $update_installment = array(
@@ -302,15 +324,15 @@ class Cinstallment extends MX_Controller
                                     'status' => $status[$index],
                                     'payment_type' => $payment_type[$index],
                                     'account' => $account[$index],
-                                    'check_no' => ($check_no[$index])? $check_no[$index] : null,
-                                    'expiry_date' => ($expiry_date[$index])? $expiry_date[$index] : null,
+                                    'check_no' => ($check_no[$index]) ? $check_no[$index] : null,
+                                    'expiry_date' => ($expiry_date[$index]) ? $expiry_date[$index] : null,
                                     'employee_id' => $employee_id[$index],
                                     'amount' => $amount[$index],
                                 );
                                 $this->db->update('invoice_installment', $update_installment);
 
                                 // if status complete
-                                if($status[$index] == 2){
+                                if ($status[$index] == 2) {
 
                                     //create new installment if payed amount is less than amount
                                     if ($payment_amount[$index] < $amount[$index]) {
@@ -318,8 +340,8 @@ class Cinstallment extends MX_Controller
                                         $installment_data = array(
                                             'invoice_id' => $invoice_id,
                                             'amount' => ($amount[$index] - $payment_amount[$index]),
-                                            'due_date' => date('Y-m-d', strtotime($due_date[count($due_date)-1] . ' + 1 months')),
-                                            'due_date_datetime' => date('Y-m-d H:i:s', strtotime($due_date[count($due_date)-1] . ' + 1 months')),
+                                            'due_date' => date('Y-m-d', strtotime($due_date[count($due_date) - 1] . ' + 1 months')),
+                                            'due_date_datetime' => date('Y-m-d H:i:s', strtotime($due_date[count($due_date) - 1] . ' + 1 months')),
                                         );
                                         $this->db->insert('invoice_installment', $installment_data);
                                     }
@@ -377,7 +399,7 @@ class Cinstallment extends MX_Controller
                                     );
                                     $this->db->update('invoice', $new_paid_amount);
 
-                               
+
                                     // add paid_amount Credit
                                     $customer_credit = array(
                                         'fy_id' => $find_active_fiscal_year->id,
@@ -416,21 +438,6 @@ class Cinstallment extends MX_Controller
                                 }
                             }
                         }
-                    } else {
-                        // var_dump($amount[$index]);
-                        $this->db->where('id', $installment['id']);
-                        $update_installment = array(
-                            'payment_date' => date('Y-m-d', strtotime($payment_date[$index])),
-                            'payment_amount' => $payment_amount[$index],
-                            'status' => $status[$index],
-                            'payment_type' => $payment_type[$index],
-                            'account' => $account[$index],
-                            'check_no' => ($check_no[$index])? $check_no[$index] : null,
-                            'expiry_date' => ($expiry_date[$index])? $expiry_date[$index] : null,
-                            'employee_id' => $employee_id[$index],
-                            'amount' => $amount[$index],
-                        );
-                        $this->db->update('invoice_installment', $update_installment);
                     }
                 }
                 // exit;
@@ -443,6 +450,18 @@ class Cinstallment extends MX_Controller
                     // remove un paid
                     $this->db->where('invoice_id', $invoice_id)->where('status', null)->delete('invoice_installment');
                 }
+
+                // update due amount in all installment details
+                // echo "<pre>";
+                foreach ($installment_details as $index => $installment) {
+                    $this->db->reset_query();
+                    $this->db->where('id', $installment['id']);
+                    $update_installment = array(
+                        'amount' => $amount[$index],
+                    );
+                    $this->db->update('invoice_installment', $update_installment);
+                }
+                // exit;
             } else {
                 $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
                 redirect(base_url('Admin_dashboard'));
@@ -492,7 +511,7 @@ class Cinstallment extends MX_Controller
     public function convert_number($number)
     {
         if ($number < 0) {
-            $number = -($number);
+            $number = - ($number);
         }
         if (($number < 0) || ($number > 9999999999999)) {
             throw new Exception("Number is out of range");
@@ -540,5 +559,4 @@ class Cinstallment extends MX_Controller
         }
         return $res;
     }
-
 }
