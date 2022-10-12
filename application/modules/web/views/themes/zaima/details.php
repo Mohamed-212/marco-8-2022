@@ -700,9 +700,9 @@ $theme = $CI->Themes->get_theme();
 <input type="hidden" id="color_variant_id" value="<?php echo isset($exploded[1]) ? $exploded[1] : null; ?>">
 <input type="hidden" id="theme_url" value="<?php echo THEME_URL . $theme; ?>">
 <input type="hidden" id="product_max_quantity" value="1" />
-<pre>
+<!-- <pre>
     <?php var_dump($var) ?>
-</pre>
+</pre> -->
 <script>
     $(document).ready(function() {
         $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
