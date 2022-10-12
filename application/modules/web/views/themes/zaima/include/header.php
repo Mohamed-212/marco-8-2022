@@ -193,8 +193,10 @@ asdasdasd
                         $comparisons = $this->session->userdata('comparison_ids');
                         $total_comparison_ids = count($this->session->userdata('comparison_ids'));
 
-                        $this->db->from('product_information');
-                        $this->db->where_in('product_id', $comparisons);
+                        $this->db->select('a.*, pr.product_price as whole_price');
+                        $this->db->from('product_information a');
+                        $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+                        $this->db->where_in('a.product_id', $comparisons);
                         $query = $this->db->get();
                         $comparison_products = $query->result();
                     ?>
@@ -214,7 +216,8 @@ asdasdasd
                                 </a>
                                 <span class="dropdown-product-details fs-14 text-muted">
                                     <?php
-                                            $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->price, 2, '.', ',') : number_format($comparison->price, 2, '.', ',') . ' ' . $currency1);
+                                            // $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->price, 2, '.', ',') : number_format($comparison->price, 2, '.', ',') . ' ' . $currency1);
+                                            $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->whole_price, 2, '.', ',') : number_format($comparison->whole_price, 2, '.', ',') . ' ' . $currency1);
                                             echo $comparison_price;
                                             ?>
 
@@ -240,9 +243,10 @@ asdasdasd
                     $total_wishlist = 0;
                     if ($this->session->userdata('customer_name')) {
                         $customer_id = $this->session->userdata('customer_id');
-                        $this->db->select('a.*,b.*');
+                        $this->db->select('a.*,b.*, pr.product_price as whole_price');
                         $this->db->from('wishlist a');
                         $this->db->join('product_information b', 'a.product_id=b.product_id');
+                        $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
                         $this->db->where('a.user_id', $customer_id);
                         $this->db->where('a.status', 1);
                         $query = $this->db->get();
@@ -273,7 +277,7 @@ asdasdasd
                                 <a class="dropdown-product-title  cart-product-item fs-15"
                                     href="<?php echo base_url() . 'product_details/' . remove_space($wishlist->product_name) . '/' . $wishlist->product_id ?>"><?php echo html_escape($wishlist->product_name); ?></a>
                                 <span
-                                    class="dropdown-product-details fs-14 text-muted"><?php echo html_escape($wishlist->price); ?></span>
+                                    class="dropdown-product-details fs-14 text-muted"><?php echo html_escape($wishlist->whole_price); ?></span>
                             </div>
                             <span class="dropdown-product-remove align-self-center text-primary"> <a href="#"
                                     class="remove_wishlist" name="<?php echo  html_escape($wishlist->product_id); ?>"><i
