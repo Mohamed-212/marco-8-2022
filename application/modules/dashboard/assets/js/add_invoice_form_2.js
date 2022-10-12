@@ -297,7 +297,9 @@ function addInputField(divName) {
                 count +
                 '" class="price_item' +
                 count +
-                ' form-control text-right" required="" min="0" readonly="readonly" /></td>' +
+                ' form-control text-right" required="" min="0" readonly="readonly" /> <input type="hidden" hidden id="price_item_saved_' +
+                count +
+                '" value="" /></td>' +
                 '<td><input type="number" name="discount[]" onkeyup="quantity_calculate(' +
                 count +
                 ');" onchange="quantity_calculate(' +

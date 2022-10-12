@@ -12,6 +12,7 @@ var APchange = function (event, ui) {
 function invoice_productList(cName) {
     var qnttClass = 'ctnqntt' + cName;
     var priceClass = 'price_item' + cName;
+    var priceSavedClass = 'price_item_saved_' + cName;
     var total_tax_price = 'total_tax_' + cName;
     var available_quantity = 'available_quantity_' + cName;
     var unit = 'unit_' + cName;
@@ -73,6 +74,7 @@ function invoice_productList(cName) {
                     success: function (data) {
 
                         var obj = jQuery.parseJSON(data);
+                        console.log(obj);
                         $('.' + qnttClass).val(obj.cartoon_quantity);
                         $('.' + priceClass).val(obj.price);
                         $('.' + total_tax_price).val(obj.tax);
