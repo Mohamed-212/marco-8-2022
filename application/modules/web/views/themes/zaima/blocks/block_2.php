@@ -88,7 +88,13 @@
                                     </div>
                                     <div class="info-area">
                                         <div class="model-name">
-                                            <a href="<?php echo $prodlink; ?>"><?php echo html_escape($product->product_name) ?></a> 
+                                            <a href="<?php echo $prodlink; ?>">
+                                            <?php 
+                                                $color_pos = strpos($product->product_name, '- CO');
+                                                // var_dump($color_pos);
+        
+                                                echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos) : $product->product_name);
+                                            ?></a> 
                                         </div>
                                         <div class="star-rating justify-content-center mt-3">
                                             <?php

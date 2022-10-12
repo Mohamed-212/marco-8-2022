@@ -48,7 +48,7 @@ if (!empty($block_list)) {
         $language = $Soft_settings[0]['language'];
         if ($_SESSION["language"] != $language) {
             $cat_pro = $this->db->select('a.*,b.category_id,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name,IF(d.trans_name IS NULL OR d.trans_name = "",b.category_name,d.trans_name) as category_name')
-                ->from('product_information a')
+                ->from('website_product_information a')
                 ->join('product_category b', 'a.category_id = b.category_id', 'left')
                 ->where('a.category_id', $block['block_cat_id'])
                 ->join('product_translation c', 'a.product_id = c.product_id', 'left')
@@ -59,7 +59,7 @@ if (!empty($block_list)) {
                 ->result();
         } else {
             $cat_pro = $this->db->select('a.*,b.category_name,b.category_id')
-                ->from('product_information a')
+                ->from('website_product_information a')
                 ->join('product_category b', 'a.category_id = b.category_id', 'left')
                 ->where('a.category_id', $block['block_cat_id'])
                 ->order_by('a.product_id', 'random')
