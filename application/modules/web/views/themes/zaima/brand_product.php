@@ -109,7 +109,12 @@
                             </a>
                             <h3 class="product-name fs-15 font-weight-600 overflow-hidden mt-2">
                                 <a href="<?php echo base_url('product_details/' . remove_space($product['product_name']) . '/' . $product['product_id']) ?>"
-                                    class="text-black"><?php echo html_escape($product['product_name']) ?></a>
+                                    class="text-black"><?php 
+                                        $color_pos = strpos($product['product_name'], '- CO');
+                                        // var_dump($color_pos);
+
+                                        echo html_escape($color_pos ? substr($product['product_name'], 0, $color_pos) : $product['product_name']);
+                                    ?></a>
                             </h3>
                             <div class="star-rating">
                                 <?php

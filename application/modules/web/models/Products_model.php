@@ -355,7 +355,7 @@ class Products_model extends CI_Model {
         $language = $Soft_settings[0]['language'];
         if($_SESSION["language"] != $language){
             $this->db->select('a.*,b.*,e.brand_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price');
-            $this->db->from('product_information a');
+            $this->db->from('website_product_information a');
             $this->db->join('product_category b','a.category_id = b.category_id','left');
             $this->db->join('brand e','a.brand_id = e.brand_id','left');
             $this->db->where('a.brand_id',$brand_id);
@@ -363,7 +363,7 @@ class Products_model extends CI_Model {
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         }else{
             $this->db->select('a.*,b.*,e.brand_name, pr.product_price as whole_price');
-            $this->db->from('product_information a');
+            $this->db->from('website_product_information a');
             $this->db->join('product_category b','a.category_id = b.category_id','left');
             $this->db->join('brand e','a.brand_id = e.brand_id','left');
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
