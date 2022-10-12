@@ -172,6 +172,26 @@
 									</tr>
 								{/salesData}
 								<?php } ?>
+								<?php if ($returnData) { ?>
+								{returnData}
+									<tr>
+										<td>{final_date}</td>
+										<td>
+											<a href="<?php echo base_url().'dashboard/Crefund/return_invoice/{return_invoice_id}'; ?>">
+												{invoice} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+											</a>
+										</td>
+										<td>
+											<a href="<?php echo base_url().'dashboard/Ccustomer/customerledger/{customer_id}'; ?>">{customer_name} <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
+										</td>
+										<td>{variant_name}</td>
+										<td> - {return_quantity}</td>
+										<td> <?php echo (($position==0)?"$currency {rate}":"{rate} $currency") ?></td>
+										<td> <?php echo (($position==0)?"$currency {total_discount}":"{total_discount} $currency") ?></td>
+										<td class="text-right"> <?php echo (($position==0)?"$currency {total_return}":"{total_return} $currency") ?></td>
+									</tr>
+								{/returnData}
+								<?php } ?>
 								</tbody>
 								<tfoot>
 									<tr>

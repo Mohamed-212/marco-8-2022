@@ -668,4 +668,28 @@ class Products extends CI_Model
             $this->website_product_entry($prod);
         }
     }
+
+    public function return_invoice_data($product_id)
+    {
+        $this->db->select('
+                a.*,
+                a.created_at as date_time,
+                ib.invoice,
+                c.customer_name,
+                d.variant_name
+			');
+        $this->db->from('invoice_return a');
+        $this->db->join('invoice ib', 'ib.invoice_id = a.invoice_id', 'left');
+        $this->db->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left');
+        $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
+        $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
+        $this->db->where('b.product_id', $product_id);
+        // $this->db->group_by('a.invoice_id');
+        $this->db->order_by('a.invoice_id', 'asc');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
 }

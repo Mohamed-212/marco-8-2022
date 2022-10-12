@@ -1015,14 +1015,24 @@ class Cproduct extends MX_Controller
             }
         }
         $salesData = $this->Products->invoice_data($product_id);
+        $returnData = $this->Products->return_invoice_data($product_id);
+        // echo "<pre>";var_dump($returnData);exit;
         $totalSales = 0;
         $totaSalesAmt = 0;
 
         if (!empty($salesData)) {
             foreach ($salesData as $k => $v) {
-                $salesData[$k]['final_date'] = $this->occational->dateConvert($salesData[$k]['date']);
+                $salesData[$k]['final_date'] = date('d-m-Y', strtotime($salesData[$k]['date_time']));
                 $totalSales = ($totalSales + $salesData[$k]['t_qty']);
                 $totaSalesAmt = ($totaSalesAmt + $salesData[$k]['total_price']);
+            }
+        }
+
+        if (!empty($returnData)) {
+            foreach ($returnData as $k => $v) {
+                $returnData[$k]['final_date'] = date('d-m-Y', strtotime($returnData[$k]['date_time']));
+                // $totalSales = ($totalSales + $returnData[$k]['t_qty']);
+                // $totaSalesAmt = ($totaSalesAmt + $returnData[$k]['total_price']);
             }
         }
 
@@ -1053,6 +1063,7 @@ class Cproduct extends MX_Controller
             'total_sales' => $stockData[1],
             'purchaseData' => $purchaseData,
             'salesData' => $salesData,
+            'returnData' => $returnData,
             'stock' => $stockData[0] - $stockData[1],
             'product_statement' => 'dashboard/Cproduct/product_sales_supplier_rate/' . $product_id,
             'currency' => $currency_details[0]['currency_icon'],
