@@ -56,6 +56,10 @@ class Product extends MX_Controller
         $variant_id = $this->input->post('variant_id',TRUE);
         $variant_color = $this->input->post('variant_color',TRUE);
 
+        if (!empty($variant_id)) {
+            $variant_id = str_replace(',', '', $variant_id);
+        }
+
         $stock = $this->Products_model->check_variant_wise_stock($variant_id, $product_id, $variant_color);
         
         if ($stock > 0) {
