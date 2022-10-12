@@ -749,12 +749,12 @@
         //     var val = $(this).val();
             
         //     // console.log(val, accessories_category_id);
-        //     // $('[name="product_rate[]"]').each(function(inx, el) {
-        //     //     var counter = inx + 1;
-        //     //     if (val == '2') {
-        //     //         $(this).val(0);
-        //     //     }
-        //     // });
+        //     $('[name="product_rate[]"]').each(function(inx, el) {
+        //         // var counter = inx + 1;
+        //         if (val == '2') {
+        //             console.log(val);
+        //         }
+        //     });
         // });
     });
 </script>

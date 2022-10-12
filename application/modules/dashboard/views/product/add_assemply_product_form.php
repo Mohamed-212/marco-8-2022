@@ -872,6 +872,7 @@ if ($all_filter_items) {
                     data: dataString,
                     success: function(result) {
                         var obj = jQuery.parseJSON(result);
+                        console.log('wewe');
                         console.log(obj);
                         $('#product_name').val(obj.product_name);
                         $('#model').val(obj.product_model);                      
