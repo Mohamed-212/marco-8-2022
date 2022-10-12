@@ -3,19 +3,23 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Products extends CI_Model {
+class Products extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
     //Count Product
-    public function count_product() {
+    public function count_product()
+    {
         return $this->db->count_all("product_information");
     }
 
     //Product List Count
-    public function product_list_count($filter = null) {
+    public function product_list_count($filter = null)
+    {
         $this->db->select('product_information.product_id');
         $this->db->from('product_information');
         $this->db->join('supplier_information', 'product_information.supplier_id = supplier_information.supplier_id', 'left');
@@ -42,7 +46,8 @@ class Products extends CI_Model {
     }
 
     //Product List
-    public function product_list($filter = null, $per_page = null, $page = null) {
+    public function product_list($filter = null, $per_page = null, $page = null)
+    {
         $is_aff = false;
         if (check_module_status('affiliate_products') == 1) {
             $is_aff = true;
@@ -93,13 +98,14 @@ class Products extends CI_Model {
     }
 
     //get store wise product when product transfer to another store
-    public function get_product_list_by_store($store_id) {
+    public function get_product_list_by_store($store_id)
+    {
         $query = $this->db->select('a.*')
-                ->from('product_information a')
-                ->join('transfer b', 'a.product_id = b.product_id')
-                ->where('store_id=', $store_id)
-                ->group_by('a.product_name')
-                ->get();
+            ->from('product_information a')
+            ->join('transfer b', 'a.product_id = b.product_id')
+            ->where('store_id=', $store_id)
+            ->group_by('a.product_name')
+            ->get();
 
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -108,7 +114,8 @@ class Products extends CI_Model {
     }
 
     // Retrive Products
-    public function retrive_products($product_name) {
+    public function retrive_products($product_name)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->like('product_name', $product_name, 'both');
@@ -120,20 +127,21 @@ class Products extends CI_Model {
     }
 
     //All Product List
-    public function all_product_list() {
+    public function all_product_list()
+    {
         $query = $this->db->select('
 					supplier_information.*,
 					product_information.*,
 					product_category.category_name,
 					unit.unit_short_name
 				')
-                ->from('product_information')
-                ->join('supplier_information', 'product_information.supplier_id = supplier_information.supplier_id', 'left')
-                ->join('product_category', 'product_category.category_id = product_information.category_id', 'left')
-                ->join('unit', 'unit.unit_id = product_information.unit', 'left')
-                ->order_by('product_information.product_name', 'asc')
-                ->group_by('product_information.product_id')
-                ->get();
+            ->from('product_information')
+            ->join('supplier_information', 'product_information.supplier_id = supplier_information.supplier_id', 'left')
+            ->join('product_category', 'product_category.category_id = product_information.category_id', 'left')
+            ->join('unit', 'unit.unit_id = product_information.unit', 'left')
+            ->order_by('product_information.product_name', 'asc')
+            ->group_by('product_information.product_id')
+            ->get();
 
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -142,11 +150,12 @@ class Products extends CI_Model {
     }
 
     //All Supplier List
-    public function all_supplier_list() {
+    public function all_supplier_list()
+    {
         $query = $this->db->select('supplier_information.*')
-                ->from('supplier_information')
-                ->order_by('supplier_information.supplier_name', 'asc')
-                ->get();
+            ->from('supplier_information')
+            ->order_by('supplier_information.supplier_name', 'asc')
+            ->get();
 
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -155,11 +164,12 @@ class Products extends CI_Model {
     }
 
     //all_category_list
-    public function all_category_list() {
+    public function all_category_list()
+    {
         $query = $this->db->select('product_category.*')
-                ->from('product_category')
-                ->order_by('product_category.category_name', 'asc')
-                ->get();
+            ->from('product_category')
+            ->order_by('product_category.category_name', 'asc')
+            ->get();
 
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -168,11 +178,12 @@ class Products extends CI_Model {
     }
 
     //All Unit List
-    public function all_unit_list() {
+    public function all_unit_list()
+    {
         $query = $this->db->select('unit.*')
-                ->from('unit')
-                ->order_by('unit.unit_name', 'asc')
-                ->get();
+            ->from('unit')
+            ->order_by('unit.unit_name', 'asc')
+            ->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
         }
@@ -180,22 +191,24 @@ class Products extends CI_Model {
     }
 
     //Tax selected item
-    public function tax_selected_item($tax_id) {
+    public function tax_selected_item($tax_id)
+    {
         $result = $this->db->select('*')
-                ->from('tax_information')
-                ->where('tax_id', $tax_id)
-                ->get()
-                ->result();
+            ->from('tax_information')
+            ->where('tax_id', $tax_id)
+            ->get()
+            ->result();
 
         return $result;
     }
 
     //Product generator id check
-    public function product_id_check($product_id) {
+    public function product_id_check($product_id)
+    {
         $query = $this->db->select('*')
-                ->from('product_information')
-                ->where('product_id', $product_id)
-                ->get();
+            ->from('product_information')
+            ->where('product_id', $product_id)
+            ->get();
         if ($query->num_rows() > 0) {
             return true;
         } else {
@@ -204,7 +217,8 @@ class Products extends CI_Model {
     }
 
     //Count Product
-    public function product_entry($data) {
+    public function product_entry($data)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('status', 1);
@@ -253,13 +267,14 @@ class Products extends CI_Model {
         if ($query->num_rows() > 0) {
             return FALSE;
         } else {
-            
+
             $this->db->insert('website_product_information', $data);
         }
     }
 
     //Retrieve Product Edit Data
-    public function retrieve_product_editdata($product_id) {
+    public function retrieve_product_editdata($product_id)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('product_id', $product_id);
@@ -271,7 +286,8 @@ class Products extends CI_Model {
     }
 
     //Retrieve company Edit Data
-    public function retrieve_company() {
+    public function retrieve_company()
+    {
         $this->db->select('*');
         $this->db->from('company_information');
         $this->db->limit('1');
@@ -283,7 +299,8 @@ class Products extends CI_Model {
     }
 
     //Update Categories
-    public function update_product($data, $product_id) {
+    public function update_product($data, $product_id)
+    {
 
         $this->db->where('product_id', $product_id);
         $this->db->update('product_information', $data);
@@ -302,16 +319,18 @@ class Products extends CI_Model {
     }
 
     //Get variant prices
-    public function get_product_variant_prices($product_id) {
+    public function get_product_variant_prices($product_id)
+    {
         $result = $this->db->select('*')
-                        ->from('product_variants')
-                        ->where('product_id', $product_id)
-                        ->get()->result();
+            ->from('product_variants')
+            ->where('product_id', $product_id)
+            ->get()->result();
         return $result;
     }
 
     // Delete Product Item
-    public function delete_product($product_id) {
+    public function delete_product($product_id)
+    {
         #### Check product is using on system or not##########
         # If this product is used any calculation you can't delete this product.
         # but if not used you can delete it from the system.
@@ -372,21 +391,22 @@ class Products extends CI_Model {
     }
 
     //Product By Search
-    public function product_search_item($product_id) {
+    public function product_search_item($product_id)
+    {
         $query = $this->db->select('
 			supplier_information.*,
 			product_information.*,
 			product_category.category_name,
 			unit.unit_short_name
 		')
-                ->from('product_information')
-                ->join('supplier_information', 'product_information.supplier_id = supplier_information.supplier_id', 'left')
-                ->join('product_category', 'product_category.category_id = product_information.category_id', 'left')
-                ->join('unit', 'unit.unit_id = product_information.unit', 'left')
-                ->where('product_information.product_id', $product_id)
-                ->order_by('product_information.product_name', 'desc')
-                ->group_by('product_information.product_id')
-                ->get();
+            ->from('product_information')
+            ->join('supplier_information', 'product_information.supplier_id = supplier_information.supplier_id', 'left')
+            ->join('product_category', 'product_category.category_id = product_information.category_id', 'left')
+            ->join('unit', 'unit.unit_id = product_information.unit', 'left')
+            ->where('product_information.product_id', $product_id)
+            ->order_by('product_information.product_name', 'desc')
+            ->group_by('product_information.product_id')
+            ->get();
 
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -395,7 +415,8 @@ class Products extends CI_Model {
     }
 
     //Duplicate Entry Checking
-    public function product_model_search($product_model) {
+    public function product_model_search($product_model)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('product_model', $product_model);
@@ -404,7 +425,8 @@ class Products extends CI_Model {
     }
 
     //Product Details
-    public function product_details_info($product_id) {
+    public function product_details_info($product_id)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('product_id', $product_id);
@@ -416,7 +438,8 @@ class Products extends CI_Model {
     }
 
     // Product Purchase Report
-    public function product_purchase_info($product_id) {
+    public function product_purchase_info($product_id)
+    {
         $this->db->select('a.*, a.created_at as date_time,b.*,c.supplier_name, d.variant_name');
         $this->db->from('product_purchase a');
         $this->db->join('product_purchase_details b', 'b.purchase_id = a.purchase_id', 'left');
@@ -432,7 +455,8 @@ class Products extends CI_Model {
     }
 
     // Invoice Data for specific data
-    public function invoice_data($product_id) {
+    public function invoice_data($product_id)
+    {
         $this->db->select('
                 a.*,
                 a.created_at as date_time,
@@ -456,7 +480,8 @@ class Products extends CI_Model {
         return false;
     }
 
-    public function previous_stock_data($product_id, $startdate) {
+    public function previous_stock_data($product_id, $startdate)
+    {
         $startdate .= " 00:00:00";
 
         $this->db->select('date,sum(quantity) as quantity');
@@ -470,7 +495,8 @@ class Products extends CI_Model {
         return false;
     }
 
-    public function get_product_model($data) {
+    public function get_product_model($data)
+    {
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('product_model', $data['product_model']);
@@ -483,28 +509,29 @@ class Products extends CI_Model {
         return $query->row();
     }
 
-    public function return_product_report($from_date=null,$to_date=null,$status=null){
-		$this->db->select('p.product_name,d.variant_name,pr.product_id,pr.variant_id,SUM(pr.quantity) as quantity,pr.status,pr.created_at');
-		$this->db->from('product_return pr');
+    public function return_product_report($from_date = null, $to_date = null, $status = null)
+    {
+        $this->db->select('p.product_name,d.variant_name,pr.product_id,pr.variant_id,SUM(pr.quantity) as quantity,pr.status,pr.created_at');
+        $this->db->from('product_return pr');
         $this->db->join('variant d', 'd.variant_id = pr.variant_id');
         $this->db->join('product_information p', 'p.product_id = pr.product_id');
         if (!empty($from_date)) {
-			$time1 = strtotime($from_date);
-			$newformat1 = date('Y-m-d',$time1);
-			$this->db->where('pr.created_at >=', $from_date);
-		}
-		if (!empty($to_date)) {
-			$time2 = strtotime($to_date);
-			$newformat2 = date('Y-m-d',$time2);
-			$this->db->where('pr.created_at <=', $to_date);
-		}
-		if (!empty($status)) {
-			$this->db->where('pr.status =', $status);
-		}
+            $time1 = strtotime($from_date);
+            $newformat1 = date('Y-m-d', $time1);
+            $this->db->where('pr.created_at >=', $from_date);
+        }
+        if (!empty($to_date)) {
+            $time2 = strtotime($to_date);
+            $newformat2 = date('Y-m-d', $time2);
+            $this->db->where('pr.created_at <=', $to_date);
+        }
+        if (!empty($status)) {
+            $this->db->where('pr.status =', $status);
+        }
 
-		$this->db->group_by('pr.product_id,pr.variant_id,pr.status');
-		return $this->db->get()->result_array();
-	}
+        $this->db->group_by('pr.product_id,pr.variant_id,pr.status');
+        return $this->db->get()->result_array();
+    }
 
     // Get variant stock info
     public function check_variant_wise_stock($product_id, $store_id, $variant_id, $variant_color = false, $date_from = null, $date_to = null)
@@ -527,7 +554,7 @@ class Products extends CI_Model {
         if ($date_to) {
             $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
         }
-        
+
         $purchase = $this->db->get()->row();
 
         // var_dump($date_from, $date_to, $purchase, $store_id, $product_id);exit;
@@ -579,7 +606,7 @@ class Products extends CI_Model {
                 if ($date_from) {
                     $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
                 }
-        
+
                 if ($date_to) {
                     $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
                 }
@@ -591,7 +618,7 @@ class Products extends CI_Model {
                 if ($date_from) {
                     $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
                 }
-        
+
                 if ($date_to) {
                     $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
                 }
@@ -614,9 +641,15 @@ class Products extends CI_Model {
         foreach ($products as $prod) {
             $model_and_color = explode('-', $prod['product_model']);
             $product_model_only = trim($model_and_color[0]);
-            $product_color = trim($model_and_color[1]) . (isset($model_and_color[2]) ? '/'.$model_and_color[2] : '');
+            $product_color = trim($model_and_color[1]) . (isset($model_and_color[2]) ? '/' . $model_and_color[2] : '');
             $prod['product_model_only'] = $product_model_only;
             $prod['product_color'] = $product_color;
+
+            if (strpos($prod['product_model'], 'CO') <= 0 && strpos($prod['product_model'], 'Default') <= 0) {
+                $prod['product_model_only'] = null;
+                $prod['product_color'] = null;
+            }
+
             $this->db->where('product_id', $prod['product_id'])
                 ->update('product_information', $prod);
         }

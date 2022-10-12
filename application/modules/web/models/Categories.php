@@ -641,6 +641,53 @@ class Categories extends CI_Model
         }
         return false;
     }
+
+    public function cat_website_product_list_count($cat_id, $filter = [])
+    {
+
+        $category_ids = $this->all_child_category($cat_id);
+        $all_brand = (explode("--", $filter['brand']));
+        array_shift($all_brand);
+
+        $this->db->select('a.*');
+        $this->db->from('website_product_information a');
+
+        $this->db->where_in('a.category_id', $category_ids);
+        if(!empty($filter['size'])){
+
+            $this->db->like('a.variants', $filter['size']);
+        }
+        if(!empty($filter['price_range'])){
+
+            $ex = explode("-", $filter['price_range']);
+            $from = $ex[0];
+            $to = $ex[1];
+            $this->db->where('a.price >=', $from);
+            $this->db->where('a.price <=', $to);
+        }
+        if(!empty($filter['filter_item'])){
+
+            $this->db->join('filter_product x','x.product_id = a.product_id','left');
+            $this->db->where_in('x.filter_item_id', $filter['filter_item']);
+
+        }
+        if(!empty($all_brand)){
+
+            $this->db->where_in('a.brand_id', $all_brand);
+        }
+        $this->db->group_by('a.product_id');
+        $query = $this->db->get();
+        if (!empty($filter['rate'])) {
+            $ratevals = $query->result();
+            $w_cat_pro = $this->get_rating_product($ratevals, $filter['rate']);
+            return count($w_cat_pro);
+        }
+        if ($query->num_rows() > 0) {
+            
+            return $query->num_rows();
+        }
+        return false;
+    }
     
     //Get category product
     public function get_category_product($filter = [])

@@ -245,8 +245,9 @@
                                 <a href="<?php echo base_url('product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>"
                                     class="text-black"><?php 
                                         $color_pos = strpos($product->product_name, '- CO');
+                                        // var_dump($color_pos);
 
-                                        echo html_escape(substr($product->product_name, 0, $color_pos));
+                                        echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos) : $product->product_name);
                                     ?></a>
                             </h3>
                             <div class="star-rating">
