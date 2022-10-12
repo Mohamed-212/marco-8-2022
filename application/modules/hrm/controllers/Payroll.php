@@ -172,7 +172,6 @@ class Payroll extends MX_Controller
         $check_exist = $this->payroll_model->check_exist($this->input->post('employee_id', true));
         if ($check_exist == 0) {
             $amount = $this->input->post('amount', TRUE);
-            echo "<pre>";var_dump($amount);
             foreach ($amount as $key => $value) {
                 $postData = [
                     'employee_id' => $this->input->post('employee_id', true),
@@ -186,7 +185,6 @@ class Payroll extends MX_Controller
                 $this->payroll_model->salary_setup_create($postData);
 
             }
-            exit;
             $this->session->set_flashdata('message', display('save_successfully'));
             redirect("hrm/payroll/manage_salary_setup");
         } else {
@@ -335,7 +333,7 @@ class Payroll extends MX_Controller
                 $times = $this->db->select('SUM(TIME_TO_SEC(staytime)) AS staytime')->from('attendance')->where('date BETWEEN "' . date('Y-m-d', strtotime($startd)) . '" and "' . date('Y-m-d', strtotime($end)) . '"')->where("employee_id", $value->employee_id)->get()->row()->staytime;
                 $wormin = ($times / 60);
                 $worhour = $wormin / 60;
-                if ($aAmount->sal_type == 1) {
+                if ((int)$aAmount->sal_type == 1) {
                     $dStart = new DateTime($startd);
                     $dEnd = new DateTime($end);
                     $dDiff = $dStart->diff($dEnd);
@@ -363,10 +361,11 @@ class Payroll extends MX_Controller
                     $TaxAmount = ($TotalTax / 365) * $numberofdays;
 
                     $netAmount = $totamount - $TaxAmount;
-
-                } else if ($aAmount->sal_type == 2) {
+                    
+                } else if ((int)$aAmount->sal_type == 2) {
                     $netAmount = $Amount;
                 }
+
                 $workingper = $this->db->select('COUNT(date) AS date')->from('attendance')->where('date BETWEEN "' . date('Y-m-d', strtotime($startd)) . '" and "' . date('Y-m-d', strtotime($end)) . '"')->where("employee_id", $value->employee_id)->get()->row()->date;
                 $emp_info = $this->db->select('first_name,last_name')->from('employee_history')->where('id', $value->employee_id)->get()->row();
                 $headname = $value->employee_id . '-' . $emp_info->first_name . '' . $emp_info->last_name;
@@ -381,6 +380,7 @@ class Payroll extends MX_Controller
                     // 'paid_by' => $this->session->userdata('user_name'),
                     'paid_by' => $this->session->userdata('user_name'),
                 );
+                // echo"<pre>";var_dump($paymentData);exit;
 //                    $empsalgen = array(
 //                        'fy_id' => $find_active_fiscal_year->id,
 //                        'VNo' => $ab,

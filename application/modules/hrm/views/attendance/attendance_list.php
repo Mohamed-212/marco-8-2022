@@ -90,7 +90,7 @@
                                             <td>
                                                 <center>
                                                 <?php if ($this->permission->method('manage_attendance', 'update')->access()){ ?>
-                                                    <a href="<?php echo base_url("hrm/attendance/edit_attendance/" . $row['att_id']) ?>"
+                                                    <a href="<?php echo base_url("hrm/attendance/bdtask_edit_attendance/" . $row['att_id']) ?>"
                                                        class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
                                                 <?php } ?>
                                                 <?php if ($this->permission->check_label('manage_attendance', 'delete')->access()){ ?>
