@@ -2587,6 +2587,7 @@ class Cproduct extends MX_Controller
 
                 } else {
                     $this->db->insert('product_information', $product_details);
+                    $this->Products->website_product_entry($product_details);
                 }
                 //opening balance
                 if ($product_quantity > 0 && $product_rate > 0) {

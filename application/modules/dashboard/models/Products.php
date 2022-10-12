@@ -215,6 +215,9 @@ class Products extends CI_Model {
             return FALSE;
         } else {
             $result = $this->db->insert('product_information', $data);
+            // insert into website product information
+            $this->website_product_entry($data);
+
             $this->db->select('*');
             $this->db->from('product_information');
             $this->db->where('status', 1);
@@ -227,6 +230,31 @@ class Products extends CI_Model {
             $productList = json_encode($json_product);
             file_put_contents($cache_file, $productList);
             return $result;
+        }
+    }
+
+    public function website_product_entry($data)
+    {
+        $product_model = explode('-', $data['product_model']);
+        $model_only = '';
+        if (is_array($product_model)) {
+            $model_only = trim($product_model[0]);
+        }
+
+        if (!empty($data['product_model_only'])) {
+            $model_only = $data['product_model_only'];
+        }
+
+        $this->db->select('*');
+        $this->db->from('website_product_information');
+        $this->db->where('status', 1);
+        $this->db->where('product_model_only', $model_only);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return FALSE;
+        } else {
+            
+            $this->db->insert('website_product_information', $data);
         }
     }
 
