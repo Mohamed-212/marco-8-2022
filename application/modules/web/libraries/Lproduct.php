@@ -90,7 +90,9 @@ class Lproduct
             $brand_name = (!empty($translated_brand->trans_name)?$translated_brand->trans_name:$product_info->brand_name);
         }
         // translation part end
-        $productModelOnly = trim(preg_replace("/- C.*$/i", '', $product_info->product_model));
+        // $productModelOnly = trim(preg_replace("/- C.*$/i", '', $product_info->product_model));
+        $productModelOnly = $product_info->product_model_only;
+
         // $varients = $CI->db->select('*')->from('product_information')->where('product_model LIKE', "%$productModelOnly%")->get()->result_array();
         $varients = $CI->db->select('p.*, pr.product_price as whole_price')
             ->from('product_information p')
