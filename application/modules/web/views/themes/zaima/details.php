@@ -89,7 +89,7 @@ $theme = $CI->Themes->get_theme();
                             <div class="col-3 col-sm-2">
                                 <!-- Begin product thumb nav -->
                                 <ul class="thumb-nav">
-                                    <li id="product-<?= $product_id ?>"><img src="<?php echo  base_url() . (!empty($image_thumb) ? $image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
+                                    <!-- <li id="product-<?= $product_id ?>"><img src="<?php echo  base_url() . (!empty($image_thumb) ? $image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li> -->
                                     <?php
                                     // if (!empty($product_gallery_img)) {
                                     // foreach ($product_gallery_img as $gallery) {
