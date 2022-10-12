@@ -151,7 +151,7 @@
                                             <?php
                                             endforeach;
                                             ?>
-                                            <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> >Sell Price</option>
+                                            <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> ><?=display('sell_price')?></option>
                                         </select>
                                     </div>
                                 </div>

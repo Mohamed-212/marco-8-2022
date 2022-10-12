@@ -531,7 +531,7 @@ function  check_price() {
     let supplier_price = Number($("#supplier_price").val());
     if (supplier_price > 0) {
         if (sell_price < supplier_price) {
-            alert('Sell price is lower than supplier price');
+            alert('Without Cases Priceis lower than supplier price');
             $("#sell_price").val(supplier_price);
 
         }
@@ -544,7 +544,7 @@ function  check_price2(row = null) {
     let supplier_price = Number($("#supplier_price").val());
     if (supplier_price > 0) {
         if (sell_price < supplier_price) {
-            alert('Sell price is lower than supplier price');
+            alert('Without Cases Priceis lower than supplier price');
             $('#pricepri' + row).val(supplier_price);
 
         }

@@ -264,7 +264,9 @@
                                             <?php
                                             endforeach;
                                             ?>
-                                            <option value="0">Sell Price</option>
+                                            <option value="0">
+                                                <?=display('sell_price')?>
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
