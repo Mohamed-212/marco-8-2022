@@ -277,7 +277,8 @@
                                         if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                             $price_val = $product->onsale_price * $target_con_rate;
                                         } else {
-                                            $price_val = $product->price * $target_con_rate;
+                                            // $price_val = $product->price * $target_con_rate;
+                                            $price_val = $product->whole_price * $target_con_rate;
                                         }
 
                                         echo (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1); ?>

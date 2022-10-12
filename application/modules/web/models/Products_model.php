@@ -354,25 +354,29 @@ class Products_model extends CI_Model {
         $Soft_settings = $this->retrieve_setting_editdata();
         $language = $Soft_settings[0]['language'];
         if($_SESSION["language"] != $language){
-            $this->db->select('a.*,b.*,e.brand_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name');
+            $this->db->select('a.*,b.*,e.brand_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price');
             $this->db->from('product_information a');
             $this->db->join('product_category b','a.category_id = b.category_id','left');
             $this->db->join('brand e','a.brand_id = e.brand_id','left');
             $this->db->where('a.brand_id',$brand_id);
             $this->db->join('product_translation c', 'a.product_id = c.product_id', 'left');
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         }else{
-            $this->db->select('a.*,b.*,e.brand_name');
+            $this->db->select('a.*,b.*,e.brand_name, pr.product_price as whole_price');
             $this->db->from('product_information a');
             $this->db->join('product_category b','a.category_id = b.category_id','left');
             $this->db->join('brand e','a.brand_id = e.brand_id','left');
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
             $this->db->where('a.brand_id',$brand_id);
         }
         if ($price_range) {
             $ex = explode("-", $price_range);
             $from = $ex[0];
             $to = $ex[1];
-            $this->db->where('price >=', $from);
-            $this->db->where('price <=', $to);
+            // $this->db->where('price >=', $from);
+            // $this->db->where('price <=', $to);
+            $this->db->where('pr.product_price >=', $from);
+            $this->db->where('pr.product_price <=', $to);
         }
         if ($sort) {
             if ($sort == 'new') {
@@ -412,10 +416,11 @@ class Products_model extends CI_Model {
                 if ($rater) {
                     $total_rate = $result->rates/$rater;
                     if ($total_rate >= $rate ) {
-                        $this->db->select('a.*,b.category_name,c.brand_name');
+                        $this->db->select('a.*,b.category_name,c.brand_name,pr.product_price as whole_price');
                         $this->db->from('product_information a');
                         $this->db->join('brand c','c.brand_id = a.brand_id','left');
                         $this->db->join('product_category b','b.category_id = a.category_id');
+                        $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
                         $this->db->where('a.product_id',$product['product_id']);
                         $query = $this->db->get();
                         $third_cat_pro = $query->result_array();

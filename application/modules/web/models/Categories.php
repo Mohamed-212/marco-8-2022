@@ -206,15 +206,17 @@ class Categories extends CI_Model
         $all_brand = (explode("--", $brand));
         array_shift($all_brand);
         if($_SESSION["language"] != $language){
-            $this->db->select('a.*,b.category_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name', false);
+            $this->db->select('a.*,b.category_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price', false);
             $this->db->from('website_product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->where_in('a.category_id', $category_ids);
             $this->db->join('product_translation c', 'a.product_id = c.product_id', 'left');
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         }else{
-            $this->db->select('a.*,b.category_name');
+            $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
             $this->db->from('website_product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
             $this->db->where_in('a.category_id', $category_ids);
         }
         if(empty($rate)){
@@ -225,8 +227,10 @@ class Categories extends CI_Model
             $ex = explode("-", $price_range);
             $from = $ex[0];
             $to = $ex[1];
-            $this->db->where('a.price >=', $from);
-            $this->db->where('a.price <=', $to);
+            // $this->db->where('a.price >=', $from);
+            // $this->db->where('a.price <=', $to);
+            $this->db->where('pr.product_price >=', $from);
+            $this->db->where('pr.product_price <=', $to);
         }
         if ($size) {
             $this->db->like('a.variants', $size);
@@ -692,9 +696,10 @@ class Categories extends CI_Model
     //Get category product
     public function get_category_product($filter = [])
     {
-        $this->db->select('a.*,b.category_name');
+        $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
         $this->db->from('product_information a');
         $this->db->join('product_category b', 'a.category_id=b.category_id','left');
+        $this->db->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = 1', 'left');
 
         if(!empty($filter['category_id'])){
             $this->db->where('a.category_id', $filter['category_id']);
