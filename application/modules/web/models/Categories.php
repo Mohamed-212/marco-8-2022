@@ -207,13 +207,13 @@ class Categories extends CI_Model
         array_shift($all_brand);
         if($_SESSION["language"] != $language){
             $this->db->select('a.*,b.category_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name', false);
-            $this->db->from('product_information a');
+            $this->db->from('website_product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->where_in('a.category_id', $category_ids);
             $this->db->join('product_translation c', 'a.product_id = c.product_id', 'left');
         }else{
             $this->db->select('a.*,b.category_name');
-            $this->db->from('product_information a');
+            $this->db->from('website_product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->where_in('a.category_id', $category_ids);
         }
