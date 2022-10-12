@@ -638,6 +638,8 @@ class Products extends CI_Model
     {
         $products = $this->db->select('*')->from('product_information')->get()->result_array();
 
+        $accessories = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
+
         foreach ($products as $prod) {
             $model_and_color = explode('-', $prod['product_model']);
             $product_model_only = trim($model_and_color[0]);
@@ -645,7 +647,7 @@ class Products extends CI_Model
             $prod['product_model_only'] = $product_model_only;
             $prod['product_color'] = $product_color;
 
-            if (strpos($prod['product_model'], 'CO') <= 0 && strpos($prod['product_model'], 'Default') <= 0) {
+            if ($prod['category_id'] == $accessories->category_id) {
                 $prod['product_model_only'] = null;
                 $prod['product_color'] = null;
             }
