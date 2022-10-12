@@ -47,20 +47,22 @@ if (!empty($block_list)) {
         // translation part start
         $language = $Soft_settings[0]['language'];
         if ($_SESSION["language"] != $language) {
-            $cat_pro = $this->db->select('a.*,b.category_id,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name,IF(d.trans_name IS NULL OR d.trans_name = "",b.category_name,d.trans_name) as category_name')
+            $cat_pro = $this->db->select('a.*,b.category_id,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name,IF(d.trans_name IS NULL OR d.trans_name = "",b.category_name,d.trans_name) as category_name, pr.product_price as whole_price')
                 ->from('website_product_information a')
                 ->join('product_category b', 'a.category_id = b.category_id', 'left')
                 ->where('a.category_id', $block['block_cat_id'])
                 ->join('product_translation c', 'a.product_id = c.product_id', 'left')
                 ->join('category_translation d', 'd.category_id = a.category_id', 'left')
+                ->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left')
                 ->order_by('a.product_id', 'random')
                 ->limit(12)
                 ->get()
                 ->result();
         } else {
-            $cat_pro = $this->db->select('a.*,b.category_name,b.category_id')
+            $cat_pro = $this->db->select('a.*,b.category_name,b.category_id, pr.product_price as whole_price')
                 ->from('website_product_information a')
                 ->join('product_category b', 'a.category_id = b.category_id', 'left')
+                ->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left')
                 ->where('a.category_id', $block['block_cat_id'])
                 ->order_by('a.product_id', 'random')
                 ->limit(12)

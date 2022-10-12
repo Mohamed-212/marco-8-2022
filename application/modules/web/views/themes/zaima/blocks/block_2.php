@@ -126,7 +126,8 @@
                                                 $old_price =  $product->price;
                                                 $save_amount =  ($product->price - $product->onsale_price) ;
                                             }else{
-                                                $price_val = $product->price * $target_con_rate;
+                                                // $price_val = $product->price * $target_con_rate;
+                                                $price_val = $product->whole_price * $target_con_rate;
                                             } ?>
 
 
