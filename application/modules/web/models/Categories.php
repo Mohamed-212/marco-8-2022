@@ -722,14 +722,14 @@ class Categories extends CI_Model
         $language = $Soft_settings[0]['language'];
         if($_SESSION["language"] != $language){
             $this->db->select('a.*,b.category_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price');
-            $this->db->from('product_information a');
+            $this->db->from('website_product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->like('a.product_name', $product_name, 'both');
             $this->db->join('product_translation c', 'a.product_id = c.product_id', 'left');
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         }else{
             $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
-            $this->db->from('product_information a');
+            $this->db->from('website_product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->like('a.product_name', $product_name, 'both');
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
