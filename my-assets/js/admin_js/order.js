@@ -219,7 +219,7 @@ function submit_form(e) {
                     installmentAmount += parseFloat(this.value);
                 }).promise().done(function () {
                     if (!valid) return;
-                    if (dueAmount == installmentAmount) {
+                    if (Math.round(dueAmount) == Math.round(installmentAmount)) {
                         $("form#validate, form#normalinvoice").submit();
                     } else {
                         alert(installment_amount_is_not_valid);
