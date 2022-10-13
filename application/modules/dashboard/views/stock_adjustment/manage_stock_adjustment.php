@@ -95,7 +95,9 @@
                                         <td><?php echo html_escape($adjustment['date']); ?></td>
                                         <td><?php echo substr_replace($adjustment['details'], '...', 25); ?></td>
                                         <td>
+                                        <?php if ($adjustment['adjustment_status'] == '0') : ?>
                                             <?php echo form_open('dashboard/Cstock_adjustment/update_status/' . $adjustment['adjustment_id'], array('id' => 'validate')); ?>
+                                            <?php endif ?>
 
                                             <select class="form-control" name="adjustment_status" required="">
                                                 <option value=""></option>
@@ -109,9 +111,12 @@
 																				echo "selected";
 																			} ?>><?php echo display('cancel') ?></option>
                                             </select>
+                                            <?php if ($adjustment['adjustment_status'] == '0') : ?>
                                             <button type="submit"
                                                 class="btn btn-primary inv_updatebtn"><?php echo display('update') ?></button>
+                                            
                                             <?php echo form_close() ?>
+                                            <?php endif ?>
                                         </td>
                                         <td><?php echo html_escape($adjustment['first_name']) . ' ' . html_escape($adjustment['last_name']); ?>
                                         </td>

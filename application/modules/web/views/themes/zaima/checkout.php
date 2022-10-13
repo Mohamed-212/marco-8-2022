@@ -1,4 +1,4 @@
-<?php include_once(dirname(__FILE__).'/functions/functions.php'); ?>
+  <?php include_once(dirname(__FILE__).'/functions/functions.php'); ?>
 <link href="<?php echo MOD_URL.'web/views/themes/zaima/assets/css/custome.css'; ?>" rel="stylesheet">
 <div class="container pb-5">
     <!--Breadcrumb-->
