@@ -204,6 +204,8 @@ function select_color_variant(product_id, variant_color, default_variant) {
 function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr) {
   var variant_id = $('[name="select_size1"]:checked').val();
   var sst = parseInt($('#sst').val(), 10);
+  var inStockMess = $('#stok').attr('data-stock-in');
+  var outStockMess = $('#stok').attr('data-stock-out');
   if (!variant_id) {
     variant_id = default_variant;
   }
@@ -238,6 +240,8 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
       $('#price').val(wholePrice);
 
       if (result[0] == "yes") {
+
+        $('#stock-text').removeClass('text-danger').addClass('text-success').text(inStockMess);
         // $(".var_amount").html(result[1]);
         $('#product_max_quantity').val(result[4]);
         if (parseInt(result[3]) > 0) {
@@ -256,6 +260,7 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
 
         return true;
       } else {
+        $('#stock-text').removeClass('text-success').addClass('text-danger').text(outStockMess);
         Swal({
           type: "warning",
           title: display("variant_not_available"),

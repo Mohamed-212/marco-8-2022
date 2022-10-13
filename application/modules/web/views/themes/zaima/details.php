@@ -267,13 +267,13 @@ $theme = $CI->Themes->get_theme();
                             <?php if (!($is_affiliate == 1)) { ?>
                                 <div class="stock">
                                     <label class="text-dark pr-1 font-weight-500 mb-0"><?php echo display('status') ?>:</label>
-                                    <input type="hidden" value="<?php echo html_escape($stok) ?>" id="stok">
+                                    <input type="hidden" value="<?php echo html_escape($stok) ?>" id="stok" data-stock-in="<?php echo display('in_stock'); ?>" data-stock-out="<?php echo display('out_of_stock'); ?>">
                                     <?php if ($stok > 0) { ?>
-                                        <span>
+                                        <span id="stock-text">
                                             <?php echo display('in_stock'); ?>
                                         </span>
                                     <?php  } else { ?>
-                                        <span class="text-danger">
+                                        <span class="text-danger" id="stock-text">
                                             <?php echo display('out_of_stock'); ?>
                                         </span>
                                     <?php } ?>
@@ -336,7 +336,9 @@ $theme = $CI->Themes->get_theme();
                         ?>
 
                                 <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked" >
-                                <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($vitem->variant_name) ?></span></label>
+                                <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded" style="color: #fff !important;
+    border: 1px solid var(--primary-color) !important;
+    background-color: var(--primary-color) !important;"><?php echo html_escape($vitem->variant_name) ?></span></label>
 
                         <?php
                                 }
@@ -703,9 +705,6 @@ $theme = $CI->Themes->get_theme();
 <input type="hidden" id="color_variant_id" value="<?php echo isset($exploded[1]) ? $exploded[1] : null; ?>">
 <input type="hidden" id="theme_url" value="<?php echo THEME_URL . $theme; ?>">
 <input type="hidden" id="product_max_quantity" value="1" />
-<!-- <pre>
-    <?php var_dump($var) ?>
-</pre> -->
 <script>
     $(document).ready(function() {
         $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
