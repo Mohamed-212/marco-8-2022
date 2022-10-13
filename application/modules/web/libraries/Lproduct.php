@@ -116,6 +116,7 @@ class Lproduct
             // if (!$colorVarient || !isset($colorVarient[0])) continue;
 
             $product['color'] = trim(substr($product['product_model'], strlen($productModelOnly)+ 3));
+            $product['size_id'] = str_replace(',', '', $product['variants']);
             
             $varientsArray[] = $product;
         }

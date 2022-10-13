@@ -202,13 +202,13 @@ function select_color_variant(product_id, variant_color, default_variant) {
 }
 
 function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr) {
-  var variant_id = $('[name="select_size1"]:checked').val();
+  // var variant_id = $('[name="select_size1"]:checked').val();
   var sst = parseInt($('#sst').val(), 10);
   var inStockMess = $('#stok').attr('data-stock-in');
   var outStockMess = $('#stok').attr('data-stock-out');
-  if (!variant_id) {
+  // if (!variant_id) {
     variant_id = default_variant;
-  }
+  // }
   // show current varient product image
   var slickIndex = $('figure#product-' + product_id).attr('data-slick-index');
   if (slickIndex) {
