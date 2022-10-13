@@ -1,12 +1,12 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     var products_with_no_quantity = "<?= display('products_with_no_quantity') ?>";
-    var installment_amount_is_not_valid = "<?=display('installment_total_amount_not_match')?>";
-    var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
+    var installment_amount_is_not_valid = "<?= display('installment_total_amount_not_match') ?>";
+    var payment_bank_not_selected = "<?= display('payment_bank_not_selected') ?>";
     var accessories_category_id = 'a';
     <?php
-        $access = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
-        echo "accessories_category_id = '" . $access->category_id . "';";
+    $access = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
+    echo "accessories_category_id = '" . $access->category_id . "';";
     ?>
 </script>
 <!-- Customer js php -->
@@ -146,13 +146,13 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="" data-val="<?=$pricing_type?>">
+                                        <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="" data-val="<?= $pricing_type ?>">
                                             <?php foreach ($all_pri_type as $pri_type) : ?>
-                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pricing_type == $pri_type['pri_type_id'] ? 'selected' : ''?> ><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?= $pricing_type == $pri_type['pri_type_id'] ? 'selected' : '' ?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
-                                            <option value="0" <?=$pricing_type == 0 ? 'selected' : ''?> ><?=display('sell_price')?></option>
+                                            <option value="0" <?= $pricing_type == 0 ? 'selected' : '' ?>><?= display('sell_price') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -164,8 +164,8 @@
                                     </label>
                                     <div class="col-sm-8">
                                         <select name="product_type" id="product_type" class="form-control " required="">
-                                            <option value="1" <?=$product_type == 1 ? 'selected' : ''?> ><?php echo display('normal') ?></option>
-                                            <option value="2" <?=$product_type == 2 ? 'selected' : ''?> ><?php echo display('assemply') ?></option>
+                                            <option value="1" <?= $product_type == 1 ? 'selected' : '' ?>><?php echo display('normal') ?></option>
+                                            <option value="2" <?= $product_type == 2 ? 'selected' : '' ?>><?php echo display('assemply') ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -340,8 +340,9 @@
                                             }
 
                                             //Variant for per product
-                                            $this->db->select('a.variants, a.assembly');
+                                            $this->db->select('a.variants, a.assembly, a.category_id, pt.product_price');
                                             $this->db->from('product_information a');
+                                            $this->db->join('pricing_types_product pt', 'pt.product_id = a.product_id AND pt.pri_type_id = 1');
                                             $this->db->where(array('a.product_id' => $value['product_id'], 'a.status' => 1));
                                             $product_information = $this->db->get()->row();
                                             $exploded = explode(',', $product_information->variants);
@@ -367,6 +368,7 @@
                                                     <input type="hidden" name="colorv[]" id="color<?php echo $i ?>" value="<?php echo $exploded[1] ?>">
                                                     <input type="hidden" name="sizev[]" id="size<?php echo $i ?>" value="<?php echo $exploded[0] ?>">
                                                     <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
+                                                    <input type="hidden" hidden name="category_id" id="category_id_<?php echo $i ?>" value="<?=$product_information->category_id?>" />
                                                     <div id="viewassembly<?php echo $i ?>" class="text-center <?php if ($product_information->assembly == 0) {
                                                                                                                     echo 'hidden';
                                                                                                                 } ?> ">
@@ -409,6 +411,7 @@
                                                 </td>
                                                 <td>
                                                     <input type="number" name="product_rate[]" onkeyup="quantity_calculate(<?php echo $i ?>);" onchange="quantity_calculate(<?php echo $i ?>);" value="<?php echo html_escape($value['rate']) ?>" id="price_item_<?php echo $i ?>" class="price_item<?php echo $i ?> form-control text-right" required="" min="0" readonly="readonly" />
+                                                    <input type="hidden" hidden id="price_item_saved_<?php echo $i ?>" value="<?php echo html_escape($product_information->product_price) ?>" data-val="<?php echo html_escape($product_information->product_price) ?>" />
                                                 </td>
                                                 <td>
                                                     <input type="number" name="discount[]" onkeyup="quantity_calculate(<?php echo $i ?>);" onchange="quantity_calculate(<?php echo $i ?>);" id="discount_<?php echo $i ?>" class="form-control text-right" placeholder="0.00" <?php if ($value['discount'] > 0) : ?>data-value="<?php echo html_escape($value['discount']) ?>" <?php endif ?> value="<?php echo html_escape($value['discount']) ?>" min="0" />
@@ -549,10 +552,10 @@
                                                                                                                                                                                                 } else {
                                                                                                                                                                                                     echo 0;
                                                                                                                                                                                                 } ?>" <?php endif ?> value="<?php if ($order_discount) {
-                                                                                    echo ($order_discount);
-                                                                                } else {
-                                                                                    echo 0;
-                                                                                } ?>" onkeyup="calculateSum();" onchange="calculateSum();" />
+                                                                                                                                                                                                                                echo ($order_discount);
+                                                                                                                                                                                                                            } else {
+                                                                                                                                                                                                                                echo 0;
+                                                                                                                                                                                                                            } ?>" onkeyup="calculateSum();" onchange="calculateSum();" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -617,7 +620,7 @@
                                                             <?php echo display('bank_list') ?> :
                                                         </label>
                                                         <div class="col-sm-8">
-                                                            <select class="form-control" name="payment_id" id="payment_id" <?=isset($order_id)? 'required' : '' ?> >
+                                                            <select class="form-control" name="payment_id" id="payment_id" <?= isset($order_id) ? 'required' : '' ?>>
                                                                 <option value=""></option>
                                                                 <?php
                                                                 if ($payment_info) {
@@ -641,7 +644,7 @@
                                                         <!-- <label for="account_no" class="col-sm-4 col-form-label"><?php echo display('account_no') ?>
                                                             :</label>
                                                         <div class="col-sm-8">
-                                                            <input class="form-control" type="text" name="account_no" id="account_no" placeholder="<?php echo display('account_no') ?>" <?=isset($order_id)? 'required' : '' ?> >
+                                                            <input class="form-control" type="text" name="account_no" id="account_no" placeholder="<?php echo display('account_no') ?>" <?= isset($order_id) ? 'required' : '' ?> >
                                                         </div> -->
                                                     </div>
                                                 </div>
@@ -743,7 +746,48 @@
 <script>
     $(document).ready(function() {
         $(".datepicker2").datepicker({
-			dateFormat: "dd-mm-yy"
-		});
+            dateFormat: "dd-mm-yy"
+        });
+        $(document).on('change', '#product_type', function() {
+            var val = $(this).val();
+
+            // console.log(val, accessories_category_id);
+            $('[name="product_rate[]"]').each(function(inx, el) {
+                var counter = inx + 1;
+                var catId = $('#category_id_' + counter).val();
+                // if (catId == accessories_category_id) {
+                var price = $('#price_item_' + counter).val();
+                // console.log(parseFloat(price));
+                if (parseFloat(price) != 0) {
+                    // $('#price_item_saved_' + counter).val(price);
+                }
+                // }
+
+                
+
+                // $('#price_item_saved_' + counter).val($('#price_item_saved_' + counter).attr('data-val'));
+
+                if (val == '2') {
+                    if (catId == accessories_category_id) {
+                        $('#price_item_' + counter).val(0);
+                        quantity_calculate(counter);
+                    }
+                } else {
+                    if (catId == accessories_category_id) {
+                        console.log(price, val, $('#price_item_saved_' + counter).val());
+                        $('#price_item_' + counter).val($('#price_item_saved_' + counter).val());
+                        quantity_calculate(counter);
+                    }
+                }
+            });
+        });
+
+        setTimeout(() => {
+            $('[name="product_rate[]"]').each(function(inx, el) {
+                var counter = inx + 1;
+
+                $('#price_item_saved_' + counter).val($('#price_item_saved_' + counter).attr('data-val'));
+            });
+        }, 560);
     });
 </script>

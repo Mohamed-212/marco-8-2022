@@ -412,6 +412,7 @@
                                         </td>
                                         <td>
                                             <input type="number" name="product_rate[]" onkeyup="quantity_calculate(1);" onchange="quantity_calculate(1);" placeholder="0.00" id="price_item_1" class="price_item1 form-control text-right" required="" min="0" readonly="readonly" />
+                                            <input type="hidden" hidden id="price_item_saved_1" value="" />
                                         </td>
                                         <!-- Discount -->
                                         <td>
@@ -744,5 +745,33 @@
         $(".datepicker2").datepicker({
 			dateFormat: "dd-mm-yy"
 		});
+        $(document).on('change', '#product_type', function() {
+            var val = $(this).val();
+
+            // console.log(val, accessories_category_id);
+            $('[name="product_rate[]"]').each(function(inx, el) {
+                var counter = inx + 1;
+                var catId = $('#category_id_' + counter).val();
+                // if (catId == accessories_category_id) {
+                var price = $('#price_item_' + counter).val();
+                // console.log(parseFloat(price));
+                if (parseFloat(price) != 0) {
+                    // $('#price_item_saved_' + counter).val(price);
+                }
+                // }
+
+                if (val == '2') {
+                    if (catId == accessories_category_id) {
+                        $('#price_item_' + counter).val(0);
+                        quantity_calculate(counter);
+                    }
+                } else {
+                    if (catId == accessories_category_id) {
+                        $('#price_item_' + counter).val($('#price_item_saved_' + counter).val());
+                        quantity_calculate(counter);
+                    }
+                }
+            });
+        });
     });
 </script>
