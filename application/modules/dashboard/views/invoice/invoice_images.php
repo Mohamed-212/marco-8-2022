@@ -51,8 +51,8 @@
                                 <div class="form-group">
                                     <label for="invoice_no" class="col-sm-4" style="display: inline"><?php echo display('invoice_no') ?></label>
                                     <select class="form-select form-control col-sm-8 d-inline select2" id="invoice_no" name="invoice_no">
-                                        <?php foreach ($invoices as $inv) : ?>
-                                            <option value="<?=$inv->invoice?>"><?=$inv->invoice?></option>
+                                        <?php foreach ($invoices as $inx => $inv) : ?>
+                                            <option value="<?=$inv->invoice?>" <?=$inx == 0 ? 'selected' : ''?>><?=$inv->invoice?></option>
                                         <?php endforeach ?>
                                     </select>
                                 </div>

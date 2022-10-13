@@ -1668,12 +1668,17 @@ class Cinvoice extends MX_Controller
         if ($invoice) {
             $data['items'] = $details;
 
+            $name = $invoice_no . '-items.txt';
+            $data = 'Items ' . "\n";
+            
             foreach ($details as $inv) {
-                // force_download('./' . $inv->image_thumb, NULL);
                 if (empty($inv->image_thumb)) continue;
                 
                 $this->zip->read_file('./' . $inv->image_thumb);
+                $data .= $inv->product_name . "\n";
             }
+
+            $this->zip->add_data($name, $data);
 
             $this->zip->download($invoice_no . '--' . microtime());
 
