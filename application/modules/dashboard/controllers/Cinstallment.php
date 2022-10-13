@@ -221,9 +221,9 @@ class Cinstallment extends MX_Controller
 
         // var_dump($due_amount_total, $payment_amount_total, $new_payment_amount - $inv->paid_amount, $new_payment_amount, $inv->due_amount, $inv->paid_amount, $inv->total_amount);exit;
 
-        
+        // var_dump($due_amount_total, $new_payment_amount, $inv->paid_amount, $inv->due_amount, abs((float)$due_amount_total + ((float)$new_payment_amount - (float)$inv->paid_amount)) , (float)$inv->due_amount);exit;
 
-        if (((float)$due_amount_total + ((float)$new_payment_amount - (float)$inv->paid_amount)) != (float)$inv->due_amount) {
+        if (((float)$due_amount_total + abs(((float)$new_payment_amount - (float)$inv->paid_amount))) != (float)$inv->due_amount) {
             $this->session->set_userdata(array('error_message' => display('installment_total_amount_not_match')));
             redirect('dashboard/cinstallment/installment_update_form/' . $invoice_id);
         }
