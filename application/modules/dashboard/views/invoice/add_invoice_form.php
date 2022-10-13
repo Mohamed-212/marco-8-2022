@@ -757,17 +757,19 @@
                 var price = $('#price_item_' + counter).val();
                 // console.log(parseFloat(price));
                 if (parseFloat(price) != 0) {
-                    $('#price_item_saved_' + counter).val(price);
+                    // $('#price_item_saved_' + counter).val(price);
                 }
                 // }
 
                 if (val == '2') {
                     if (catId == accessories_category_id) {
                         $('#price_item_' + counter).val(0);
+                        quantity_calculate(counter);
                     }
                 } else {
                     if (catId == accessories_category_id) {
                         $('#price_item_' + counter).val($('#price_item_saved_' + counter).val());
+                        quantity_calculate(counter);
                     }
                 }
             });

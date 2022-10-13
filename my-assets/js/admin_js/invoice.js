@@ -516,6 +516,7 @@ function get_pri_type_rate() {
                 var res = JSON.parse(result);
 
                 $("#price_item_" + sl).val(res[1]);
+                $("#price_item_saved_" + sl).val(res[1]);
                 quantity_calculate(sl);
 
             },
@@ -544,6 +545,7 @@ function get_pri_type_rate1(sl) {
             var res = JSON.parse(result);
 
             $("#price_item_" + sl).val(res[1]);
+            $("#price_item_saved_" + sl).val(res[1]);
             quantity_calculate(sl);
 
         },
