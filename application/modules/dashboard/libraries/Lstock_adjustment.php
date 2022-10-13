@@ -54,8 +54,16 @@ class Lstock_adjustment {
     public function stock_adjustment_html_data($adjustment_id){
         $CI =& get_instance();
         $CI->load->model('dashboard/Stock_adjustment_model');
+
+        $adj = $CI->db->select('a.*, s.store_name')->from('stock_adjustment_table a')
+            ->join('store_set s', 's.store_id = a.store_id', 'left')
+            ->where('a.adjustment_id', $adjustment_id)
+            ->get()
+            ->result();
+
         $data = array(
                 'title' =>display('stock_adjustment_details'),
+                'adj' => $adj,
                 'adjustment_details'=>$CI->Stock_adjustment_model->adjustment_details($adjustment_id)
             );
         $content = $CI->parser->parse('dashboard/stock_adjustment/stock_adjustment_html_data',$data,true);
