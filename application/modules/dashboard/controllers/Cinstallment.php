@@ -196,19 +196,23 @@ class Cinstallment extends MX_Controller
         // echo "<pre>";
 
         $inv = $this->db->select('*')->from('invoice')->where('invoice_id', $invoice_id)->limit(1)->get()->row();
+        $install = $this->db->select('SUM(amount) as due_amount, SUM(payment_amount) as payment_amount')->from('invoice_installment')->where('invoice_id', $invoice_id)->group_by('invoice_id')->get()->row();
 
         $amount = $this->input->post('amount', TRUE);
         $status = $this->input->post('status', TRUE);
         $payment_amount = $this->input->post('payment_amount', TRUE);
         $due_amount_total = 0;
+        $due_amount_all_total = 0;
         $payment_amount_total = 0;
         $new_payment_amount = 0;
         // echo "<pre>";
         foreach ($amount as $inx => $am) {
-            if ($status[$inx] != 1) continue;
+            // var_dump($status[$inx]);
+            if ($status[$inx] == 1) {
+                $due_amount_total += $am;
+            };
 
-            // var_dump($am);
-            $due_amount_total += $am;
+            $due_amount_all_total += $am;
         }
         foreach ($payment_amount as $iinx => $pyamount) {
             $payment_amount_total += $pyamount;
@@ -220,18 +224,27 @@ class Cinstallment extends MX_Controller
         }
 
         // var_dump($due_amount_total, $payment_amount_total, $new_payment_amount - $inv->paid_amount, $new_payment_amount, $inv->due_amount, $inv->paid_amount, $inv->total_amount);exit;
+        // echo "<pre>";
 
-        // var_dump($due_amount_total, $new_payment_amount, $inv->paid_amount, $inv->due_amount, abs((float)$due_amount_total + ((float)$new_payment_amount - (float)$inv->paid_amount)) , (float)$inv->due_amount);exit;
+        // var_dump($due_amount_all_total, $payment_amount_total , $install);exit;
 
-        if (((float)$due_amount_total + abs(((float)$new_payment_amount - (float)$inv->paid_amount))) != (float)$inv->due_amount) {
+        // var_dump(((float)$due_amount_total + abs(((float)$new_payment_amount - (float)$inv->paid_amount))) , (float)$inv->due_amount);
+
+        if ((float)$due_amount_total > (float)$install->due_amount) {
             $this->session->set_userdata(array('error_message' => display('installment_total_amount_not_match')));
+            // var_dump(display('installment_total_amount_not_match'));
             redirect('dashboard/cinstallment/installment_update_form/' . $invoice_id);
+            return;
         }
 
-        if ((float)$payment_amount_total > (float)$inv->due_amount) {
+        if ((float)$payment_amount_total > (float)$install->due_amount) {
             $this->session->set_userdata(array('error_message' => display('installment_total_payed_amount_not_match')));
+            // var_dump(display('installment_total_payed_amount_not_match'));
             redirect('dashboard/cinstallment/installment_update_form/' . $invoice_id);
+            return;
         }
+
+        // exit;
 
 
         if (check_module_status('accounting') == 1) {
