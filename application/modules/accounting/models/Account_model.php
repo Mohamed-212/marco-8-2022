@@ -728,11 +728,12 @@ class Account_model extends CI_Model
   public function supplier_payment_insert()
   {
     $bank_id = $this->input->post('bank_id', TRUE);
-    if (!empty($bank_id)) {
-      $bankcoaid = $this->db->select('HeadCode')->from('acc_coa')->where('service_id', $bank_id)->get()->row()->HeadCode;
-    } else {
-      $bankcoaid = '';
-    }
+    // var_dump($bank_id);exit;
+    // if (!empty($bank_id)) {
+    //   $bankcoaid = $this->db->select('HeadCode')->from('acc_coa')->where('service_id', $bank_id)->get()->row()->HeadCode;
+    // } else {
+    //   $bankcoaid = '';
+    // }
 
     $voucher_no = addslashes(trim($this->input->post('txtVNo', TRUE)));
     $Vtype = "PM";
@@ -786,7 +787,7 @@ class Account_model extends CI_Model
       'VNo' => $voucher_no,
       'Vtype' => $Vtype,
       'VDate' => $VDate,
-      'COAID' => $bankcoaid,
+      'COAID' => $bank_id,
       'Narration' => 'Supplier Payment To ' . $supinfo->supplier_name,
       'Debit' => 0,
       'Credit' => $Damnt,
