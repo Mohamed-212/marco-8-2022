@@ -103,8 +103,10 @@ class Reports extends CI_Model
             $to_date = date('Y-m-d', strtotime('last day of this month', strtotime(date('Y-m-d'))));
         }
 
-        $query->where('i.due_date >=', $from_date);
-        $query->where('i.due_date <=', $to_date);
+        // $query->where('i.due_date >=', $from_date);
+        // $query->where('i.due_date <=', $to_date);
+        $dateRange = "DATE(i.due_date_datetime) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        $this->db->where($dateRange, NULL, FALSE);
 
         if (!$query = $query->get()) {
             return redirect(base_url());
