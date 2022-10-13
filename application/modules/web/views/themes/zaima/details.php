@@ -359,18 +359,18 @@ $theme = $CI->Themes->get_theme();
                         </div>
                     </div>
                 <?php } ?>
-                <?php if ($stok > 0) { ?>
-                    <a href="javascript:void(0)" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
-                <?php }
+                
+                    <a href="javascript:void(0)" id="add_to_cart" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
+                <?php 
                 if ($is_affiliate == 1) { ?>
                     <a href="<?php echo html_escape($affiliate_url) ?>" class="btn btn-primary text-uppercase fs-12 font-weight-500 mr-2 color4 color46" target="0">
                         <?php echo display('buy_now') ?>
                     </a>
                 <?php } ?>
-                <a href="javascript:void(0)" class="add-wishlist wishlist d-flex align-items-center justify-content-center" data-toggle="tooltip" data-placement="top" title="<?php echo display('wishlist') ?>" name="<?php echo html_escape($product_id) ?>">
+                <a href="javascript:void(0)" id="add_to_wish" class="add-wishlist wishlist d-flex align-items-center justify-content-center" data-toggle="tooltip" data-placement="top" title="<?php echo display('wishlist') ?>" name="<?php echo html_escape($product_id) ?>">
                     <i data-feather="heart"></i>
                 </a>
-                <a href="javascript:void(0)" class="add-wishlist d-flex align-items-center justify-content-center compare-btn" data-toggle="tooltip" data-placement="top" onclick="comparison_btn(<?php echo html_escape($product_id) ?>)" title="<?php echo display('compare') ?>">
+                <a href="javascript:void(0)" id="add_to_compare" class="add-wishlist d-flex align-items-center justify-content-center compare-btn" data-toggle="tooltip" data-placement="top" onclick="comparison_btn(<?php echo html_escape($product_id) ?>)" title="<?php echo display('compare') ?>">
                     <i data-feather="repeat"></i>
                 </a>
                 <?php echo form_close(); ?>

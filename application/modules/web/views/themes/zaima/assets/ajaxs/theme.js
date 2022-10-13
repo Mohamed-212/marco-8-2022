@@ -207,7 +207,7 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
   var inStockMess = $('#stok').attr('data-stock-in');
   var outStockMess = $('#stok').attr('data-stock-out');
   // if (!variant_id) {
-    variant_id = default_variant;
+  var variant_id = default_variant;
   // }
   // show current varient product image
   var slickIndex = $('figure#product-' + product_id).attr('data-slick-index');
