@@ -804,6 +804,10 @@ class Home extends MX_Controller
         $this->form_validation->set_rules('customer_mobile', display('customer_mobile'), 'trim|required');
         $this->form_validation->set_rules('shipping_cost', display('shipping_method'), 'trim|required');
         $this->form_validation->set_rules('payment_method', display('payment_method'), 'trim|required');
+
+        $details = $this->input->post('ordre_notes', true);
+        $this->session->set_userdata("ordre_notes", $details);
+
         if ($this->form_validation->run() == FALSE) {
             $content = $this->lhome->checkout();
             $this->template_lib->full_website_html_view($content);

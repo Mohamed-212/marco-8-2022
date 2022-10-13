@@ -827,6 +827,8 @@ class Homes extends CI_Model
             ->get()
             ->row();
 
+        $empId = $this->db->select('id')->from('employee_history')->where('first_name', 'Website')->limit(1)->get()->row();
+
         $payment_method = $this->session->userdata('payment_method');
         if ($payment_method == 1) {
             //Data inserting into order table
@@ -834,15 +836,18 @@ class Homes extends CI_Model
                 'order_id' => $order_id,
                 'customer_id' => $customer_id,
                 'store_id' => (!empty($default_store->store_id) ? $default_store->store_id : null),
-                'date' => date("m-d-Y"),
+                'date' => date("d-m-Y"),
                 'total_amount' => $this->session->userdata('cart_total'),
                 'order' => $order = $this->number_generator_order(),
+                'details' => $this->session->userdata('ordre_notes'),
                 'total_discount' => $this->session->userdata('total_discount'),
                 'order_discount' => $this->session->userdata('total_discount'),
                 'due_amount' => $this->session->userdata('cart_total'),
                 'service_charge' => $this->session->userdata('cart_ship_cost'),
                 'coupon' => ($this->session->userdata('coupon_code')) ? $this->session->userdata('coupon_code') : '',
-                'status' => 1
+                'status' => 1,
+                'employee_id' => $empId->id,
+                'pricing_type' => 1
             );
             //Data inserting into order table for payment gateway
             $this->db->insert('order', $data);
@@ -863,12 +868,15 @@ class Homes extends CI_Model
                 'date' => date("m-d-Y"),
                 'total_amount' => $this->session->userdata('cart_total'),
                 'order' => $order = $this->number_generator_order(),
+                'details' => $this->session->userdata('ordre_notes'),
                 'total_discount' => $this->session->userdata('total_discount'),
                 'order_discount' => $this->session->userdata('total_discount'),
                 'paid_amount' => $paid_amount,
                 'due_amount' => $due_amount,
                 'service_charge' => $this->session->userdata('cart_ship_cost'),
-                'status' => 1
+                'status' => 1,
+                'employee_id' => $empId->id,
+                'pricing_type' => 1
             );
             $this->db->insert('order', $data);
         
