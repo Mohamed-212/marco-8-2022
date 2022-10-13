@@ -204,7 +204,7 @@
 									<tr>
 										<td><?php echo html_escape(date('d-m-Y', strtotime($sales['date_time']))); ?></td>
 										<td>
-											<a href="<?php echo base_url().'dashboard/Cinvoice/invoice_inserted_data/'.$sales['invoice_id']; ?>"><?php echo html_escape($sales['invoice_id']) ?>
+											<a href="<?php echo base_url().'dashboard/Cinvoice/invoice_inserted_data/'.$sales['invoice_id']; ?>"><?php echo html_escape($sales['invoice']) ?>
 												 <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                             </a>
 										</td>
@@ -214,6 +214,30 @@
 										<td><?php echo html_escape($sales['quantity']); ?></td>
 										<td> <?php echo (($position==0)? $currency." ".$sales['rate'] :$sales['rate']." ".$currency) ?></td>
 										<td class="text-right"> <?php echo (($position==0)? $currency." ".$sales['total_price'] : $sales['total_price']." ".$currency) ?></td>
+									</tr>
+								
+								<?php
+									}
+								}
+								?>
+								<?php
+									if ($returnData) {
+										foreach($returnData as $return){
+								?>
+								
+									<tr>
+										<td><?php echo html_escape(date('d-m-Y', strtotime($return['date_time']))); ?></td>
+										<td>
+											<a href="<?php echo base_url().'dashboard/Crefund/return_invoice/'.$return['return_invoice_id']; ?>"><?php echo html_escape($return['invoice']) ?>
+												 <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+                                            </a>
+										</td>
+										<td>
+											<a href="<?php echo base_url().'dashboard/Ccustomer/customerledger/'.$return['customer_id']; ?>"><?php echo html_escape($return['customer_name']); ?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
+										</td>
+										<td> - <?php echo html_escape($return['return_quantity']); ?></td>
+										<td> <?php echo (($position==0)? $currency." ".$return['rate'] :$return['rate']." ".$currency) ?></td>
+										<td class="text-right"> <?php echo (($position==0)? $currency." ".$return['total_return'] : $return['total_return']." ".$currency) ?></td>
 									</tr>
 								
 								<?php

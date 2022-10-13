@@ -1120,6 +1120,8 @@ class Cproduct extends MX_Controller
 
         
         // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+
+        $returnData = $this->Products->return_invoice_data($product_id);
         
 
 
@@ -1138,6 +1140,7 @@ class Cproduct extends MX_Controller
             'total_sales' => $stockData[1],
             'purchaseData' => $purchaseData,
             'salesData' => $salesData,
+            'returnData' => $returnData,
             // 'stock' => $stock,
             'stock' => $stockData[0] - $stockData[1],
             'product_list' => $products_list,
