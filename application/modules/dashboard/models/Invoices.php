@@ -4470,7 +4470,10 @@ class Invoices extends CI_Model {
             $this->db->where('product_id', $product_id);
             $pro = $this->db->get()->row();
 
-            if ($pro->category_id == 'NZUN74MS3GP8QAV') {
+            // get accessiores category id
+            $acc_cate_id = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
+
+            if ($pro->category_id == $acc_cate_id->category_id) {
                 return "0";
             }
         }

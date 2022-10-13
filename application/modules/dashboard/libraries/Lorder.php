@@ -664,6 +664,7 @@ class Lorder {
             'store_list'        =>  $store_list,
             'store_list_selected'=> $store_list_selected,
             'terminal_list'     =>  $terminal_list,
+
         );
 
         $chapterList = $CI->parser->parse('dashboard/order/create_invoice_form',$data,true);

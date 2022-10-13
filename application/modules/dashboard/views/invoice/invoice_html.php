@@ -3,6 +3,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<?php
+    $acc_cate_id = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
+?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -425,7 +428,7 @@
 
                                                                     foreach ($invoice_all_data as $invoice) {
                                                                 ?>
-                                                                        <tr class="<?=$invoice['category_id'] == 'NZUN74MS3GP8QAV' && $product_type == 2 ? 'print-none' : ''?>">
+                                                                        <tr class="<?=$invoice['category_id'] == $acc_cate_id->category_id && $product_type == 2 ? 'print-none' : ''?>">
                                                                             <td><?php echo html_escape($invoice['sl']); ?></td>
                                                                             <!-- <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td> -->
 <!--                                                                            <td class='hide-me'>-->
@@ -685,7 +688,7 @@
                                                                             <?php
                                                                                 $totalQuantity = 0;
                                                                                 foreach ($invoice_all_data as $inv) {
-                                                                                    if ($inv['category_id'] == 'NZUN74MS3GP8QAV' && $product_type == 2) {
+                                                                                    if ($inv['category_id'] == $acc_cate_id->category_id && $product_type == 2) {
                                                                                         continue;
                                                                                     }
                                                                                     $total_quantity += (int)$inv['quantity'];
