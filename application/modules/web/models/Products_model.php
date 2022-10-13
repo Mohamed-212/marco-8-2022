@@ -294,6 +294,8 @@ class Products_model extends CI_Model {
         ->get()
         ->row();
 
+        $variant = str_replace(',', '', $variant);
+
         // $this->db->select('open_quantity')
         //     ->from('product_information')
         //     ->where('product_id',$product_id);
@@ -322,6 +324,7 @@ class Products_model extends CI_Model {
         $cart_qnty = $this->get_product_cart_quantity($product_id, $variant);
         
         // $result = (($purchase->totalPurchaseQnty + (int)$openQuantity) - ($order->totalSalesQnty + $cart_qnty));
+
         $result = $purchase->totalPurchaseQnty - ($order->totalSalesQnty + $cart_qnty);
         return $result;
     }   
