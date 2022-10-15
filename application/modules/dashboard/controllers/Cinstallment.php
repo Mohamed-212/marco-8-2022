@@ -76,7 +76,7 @@ class Cinstallment extends MX_Controller
 
     public function manage_installment()
     {
-        $this->permission->check_label('manage_installment')->read()->redirect();
+        $this->permission->check_label('installment')->read()->redirect();
         $filter = array(
             'invoice_no' => $this->input->get('invoice_no', TRUE),
             'customer_id' => $this->input->get('customer_id', TRUE),
@@ -149,7 +149,7 @@ class Cinstallment extends MX_Controller
     //Installment Update Form
     public function installment_update_form($invoice_id)
     {
-        $this->permission->check_label('manage_installment')->update()->redirect();
+        $this->permission->check_label('installment')->read()->redirect();
 
         $this->db->select('*');
         $this->db->from('invoice_installment');
@@ -190,7 +190,7 @@ class Cinstallment extends MX_Controller
     // Installment Update
     public function installment_update()
     {
-        $this->permission->check_label('manage_installment')->update()->redirect();
+        $this->permission->check_label('installment')->read()->redirect();
 
         $invoice_id = $this->input->post('invoice_id', TRUE);
         // echo "<pre>";

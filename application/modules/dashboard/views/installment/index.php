@@ -145,7 +145,7 @@
                                             </td>
                                             <td>
                                                 <center>
-                                                    <?php if ($this->permission->check_label('manage_installment')->update()->access()) { ?>
+                                                    <?php if ($this->permission->check_label('installment')->read()->access()) { ?>
                                                     <a href="<?php echo base_url() . 'dashboard/Cinstallment/installment_update_form/' . $invoice['invoice_id']; ?>"
                                                     class="btn btn-info btn-sm" data-toggle="tooltip"
                                                     data-placement="left" title="<?php echo display('update') ?>"><i
