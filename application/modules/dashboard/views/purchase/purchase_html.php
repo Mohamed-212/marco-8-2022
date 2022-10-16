@@ -286,17 +286,17 @@
                                                                             <div>
                                                                                 <?php echo display('vat_for_supplier') ?> :<?php echo html_escape($vat_no) ?>
                                                                             </div>
-                                                                            <div>
+                                                                            <!-- <div>
                                                                                 <?php echo display('supplier_invoice_date') ?>
                                                                                 :<?php echo html_escape($purchase_date); ?>
-                                                                            </div>
+                                                                            </div> -->
                                                                             <div>
                                                                                 <?php echo display('invoice_creation_date') ?>
-                                                                                :<?php echo html_escape($created_date) ?>
+                                                                                :<?php echo html_escape(date('d-m-Y', strtotime($created_date))) ?>
                                                                             </div>
-                                                                            <div class="m-b-15">
+                                                                            <!-- <div class="m-b-15">
                                                                                 <?php echo display('invoice_time') ?> :<?php echo html_escape($created_time) ?>
-                                                                            </div>
+                                                                            </div> -->
                                                                         <!-- </div> -->
                                                                     </td>
                                                                 </tr>
@@ -315,8 +315,8 @@
                                                                 <th><?php echo display('item_code') ?></th>
                                                                 <th class="hide-me"><?php echo display('item_picture') ?></th>
                                                                 <th><?php echo display('size') ?></th>
-                                                                <th><?php echo display('unit') ?></th>
-                                                                <th><?php echo display('batch_no') ?></th>
+                                                                <!-- <th><?php echo display('unit') ?></th> -->
+                                                                <!-- <th><?php echo display('batch_no') ?></th> -->
                                                                 <th><?php echo display('quantity') ?></th>
                                                                 <th><?php echo display('price') ?></th>
                                                                 <!--                                            <th><?php echo display('discount') ?></th>
@@ -343,8 +343,8 @@
                                                                         <td class="hide-me"><img src="<?php echo  base_url() . (!empty(html_escape($purchase['image_thumb'])) ? html_escape($purchase['image_thumb']) : 'assets/img/icons/default.jpg') ?>" width="50" height="50"></td>
 
                                                                         <td><?php echo html_escape($purchase['variant_name']); ?></td>
-                                                                        <td><?php echo html_escape($purchase['unit_short_name']); ?></td>
-                                                                        <td><?php echo html_escape($purchase['batch_no']); ?></td>
+                                                                        <!-- <td><?php echo html_escape($purchase['unit_short_name']); ?></td> -->
+                                                                        <!-- <td><?php echo html_escape($purchase['batch_no']); ?></td> -->
                                                                         <td><?php $total_quantity += $purchase['quantity'];
                                                                             echo html_escape($purchase['quantity']); ?>
                                                                         </td>

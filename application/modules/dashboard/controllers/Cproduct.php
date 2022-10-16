@@ -1118,11 +1118,11 @@ class Cproduct extends MX_Controller
             $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $size_id);
         }
 
-        
+
         // $stock = ($totalPurchase + $openQuantity) - $totalSales;
 
         $returnData = $this->Products->return_invoice_data($product_id);
-        
+
 
 
         $stock = ($totalPurchase - $totalSales);
@@ -2491,6 +2491,10 @@ class Cproduct extends MX_Controller
                     }
 
                     if (!$filter_1_item_id) {
+                        // // delete old one first
+                        // if (count($exists)) {
+                        //     $this->db->where('product_id', $exists[0]['product_id'])->where('filter_type_id', 1)->delete('filter_product');
+                        // }
                         // create new filter item
                         $filter_item_data = [
                             'item_name' => $filter_1,
@@ -2532,6 +2536,10 @@ class Cproduct extends MX_Controller
                     }
 
                     if (!$filter_2_item_id) {
+                        // // delete old one first
+                        // if (count($exists)) {
+                        //     $this->db->where('product_id', $exists[0]['product_id'])->where('filter_type_id', 2)->delete('filter_product');
+                        // }
                         // create new filter item
                         $filter_item_data_2 = [
                             'item_name' => $filter_2,
@@ -2585,6 +2593,7 @@ class Cproduct extends MX_Controller
                 // print_r($product_details);
                 // exit;
 
+
                 // check if product is already exists
                 $exists = $this->db->select('product_id')
                     ->from('product_information')
@@ -2598,7 +2607,7 @@ class Cproduct extends MX_Controller
                     $this->db->set($product_details);
                     $this->db->where('product_id', $exists[0]['product_id']);
                     $this->db->update('product_information');
-
+                    $product_id = $exists[0]['product_id'];
                 } else {
                     $this->db->insert('product_information', $product_details);
                     $this->Products->website_product_entry($product_details);
@@ -2655,6 +2664,15 @@ class Cproduct extends MX_Controller
                     'product_price' => $excel['s_price'],
                 );
                 $this->db->insert_batch('pricing_types_product', $price_types_list);
+                // delete old
+                $this->db->reset_query();
+                // echo "<pre>";
+                // var_dump($category_id,$product_id, $exists);
+                // $this->db->query("DELETE FROM filter_product WHERE category_id = '" . $category_id."' AND product_id = '" . $product_id . "'");
+                if (count($exists)) {
+                    $this->db->where('category_id', $category_id)->where('product_id', $product_id)->delete('filter_product');
+                }
+                $this->db->reset_query();
                 //GENDER
                 $filter_list[] = array(
                     'category_id' => $category_id,
@@ -2804,7 +2822,7 @@ class Cproduct extends MX_Controller
     public function copy_products_to_website_products()
     {
         $this->Products->copy_products_to_website_products();
-        
+
         redirect('dashboard/Cproduct/manage_product/');
     }
 }
