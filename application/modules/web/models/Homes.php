@@ -871,14 +871,34 @@ class Homes extends CI_Model
                 'details' => $this->session->userdata('ordre_notes'),
                 'total_discount' => $this->session->userdata('total_discount'),
                 'order_discount' => $this->session->userdata('total_discount'),
-                'paid_amount' => $paid_amount,
-                'due_amount' => $due_amount,
+                'paid_amount' => $this->session->userdata('paid_amount'),
+                'due_amount' => $this->session->userdata('due_amount'),
                 'service_charge' => $this->session->userdata('cart_ship_cost'),
                 'status' => 1,
                 'employee_id' => $empId->id,
-                'pricing_type' => 1
+                'pricing_type' => 1,
+                'is_installment' => (int)$this->session->userdata('due_amount') > 0,
+                'month_no' => 3,
+                'due_day' => 1
             );
             $this->db->insert('order', $data);
+
+            var_dump((int)$this->session->userdata('due_amount'));
+
+            // create installment
+            if ((int)$this->session->userdata('due_amount') > 0) {
+                for($i = 1; $i <= 3;$i++) {
+                    $due_date = date('d-m-Y', strtotime('+' . $i .' month'));
+
+                    $installment_data = array(
+                        'invoice_id' => $order_id,
+                        'amount' => (float)((float)$this->session->userdata('due_amount') / 3),
+                        'due_date' => $due_date,
+                        'due_date_datetime' => date('Y-m-d H:i:s', $due_date),
+                    );
+                    $this->db->insert('order_installment', $installment_data);
+                }
+            }
         
         } else {
 
