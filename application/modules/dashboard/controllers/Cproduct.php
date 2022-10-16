@@ -1056,6 +1056,8 @@ class Cproduct extends MX_Controller
 
         $openQuantity = (int)$details_info[0]['open_quantity'];
 
+        $products_list = $this->Products->product_list();
+
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_details'),
@@ -1064,6 +1066,7 @@ class Cproduct extends MX_Controller
             'price' => $details_info[0]['price'],
             'purchaseTotalAmount' => number_format($totalPrcsAmnt, 2, '.', ','),
             'salesTotalAmount' => number_format($totaSalesAmt, 2, '.', ','),
+            'product_list' => $products_list,
             // 'total_purchase' => $totalPurchase,
             // 'total_sales' => $totalSales,
             'total_purchase' => $stockData[0] - $openQuantity,
@@ -1089,6 +1092,8 @@ class Cproduct extends MX_Controller
         $this->permission->check_label('product_ledger')->read()->redirect();
 
         $product_id = $this->input->post('product_id', TRUE);
+
+        return $this->product_details($product_id);
 
         $details_info = $this->Products->product_details_info($product_id);
         $purchaseData = $this->Products->product_purchase_info($product_id);

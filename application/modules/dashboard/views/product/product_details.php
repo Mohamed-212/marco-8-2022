@@ -42,6 +42,33 @@
 		}
 		?>
 
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<?php echo form_open("dashboard/Cproduct/product_details_single"); ?>
+						<div class="form-group row">
+							<label for="product_id" class="col-sm-2"><?php echo display('select_product') ?>:</label>
+							<div class="col-sm-6">
+								<select class="form-control" name="product_id" id="product_id">
+									<?php foreach ($product_list as $product) { ?>
+										<option value=""></option>
+										<option value="<?php echo html_escape($product['product_id']) ?>">
+											<?php echo html_escape($product['product_name']) ?>-(<?php echo html_escape($product['product_model']) ?>)
+										</option>
+									<?php } ?>
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+							</div>
+						</div>
+						<?php echo form_close(); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Product details -->
 		<div class="row">
 			<div class="col-sm-12">
@@ -180,12 +207,12 @@
 										<td colspan="4" class="text-right"><b><?php echo display('grand_total') ?></b></td>
 										<td>
 											<?php
-												$totalSales = 0;
-												foreach ($salesData as $sale) {
-													$totalSales += $sale['quantity'];
-												}
+											$totalSales = 0;
+											foreach ($salesData as $sale) {
+												$totalSales += $sale['quantity'];
+											}
 
-												echo $totalSales;
+											echo $totalSales;
 											?>
 										</td>
 										<td>&nbsp;</td>
@@ -252,14 +279,14 @@
 										<td>{total_return}</td>
 										<td>&nbsp;</td>
 										<td>&nbsp;</td>
-										<td class="text-right"><b> <?php 
-										
-										$totalReturnAmount = 0;
-										foreach ($returnData as $return) {
-											$totalReturnAmount += $return['total_return'];
-										}
-									
-										echo (($position == 0) ? "$currency {$totalReturnAmount}" : "{$totalReturnAmount} $currency") ?></b></td>
+										<td class="text-right"><b> <?php
+
+																	$totalReturnAmount = 0;
+																	foreach ($returnData as $return) {
+																		$totalReturnAmount += $return['total_return'];
+																	}
+
+																	echo (($position == 0) ? "$currency {$totalReturnAmount}" : "{$totalReturnAmount} $currency") ?></b></td>
 									</tr>
 								</tfoot>
 							</table>

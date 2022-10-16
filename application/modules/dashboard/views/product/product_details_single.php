@@ -103,8 +103,10 @@
 						<?php echo (($position==0)? $currency." ".$price: $price." ".$currency) ?></span></h4>
 						<table class="table">
 							<tr>
+								<th><?php echo display('open_quantity') ?> = <span class="color_red"><?=$openQuantity?></span></th>
 								<th><?php echo display('total_purchase') ?> = <span class="color_red"><?php echo html_escape($total_purchase) ?></span></th>
 								<th><?php echo display('total_sales') ?> = <span class="color_red"><?php echo html_escape($total_sales); ?></span></th>
+								<th><?php echo display('total_return') ?> = <span class="color_red"><?=$total_return?></span></th>
 								<th><?php echo display('stock') ?> = <span class="color_red"><?php echo html_escape($stock); ?></span></th>
 							</tr>
 						</table>
