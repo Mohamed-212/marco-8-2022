@@ -99,6 +99,7 @@ class Lproduct
         $varients = $CI->db->select('p.*, pr.product_price as whole_price')
             ->from('product_information p')
             ->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = 1', 'left')
+            ->where('p.product_model_only IS NOT NULL', null, false)
             ->where('p.product_model_only', $product_info->product_model_only)
             ->get()->result_array();
 
