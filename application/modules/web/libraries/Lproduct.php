@@ -16,6 +16,8 @@ class Lproduct
         $CI->load->model('dashboard/Variants');
         $theme = $CI->themes->get_theme();
 
+        $CI->load->library('session');
+
         $pro_category_list    = $CI->Homes->category_list();
         $parent_category_list = $CI->Homes->parent_category_list();
         $best_sales           = $CI->Homes->best_sales();
@@ -97,6 +99,7 @@ class Lproduct
         $varients = $CI->db->select('p.*, pr.product_price as whole_price')
             ->from('product_information p')
             ->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = 1', 'left')
+            ->where('p.product_model_only IS NOT NULL', null, false)
             ->where('p.product_model_only', $product_info->product_model_only)
             ->get()->result_array();
 
@@ -177,6 +180,7 @@ class Lproduct
             'is_assembly'        => $is_assembly,
             'affiliate_url'      => $affiliate_url,
             'varients' => $varientsArray,
+            'isLogIn' => !empty($CI->session->userdata('customer_id')),
         );
 
         if($is_assembly==1){

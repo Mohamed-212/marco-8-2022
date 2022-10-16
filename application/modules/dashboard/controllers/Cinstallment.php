@@ -301,15 +301,15 @@ class Cinstallment extends MX_Controller
                 $result = $this->db->query($sql);
                 $customer_balance  = $result->result_array()[0];
                 $balance = $total_installment - ($customer_balance['Debit'] - $customer_balance['Credit']);
-                // dd([$total_from_balance,$total_installment,$balance,$customer_balance['Debit'],$customer_balance['Credit']]);
-                if ($payment_type[$index] == 5) {
-                    if ($total_from_balance > $balance) {
-                        $this->session->set_userdata(array('error_message' => display('balance_not_enough')));
-                        redirect('dashboard/cinstallment/manage_installment');
-                    }
-                }
-
+              
                 foreach ($installment_details as $index => $installment) {
+                    if ($payment_type[$index] == 5) {
+                        // dd([$payment_type,$index,$total_from_balance,$total_installment,$balance,$customer_balance['Debit'],$customer_balance['Credit']]);
+                        if ((int)$total_from_balance > (int)$balance) {
+                            $this->session->set_userdata(array('error_message' => display('balance_not_enough')));
+                            redirect('dashboard/cinstallment/manage_installment');
+                        }
+                    }
                     if ($installment['status'] != 2) {
                         if (
                             $payment_amount[$index] && $payment_date[$index]

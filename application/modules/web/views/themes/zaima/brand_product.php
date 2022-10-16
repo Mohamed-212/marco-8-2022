@@ -11,10 +11,12 @@
                         <i data-feather="sliders" class="card-header_icon"></i>
                     </div>
                     <div class="card-body">
-                        <?php echo form_open('', array('id' => 'priceForm')); ?>
+                        <?php if ($isLogIn) : ?>
+                            <?php echo form_open('', array('id' => 'priceForm')); ?>
 
-                        <input type="text" class="price-range" value="price-range" name="price-range" />
-                        <?php echo form_close(); ?>
+                            <input type="text" class="price-range" value="price-range" name="price-range" />
+                            <?php echo form_close(); ?>
+                        <?php endif ?>
                     </div>
                 </div>
             <?php
@@ -142,7 +144,7 @@
                                             echo (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1) . ' / ' . display('unit');
                                         }
                                         ?>
-                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
