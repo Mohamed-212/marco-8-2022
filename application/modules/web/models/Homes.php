@@ -883,7 +883,7 @@ class Homes extends CI_Model
             );
             $this->db->insert('order', $data);
 
-            var_dump((int)$this->session->userdata('due_amount'));
+            // var_dump((int)$this->session->userdata('due_amount'));
 
             // create installment
             if ((int)$this->session->userdata('due_amount') > 0) {
