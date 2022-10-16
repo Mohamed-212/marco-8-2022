@@ -203,6 +203,7 @@ class Lproduct
         $CI->load->model('dashboard/Variants');
         $CI->load->model('dashboard/Themes');
         $theme = $CI->Themes->get_theme();
+        $CI->load->library('session');
 
         $brand_product 	  = $CI->Products_model->retrieve_brand_product($brand_id,$price_range,$size,$sort,$rate);
 
@@ -274,6 +275,7 @@ class Lproduct
             'to_price' 		  => $to_price,
             'default_currency_icon' => $selected_default_currency_info->currency_icon,
             'variant_list'  => $variant_list,
+            'isLogIn' => !empty($CI->session->userdata('customer_id')),
         );
         $categoryList = $CI->parser->parse('web/themes/' . $theme .'/brand_product',$data,true);
         return $categoryList;

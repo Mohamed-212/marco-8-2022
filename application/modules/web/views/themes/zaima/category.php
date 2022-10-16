@@ -4,20 +4,19 @@
 
 <div class="container py-4">
     <div class="row">
-        <div
-            class="<?php echo (!empty($after_search) ? 'col-md-3' : 'col-md-3') ?> d-none d-lg-block leftSidebar mb-3 pr-xl-4">
+        <div class="<?php echo (!empty($after_search) ? 'col-md-3' : 'col-md-3') ?> d-none d-lg-block leftSidebar mb-3 pr-xl-4">
             <?php
             $sub_category = $this->Homes->get_sub_category($category_id);
             if (!empty($sub_category)) { ?>
-            <div class="card mb-4">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h2 class="mb-0 fs-17"><?php echo html_escape($category_name) ?></h2>
-                    <i data-feather="sliders" class="card-header_icon"></i>
-                </div>
+                <div class="card mb-4">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h2 class="mb-0 fs-17"><?php echo html_escape($category_name) ?></h2>
+                        <i data-feather="sliders" class="card-header_icon"></i>
+                    </div>
 
-                <div class="card-body">
-                    <ul class="subcategories list-unstyled">
-                        <?php
+                    <div class="card-body">
+                        <ul class="subcategories list-unstyled">
+                            <?php
                             if ($sub_category) {
                                 $i = 1;
                                 foreach ($sub_category as $cat) {
@@ -25,23 +24,21 @@
                                     $no_of_pro = $this->Categories->select_total_sub_cat_no_of_pro($cat['category_id']);
                             ?>
 
-                        <li>
-                            <a href="<?php echo base_url('category/p/' . remove_space($cat['category_name']) . '/' . $cat['category_id']) ?>"
-                                class="d-flex align-items-center mb-2 text-black">
-                                <i data-feather="chevron-right" class="mr-1"></i>
-                                <span class="name"><?php echo html_escape($cat['category_name']) ?></span>
-                                <span
-                                    class="total fs-12 text-black-50 ml-2">(<?php echo html_escape($no_of_pro); ?>)</span>
-                            </a>
-                        </li>
-                        <?php
+                                    <li>
+                                        <a href="<?php echo base_url('category/p/' . remove_space($cat['category_name']) . '/' . $cat['category_id']) ?>" class="d-flex align-items-center mb-2 text-black">
+                                            <i data-feather="chevron-right" class="mr-1"></i>
+                                            <span class="name"><?php echo html_escape($cat['category_name']) ?></span>
+                                            <span class="total fs-12 text-black-50 ml-2">(<?php echo html_escape($no_of_pro); ?>)</span>
+                                        </a>
+                                    </li>
+                            <?php
                                     $i++;
                                 }
                             }
                             ?>
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
             <?php } ?>
             <div class="card mb-4">
                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -59,13 +56,13 @@
             $brand_info = $this->Categories->select_sub_cat_brand_info($category_id);
             if ($brand_info) { ?>
 
-            <div class="card mb-4">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h2 class="mb-0 fs-17"><?php echo display('brand') ?></h2>
-                    <i data-feather="sliders" class="card-header_icon"></i>
-                </div>
-                <div class="card-body">
-                    <?php
+                <div class="card mb-4">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h2 class="mb-0 fs-17"><?php echo display('brand') ?></h2>
+                        <i data-feather="sliders" class="card-header_icon"></i>
+                    </div>
+                    <div class="card-body">
+                        <?php
                         $i = 1;
                         $query_string = '';
                         $query_string = $this->input->server('QUERY_STRING');
@@ -84,11 +81,9 @@
                         foreach ($brand_info as $brand_in) {
                             if ($brand_in['brand_id']) {
                         ?>
-                    <div class="custom-control custom-checkbox mb-2">
+                                <div class="custom-control custom-checkbox mb-2">
 
-                        <input id="brand<?php echo $i ?>" type="checkbox" class="brand_class custom-control-input"
-                            name="brand"
-                            value="<?php
+                                    <input id="brand<?php echo $i ?>" type="checkbox" class="brand_class custom-control-input" name="brand" value="<?php
                                                                                                                                                     $target_id = $brand_in['brand_id'];
                                                                                                                                                     if (strpos($brand_url_ids, $target_id) !== false) {
                                                                                                                                                         if ($lastElementKey == 1) {
@@ -109,25 +104,23 @@
                                                                                                                                                             echo base_url('category') . '/' . $category_id . '/' . $brand_url_ids . '--' . $target_id . $query_string;
                                                                                                                                                         }
                                                                                                                                                     }
-                                                                                                                                                    ?>"
-                            <?php
+                                                                                                                                                    ?>" <?php
                                                                                                                                                         if (strpos($brand_url_ids, $target_id) !== false) {
                                                                                                                                                             echo 'checked';
                                                                                                                                                         }
                                                                                                                                                         ?>>
 
-                        <label class="custom-control-label" for="brand<?php echo $i ?>">
-                            <?php echo html_escape($brand_in['brand_name']) ?><span
-                                class="count text-muted fs-12 ml-1"></span>
-                        </label>
-                    </div>
-                    <?php
+                                    <label class="custom-control-label" for="brand<?php echo $i ?>">
+                                        <?php echo html_escape($brand_in['brand_name']) ?><span class="count text-muted fs-12 ml-1"></span>
+                                    </label>
+                                </div>
+                        <?php
                                 $i++;
                             }
                         }
                         ?>
+                    </div>
                 </div>
-            </div>
             <?php } ?>
 
 
@@ -139,14 +132,14 @@
                 $prev_filter_item = $this->input->get('filter_item', TRUE);
                 $filter_price = $this->input->get('price', TRUE);
                 foreach ($filter_types as  $filter_type) { ?>
-            <div class="card mb-4">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h2 class="mb-0 fs-17"><?php echo html_escape($filter_type['fil_type_name']) ?></h2>
-                    <i data-feather="sliders" class="card-header_icon"></i>
-                </div>
-                <div class="card-body">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <h2 class="mb-0 fs-17"><?php echo html_escape($filter_type['fil_type_name']) ?></h2>
+                            <i data-feather="sliders" class="card-header_icon"></i>
+                        </div>
+                        <div class="card-body">
 
-                    <?php
+                            <?php
                             $filter_items = $this->db->select('*')->from('filter_items')->where('type_id', $filter_type['fil_type_id'])->get()->result();
 
                             $j = 1;
@@ -178,20 +171,16 @@
                                 $full_url = current_url() . '?' . $qsting_arr;
 
                             ?>
-                    <div class="custom-control custom-checkbox mb-2">
-                        <input id="filter_item_<?php echo $k . $j; ?>" type="checkbox"
-                            class="filter_item_class custom-control-input" name="filter_item"
-                            value="<?php echo $full_url; ?>" data_id="<?php echo $filter_item->item_id; ?>"
-                            <?php echo $checked; ?>>
-                        <label class="custom-control-label" for="filter_item_<?php echo $k . $j; ?>">
-                            <?php echo html_escape($filter_item->item_name) ?> <span
-                                class="count text-muted fs-12 ml-1"></span>
-                        </label>
-                    </div>
-                    <?php $j++;
+                                <div class="custom-control custom-checkbox mb-2">
+                                    <input id="filter_item_<?php echo $k . $j; ?>" type="checkbox" class="filter_item_class custom-control-input" name="filter_item" value="<?php echo $full_url; ?>" data_id="<?php echo $filter_item->item_id; ?>" <?php echo $checked; ?>>
+                                    <label class="custom-control-label" for="filter_item_<?php echo $k . $j; ?>">
+                                        <?php echo html_escape($filter_item->item_name) ?> <span class="count text-muted fs-12 ml-1"></span>
+                                    </label>
+                                </div>
+                            <?php $j++;
                             } ?>
-                </div>
-            </div>
+                        </div>
+                    </div>
             <?php $k++;
                 }
             } ?>
@@ -206,19 +195,18 @@
             <div class="filter-row d-flex align-items-center justify-content-between mb-2">
                 <div class="filter-title">
                     <?php if (!empty($after_search)) { ?>
-                    <h1 class="fs-21 mb-0 d-inline-block">
-                        <?php echo html_escape($total) . " " . display('search_items') . '"' . $keyword . '"';
+                        <h1 class="fs-21 mb-0 d-inline-block">
+                            <?php echo html_escape($total) . " " . display('search_items') . '"' . $keyword . '"';
                             ?>
-                    </h1>
+                        </h1>
                     <?php } else { ?>
-                    <h1 class="fs-21 mb-0 d-inline-block"><?php echo html_escape($category_name); ?></h1>
-                    <span class="text-black-50">- <?php echo html_escape($total); ?>
-                        <?php echo display('items') ?></span>
+                        <h1 class="fs-21 mb-0 d-inline-block"><?php echo html_escape($category_name); ?></h1>
+                        <span class="text-black-50">- <?php echo html_escape($total); ?>
+                            <?php echo display('items') ?></span>
                     <?php } ?>
                 </div>
 
-                <a class="btn btn-warning color4 color46 text-white" href="<?php echo base_url() ?>"><i
-                        class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
+                <a class="btn btn-warning color4 color46 text-white" href="<?php echo base_url() ?>"><i class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
             </div>
             <div class="row">
                 <?php
@@ -226,32 +214,26 @@
                     foreach ($category_product as $product) {
                 ?>
 
-                <div class="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3">
-                    <div class="feature-card card mb-3">
-                        <div class="card-body">
-                            <a href="<?php echo base_url('product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>"
-                                class="product-img d-block">
-                                <?php if (@getimagesize($product->image_thumb) === false) { ?>
-                                <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>"
-                                    class="media-object img-fluid"
-                                    alt="<?php echo html_escape($product->product_name) ?>">
-                                <?php } else { ?>
-                                <img class="img-fluid"
-                                    src="<?php echo  base_url() . (!empty($product->image_thumb) ? $product->image_thumb : 'assets/img/icons/default.jpg') ?>"
-                                    alt="<?php echo html_escape($product->product_name) ?>">
-                                <?php } ?>
-                            </a>
-                            <h3 class="product-name fs-15 font-weight-600 overflow-hidden mt-2">
-                                <a href="<?php echo base_url('product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>"
-                                    class="text-black"><?php 
-                                        $color_pos = strpos($product->product_name, '- CO');
-                                        // var_dump($color_pos);
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3">
+                            <div class="feature-card card mb-3">
+                                <div class="card-body">
+                                    <a href="<?php echo base_url('product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>" class="product-img d-block">
+                                        <?php if (@getimagesize($product->image_thumb) === false) { ?>
+                                            <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="media-object img-fluid" alt="<?php echo html_escape($product->product_name) ?>">
+                                        <?php } else { ?>
+                                            <img class="img-fluid" src="<?php echo  base_url() . (!empty($product->image_thumb) ? $product->image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo html_escape($product->product_name) ?>">
+                                        <?php } ?>
+                                    </a>
+                                    <h3 class="product-name fs-15 font-weight-600 overflow-hidden mt-2">
+                                        <a href="<?php echo base_url('product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>" class="text-black"><?php
+                                                                                                                                                                            $color_pos = strpos($product->product_name, '- CO');
+                                                                                                                                                                            // var_dump($color_pos);
 
-                                        echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos) : $product->product_name);
-                                    ?></a>
-                            </h3>
-                            <div class="star-rating">
-                                <?php
+                                                                                                                                                                            echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos) : $product->product_name);
+                                                                                                                                                                            ?></a>
+                                    </h3>
+                                    <div class="star-rating">
+                                        <?php
                                         $result = $this->db->select('IFNULL(SUM(rate),0) as t_rates, count(rate) as t_reviewer')
                                             ->from('product_review')
                                             ->where('product_id', $product->product_id)
@@ -270,37 +252,39 @@
                                             }
                                         }
                                         ?>
-                            </div>
-                            <div class="product-price font-weight-bolder font-italic">
-                                <?php
+                                    </div>
+                                    <div class="product-price font-weight-bolder font-italic">
+                                        <?php
+                                        if ($isLogIn) {
+                                            if ($product->onsale == 1 && !empty($product->onsale_price)) {
+                                                $price_val = $product->onsale_price * $target_con_rate;
+                                            } else {
+                                                // $price_val = $product->price * $target_con_rate;
+                                                $price_val = $product->whole_price * $target_con_rate;
+                                            }
 
-                                        if ($product->onsale == 1 && !empty($product->onsale_price)) {
-                                            $price_val = $product->onsale_price * $target_con_rate;
-                                        } else {
-                                            // $price_val = $product->price * $target_con_rate;
-                                            $price_val = $product->whole_price * $target_con_rate;
+                                            echo (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1) . ' / ' . display('unit');
                                         }
-
-                                        echo (($position1 == 0) ? $currency1 . number_format($price_val, 2, '.', ',') : number_format($price_val, 2, '.', ',') . $currency1); ?>
-                                / <?php echo display('unit') ?></div>
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <?php }
+                    <?php }
                 } else {  ?>
-                <div class="col-md-12 text-center">
-                    <h3 class='text-muted mt-3'><?php echo display('category_product_not_found'); ?></h3>
+                    <div class="col-md-12 text-center">
+                        <h3 class='text-muted mt-3'><?php echo display('category_product_not_found'); ?></h3>
                     <?php } ?>
-                </div>
-                <div class="pt-2">
-                    <!-- Pagination-->
-                    <div class="pagination d-flex align-items-center">
-                        <div class="column">
-                            
-                            <?php echo htmlspecialchars_decode($links); ?>
+                    </div>
+                    <div class="pt-2">
+                        <!-- Pagination-->
+                        <div class="pagination d-flex align-items-center">
+                            <div class="column">
+
+                                <?php echo htmlspecialchars_decode($links); ?>
+                            </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -314,9 +298,7 @@
 <input type="hidden" name="brand_url_ids" id="brand_url_ids" value="<?php echo $this->uri->segment('3') ?>">
 </div>
 <input type="hidden" name="price_min_value" id="price_min_value" value="<?php echo html_escape($min_value) ?>">
-<input type="hidden" name="price_max_value" id="price_max_value"
-    value="<?php echo (!empty($max_value) ? html_escape($max_value) : 10000) ?>">
+<input type="hidden" name="price_max_value" id="price_max_value" value="<?php echo (!empty($max_value) ? html_escape($max_value) : 10000) ?>">
 <input type="hidden" name="from_price" id="from_price" value="<?php echo html_escape($from_price) ?>">
 <input type="hidden" name="to_price" id="to_price" value="<?php echo html_escape($to_price) ?>">
-<input type="hidden" name="default_currency_icon" id="default_currency_icon"
-    value="<?php echo (!empty($default_currency_icon) ? html_escape($default_currency_icon) : $currency1) ?>">
+<input type="hidden" name="default_currency_icon" id="default_currency_icon" value="<?php echo (!empty($default_currency_icon) ? html_escape($default_currency_icon) : $currency1) ?>">

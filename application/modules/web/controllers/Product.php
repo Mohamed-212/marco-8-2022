@@ -109,9 +109,6 @@ class Product extends MX_Controller
 
     public function brand_product($brand_id=null)
     {
-        // $this->load->library('session');
-
-        // echo "<pre>";var_dump($this->session->userdata('isLogIn'));exit;
         $price_range = $this->input->get('price',TRUE);
         $size        = $this->input->get('size',TRUE);
         $sort        = $this->input->get('sort',TRUE);
