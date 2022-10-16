@@ -1049,6 +1049,13 @@ class Cproduct extends MX_Controller
             $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $size_id);
         }
 
+        $total_return = 0;
+        foreach ($returnData as $return) {
+            $total_return += $return['return_quantity'];
+        }
+
+        $openQuantity = (int)$details_info[0]['open_quantity'];
+
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_details'),
@@ -1059,8 +1066,9 @@ class Cproduct extends MX_Controller
             'salesTotalAmount' => number_format($totaSalesAmt, 2, '.', ','),
             // 'total_purchase' => $totalPurchase,
             // 'total_sales' => $totalSales,
-            'total_purchase' => $stockData[0],
+            'total_purchase' => $stockData[0] - $openQuantity,
             'total_sales' => $stockData[1],
+            'total_return' => $total_return,
             'purchaseData' => $purchaseData,
             'salesData' => $salesData,
             'returnData' => $returnData,
@@ -1068,6 +1076,7 @@ class Cproduct extends MX_Controller
             'product_statement' => 'dashboard/Cproduct/product_sales_supplier_rate/' . $product_id,
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
+            'openQuantity' => $openQuantity,
         );
 
         $content = $this->parser->parse('dashboard/product/product_details', $data, true);
