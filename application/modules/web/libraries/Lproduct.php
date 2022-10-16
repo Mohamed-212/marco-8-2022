@@ -16,6 +16,8 @@ class Lproduct
         $CI->load->model('dashboard/Variants');
         $theme = $CI->themes->get_theme();
 
+        $CI->load->library('session');
+
         $pro_category_list    = $CI->Homes->category_list();
         $parent_category_list = $CI->Homes->parent_category_list();
         $best_sales           = $CI->Homes->best_sales();
@@ -177,6 +179,7 @@ class Lproduct
             'is_assembly'        => $is_assembly,
             'affiliate_url'      => $affiliate_url,
             'varients' => $varientsArray,
+            'isLogIn' => !empty($CI->session->userdata('customer_id')),
         );
 
         if($is_assembly==1){

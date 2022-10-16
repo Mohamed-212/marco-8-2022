@@ -244,21 +244,25 @@ $theme = $CI->Themes->get_theme();
                                 <span class="amount var_amount">
 
                                     <?php
-                                    if ($target_con_rate > 1) {
-                                        $price = $price * $target_con_rate;
-                                        // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
-                                    }
+                                    if ($isLogIn) {
+                                        if ($target_con_rate > 1) {
+                                            $price = $price * $target_con_rate;
+                                            // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                        }
 
-                                    if ($target_con_rate <= 1) {
-                                        $price = $price * $target_con_rate;
-                                        // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
-                                    }
+                                        if ($target_con_rate <= 1) {
+                                            $price = $price * $target_con_rate;
+                                            // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                        }
 
-                                    $getWholePrice = $this->db->select('product_price')->from('pricing_types_product')->where('product_id', $product_id)->where('pri_type_id', 1)->limit(1)->get()->row();
-                                    echo (($position1 == 0) ? $currency1 . " " . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . " " . $currency1);
+                                        $getWholePrice = $this->db->select('product_price')->from('pricing_types_product')->where('product_id', $product_id)->where('pri_type_id', 1)->limit(1)->get()->row();
+                                        echo (($position1 == 0) ? $currency1 . " " . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . " " . $currency1);
+                                    }
                                     ?>
                                 </span>
-                                <input type="hidden" id="price" name="price" value="<?php echo html_escape($getWholePrice->product_price) ?>">
+                                <?php if ($isLogIn) : ?>
+                                    <input type="hidden" id="price" name="price" value="<?php echo html_escape($getWholePrice->product_price) ?>">
+                                <?php endif ?>
                             </ins>
                         <?php }  ?>
                     </div>
@@ -320,7 +324,7 @@ $theme = $CI->Themes->get_theme();
 
                                 <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
                                 <?php foreach ($varients as $product) : $vt = $product['color']; ?>
-                                    <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?=$product['size_id']?>', '<?=$product['size_id']?>', '<?=$product['whole_price']?>', '<?=(($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1)?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
+                                    <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?= $product['size_id'] ?>', '<?= $product['size_id'] ?>', '<?= $product['whole_price'] ?>', '<?= (($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1) ?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
                                     <label class="mr-1" for="id<?php echo html_escape($product['product_id']) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($product['color']) ?></span></label>
                                 <?php endforeach ?>
                             </div>
@@ -335,7 +339,7 @@ $theme = $CI->Themes->get_theme();
                                 if ($vitem->variant_type == 'size') {
                         ?>
 
-                                <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked" >
+                                <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
                                 <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded" style="color: #fff !important;
     border: 1px solid var(--primary-color) !important;
     background-color: var(--primary-color) !important;"><?php echo html_escape($vitem->variant_name) ?></span></label>
@@ -359,9 +363,11 @@ $theme = $CI->Themes->get_theme();
                         </div>
                     </div>
                 <?php } ?>
-                
+
+                <?php if ($isLogIn) : ?>
                     <a href="javascript:void(0)" id="add_to_cart" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
-                <?php 
+                <?php endif ?>
+                <?php
                 if ($is_affiliate == 1) { ?>
                     <a href="<?php echo html_escape($affiliate_url) ?>" class="btn btn-primary text-uppercase fs-12 font-weight-500 mr-2 color4 color46" target="0">
                         <?php echo display('buy_now') ?>
