@@ -138,6 +138,7 @@
                                         ?>
                             </div>
                             <div class="product-price font-weight-bolder font-italic">
+                                
                                 <?php
 
                                         if ($product['onsale'] == 1 && !empty($product['onsale_price'])) {

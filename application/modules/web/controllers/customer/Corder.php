@@ -26,6 +26,7 @@ class Corder extends MX_Controller
     //Add new order
     public function new_order()
     {
+        return redirect(base_url());
         $data = array(
             'title' => display('new_order'),
         );
