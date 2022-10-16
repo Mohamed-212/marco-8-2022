@@ -99,6 +99,7 @@ class Cproduct extends MX_Controller
                 }
             }
             $category_id = $this->input->post('category_id', TRUE);
+            $category_name = $category_id;
             // check if category_id is not found
             $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_id', $category_id)->get()->num_rows();
             if ($categoryIsFound == 0) {
@@ -190,6 +191,11 @@ class Cproduct extends MX_Controller
             $model_and_color = explode('-', $this->input->post('model', TRUE));
             $product_model_only = trim($model_and_color[0]);
             $product_color = trim($model_and_color[1]);
+
+            if ($category_name == 'ACCESSORIES') {
+                $product_model_only = null;
+                $product_color = null;
+            }
 
             $data = array(
                 'product_id' => $product_id,
@@ -710,6 +716,12 @@ class Cproduct extends MX_Controller
             $model_and_color = explode('-', $this->input->post('model', TRUE));
             $product_model_only = trim($model_and_color[0]);
             $product_color = trim($model_and_color[1]);
+
+            $product_category_id = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
+            if ($product_category_id->category_id == $category_id) {
+                $product_model_only = null;
+                $product_color = null;
+            }
 
             $data = array(
                 'product_name' => $this->input->post('product_name', TRUE),
@@ -2356,6 +2368,12 @@ class Cproduct extends MX_Controller
                 $s_price = (float)$sheetdata[$i][9]; // customer price
                 $product_quantity = (int)$sheetdata[$i][10];
                 $product_rate = (float)$sheetdata[$i][11]; // supplier price
+
+                // if category is accessories then color and model only is not needed
+                if ($category_id == 'ACCESSORIES') {
+                    $product_model_only = null;
+                    $product_color = null;
+                }
 
                 // echo "<pre>";var_dump($variants);exit;
 
