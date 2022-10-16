@@ -79,6 +79,8 @@ class Signup extends MX_Controller
     public function user_signup()
     {
 
+        return redirect(base_url());
+
         $this->form_validation->set_rules('first_name', display('first_name'), 'trim|required');
         $this->form_validation->set_rules('email', display('email'), 'trim|required|is_unique[customer_information.customer_email]');
         $this->form_validation->set_rules('phone', display('phone'), 'trim|required|is_unique[customer_information.customer_mobile]');
