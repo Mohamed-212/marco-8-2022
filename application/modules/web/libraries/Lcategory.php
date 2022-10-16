@@ -16,6 +16,9 @@ class Lcategory
         $CI->load->model('dashboard/cfiltration_model');
         $CI->load->model('dashboard/Variants');
         $CI->load->model('dashboard/Themes');
+        
+        $CI->load->library('session');
+
         $theme = $CI->Themes->get_theme();
         $max_value = 0;
         $min_value = 0;
@@ -69,7 +72,7 @@ class Lcategory
         // }
 
         // echo "<pre>";
-        // var_dump($nums);
+        // var_dump($CI->session->userdata());
         // exit;
         
         $data = array(
@@ -99,7 +102,8 @@ class Lcategory
             'from_price' => $from_price,
             'to_price' => $to_price,
             'select_category_adds' => $select_category_adds,
-            'filter_types' => $filter_types
+            'filter_types' => $filter_types,
+            'isLogIn' => !empty($CI->session->userdata('customer_id')),
         );
         $HomeForm = $CI->parser->parse('web/themes/' . $theme . '/category', $data, true);
         return $HomeForm;
@@ -115,6 +119,7 @@ class Lcategory
         $CI->load->model('dashboard/Soft_settings');
         $CI->load->model('dashboard/Blocks');
         $CI->load->model('dashboard/Themes');
+        $CI->load->library('session');
         $theme = $CI->Themes->get_theme();
         $max_value = 0;
         $min_value = 0;
@@ -182,7 +187,8 @@ class Lcategory
             'currency'               => $currency_details[0]['currency_icon'],
             'position'               => $currency_details[0]['currency_position'],
             'links'                  => $links,
-            'select_category_adds'   => $select_category_adds
+            'select_category_adds'   => $select_category_adds,
+            'isLogIn' => !empty($CI->session->userdata('customer_id')),
         );
         $HomeForm = $CI->parser->parse('web/themes/' . $theme . '/category', $data, true);
         return $HomeForm;

@@ -285,7 +285,16 @@ class Crefund extends MX_Controller {
                         $bank_return= $return;
                 }
 
-                
+                $customer_ledger_data = array(
+                    'transaction_id' => generator(15),
+                    'customer_id' => $customer_id,
+                    'date' => date('Y-m-d'),
+                    'amount' => $bank_return,
+                    'payment_type' => 1,
+                    'description' => 'ITP',
+                    'status' => 1
+                );
+                $this->db->insert('customer_ledger', $customer_ledger_data);
                 
                 //1st debit (Sales return for Showroom sales) with total price before discount
                 $customer_credit = array(

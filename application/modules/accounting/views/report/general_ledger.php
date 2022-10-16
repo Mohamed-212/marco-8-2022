@@ -75,10 +75,10 @@
                                     autocomplete="off" placeholder="Select Date">
                             </div>
                             <div class="col-sm-1">
-                                <div class="form-group deaail-mt">
+                                <!-- <div class="form-group deaail-mt">
                                     <input type="checkbox" id="chkIsTransction" name="chkIsTransction" size="40">
                                     <label for="chkIsTransction">With Details</label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="col-sm-2">
                                 <div class="form-group">

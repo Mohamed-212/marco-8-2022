@@ -306,10 +306,11 @@
                                                             $TotalDebit = 0;
                                                             $CurBalance = $prebalance;
                                                             foreach ($HeadName2 as $key => $data) {
+                                                                // var_dump($data);
                                                             ?>
                                                                 <tr>
                                                                     <td height="25" align="center"><?php echo ++$key; ?></td>
-                                                                    <td align="center"><?php echo html_escape($data['VDate']); ?></td>
+                                                                    <td align="center"><?php echo html_escape(date('d-m-Y', strtotime($data['VDate']))); ?></td>
                                                                     <td align="center"><?php echo html_escape($data['COAID']); ?></td>
                                                                     <?php if ($chkIsTransction) { ?>
                                                                         <td align="center"><?php echo html_escape($data['Narration']); ?>

@@ -103,7 +103,9 @@ class Areports extends MX_Controller
     $range          = $this->input->post('date_range', true);
     $cmbGLCode      = $this->input->post('cmbGLCode', true);
     $cmbCode        = $this->input->post('cmbCode', true);
-    $chkIsTransction = $this->input->post('chkIsTransction', true);
+    // $chkIsTransction = $this->input->post('chkIsTransction', true);
+    $chkIsTransction = true;
+
 
     $this->form_validation->set_rules('date_range', display('date_range'), 'required');
     $this->form_validation->set_rules('cmbGLCode', display('cmbGLCode'), 'trim|required');
@@ -132,6 +134,7 @@ class Areports extends MX_Controller
         'chkIsTransction' => $chkIsTransction,
         'dateRange'      => $range,
         'company_info'   => $company_info,
+        // 'chkIsTransction' => true,
       );
       $data['ledger']  = $this->reports_model->general_led_report_headname($cmbCode);
       // echo "<pre>";print_r($data);exit;

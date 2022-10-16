@@ -22,22 +22,22 @@
         <?php
         $message = $this->session->userdata('message');
         if (isset($message)) {
-            ?>
+        ?>
             <div class="alert alert-info alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <?php echo $message ?>
             </div>
-            <?php
+        <?php
             $this->session->unset_userdata('message');
         }
         $error_message = $this->session->userdata('error_message');
         if (isset($error_message)) {
-            ?>
+        ?>
             <div class="alert alert-danger alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                 <?php echo $error_message ?>
             </div>
-            <?php
+        <?php
             $this->session->unset_userdata('error_message');
         }
         ?>
@@ -46,15 +46,13 @@
             <div class="col-sm-12">
                 <div class="column">
                     <?php if ($this->permission->check_label('add_supplier')->create()->access()) { ?>
-                        <a href="<?php echo base_url('dashboard/Csupplier') ?>" class="btn btn-success m-b-5 m-r-2"><i
-                                class="ti-plus"> </i> <?php echo display('add_supplier') ?></a>
-                        <?php }
-                        if ($this->permission->check_label('manage_supplier')->read()->access()) {
-                            ?>
-                        <a href="<?php echo base_url('dashboard/Csupplier/manage_supplier') ?>"
-                           class="btn btn-success m-b-5 m-r-2"><i class="ti-align-justify"> </i>
-                        <?php echo display('manage_supplier') ?></a>
-<?php } ?>
+                        <a href="<?php echo base_url('dashboard/Csupplier') ?>" class="btn btn-success m-b-5 m-r-2"><i class="ti-plus"> </i> <?php echo display('add_supplier') ?></a>
+                    <?php }
+                    if ($this->permission->check_label('manage_supplier')->read()->access()) {
+                    ?>
+                        <a href="<?php echo base_url('dashboard/Csupplier/manage_supplier') ?>" class="btn btn-success m-b-5 m-r-2"><i class="ti-align-justify"> </i>
+                            <?php echo display('manage_supplier') ?></a>
+                    <?php } ?>
 
                 </div>
             </div>
@@ -65,31 +63,26 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-<?php echo form_open('dashboard/Csupplier/supplier_ledger_report', array('class' => 'form-inline')); ?>
+                        <?php echo form_open('dashboard/Csupplier/supplier_ledger_report', array('class' => 'form-inline')); ?>
                         <div class="form-group">
-                            <label for="supplier_name"><?php echo display('select_supplier') ?><span
-                                    class="text-danger">*</span>:</label>
+                            <label for="supplier_name"><?php echo display('select_supplier') ?><span class="text-danger">*</span>:</label>
                             <select class="form-control" name="supplier_id" id="supplier_id">
-                                <?php foreach($suppliers_list as $sub) : ?>
-                                <option value=""></option>
-                                <option value="<?=$sub['supplier_id']?>" <?=$supplier_id == $sub['supplier_id'] ? 'selected' : '' ?> ><?=$sub['supplier_name']?></option>
+                                <?php foreach ($suppliers_list as $sub) : ?>
+                                    <option value=""></option>
+                                    <option value="<?= $sub['supplier_id'] ?>" <?= $supplier_id == $sub['supplier_id'] ? 'selected' : '' ?>><?= $sub['supplier_name'] ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="from_date"><?php echo display('from_date') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker2" autocomplete="off"
-                                   placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=$from_date?>" required>
+                            <label for="from_date"><?php echo display('from_date') ?><span class="text-danger">*</span>:</label>
+                            <input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?= $from_date ?>" required>
                         </div>
                         <div class="form-group">
-                            <label for="to_date"><?php echo display('to_date') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker2" autocomplete="off"
-                                   placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=$to_date?>" required>
+                            <label for="to_date"><?php echo display('to_date') ?><span class="text-danger">*</span>:</label>
+                            <input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?= $to_date ?>" required>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-<?php echo form_close(); ?>
+                        <?php echo form_close(); ?>
                     </div>
                 </div>
             </div>
@@ -97,7 +90,7 @@
 
         <?php
         if ($supplier_name) {
-            ?>
+        ?>
 
             <div class="row">
                 <div class="col-sm-12">
@@ -116,12 +109,12 @@
                                     <tr>
                                         <td> <?php echo display('debit_ammount') ?> </td>
                                         <td> <?php
-                                            if ($total_debit) {
-                                                echo (($position == 0) ? "$currency {total_debit}" : "{total_debit} $currency");
-                                            } else {
-                                                echo (($position == 0) ? "$currency 00" : " 00 $currency");
-                                            }
-                                            ?>
+                                                if ($total_debit) {
+                                                    echo (($position == 0) ? "$currency {total_debit}" : "{total_debit} $currency");
+                                                } else {
+                                                    echo (($position == 0) ? "$currency 00" : " 00 $currency");
+                                                }
+                                                ?>
                                         </td>
                                     </tr>
                                     <tr>
@@ -139,13 +132,13 @@
                                     <tr>
                                         <td><?php echo display('balance_ammount') ?> </td>
                                         <td class="balance_txt">
-    <?php
-    if ($total_balance) {
-        echo (($position == 0) ? "$currency {total_balance}" : "{total_balance} $currency");
-    } else {
-        echo (($position == 0) ? "$currency 00" : " 00 $currency");
-    }
-    ?>
+                                            <?php
+                                            if ($total_balance) {
+                                                echo (($position == 0) ? "$currency {total_balance}" : "{total_balance} $currency");
+                                            } else {
+                                                echo (($position == 0) ? "$currency 00" : " 00 $currency");
+                                            }
+                                            ?>
                                         </td>
                                     </tr>
                                 </table>
@@ -205,9 +198,9 @@
                                         $this->db->where('b.is_opening', 1);
                                         $supplier_openning_info = $this->db->get()->row();
                                         ?>
-    <?php
-    if (!empty($supplier_openning_info)) {
-        ?>
+                                        <?php
+                                        if (!empty($supplier_openning_info)) {
+                                        ?>
                                             <!-- <tr>
                                                 <td class="text-center">1</td>
                                                 <td><?php echo html_escape($supplier_openning_info->Vtype) ?></td>
@@ -219,32 +212,35 @@
                                                 <td class="text-right">
                                             <?php echo (($position == 0) ? $currency . " " . $supplier_openning_info->Credit : $supplier_openning_info->Credit . " " . $currency) ?>
                                                 </td>
-                                                <td class="text-right"><?=$supplier_openning_info->Debit-$supplier_openning_info->Credit?></td>
+                                                <td class="text-right"><?= $supplier_openning_info->Debit - $supplier_openning_info->Credit ?></td>
                                                 <td><?php echo html_escape($supplier_openning_info->Narration) ?></td>
                                             </tr> -->
-                                            <?php
+                                        <?php
                                         }
                                         ?>
-                                                <?php
-                                                if ($ledger) {
-                                                    $total_sup_debit = $total_sup_credit = $total_sup_balance = 0;
-                                                    foreach ($ledger as $key => $ledger) {
-                                                        ?>
+                                        <?php
+                                        if ($ledger) {
+                                            $total_sup_debit = $total_sup_credit = $total_sup_balance = 0;
+                                            foreach ($ledger as $key => $ledger) {
+                                        ?>
                                                 <tr>
                                                     <td class="text-center">
                                                         <?php echo ((!empty($supplier_openning_info)) ? $key + 2 : $key + 1); ?>
                                                     </td>
                                                     <td>
-            <?php
-            $transaction_info = $this->db->select('Vtype,Narration')->from('acc_transaction')->where('VNo', $ledger['invoice_no'])->get()->row();
-            if (!empty($transaction_info)) {
-                echo $transaction_info->Vtype;
-            }
-            ?>
+                                                        <?php
+                                                        $transaction_info = $this->db->select('Vtype,Narration')->from('acc_transaction')->where('VNo', $ledger['invoice_no'])->get()->row();
+                                                        if (!empty($transaction_info)) {
+                                                            echo $transaction_info->Vtype;
+                                                        }
+                                                        ?>
                                                     </td>
-                                                    <td><a
-                                                            href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_details_data/{purchase_id}'; ?>"><?php echo $ledger['invoice_no']; ?>
-                                                            <i class="fa fa-tasks pull-right" aria-hidden="true"></i></a></td>
+                                                    <td>
+                                                        <?php if (!empty($ledger['invoice_no'])) : ?>
+                                                            <a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_details_data/{purchase_id}'; ?>"><?php echo $ledger['invoice_no']; ?>
+                                                                <i class="fa fa-tasks pull-right" aria-hidden="true"></i></a>
+                                                        <?php endif ?>
+                                                    </td>
                                                     <td><?php echo html_escape(date('d-m-Y', strtotime($ledger['sl_created_at']))); ?></td>
                                                     <td class="text-right">
                                                         <?php $total_sup_debit += ((empty($ledger['debit'])) ? 0 : $ledger['debit']);
@@ -257,47 +253,47 @@
                                                         ?>
                                                     </td>
                                                     <td class="text-right">
-                                                <?php $total_sup_balance += ((empty($ledger['balance'])) ? 0 : $ledger['balance']);
-                                                echo (($position == 0) ? $currency . " " . $ledger['balance'] : $ledger['balance'] . " " . $currency)
-                                                ?>
+                                                        <?php $total_sup_balance += ((empty($ledger['balance'])) ? 0 : $ledger['balance']);
+                                                        echo (($position == 0) ? $currency . " " . $ledger['balance'] : $ledger['balance'] . " " . $currency)
+                                                        ?>
                                                     </td>
                                                     <td><?php
-                                    if (!empty($transaction_info)) {
-                                        echo html_escape($transaction_info->Narration);
-                                    }
-                                    ?>
+                                                        if (!empty($transaction_info)) {
+                                                            echo html_escape($transaction_info->Narration);
+                                                        }
+                                                        ?>
                                                     </td>
                                                 </tr>
                                             <?php
-                                        }
-                                        ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th class="text-center" colspan="4">Total</th>
-                                                <td class="text-center"><?php echo html_escape($total_sup_debit); ?></td>
-                                                <td class="text-center"><?php echo html_escape($total_sup_credit); ?></td>
-                                                <td class="text-center"><?php echo html_escape($total_sup_debit - $total_sup_credit); ?></td>
-                                                <td class="text-center"></td>
-                                            </tr>
-                                        </tfoot>
-    <?php } ?>
+                                            }
+                                            ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="text-center" colspan="4">Total</th>
+                                            <td class="text-center"><?php echo html_escape($total_sup_debit); ?></td>
+                                            <td class="text-center"><?php echo html_escape($total_sup_credit); ?></td>
+                                            <td class="text-center"><?php echo html_escape($total_sup_debit - $total_sup_credit); ?></td>
+                                            <td class="text-center"></td>
+                                        </tr>
+                                    </tfoot>
+                                <?php } ?>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-    <?php
-}
-?>
+        <?php
+        }
+        ?>
     </section>
 </div>
 <!-- Supplier Ledger End -->
 <script>
     $(document).ready(function() {
         $(".datepicker2").datepicker({
-			dateFormat: "dd-mm-yy"
-		});
+            dateFormat: "dd-mm-yy"
+        });
     });
 </script>

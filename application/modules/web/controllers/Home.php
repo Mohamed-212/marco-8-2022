@@ -791,8 +791,7 @@ class Home extends MX_Controller
 
     //Submit checkout
     public function submit_checkout()
-    {
-        
+    {        
         $this->form_validation->set_rules('first_name', display('first_name'), 'trim|required');
         $this->form_validation->set_rules('last_name', display('last_name'), 'trim|required');
         $this->form_validation->set_rules('country', display('country'), 'trim|required');
@@ -804,6 +803,14 @@ class Home extends MX_Controller
         $this->form_validation->set_rules('customer_mobile', display('customer_mobile'), 'trim|required');
         $this->form_validation->set_rules('shipping_cost', display('shipping_method'), 'trim|required');
         $this->form_validation->set_rules('payment_method', display('payment_method'), 'trim|required');
+
+        $details = $this->input->post('ordre_notes', true);
+        $paid_amount = $this->input->post('paid_amount', true);
+        $due_amount = $this->input->post('due_amount', true);
+        $this->session->set_userdata("ordre_notes", $details);
+        $this->session->set_userdata("paid_amount", $paid_amount);
+        $this->session->set_userdata("due_amount", $due_amount);
+
         if ($this->form_validation->run() == FALSE) {
             $content = $this->lhome->checkout();
             $this->template_lib->full_website_html_view($content);
@@ -1062,7 +1069,10 @@ class Home extends MX_Controller
                 $data['orderinfo'] = array();
                 $data['customerinfo'] = array();
                 $data['orderinfo']['order_id']      = $order_id;
-                $data['orderinfo']['total_amount']  = number_format($this->session->userdata('cart_total'),2,'.','');
+                // $data['orderinfo']['total_amount']  = number_format($this->session->userdata('cart_total'),2,'.','');
+                $data['orderinfo']['total_amount']  = number_format($this->session->userdata('paid_amount'),2,'.','');
+                $data['orderinfo']['due_amount']  = number_format($this->session->userdata('due_amount'),2,'.','');
+                
 
                 $data['paymentinfo']  = $this->Homes->paymentinfo($payment_method);
 
@@ -1076,7 +1086,10 @@ class Home extends MX_Controller
                 $data['apikey']       = $data['paymentinfo']->r_pay_marchantid;
                 $data['sharedSecret'] = $data['paymentinfo']->r_pay_password;
 
-                $this->load->view('rozarpay/rozarpaypay', $data);
+                $return_order_id = $this->Homes->order_entry($customer_id, $order_id);
+
+                // $this->load->view('rozarpay/rozarpaypay', $data);
+                exit;
 
             }
 
@@ -2267,6 +2280,11 @@ class Home extends MX_Controller
         $this->cart->destroy();
         $this->session->set_userdata(array('message' => display('product_successfully_order')));
         redirect(base_url());
+    }
+
+    public function order_payed()
+    {
+
     }
  
 }

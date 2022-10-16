@@ -205,6 +205,7 @@
 											<tr>
 												<td><?php echo empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) ? '' : html_escape(date('d-m-Y', strtotime($v_ledger['cl_created_at']))); ?></td>
 												<td>
+													<?php if (!empty($v_ledger['invoice_no'])) : ?>
 													<?php if ($this->permission->check_label('new_sale')->access()) {
 														if ($v_ledger['invoice_no'] != 'NA') { ?>
 															<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $v_ledger['invoice_no']; ?>">
@@ -212,6 +213,7 @@
 															</a>
 													<?php }
 													} ?>
+													<?php endif ?>
 												</td>
 												<td>
 													<?php echo html_escape($v_ledger['receipt_no']); ?>

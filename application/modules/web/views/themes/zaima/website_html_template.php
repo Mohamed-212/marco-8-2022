@@ -135,8 +135,8 @@
                         <nav class="nav mb-3">
                             <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne"
                                 aria-expanded="true" aria-controls="collapseOne"><?php echo display('login') ?></a>
-                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                                aria-expanded="false" aria-controls="collapseTwo"><?php echo display('sign_up') ?></a>
+                            <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                                aria-expanded="false" aria-controls="collapseTwo"><?php echo display('sign_up') ?></a> -->
                         </nav>
                         <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
                             <div class="form-title_wrap mb-3">
@@ -227,9 +227,9 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <div class="signup-section"><?php echo display('dont_have_an_account'); ?><a href="#a"
+                    <!-- <div class="signup-section"><?php echo display('dont_have_an_account'); ?><a href="#a"
                             class="text-primary" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
-                            aria-controls="collapseTwo"><?php echo display('sign_up'); ?></a>.</div>
+                            aria-controls="collapseTwo"><?php echo display('sign_up'); ?></a>.</div> -->
                 </div>
             </div>
         </div>

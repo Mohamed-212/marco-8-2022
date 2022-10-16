@@ -89,7 +89,7 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?php echo base_url('customer/order')?>"><?php echo display('new_order') ?></a></li>
+                    <!-- <li><a href="<?php echo base_url('customer/order')?>"><?php echo display('new_order') ?></a></li> -->
                     <li><a href="<?php echo base_url('customer/order/manage_order')?>"><?php echo display('manage_order') ?></a></li>
                 </ul>
             </li>
