@@ -100,7 +100,7 @@
 										<tr>
 											<td>{final_date}</td>
 											<td>
-												<a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_details_data/{purchase_id}'; ?>">{invoice_no} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+												<a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_inserted_data/{purchase_id}'; ?>">{invoice_no} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
 												</a>
 											</td>
 											<td>
