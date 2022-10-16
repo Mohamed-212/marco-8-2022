@@ -14,6 +14,8 @@ class Lhome {
 		$CI->load->model('dashboard/Themes');
 		$theme = $CI->Themes->get_theme();
 
+		$CI->load->library('session');
+
 		$parent_category_list =$CI->Homes->parent_category_list();
 		$pro_category_list 	  =$CI->Homes->category_list();
 		$best_sales 		  =$CI->Homes->best_sales();
@@ -48,7 +50,8 @@ class Lhome {
 				'position' 		       => $currency_details[0]['currency_position'],
                 'promotion_product'    => $promotion_product,
             	'most_popular_product' => $most_popular_product,
-                'brands'               => $brands
+                'brands'               => $brands,
+				'isLogIn' => !empty($CI->session->userdata('customer_id')),
 			);
         $HomeForm = $CI->parser->parse('web/themes/'.$theme.'/home',$data,true);
 		return $HomeForm;
