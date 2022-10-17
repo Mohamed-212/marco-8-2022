@@ -162,8 +162,7 @@
 									<table class="table table-bordered bcollapse">
 										<?php
 										$counter = 0;
-										for ($i = 0; $i < $stock; $i++) {
-										// for ($i = 0; $i < 1; $i++) {
+										for ($i = 0; $i < 30; $i++) {
 										?>
 											<?php if ($counter == 5) { ?>
 												<tr>
