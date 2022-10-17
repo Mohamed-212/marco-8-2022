@@ -42,6 +42,7 @@ class Ccustomer extends MX_Controller
     public function insert_customer()
     {
         $customer_id = $this->generator(15);
+        $paymentType = $this->input->post('balance_type', TRUE);
         //Customer  basic information adding.
         $data = array(
             'customer_id'           => $customer_id,
@@ -50,7 +51,7 @@ class Ccustomer extends MX_Controller
             'customer_email'        => $this->input->post('email', TRUE),
             'vat_no'                => $this->input->post('vat_no', TRUE),
             'cr_no'                 => $this->input->post('cr_no', TRUE),
-            'previous_balance'      => $this->input->post('previous_balance', TRUE),
+            'previous_balance'      => $paymentType == 2 ? $this->input->post('previous_balance', TRUE) * -1 : $this->input->post('previous_balance', TRUE),
             'customer_short_address' => $this->input->post('address', TRUE),
             'customer_address_1'    => $this->input->post('customer_address_1', TRUE),
             'customer_address_2'    => $this->input->post('customer_address_2', TRUE),

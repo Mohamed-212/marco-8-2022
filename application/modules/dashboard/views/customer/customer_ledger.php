@@ -57,39 +57,34 @@
 		</div>
 
 		<?php if (isset($not_report) && !$not_report) : ?>
-		<div class="row">
-            <div class="col-sm-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <?php echo form_open("dashboard/Ccustomer/customer_ledger_report", array('class' => 'form-inline')); ?>
-                        <div class="form-group">
-                            <label for="customer_id"><?php echo display('customer') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <select class="form-control" name="customer_id" id="customer_id" required>
-								<?php foreach ($customers_list as $cust) : ?>
-                                <option value=""></option>
-                                <option value="<?=$cust['customer_id']?>" <?=isset($customer_id) && $customer_id == $cust['customer_id'] ? 'selected' : '' ?> ><?=$cust['customer_name']?></option>
-								<?php endforeach ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="from_date"><?php echo display('from_date') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker2" autocomplete="off"
-                                placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=$this->input->post('from_date', TRUE);?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="to_date"><?php echo display('to_date') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker2" autocomplete="off"
-                                placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=$this->input->post('to_date', TRUE);?>" required>
-                        </div>
-                        <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-                        <?php echo form_close() ?>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<?php echo form_open("dashboard/Ccustomer/customer_ledger_report", array('class' => 'form-inline')); ?>
+							<div class="form-group">
+								<label for="customer_id"><?php echo display('customer') ?><span class="text-danger">*</span>:</label>
+								<select class="form-control" name="customer_id" id="customer_id" required>
+									<?php foreach ($customers_list as $cust) : ?>
+										<option value=""></option>
+										<option value="<?= $cust['customer_id'] ?>" <?= isset($customer_id) && $customer_id == $cust['customer_id'] ? 'selected' : '' ?>><?= $cust['customer_name'] ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="from_date"><?php echo display('from_date') ?><span class="text-danger">*</span>:</label>
+								<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?= $this->input->post('from_date', TRUE); ?>" required>
+							</div>
+							<div class="form-group">
+								<label for="to_date"><?php echo display('to_date') ?><span class="text-danger">*</span>:</label>
+								<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?= $this->input->post('to_date', TRUE); ?>" required>
+							</div>
+							<button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+							<?php echo form_close() ?>
+						</div>
+					</div>
+				</div>
+			</div>
 		<?php endif ?>
 
 		<div class="row">
@@ -127,6 +122,11 @@
 						<div class="ft_right mr_50">
 							<br>
 							<table class="table table-striped table-condensed table-bordered">
+
+								<tr>
+									<td> <?php echo display('previous_balance') ?> </td>
+									<td class="text-right mr_20"> <?php echo (($position == 0) ? $currency . " " . $previous_balance : $previous_balance . " " . $currency) ?></td>
+								</tr>
 								<tr>
 									<td> <?php echo display('debit_ammount') ?> </td>
 									<td class="text-right mr_20"> <?php echo (($position == 0) ? $currency . " " . $total_debit : $total_debit . " " . $currency) ?></td>
@@ -145,7 +145,7 @@
 					<div class="card-body px-3">
 
 						<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse<?= $customer_id ?>" aria-expanded="false" aria-controls="collapse<?= $customer_id ?>" style="margin: 15px;">
-							<?=display('see_more')?> <?=display('contact_info')?>
+							<?= display('see_more') ?> <?= display('contact_info') ?>
 						</button>
 						<div class="collapse" id="collapse<?= $customer_id ?>">
 							<div class="well">
@@ -193,7 +193,7 @@
 										<th><?php echo display('description') ?></th>
 										<th class="text-right mr_20"><?php echo display('debit') ?></th>
 										<th class="text-right mr_20"><?php echo display('credit') ?></th>
-										<th class="text-right mr_20"><?php echo display('balance') ?></th>
+										<!-- <th class="text-right mr_20"><?php echo display('balance') ?></th> -->
 									</tr>
 								</thead>
 								<tbody>
@@ -206,13 +206,13 @@
 												<td><?php echo empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) ? '' : html_escape(date('d-m-Y', strtotime($v_ledger['cl_created_at']))); ?></td>
 												<td>
 													<?php if (!empty($v_ledger['invoice_no'])) : ?>
-													<?php if ($this->permission->check_label('new_sale')->access()) {
-														if ($v_ledger['invoice_no'] != 'NA') { ?>
-															<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $v_ledger['invoice_no']; ?>">
-																<?php echo  html_escape($v_ledger['invoice_no']); ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
-															</a>
-													<?php }
-													} ?>
+														<?php if ($this->permission->check_label('new_sale')->access()) {
+															if ($v_ledger['invoice_no'] != 'NA') { ?>
+																<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $v_ledger['invoice_no']; ?>">
+																	<?php echo  html_escape($v_ledger['invoice_no']); ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+																</a>
+														<?php }
+														} ?>
 													<?php endif ?>
 												</td>
 												<td>
@@ -226,7 +226,7 @@
 
 												</td>
 												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['credit'] : $v_ledger['credit'] . ' ' . $currency) ?></td>
-												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
+												<!-- <td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td> -->
 											</tr>
 
 									<?php
@@ -244,9 +244,9 @@
 </div>
 <!-- Customer Ledger End  -->
 <script>
-    $(document).ready(function() {
-        $(".datepicker2").datepicker({
+	$(document).ready(function() {
+		$(".datepicker2").datepicker({
 			dateFormat: "dd-mm-yy"
 		});
-    });
+	});
 </script>
