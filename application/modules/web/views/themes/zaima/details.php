@@ -102,7 +102,7 @@ $theme = $CI->Themes->get_theme();
                                     // }
                                     ?>
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
-                                        <li id="product-<?= $var->product_id ?>"><img src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
+                                        <!-- <li id="product-<?= $var->product_id ?>"><img src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li> -->
                                     <?php endforeach ?>
                                 </ul>
                                 <!-- End product thumb nav -->
@@ -112,7 +112,7 @@ $theme = $CI->Themes->get_theme();
                                 <div class="main-img-slider">
                                     <figure id="product-<?= $product_id ?>">
                                         <a href="<?php echo base_url() . $image_large_details; ?>" data-size="1400x1400">
-                                            <img class="img-fluid" src="<?php echo base_url() . $image_large_details; ?>" data-lazy="<?php echo base_url() . $image_large_details; ?>" data-zoom-image="<?php echo base_url() . $image_large_details; ?>" alt="<?php echo display('image') ?>" />
+                                            <!-- <img class="img-fluid" src="<?php echo base_url() . $image_large_details; ?>" data-lazy="<?php echo base_url() . $image_large_details; ?>" data-zoom-image="<?php echo base_url() . $image_large_details; ?>" alt="<?php echo display('image') ?>" /> -->
                                         </a>
                                     </figure>
                                     <?php
@@ -134,7 +134,7 @@ $theme = $CI->Themes->get_theme();
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
                                         <figure id="product-<?= $var->product_id ?>">
                                             <a href="<?php echo base_url() . $var->image_large_details; ?>" data-size="1400x1400">
-                                                <img class="img-fluid" src="<?php echo base_url() . $var->image_large_details; ?>" data-lazy="<?php echo base_url() . $var->image_large_details; ?>" data-zoom-image="<?php echo base_url() . $var->image_large_details; ?>" alt="<?php echo display('image') ?>" />
+                                                <!-- <img class="img-fluid" src="<?php echo base_url() . $var->image_large_details; ?>" data-lazy="<?php echo base_url() . $var->image_large_details; ?>" data-zoom-image="<?php echo base_url() . $var->image_large_details; ?>" alt="<?php echo display('image') ?>" /> -->
                                             </a>
                                         </figure>
                                     <?php endforeach ?>
@@ -651,7 +651,7 @@ $theme = $CI->Themes->get_theme();
                         <div class="deals-item-inner bg-white overflow-hidden border mb-3">
                             <a href="<?php echo base_url('product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>">
                                 <div class="item-image">
-                                    <img src="<?php echo  base_url() . (!empty($product->image_thumb) ? $product->image_thumb : 'assets/img/icons/default.jpg') ?>" class="img-fluid" alt="">
+                                    <!-- <img src="<?php echo  base_url() . (!empty($product->image_thumb) ? $product->image_thumb : 'assets/img/icons/default.jpg') ?>" class="img-fluid" alt=""> -->
                                 </div>
                                 <div class="item-details position-relative">
                                     <h3 class="item-details-title overflow-hidden font-weight-400 mt-2 mb-0 fs-13">
@@ -713,6 +713,8 @@ $theme = $CI->Themes->get_theme();
 <input type="hidden" id="product_max_quantity" value="1" />
 <script>
     $(document).ready(function() {
+        // $.LoadingOverlay("show");
+        alert('wwwww');
         $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
         // $('input[name="select_size1"]').attr("checked", 'checked');
     });

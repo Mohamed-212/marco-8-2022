@@ -275,6 +275,8 @@
     <script src="<?php echo THEME_URL . $theme . '/assets/plugins/jquery.countdown/jquery.countdown.min.js'; ?>">
     </script>
 
+    <script src="<?php echo THEME_URL . $theme . '/assets/dist/js/loadingoverlay.min.js'; ?>"></script>
+
     <?php if (!empty($lang_config) && ($lang_config['direction'] == 'rtl')) { ?>
     <script src="<?php echo THEME_URL . $theme . '/assets/dist/js/custom-rtl.js'; ?>"></script>
     <?php } else { ?>
