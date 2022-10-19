@@ -34,6 +34,7 @@
     <title><?php echo (isset($title)) ? $title : "Isshue" ?></title>
 
     <style>
+        .lazy-hidden{background:url(<?php echo THEME_URL . $theme . '/assets/img/loading.svg';?>) 50% 50% no-repeat #eee}
         #splash {
             color: #333;
             background-color: #fff;
@@ -355,6 +356,8 @@
     </script>
 
     <script src="<?php echo THEME_URL . $theme . '/assets/dist/js/loadingoverlay.min.js'; ?>"></script>
+
+    <script src="<?php echo THEME_URL . $theme . '/assets/dist/js/jquery.lazyloadxt.extra.min.js'; ?>"></script>
 
     <?php if (!empty($lang_config) && ($lang_config['direction'] == 'rtl')) { ?>
         <script src="<?php echo THEME_URL . $theme . '/assets/dist/js/custom-rtl.js'; ?>"></script>
