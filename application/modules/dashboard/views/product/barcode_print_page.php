@@ -87,7 +87,7 @@
 										$counter = 0;
 										// for ($i=0; $i < 60 ; $i++) { 
 										// for ($i=0; $i < $open_quantity ; $i++) { 
-										$stock = 5;
+										$stock = 1;
 										for ($i = 0; $i < $stock; $i++) {
 										?>
 											<?php if ($counter == 5) { ?>
