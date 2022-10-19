@@ -57,6 +57,21 @@ $("#sst,.reduced,.increase").on("change", function () {
   var variant = $("#variant_id").val();
   var variant_color = $('[name="select_color"]:checked').val();
 
+  var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
+      "css"   : {
+          "border"        : "4px dashed gold",
+          "font-size"     : "40px",
+          "text-align"    : "center",
+          "padding"       : "10px"
+      },
+      "class" : "",
+      "text"  : ""
+  });
+  $('.product-summary-top').LoadingOverlay("show", {
+    image       : "",
+    custom      : customElement
+  });
+
   $.ajax({
     type: "post",
     async: true,
@@ -69,6 +84,7 @@ $("#sst,.reduced,.increase").on("change", function () {
       // variant_color: variant_color,
     },
     success: function (data) {
+      $('.product-summary-top').LoadingOverlay("hide");
       if (data == "no") {
         Swal({
           type: "warning",
@@ -85,6 +101,7 @@ $("#sst,.reduced,.increase").on("change", function () {
         type: "warning",
         title: display("request_failed"),
       });
+      $('.product-summary-top').LoadingOverlay("hide");
     },
   });
 });
@@ -1398,6 +1415,22 @@ $("body").on("click", ".wishlist", function (e) {
     });
     return false;
   }
+
+  var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
+      "css"   : {
+          "border"        : "4px dashed gold",
+          "font-size"     : "40px",
+          "text-align"    : "center",
+          "padding"       : "10px"
+      },
+      "class" : "",
+      "text"  : ""
+  });
+  $('.product-summary-top').LoadingOverlay("show", {
+    image       : "",
+    custom      : customElement
+  });
+
   $.ajax({
     type: "post",
     async: true,
@@ -1425,12 +1458,14 @@ $("body").on("click", ".wishlist", function (e) {
           title: display("please_login_first"),
         });
       }
+      $('.product-summary-top').LoadingOverlay("hide");
     },
     error: function () {
       Swal({
         type: "warning",
         title: display("request_failed"),
       });
+      $('.product-summary-top').LoadingOverlay("hide");
     },
   });
 });
