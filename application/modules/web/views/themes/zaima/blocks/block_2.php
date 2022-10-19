@@ -56,9 +56,9 @@
                                         <div class="img">
                                             <a href="<?php echo $prodlink; ?>">
                                                 <?php if (@getimagesize($product->image_thumb) === false) { ?>
-                                                    <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="img-fluid" alt="<?php echo html_escape($product->product_name) ?>">
+                                                    <img style="min-height: 350px;" data-src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="img-fluid" alt="<?php echo html_escape($product->product_name) ?>">
                                                 <?php } else { ?>
-                                                    <img class="img-fluid" src="<?php echo base_url() . $product->image_thumb ?>" alt="<?php echo html_escape($product->product_name) ?>">
+                                                    <img class="img-fluid" style="min-height: 350px;" data-src="<?php echo base_url() . $product->image_thumb ?>" alt="<?php echo html_escape($product->product_name) ?>">
                                                 <?php } ?>
                                             </a>
                                         </div>
@@ -82,9 +82,9 @@
                                             <div class="img">
                                                 <a href="<?php echo $prodlink; ?>">
                                                     <?php if (@getimagesize($product->image_thumb) === false) { ?>
-                                                        <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" alt="image">
+                                                        <img style="min-height: 160px;" data-src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" alt="image">
                                                     <?php } else { ?>
-                                                        <img src="<?php echo base_url() . $product->image_thumb ?>" alt="image">
+                                                        <img style="min-height: 160px;" data-src="<?php echo base_url() . $product->image_thumb ?>" alt="image">
                                                     <?php } ?>
                                                 </a>
                                             </div>

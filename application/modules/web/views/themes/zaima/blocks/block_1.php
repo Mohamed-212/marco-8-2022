@@ -31,9 +31,9 @@
                                 <?php $prodlink =  base_url('/product/' . remove_space($product->product_name) . '/' . $product->product_id) ?>
                                 <a href="<?php echo $prodlink; ?>" class="product-img d-block">
                                     <?php if (@getimagesize($product->image_thumb) === false) { ?>
-                                        <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="media-object img-fluid" alt="image">
+                                        <img style="min-height: 90px;" data-src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="media-object img-fluid" alt="image">
                                     <?php } else { ?>
-                                        <img class="img-fluid" src="<?php echo base_url() . $product->image_thumb ?>" alt="image">
+                                        <img class="img-fluid" style="min-height: 90px;" data-src="<?php echo base_url() . $product->image_thumb ?>" alt="image">
                                     <?php } ?>
                                 </a>
                                 <h3 class="product-name fs-15 font-weight-600 overflow-hidden mt-2">
