@@ -200,8 +200,21 @@ function select_color_variant(product_id, variant_color, default_variant) {
     },
   });
 }
-
 function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr) {
+  var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
+      "css"   : {
+          "border"        : "4px dashed gold",
+          "font-size"     : "40px",
+          "text-align"    : "center",
+          "padding"       : "10px"
+      },
+      "class" : "",
+      "text"  : ""
+  });
+  $('.product-summary-top').LoadingOverlay("show", {
+    image       : "",
+    custom      : customElement
+  });
   // var variant_id = $('[name="select_size1"]:checked').val();
   var sst = parseInt($('#sst').val(), 10);
   var inStockMess = $('#stok').attr('data-stock-in');
@@ -257,15 +270,17 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
         //   // $('#sst').val('1');
         //   // do nothing
         // }
-
+        $('.product-summary-top').LoadingOverlay("hide", true);
         return true;
       } else {
+        
         $('#stock-text').removeClass('text-success').addClass('text-danger').text(outStockMess);
         Swal({
           type: "warning",
           title: display("variant_not_available"),
         });
         $('#product_max_quantity').val(0);
+        $('.product-summary-top').LoadingOverlay("hide", true);
         return false;
       }
     },
@@ -274,6 +289,7 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
         type: "warning",
         title: display("request_failed"),
       });
+      $('.product-summary-top').LoadingOverlay("hide", true);
     },
   });
 }
@@ -309,6 +325,21 @@ function cart_btn(product_id) {
     }
   }
 
+  var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
+      "css"   : {
+          "border"        : "4px dashed gold",
+          "font-size"     : "40px",
+          "text-align"    : "center",
+          "padding"       : "10px"
+      },
+      "class" : "",
+      "text"  : ""
+  });
+  $('.product-summary-top').LoadingOverlay("show", {
+    image       : "",
+    custom      : customElement
+  });
+
   //before add to cart check product stock
   $.ajax({
     type: "POST",
@@ -327,6 +358,7 @@ function cart_btn(product_id) {
           type: "warning",
           title: display("not_enough_product_in_stock"),
         });
+        $('.product-summary-top').LoadingOverlay("hide");
         return false;
       }
       if (data == "yes") {
@@ -342,6 +374,7 @@ function cart_btn(product_id) {
             // variant_color: variant_color,
           },
           success: function (data) {
+            $('.product-summary-top').LoadingOverlay("hide");
             if (data != 1) {
               Swal({
                 type: "warning",
@@ -360,6 +393,7 @@ function cart_btn(product_id) {
               type: "warning",
               title: display("request_failed"),
             });
+            $('.product-summary-top').LoadingOverlay("hide");
           },
         });
       }
@@ -369,6 +403,7 @@ function cart_btn(product_id) {
         type: "warning",
         title: display("request_failed"),
       });
+      $('.product-summary-top').LoadingOverlay("hide");
     },
   });
 }
@@ -1551,6 +1586,20 @@ function comparison_btn(product_id) {
     });
     return false;
   }
+  var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
+      "css"   : {
+          "border"        : "4px dashed gold",
+          "font-size"     : "40px",
+          "text-align"    : "center",
+          "padding"       : "10px"
+      },
+      "class" : "",
+      "text"  : ""
+  });
+  $('.product-summary-top').LoadingOverlay("show", {
+    image       : "",
+    custom      : customElement
+  });
   $.ajax({
     type: "POST",
     async: true,
@@ -1566,12 +1615,14 @@ function comparison_btn(product_id) {
         type: "success",
         title: display("product_added_to_compare"),
       });
+      $('.product-summary-top').LoadingOverlay("hide");
     },
     error: function () {
       Swal({
         type: "warning",
         title: display("request_failed"),
       });
+      $('.product-summary-top').LoadingOverlay("hide");
     },
   });
 }

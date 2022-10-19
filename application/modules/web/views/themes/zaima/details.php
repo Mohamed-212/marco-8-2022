@@ -206,7 +206,7 @@ $theme = $CI->Themes->get_theme();
                 </div>
                 <!-- wrapper -->
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 product-summary-top">
                 <div class="product-summary-content pl-md-4">
                     <div class="product-price-summary">
                         <?php if ($onsale) { ?>
@@ -320,7 +320,7 @@ $theme = $CI->Themes->get_theme();
 
 
 
-                            <div class="product-size mb-3">
+                            <div class="product-size product-color-select mb-3">
 
                                 <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
                                 <?php foreach ($varients as $product) : $vt = $product['color']; ?>
@@ -339,7 +339,7 @@ $theme = $CI->Themes->get_theme();
                                 if ($vitem->variant_type == 'size') {
                         ?>
 
-                                <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
+                                <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="return null;select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
                                 <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded" style="color: #fff !important;
     border: 1px solid var(--primary-color) !important;
     background-color: var(--primary-color) !important;"><?php echo html_escape($vitem->variant_name) ?></span></label>
@@ -353,7 +353,7 @@ $theme = $CI->Themes->get_theme();
                 <?php  }  ?>
                 <!--  /.End of product Size -->
                 </div>
-                <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center')); ?>
+                <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center cart-form-update')); ?>
                 <?php if (!($is_affiliate == 1)) { ?>
                     <div class="num-block skin-2">
                         <div class="num-in d-flex bg-white border mr-2">
@@ -713,8 +713,8 @@ $theme = $CI->Themes->get_theme();
 <input type="hidden" id="product_max_quantity" value="1" />
 <script>
     $(document).ready(function() {
-        // $.LoadingOverlay("show");
-        alert('wwwww');
+        
+        // alert('wwwww');
         $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
         // $('input[name="select_size1"]').attr("checked", 'checked');
     });
