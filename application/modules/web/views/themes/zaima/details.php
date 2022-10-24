@@ -206,102 +206,103 @@ $theme = $CI->Themes->get_theme();
                 </div>
                 <!-- wrapper -->
             </div>
-            <div class="col-md-6 product-summary-top">
-                <div class="product-summary-content pl-md-4">
-                    <div class="product-price-summary">
-                        <?php if ($onsale) { ?>
+            <div class="col-md-6">
+                <div class="product-summary-top">
+                    <div class="product-summary-content pl-md-4">
+                        <div class="product-price-summary">
+                            <?php if ($onsale) { ?>
 
-                            <ins class="fs-29 d-inline-block">
-                                <span class="amount var_amount">
-                                    <?php
+                                <ins class="fs-29 d-inline-block">
+                                    <span class="amount var_amount">
+                                        <?php
 
-                                    if ($target_con_rate > 1) {
-                                        $onsale_price = $onsale_price * $target_con_rate;
-                                        echo (($position1 == 0) ? $currency1 . " " . number_format($onsale_price, 2, '.', ',') : number_format($onsale_price, 2, '.', ',') . " " . $currency1);
-                                    }
-
-                                    if ($target_con_rate <= 1) {
-                                        $onsale_price = $onsale_price * $target_con_rate;
-                                        echo (($position1 == 0) ? $currency1 . " " . number_format($onsale_price, 2, '.', ',') : number_format($onsale_price, 2, '.', ',') . " " . $currency1);
-                                    }
-                                    ?>
-                                </span>
-                                <input type="hidden" id="price" name="price" value="<?php echo html_escape($onsale_price) ?>">
-                            </ins>
-                            <del class="Price-discount fs-14 text-black-50 font-weight-600 pl-1 price_discount">
-                                <span class="amount regular_price">
-                                    <?php echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1); ?>
-                                </span>
-                            </del>
-                            <?php $save_amount =  ($price - $onsale_price);
-                            if ($save_amount > 0) {
-                            ?>
-                                <span class="sale fs-14 font-weight-500 ml-1 price_discount">(-<span class="save_perct"><?php echo ceil((($save_amount / $price) * 100)) ?></span>%)</span>
-                            <?php } ?>
-
-                        <?php } else { ?>
-                            <ins class="fs-29 d-inline-block">
-                                <span class="amount var_amount">
-
-                                    <?php
-                                    if ($isLogIn) {
                                         if ($target_con_rate > 1) {
-                                            $price = $price * $target_con_rate;
-                                            // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                            $onsale_price = $onsale_price * $target_con_rate;
+                                            echo (($position1 == 0) ? $currency1 . " " . number_format($onsale_price, 2, '.', ',') : number_format($onsale_price, 2, '.', ',') . " " . $currency1);
                                         }
 
                                         if ($target_con_rate <= 1) {
-                                            $price = $price * $target_con_rate;
-                                            // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                            $onsale_price = $onsale_price * $target_con_rate;
+                                            echo (($position1 == 0) ? $currency1 . " " . number_format($onsale_price, 2, '.', ',') : number_format($onsale_price, 2, '.', ',') . " " . $currency1);
                                         }
+                                        ?>
+                                    </span>
+                                    <input type="hidden" id="price" name="price" value="<?php echo html_escape($onsale_price) ?>">
+                                </ins>
+                                <del class="Price-discount fs-14 text-black-50 font-weight-600 pl-1 price_discount">
+                                    <span class="amount regular_price">
+                                        <?php echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1); ?>
+                                    </span>
+                                </del>
+                                <?php $save_amount =  ($price - $onsale_price);
+                                if ($save_amount > 0) {
+                                ?>
+                                    <span class="sale fs-14 font-weight-500 ml-1 price_discount">(-<span class="save_perct"><?php echo ceil((($save_amount / $price) * 100)) ?></span>%)</span>
+                                <?php } ?>
 
-                                        $getWholePrice = $this->db->select('product_price')->from('pricing_types_product')->where('product_id', $product_id)->where('pri_type_id', 1)->limit(1)->get()->row();
-                                        echo (($position1 == 0) ? $currency1 . " " . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . " " . $currency1);
-                                    }
-                                    ?>
-                                </span>
-                                <?php if ($isLogIn) : ?>
-                                    <input type="hidden" id="price" name="price" value="<?php echo html_escape($getWholePrice->product_price) ?>">
-                                <?php endif ?>
-                            </ins>
-                        <?php }  ?>
-                    </div>
-                    <ul class="summary-header d-flex flex-wrap align-items-center list-unstyled  border-bottom font-weight-600 pb-2">
-                        <li class="position-relative px-2 px-md-3">
-                            <?php if (!($is_affiliate == 1)) { ?>
-                                <div class="stock">
-                                    <label class="text-dark pr-1 font-weight-500 mb-0"><?php echo display('status') ?>:</label>
-                                    <input type="hidden" value="<?php echo html_escape($stok) ?>" id="stok" data-stock-in="<?php echo display('in_stock'); ?>" data-stock-out="<?php echo display('out_of_stock'); ?>">
-                                    <?php if ($stok > 0) { ?>
-                                        <span id="stock-text">
-                                            <?php echo display('in_stock'); ?>
-                                        </span>
-                                    <?php  } else { ?>
-                                        <span class="text-danger" id="stock-text">
-                                            <?php echo display('out_of_stock'); ?>
-                                        </span>
-                                    <?php } ?>
-                                </div>
-                            <?php } ?>
-                        </li>
-                    </ul>
-                    <div class="short-description">
+                            <?php } else { ?>
+                                <ins class="fs-29 d-inline-block">
+                                    <span class="amount var_amount">
 
-                        <p><?php echo character_limiter(strip_tags($product_details), 200); ?></p>
+                                        <?php
+                                        if ($isLogIn) {
+                                            if ($target_con_rate > 1) {
+                                                $price = $price * $target_con_rate;
+                                                // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                            }
 
-                        <?php
-                        $var_types = [];
-                        if (!empty($variant)) {
-                            $exploded = explode(',', $variant);
-                            $this->db->select('*');
-                            $this->db->from('variant');
-                            $this->db->where_in('variant_id', $exploded);
-                            $this->db->order_by('variant_name', 'asc');
-                            $vresult = $this->db->get()->result();
-                            $var_types = array_column($vresult, 'variant_type');
-                        ?>
+                                            if ($target_con_rate <= 1) {
+                                                $price = $price * $target_con_rate;
+                                                // echo (($position1 == 0) ? $currency1 . " " . number_format($price, 2, '.', ',') : number_format($price, 2, '.', ',') . " " . $currency1);
+                                            }
 
-                            <?php /* if (in_array('color', $var_types)) { ?>
+                                            $getWholePrice = $this->db->select('product_price')->from('pricing_types_product')->where('product_id', $product_id)->where('pri_type_id', 1)->limit(1)->get()->row();
+                                            echo (($position1 == 0) ? $currency1 . " " . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . " " . $currency1);
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php if ($isLogIn) : ?>
+                                        <input type="hidden" id="price" name="price" value="<?php echo html_escape($getWholePrice->product_price) ?>">
+                                    <?php endif ?>
+                                </ins>
+                            <?php }  ?>
+                        </div>
+                        <ul class="summary-header d-flex flex-wrap align-items-center list-unstyled  border-bottom font-weight-600 pb-2">
+                            <li class="position-relative px-2 px-md-3">
+                                <?php if (!($is_affiliate == 1)) { ?>
+                                    <div class="stock">
+                                        <label class="text-dark pr-1 font-weight-500 mb-0"><?php echo display('status') ?>:</label>
+                                        <input type="hidden" value="<?php echo html_escape($stok) ?>" id="stok" data-stock-in="<?php echo display('in_stock'); ?>" data-stock-out="<?php echo display('out_of_stock'); ?>">
+                                        <?php if ($stok > 0) { ?>
+                                            <span id="stock-text">
+                                                <?php echo display('in_stock'); ?>
+                                            </span>
+                                        <?php  } else { ?>
+                                            <span class="text-danger" id="stock-text">
+                                                <?php echo display('out_of_stock'); ?>
+                                            </span>
+                                        <?php } ?>
+                                    </div>
+                                <?php } ?>
+                            </li>
+                        </ul>
+                        <div class="short-description">
+
+                            <p><?php echo character_limiter(strip_tags($product_details), 200); ?></p>
+
+                            <?php
+                            $var_types = [];
+                            if (!empty($variant)) {
+                                $exploded = explode(',', $variant);
+                                $this->db->select('*');
+                                $this->db->from('variant');
+                                $this->db->where_in('variant_id', $exploded);
+                                $this->db->order_by('variant_name', 'asc');
+                                $vresult = $this->db->get()->result();
+                                $var_types = array_column($vresult, 'variant_type');
+                            ?>
+
+                                <?php /* if (in_array('color', $var_types)) { ?>
                                 <div class="product-color mb-3">
                                     <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
                                     <?php
@@ -320,86 +321,87 @@ $theme = $CI->Themes->get_theme();
 
 
 
-                            <div class="product-size product-color-select mb-3">
+                                <div class="product-size product-color-select mb-3">
 
-                                <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
-                                <?php foreach ($varients as $product) : $vt = $product['color']; ?>
-                                    <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?= $product['size_id'] ?>', '<?= $product['size_id'] ?>', '<?= $product['whole_price'] ?>', '<?= (($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1) ?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
-                                    <label class="mr-1" for="id<?php echo html_escape($product['product_id']) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($product['color']) ?></span></label>
-                                <?php endforeach ?>
-                            </div>
+                                    <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
+                                    <?php foreach ($varients as $product) : $vt = $product['color']; ?>
+                                        <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?= $product['size_id'] ?>', '<?= $product['size_id'] ?>', '<?= $product['whole_price'] ?>', '<?= (($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1) ?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
+                                        <label class="mr-1" for="id<?php echo html_escape($product['product_id']) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($product['color']) ?></span></label>
+                                    <?php endforeach ?>
+                                </div>
 
-                    </div>
+                        </div>
 
 
-                    <div class="product-size mb-3">
-                        <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('product_size') ?>:</h5>
-                        <?php
-                            foreach ($vresult as $vitem) {
-                                if ($vitem->variant_type == 'size') {
-                        ?>
+                        <div class="product-size mb-3">
+                            <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('product_size') ?>:</h5>
+                            <?php
+                                foreach ($vresult as $vitem) {
+                                    if ($vitem->variant_type == 'size') {
+                            ?>
 
-                                <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="return null;select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
-                                <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded" style="color: #fff !important;
+                                    <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="return null;select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
+                                    <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded" style="color: #fff !important;
     border: 1px solid var(--primary-color) !important;
     background-color: var(--primary-color) !important;"><?php echo html_escape($vitem->variant_name) ?></span></label>
 
-                        <?php
-                                }
-                            }
-
-                        ?>
-                    </div>
-                <?php  }  ?>
-                <!--  /.End of product Size -->
-                </div>
-                <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center cart-form-update')); ?>
-                <?php if ($isLogIn) : ?>
-                    <?php if (!($is_affiliate == 1)) { ?>
-                        <div class="num-block skin-2">
-                            <div class="num-in d-flex bg-white border mr-2">
-                                <span class="minus position-relative dis reduced"></span>
-                                <input type="text" name="qty" id="sst" class="in-num text-center border-0 qty" value="1" readonly="">
-                                <span class="plus position-relative increase"></span>
-                            </div>
-                        </div>
-                    <?php } ?>
-
-
-                    <a href="javascript:void(0)" id="add_to_cart" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
-                <?php endif ?>
-                <?php
-                if ($is_affiliate == 1) { ?>
-                    <a href="<?php echo html_escape($affiliate_url) ?>" class="btn btn-primary text-uppercase fs-12 font-weight-500 mr-2 color4 color46" target="0">
-                        <?php echo display('buy_now') ?>
-                    </a>
-                <?php } ?>
-                <a href="javascript:void(0)" id="add_to_wish" class="add-wishlist wishlist d-flex align-items-center justify-content-center" data-toggle="tooltip" data-placement="top" title="<?php echo display('wishlist') ?>" name="<?php echo html_escape($product_id) ?>">
-                    <i data-feather="heart"></i>
-                </a>
-                <a href="javascript:void(0)" id="add_to_compare" class="add-wishlist d-flex align-items-center justify-content-center compare-btn" data-toggle="tooltip" data-placement="top" onclick="comparison_btn(<?php echo html_escape($product_id) ?>)" title="<?php echo display('compare') ?>">
-                    <i data-feather="repeat"></i>
-                </a>
-                <?php echo form_close(); ?>
-                <div class="product-meta pt-2 border-top mt-2">
-                    <div class="posted-in mb-1">
-                        <strong class="font-weight-500 mr-1"><?php echo display('category') ?>: </strong>
-                        <a href="<?php echo base_url() . 'category/p/' . remove_space($category_name) . '/' . $category_id; ?>"><?php echo html_escape($category_name); ?></a>
-                    </div>
-                    <?php if (!empty($tag)) { ?>
-                        <div class="tag-as">
-                            <strong class="font-weight-500 mr-1"><?php echo display('tag') ?>: </strong>
                             <?php
-                            rtrim($tag, ',');
-                            $tags = explode(',', $tag);
-                            $i = 1;
-                            foreach ($tags as $tagval) {
-                                echo (($i > 1) ? ',' : '');
-                                $i++ ?>
-                                <a href="javascript:void(0)" class="text-black-50"><?php echo html_escape($tagval); ?></a>
-                            <?php } ?>
+                                    }
+                                }
+
+                            ?>
                         </div>
+                    <?php  }  ?>
+                    <!--  /.End of product Size -->
+                    </div>
+                    <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center cart-form-update')); ?>
+                    <?php if ($isLogIn) : ?>
+                        <?php if (!($is_affiliate == 1)) { ?>
+                            <div class="num-block skin-2">
+                                <div class="num-in d-flex bg-white border mr-2">
+                                    <span class="minus position-relative dis reduced"></span>
+                                    <input type="text" name="qty" id="sst" class="in-num text-center border-0 qty" value="1" readonly="">
+                                    <span class="plus position-relative increase"></span>
+                                </div>
+                            </div>
+                        <?php } ?>
+
+
+                        <a href="javascript:void(0)" id="add_to_cart" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
+                    <?php endif ?>
+                    <?php
+                    if ($is_affiliate == 1) { ?>
+                        <a href="<?php echo html_escape($affiliate_url) ?>" class="btn btn-primary text-uppercase fs-12 font-weight-500 mr-2 color4 color46" target="0">
+                            <?php echo display('buy_now') ?>
+                        </a>
                     <?php } ?>
+                    <a href="javascript:void(0)" id="add_to_wish" class="add-wishlist wishlist d-flex align-items-center justify-content-center" data-toggle="tooltip" data-placement="top" title="<?php echo display('wishlist') ?>" name="<?php echo html_escape($product_id) ?>">
+                        <i data-feather="heart"></i>
+                    </a>
+                    <a href="javascript:void(0)" id="add_to_compare" class="add-wishlist d-flex align-items-center justify-content-center compare-btn" data-toggle="tooltip" data-placement="top" onclick="comparison_btn(<?php echo html_escape($product_id) ?>)" title="<?php echo display('compare') ?>">
+                        <i data-feather="repeat"></i>
+                    </a>
+                    <?php echo form_close(); ?>
+                    <div class="product-meta pt-2 border-top mt-2">
+                        <div class="posted-in mb-1">
+                            <strong class="font-weight-500 mr-1"><?php echo display('category') ?>: </strong>
+                            <a href="<?php echo base_url() . 'category/p/' . remove_space($category_name) . '/' . $category_id; ?>"><?php echo html_escape($category_name); ?></a>
+                        </div>
+                        <?php if (!empty($tag)) { ?>
+                            <div class="tag-as">
+                                <strong class="font-weight-500 mr-1"><?php echo display('tag') ?>: </strong>
+                                <?php
+                                rtrim($tag, ',');
+                                $tags = explode(',', $tag);
+                                $i = 1;
+                                foreach ($tags as $tagval) {
+                                    echo (($i > 1) ? ',' : '');
+                                    $i++ ?>
+                                    <a href="javascript:void(0)" class="text-black-50"><?php echo html_escape($tagval); ?></a>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
         </div>
