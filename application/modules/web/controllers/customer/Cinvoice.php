@@ -61,7 +61,11 @@ class Cinvoice extends MX_Controller
     //Retrive right now inserted data to cretae html
     public function invoice_inserted_data($invoice_id)
     {
-
+        $this->load->library('session');
+        $this->session->set_userdata('customer_page', 'some_value');
+        $content = $this->linvoice->invoice_html_data($invoice_id);
+        $this->template_lib->full_admin_html_view($content);
+        return;
         $invoice_detail = $this->Invoices->retrieve_invoice_html_data($invoice_id);
 
         $shipping_method = $this->Shipping_methods->shipping_method_search_item($invoice_detail[0]['shipping_method']);
