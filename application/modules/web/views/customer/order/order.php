@@ -43,9 +43,9 @@
 
         <div class="row">
             <div class="col-sm-12">
-                <div class="column">
+                <!-- <div class="column">
                   	<a href="<?php echo base_url('customer/order')?>" class="btn btn-info m-b-5 m-r-2"><i class="ti-plus"> </i> <?php echo display('new_order')?></a>
-                </div>
+                </div> -->
             </div>
         </div>
 
