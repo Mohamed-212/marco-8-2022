@@ -73,9 +73,9 @@ $company_info = $CI->Companies->company_list();
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center">
+                    <!-- <div class="d-flex justify-content-center">
                         <div class="signup-section"><?php echo display('dont_have_an_account'); ?> <a href="<?php echo base_url('signup') ?>" class="text-primary color42"><?php echo display('sign_up'); ?></a></div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row mt-5">
                     <div class="col-md-6 form-group">
