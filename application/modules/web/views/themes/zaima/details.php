@@ -354,17 +354,18 @@ $theme = $CI->Themes->get_theme();
                 <!--  /.End of product Size -->
                 </div>
                 <?php echo form_open('#', array('class' => 'cart-row d-flex align-items-center cart-form-update')); ?>
-                <?php if (!($is_affiliate == 1)) { ?>
-                    <div class="num-block skin-2">
-                        <div class="num-in d-flex bg-white border mr-2">
-                            <span class="minus position-relative dis reduced"></span>
-                            <input type="text" name="qty" id="sst" class="in-num text-center border-0 qty" value="1" readonly="">
-                            <span class="plus position-relative increase"></span>
-                        </div>
-                    </div>
-                <?php } ?>
-
                 <?php if ($isLogIn) : ?>
+                    <?php if (!($is_affiliate == 1)) { ?>
+                        <div class="num-block skin-2">
+                            <div class="num-in d-flex bg-white border mr-2">
+                                <span class="minus position-relative dis reduced"></span>
+                                <input type="text" name="qty" id="sst" class="in-num text-center border-0 qty" value="1" readonly="">
+                                <span class="plus position-relative increase"></span>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+
                     <a href="javascript:void(0)" id="add_to_cart" class="btn btn-primary cart-btn text-uppercase fs-12 font-weight-500 mr-2 cart-btn color4 color46" onclick="cart_btn('<?php echo html_escape($product_id) ?>')"><?php echo display('add_to_cart') ?></a>
                 <?php endif ?>
                 <?php
@@ -713,7 +714,7 @@ $theme = $CI->Themes->get_theme();
 <input type="hidden" id="product_max_quantity" value="1" />
 <script>
     $(document).ready(function() {
-        
+
         // alert('wwwww');
         $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
         // $('input[name="select_size1"]').attr("checked", 'checked');
