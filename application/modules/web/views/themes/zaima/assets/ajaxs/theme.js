@@ -217,7 +217,10 @@ function select_color_variant(product_id, variant_color, default_variant) {
     },
   });
 }
+var busy = false;
 function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr) {
+  if (busy) return;
+  busy = true;
   var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
       "css"   : {
           "border"        : "4px dashed gold",
@@ -288,6 +291,7 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
         //   // do nothing
         // }
         $('.product-summary-top').LoadingOverlay("hide", true);
+        busy = false;
         return true;
       } else {
         
@@ -298,6 +302,7 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
         });
         $('#product_max_quantity').val(0);
         $('.product-summary-top').LoadingOverlay("hide", true);
+        busy = false;
         return false;
       }
     },
@@ -307,6 +312,7 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
         title: display("request_failed"),
       });
       $('.product-summary-top').LoadingOverlay("hide", true);
+      busy = false;
     },
   });
 }
