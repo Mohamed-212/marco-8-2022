@@ -46,6 +46,8 @@ class Cqrcode extends MX_Controller
         $company_info = $this->Invoices->retrieve_company();
         $currency_details = $this->Soft_settings->retrieve_currency_info();
 
+        
+
         $data = array(
             'title' => display('print_qrcode'),
             'product_name' => $product_info[0]['product_name'],

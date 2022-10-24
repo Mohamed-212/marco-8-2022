@@ -94,10 +94,10 @@ if (!empty($block_list)) {
 <div class="container mt-1 mb-5">
     <div class="brand-logo owl-carousel owl-theme border-top border-bottom py-4 px-4">
         <?php foreach ($brands as $brand) { ?>
-        <a href="<?php echo base_url() . "brand_product/list/" . $brand['brand_id']; ?>"
+        <a style="min-height: 70px;" href="<?php echo base_url() . "brand_product/list/" . $brand['brand_id']; ?>"
             class="brand-logo_item d-block">
-            <img class="brand-logo_img"
-                src="<?php echo  base_url() . (!empty($brand['brand_image']) ? $brand['brand_image'] : 'assets/img/icons/default.jpg') ?>"
+            <img style="min-height: 70px;" class="brand-logo_img"
+                data-src="<?php echo  base_url() . (!empty($brand['brand_image']) ? $brand['brand_image'] : 'assets/img/icons/default.jpg') ?>"
                 alt="<?php echo html_escape($brand['brand_name']) ?>">
         </a>
         <?php } ?>

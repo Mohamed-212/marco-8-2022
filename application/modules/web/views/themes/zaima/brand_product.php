@@ -96,9 +96,9 @@
                                     <a href="<?php echo base_url('product_details/' . remove_space($product['product_name']) . '/' . $product['product_id']) ?>" class="product-img d-block">
                                         <?php if (@getimagesize($product['image_thumb']) === false) { ?>
 
-                                            <img src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="media-object img-fluid" alt="<?php echo html_escape($product['product_name']) ?>">
+                                            <img data-src="<?php echo base_url() . '/my-assets/image/no-image.jpg' ?>" class="media-object img-fluid" alt="<?php echo html_escape($product['product_name']) ?>">
                                         <?php } else {  ?>
-                                            <img class="img-fluid" src="<?php echo  base_url() . (!empty($product['image_thumb']) ? $product['image_thumb'] : 'assets/img/icons/default.jpg') ?>" alt="<?php echo html_escape($product['product_name']) ?>">
+                                            <img class="img-fluid" data-src="<?php echo  base_url() . (!empty($product['image_thumb']) ? $product['image_thumb'] : 'assets/img/icons/default.jpg') ?>" alt="<?php echo html_escape($product['product_name']) ?>">
                                         <?php } ?>
                                     </a>
                                     <h3 class="product-name fs-15 font-weight-600 overflow-hidden mt-2">
