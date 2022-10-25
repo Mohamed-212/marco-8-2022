@@ -226,7 +226,7 @@
                                         <th class="text-center" width="130"><?php echo display('size') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('available_quantity') ?></th>
                                         <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('rate') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center"><?php echo display('price') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('discount') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('total') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('action') ?></th>
