@@ -388,4 +388,4 @@
     </section>
 </div>
 <!-- Add New Purchase End -->
-<script src="<?php echo MOD_URL . 'dashboard/assets/js/add_purchase_order_form.js'; ?>"></script>
+<script src="<?php echo MOD_URL . 'dashboard/assets/js/edit_purchase_order_form.js'; ?>"></script>
