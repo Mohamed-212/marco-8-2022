@@ -591,6 +591,11 @@ class Cpurchase extends MX_Controller {
 
         $purchase_detail = $this->Purchases->get_purchase_order_by_id($pur_order_id);
 
+        if ($purchase_detail[0]['receive_status']) {
+            redirect(base_url('dashboard/Cpurchase/purchase_order'));
+            return;
+        }
+
         if ($this->form_validation->run() == TRUE) {
 
             $result = $this->Purchases->purchase_order_update($pur_order_id);
