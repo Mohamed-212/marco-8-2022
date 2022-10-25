@@ -39,4 +39,19 @@ class Stock_adjustment_model extends CI_Model {
         }
         return false;
     }
+
+    public function product_adjustment_details($product_id){
+    	$this->db->select('a.*,b.*,c.variant_name,d.variant_name as variant_color,e.unit_short_name');
+    	$this->db->from('stock_adjustment_details a');
+    	$this->db->join('product_information b','b.product_id = a.product_id','left');
+        $this->db->join('variant c','c.variant_id = a.variant_id','left');
+        $this->db->join('variant d','d.variant_id = a.color_variant','left');
+        $this->db->join('unit e','e.unit_id = b.unit','left');
+    	$this->db->where('a.product_id',$product_id);
+    	$query = $this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        return false;
+    }
 }

@@ -1010,6 +1010,8 @@ class Cproduct extends MX_Controller
     //Retrieve Single Item  By Search
     public function product_details($product_id)
     {
+        $this->load->model('dashboard/Stock_adjustment_model');
+
         $this->permission->check_label('manage_product')->read()->redirect();
 
         $product_id = urldecode($product_id);
@@ -1076,6 +1078,9 @@ class Cproduct extends MX_Controller
             ->where('b.product_id', $product_id)
             ->get()->result();
 
+        // stock adjustment data
+        $adjustments = $this->Stock_adjustment_model->product_adjustment_details($product_id); 
+
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_details'),
@@ -1099,6 +1104,7 @@ class Cproduct extends MX_Controller
             'position' => $currency_details[0]['currency_position'],
             'openQuantity' => $openQuantity,
             'pri_types' => $pri_types,
+            'adjustments' => $adjustments,
         );
 
         $content = $this->parser->parse('dashboard/product/product_details', $data, true);

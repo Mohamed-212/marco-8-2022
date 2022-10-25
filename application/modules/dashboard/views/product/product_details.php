@@ -308,6 +308,54 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Stock Adjustment table -->
+		<div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-bd lobidrag">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4><?php echo display('stock_adjustment_details') ?> </h4>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table id="dataTableExample3" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><?php echo display('adjustment_id') ?></th>
+                                        <th><?php echo display('product') ?></th>
+                                        <th><?php echo display('variant') ?></th>
+                                        <!-- <th><?php echo display('color_variant') ?></th> -->
+                                        <th><?php echo display('previous_quantity') ?></th>
+                                        <th><?php echo display('adjustment_quantity') ?></th>
+                                        <th><?php echo display('adjustment_type') ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    if (!empty($adjustments)) {
+                                        foreach ($adjustments as $details) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo html_escape($details['adjustment_id']); ?></td>
+                                        <td><?php echo html_escape($details['product_name']); ?></td>
+                                        <td><?php echo html_escape(@$details['variant_name']); ?></td>
+                                        <!-- <td><?php echo html_escape(@$details['color_variant']); ?></td> -->
+                                        <td><?php echo html_escape(@$details['previous_quantity']); ?></td>
+                                        <td><?php echo html_escape(@$details['adjustment_quantity']); ?></td>
+                                        <td><?php echo html_escape(ucfirst($details['adjustment_type'])); ?></td>
+                                    </tr>
+                                    <?php }
+                                    } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 	</section>
 </div>
 <!-- Product details page end

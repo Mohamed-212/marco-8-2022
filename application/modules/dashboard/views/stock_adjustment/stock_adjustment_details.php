@@ -67,7 +67,7 @@
                                         <th><?php echo display('adjustment_id') ?></th>
                                         <th><?php echo display('product') ?></th>
                                         <th><?php echo display('variant') ?></th>
-                                        <th><?php echo display('color_variant') ?></th>
+                                        <!-- <th><?php echo display('color_variant') ?></th> -->
                                         <th><?php echo display('previous_quantity') ?></th>
                                         <th><?php echo display('adjustment_quantity') ?></th>
                                         <th><?php echo display('adjustment_type') ?></th>
@@ -82,7 +82,7 @@
                                         <td><?php echo html_escape($details['adjustment_id']); ?></td>
                                         <td><?php echo html_escape($details['product_name']); ?></td>
                                         <td><?php echo html_escape(@$details['variant_name']); ?></td>
-                                        <td><?php echo html_escape(@$details['color_variant']); ?></td>
+                                        <!-- <td><?php echo html_escape(@$details['color_variant']); ?></td> -->
                                         <td><?php echo html_escape(@$details['previous_quantity']); ?></td>
                                         <td><?php echo html_escape(@$details['adjustment_quantity']); ?></td>
                                         <td><?php echo html_escape(ucfirst($details['adjustment_type'])); ?></td>
