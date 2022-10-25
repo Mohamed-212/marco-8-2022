@@ -81,8 +81,21 @@
 					<div class="panel-body">
 						<h2><span class="fw_normal"><?php echo display('product_name') ?>: </span><span class="color_005580">{product_name}</span></h2>
 						<h4><span class="fw_normal"><?php echo display('item_code') ?>:</span> <span class="color_005580">{product_model}</span></h4>
-						<h4><span class="fw_normal"><?php echo display('price') ?>:</span> <span class="color_005580">
-								<?php echo (($position == 0) ? "$currency {price}" : "{price} $currency") ?></span></h4>
+						<table class="table">
+							<tr>
+								<th>
+									<span class="fw_normal"><?php echo display('sell_price') ?>:</span> <span class="color_005580">
+										<?php echo (($position == 0) ? "$currency {price}" : "{price} $currency") ?></span>
+								</th>
+								<?php foreach ($pri_types as $pri) : ?>
+									<th>
+										<span class="fw_normal"><?php echo $pri->pri_type_name ?>:</span> <span class="color_005580">
+											<?php echo (($position == 0) ? "$currency {$pri->product_price}" : "{$pri->product_price} $currency") ?></span>
+									</th>
+								<?php endforeach ?>
+							</tr>
+						</table>
+
 						<table class="table">
 							<tr>
 								<th><?php echo display('open_quantity') ?> = <span class="color_red">{openQuantity}</span></th>
@@ -92,7 +105,7 @@
 								<th><?php echo display('stock') ?> = <span class="color_red">{stock}</span></th>
 							</tr>
 						</table>
-						<p class="text-center"><a class="btn btn-success" href="<?php echo base_url('dashboard/Creport/stock_report_store_wise') ?>"><?php echo display('stock_report') . ' ' . display('details'); ?></a></p>
+						<!-- <p class="text-center"><a class="btn btn-success" href="<?php echo base_url('dashboard/Creport/stock_report_store_wise') ?>"><?php echo display('stock_report') . ' ' . display('details'); ?></a></p> -->
 					</div>
 				</div>
 			</div>

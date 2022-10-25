@@ -1070,6 +1070,12 @@ class Cproduct extends MX_Controller
 
         $products_list = $this->Products->product_list();
 
+        $pri_types = $this->db->select('a.pri_type_name, b.product_price')
+            ->from('pricing_types_product b')
+            ->join('pricing_types a', 'a.pri_type_id = b.pri_type_id')
+            ->where('b.product_id', $product_id)
+            ->get()->result();
+
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
             'title' => display('product_details'),
@@ -1092,6 +1098,7 @@ class Cproduct extends MX_Controller
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
             'openQuantity' => $openQuantity,
+            'pri_types' => $pri_types,
         );
 
         $content = $this->parser->parse('dashboard/product/product_details', $data, true);
