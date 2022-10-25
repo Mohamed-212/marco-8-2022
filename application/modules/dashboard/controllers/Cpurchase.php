@@ -1027,4 +1027,8 @@ class Cpurchase extends MX_Controller {
         force_download($file_name, null);
     }
 
+    public function edit_purorder($pur_order_id)
+    {
+        
+    }
 }
