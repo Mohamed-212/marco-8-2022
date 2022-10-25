@@ -180,7 +180,7 @@
 					</div>
 					<div class="panel-body">
 						<div class="table-responsive">
-							<table id="dataTableExample3" class="table table-bordered table-striped table-hover">
+							<table class="table table-bordered table-striped table-hover dataTablePagination">
 								<thead>
 									<tr>
 										<th><?php echo display('date') ?></th>
@@ -251,7 +251,7 @@
 					</div>
 					<div class="panel-body">
 						<div class="table-responsive">
-							<table id="dataTableExample3" class="table table-bordered table-striped table-hover">
+							<table id="dataTableExample44" class="table table-bordered table-striped table-hover dataTablePagination">
 								<thead>
 									<tr>
 										<th><?php echo display('date') ?></th>
