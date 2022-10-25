@@ -148,7 +148,7 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" tabindex="3" class="form-control datepicker" value="<?php echo html_escape($purchase_info[0]['expire_date'] == '0000-00-00' ? $purchase_info[0]['expire_date'] : date('d-m-Y', strtotime($purchase_info[0]['expire_date']))) ?>" name="expire_date" id="expire_date" placeholder="<?php echo display('enter_expire_date'); ?>" required autocomplete="off" />
+                                        <input type="text" tabindex="3" class="form-control datepicker2" value="<?php echo html_escape($purchase_info[0]['expire_date'] == '0000-00-00' ? $purchase_info[0]['expire_date'] : date('d-m-Y', strtotime($purchase_info[0]['expire_date']))) ?>" name="expire_date" id="expire_date" placeholder="<?php echo display('enter_expire_date'); ?>" required autocomplete="off" />
                                     </div>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <input type="text" tabindex="3" class="form-control datepicker" value="<?php echo html_escape(date('d-m-Y', strtotime($purchase_info[0]['supply_date']))) ?>" name="supply_date" id="supply_date" placeholder="<?php echo display('enter_supply_date'); ?>" required autocomplete="off" />
+                                        <input type="text" tabindex="3" class="form-control datepicker2" value="<?php echo html_escape(date('d-m-Y', strtotime($purchase_info[0]['supply_date']))) ?>" name="supply_date" id="supply_date" placeholder="<?php echo display('enter_supply_date'); ?>" required autocomplete="off" />
                                     </div>
                                 </div>
                             </div>
@@ -295,7 +295,7 @@
 
 
                                                 <td class="text-right">
-                                                    <input type="text" id="expiry_date_<?php echo $sl ?>" name="expiry_date[<?php echo $sl ?>]" value="<?php echo html_escape($purchase['expiry_date']) ?>" class="form-control datepicker" placeholder="<?php echo display('enter_expire_date') ?>" />
+                                                    <input type="text" id="expiry_date_<?php echo $sl ?>" name="expiry_date[<?php echo $sl ?>]" value="<?php echo (empty($purchase['expiry_date']) || strlen($purchase['expiry_date']) < 2) ? '' : html_escape(date('d-m-Y', strtotime($purchase['expiry_date']))) ?>" class="form-control datepicker2" placeholder="<?php echo display('enter_expire_date') ?>" />
                                                 </td>
 
 
@@ -389,3 +389,10 @@
 </div>
 <!-- Add New Purchase End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/edit_purchase_order_form.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+    });
+</script>
