@@ -1079,7 +1079,7 @@ class Cproduct extends MX_Controller
             ->get()->result();
 
         // stock adjustment data
-        $adjustments = $this->Stock_adjustment_model->product_adjustment_details($product_id); 
+        $adjustments = $this->Stock_adjustment_model->product_adjustment_details($product_id);
 
         $currency_details = $this->Soft_settings->retrieve_currency_info();
         $data = array(
@@ -2869,5 +2869,72 @@ class Cproduct extends MX_Controller
         $this->Products->copy_products_to_website_products();
 
         redirect('dashboard/Cproduct/manage_product/');
+    }
+
+    public function clearJsonFiles()
+    {
+        // products json file
+        $this->db->select('*');
+        $this->db->from('product_information');
+        $this->db->where('status', 1);
+        $query = $this->db->get();
+        foreach ($query->result() as $row) {
+            //$json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
+            $json_product[] = array('label' => $row->product_name, 'value' => $row->product_id);
+        }
+        $cache_file = './my-assets/js/admin_js/json/product.json';
+        $productList = json_encode($json_product);
+        file_put_contents($cache_file, $productList);
+
+        // customers cached json file
+        $this->db->select('*');
+        $this->db->from('customer_information');
+        $this->db->order_by('customer_name', 'asc');
+        $query = $this->db->get();
+        foreach ($query->result() as $row) {
+            $json_customer[] = array('label' => $row->customer_name . (!empty($row->customer_mobile) ? ' (' . $row->customer_mobile . ')' : ''), 'value' => $row->customer_id);
+        }
+        $cache_file = './my-assets/js/admin_js/json/customer.json';
+        $customerList = json_encode($json_customer);
+        file_put_contents($cache_file, $customerList);
+
+        // users cached json file
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('status', 1);
+
+        $query = $this->db->get();
+        foreach ($query->result() as $row) {
+            $json_product[] = array('label' => $row->first_name, 'value' => $row->user_id);
+        }
+        $cache_file = './my-assets/js/admin_js/json/user.json';
+        $productList = json_encode($json_product);
+        file_put_contents($cache_file, $productList);
+
+        // supplier cached json file
+        $this->db->select('*');
+        $this->db->from('supplier_information');
+        $this->db->where('status', 1);
+        $query = $this->db->get();
+        foreach ($query->result() as $row) {
+            $json_product[] = array('label' => $row->supplier_name, 'value' => $row->supplier_id);
+        }
+        $cache_file = './my-assets/js/admin_js/json/supplier.json';
+        $productList = json_encode($json_product);
+        file_put_contents($cache_file, $productList);
+
+        // company cached json file
+        $this->db->select('*');
+		$this->db->from('company_information');
+		$this->db->where('status',1);
+		$query = $this->db->get();
+		foreach ($query->result() as $row) {
+			$json_product[] = array('label'=>$row->company_name,'value'=>$row->company_id);
+		}
+		$cache_file = './my-assets/js/admin_js/json/company.json';
+		$productList = json_encode($json_product);
+		file_put_contents($cache_file,$productList);
+
+        redirect(base_url() . '/Admin_dashboard');
     }
 }
