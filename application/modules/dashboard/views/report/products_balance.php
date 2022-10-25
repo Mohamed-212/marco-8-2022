@@ -119,7 +119,7 @@
 					</div>
 					<div class="panel-body">
 						<div class="table-responsive mt_10">
-							<table class="table table-bordered table-striped table-hover stripe" id="example">
+							<table class="table table-bordered table-striped table-hover stripe dataTablePagination" id="example">
 								<style>
 									thead tr {
 										text-align: center;
