@@ -170,7 +170,7 @@
 <!--                        href="--><?php //echo base_url('dashboard/Cproduct/add_product_csv') ?><!--">--><?php //echo display('import_product_csv') ?><!--</a>-->
 <!--                </li>-->
 <!--                --><?php //} ?>
-               <?php if ($this->permission->check_label('import_product_excel')->access()) { ?>
+               <?php if ($this->permission->check_label('add_product')->access()) { ?>
                 <li class="<?php echo (($this->uri->segment(3) == 'product_excel_import' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Cproduct/product_excel_import') ?>"><?php echo display('import_product_excel') ?></a>
