@@ -2393,6 +2393,11 @@ class Cproduct extends MX_Controller
                     $product_color = null;
                 }
 
+                if ($category_id != 'ACCESSORIES' && empty($product_color)) {
+                    $product_color = 'Default';
+                    $product_model .= $product_color;
+                } 
+
                 // echo "<pre>";var_dump($variants);exit;
 
                 //GET BRAND NAME
