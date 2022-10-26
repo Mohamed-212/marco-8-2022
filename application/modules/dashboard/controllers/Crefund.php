@@ -417,7 +417,7 @@ class Crefund extends MX_Controller {
                 );
                 $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
 
-                if ($filter['payment_id'] != "") {
+                if ($filter['payment_id'] != "" && $this->input->get('payment_type', TRUE) == 1) {
                     $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
                     $bank_credit = array(
                         'fy_id' => $find_active_fiscal_year->id,
