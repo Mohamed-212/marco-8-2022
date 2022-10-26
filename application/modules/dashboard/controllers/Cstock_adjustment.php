@@ -58,7 +58,7 @@ class Cstock_adjustment extends MX_Controller
         } else {
             // stock_adjustment_table info for insertion
             $store_id          = $this->input->post('store_id', TRUE);
-            $date              = $this->input->post('date', TRUE);
+            $date              = date('Y-m-d', strtotime($this->input->post('date', TRUE)));
             $adjustment_details = $this->input->post('adjustment_details', TRUE);
             $created_by        = $this->session->userdata('user_id');
             $data = array(
