@@ -1039,8 +1039,12 @@ class Cproduct extends MX_Controller
                 $salesData[$k]['final_date'] = date('d-m-Y', strtotime($salesData[$k]['date_time']));
                 $totalSales = ($totalSales + $salesData[$k]['t_qty']);
                 $totaSalesAmt = ($totaSalesAmt + $salesData[$k]['total_price']);
+                $salesData[$k]['item_discount'] = round(((float)$salesData[$k]['invoice_discount'] * (float)$salesData[$k]['quantity']) + ((float)$salesData[$k]['discount'] * (float)$salesData[$k]['quantity']), 2);
+                $salesData[$k]['total_price_after_discount'] = round(((float)$salesData[$k]['total_price'] + ((float)$salesData[$k]['discount'] * (float)$salesData[$k]['quantity'])) - (float)$salesData[$k]['item_discount'], 2);
             }
         }
+
+        // echo "<pre>";print_r($salesData);exit;
 
         if (!empty($returnData)) {
             foreach ($returnData as $k => $v) {

@@ -209,8 +209,8 @@
 											<td>{variant_name}</td>
 											<td>{quantity}</td>
 											<td> <?php echo (($position == 0) ? "$currency {rate}" : "{rate} $currency") ?></td>
-											<td> <?php echo (($position == 0) ? "$currency {discount}" : "{discount} $currency") ?></td>
-											<td class="text-right"> <?php echo (($position == 0) ? "$currency {total_price}" : "{total_price} $currency") ?></td>
+											<td> <?php echo (($position == 0) ? "$currency {item_discount}" : "{item_discount} $currency") ?></td>
+											<td class="text-right"> <?php echo (($position == 0) ? "$currency {total_price_after_discount}" : "{total_price_after_discount} $currency") ?></td>
 										</tr>
 										{/salesData}
 									<?php } ?>
