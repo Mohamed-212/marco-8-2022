@@ -2929,16 +2929,34 @@ class Cproduct extends MX_Controller
 
         // company cached json file
         $this->db->select('*');
-		$this->db->from('company_information');
-		$this->db->where('status',1);
-		$query = $this->db->get();
-		foreach ($query->result() as $row) {
-			$json_product[] = array('label'=>$row->company_name,'value'=>$row->company_id);
-		}
-		$cache_file = './my-assets/js/admin_js/json/company.json';
-		$productList = json_encode($json_product);
-		file_put_contents($cache_file,$productList);
+        $this->db->from('company_information');
+        $this->db->where('status', 1);
+        $query = $this->db->get();
+        foreach ($query->result() as $row) {
+            $json_product[] = array('label' => $row->company_name, 'value' => $row->company_id);
+        }
+        $cache_file = './my-assets/js/admin_js/json/company.json';
+        $productList = json_encode($json_product);
+        file_put_contents($cache_file, $productList);
 
         redirect(base_url() . '/Admin_dashboard');
+    }
+
+    public function fix_products_color()
+    {
+        $products = $this->db->select('*')
+            ->from('product_information')
+            // ->where('product_color IS NULL',null, false)
+            ->where("substring_index(product_model, '-', -1) = ''", null, false)
+            ->get()->result();
+
+        foreach ($products as $prod) {
+            $defaultColor = 'Default';
+            $this->db->set('product_color', $defaultColor)
+                ->set('product_model', trim($prod->product_model) . ' ' . $defaultColor)
+                ->set('product_name', trim($prod->product_name) . ' ' . $defaultColor)
+                ->where('product_id', $prod->product_id)
+                ->update('product_information');
+        }
     }
 }
