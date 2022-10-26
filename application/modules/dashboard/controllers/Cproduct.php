@@ -1080,6 +1080,7 @@ class Cproduct extends MX_Controller
             ->from('pricing_types_product b')
             ->join('pricing_types a', 'a.pri_type_id = b.pri_type_id')
             ->where('b.product_id', $product_id)
+            ->limit(2)
             ->get()->result();
 
         // stock adjustment data
