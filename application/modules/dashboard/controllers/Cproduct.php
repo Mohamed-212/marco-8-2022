@@ -2367,6 +2367,11 @@ class Cproduct extends MX_Controller
         $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
         $voucher_date      = date('Y-m-d H:i:s');
         $store_id = "SDMQ4TIBSH6LAJ1";
+        if ($datacount > 500) {
+            $this->session->set_userdata(array('error_message' => display('excel_sheet_max_num')));
+            redirect(base_url() . '/dashboard/Cproduct/product_excel_import');
+            return;
+        }
         if ($datacount > 1) {
             // echo "<pre>";print_r($sheetdata);exit;
             for ($i = 1; $i < $datacount; $i++) {
