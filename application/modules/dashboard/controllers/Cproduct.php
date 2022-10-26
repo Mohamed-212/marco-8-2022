@@ -1873,7 +1873,7 @@ class Cproduct extends MX_Controller
 
     public function product_excel_import()
     {
-        $this->permission->check_label('import_product_excel')->read()->redirect();
+        // $this->permission->check_label('add_product')->read()->redirect();
         $data = array(
             'title' => display('import_product_excel')
         );
