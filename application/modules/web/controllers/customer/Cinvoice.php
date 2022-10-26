@@ -64,7 +64,10 @@ class Cinvoice extends MX_Controller
         $this->load->library('session');
         $this->session->set_userdata('customer_page', 'some_value');
         $content = $this->linvoice->invoice_html_data($invoice_id);
-        $this->template_lib->full_admin_html_view($content);
+        // $this->template_lib->full_admin_html_view($content);
+        $data['module'] = "web";
+        $data['page'] = "customer/invoice/invoice_html";
+        $this->parser->parse('customer/customer_html_template', $data);
         return;
         $invoice_detail = $this->Invoices->retrieve_invoice_html_data($invoice_id);
 

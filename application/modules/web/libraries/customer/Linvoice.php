@@ -213,7 +213,7 @@ class Linvoice {
 		$data['emp_name'] = $emp_name;
 		$data['emp_id'] = $emp_id;
 		
-		$chapterList = $CI->parser->parse('dashboard/invoice/invoice_html',$data,true);
+		$chapterList = $CI->parser->parse('web/customer/invoice/invoice_html',$data,true);
 		return $chapterList;
 	}
 }
