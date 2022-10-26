@@ -93,6 +93,20 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group row">
+                                        <label for="payment_type" class="col-sm-4 col-form-label"><?php echo display('payment_type') ?>
+                                            <i class="text-danger">*</i></label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control" name="payment_type" id="payment_type">
+                                                <option value="1" selected><?= display('bank_list') ?></option>
+                                                <option value="2"><?= display('customer_balance') ?></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6" id="bank_list_container">
+                                    <div class="form-group row">
                                         <label for="payment_id" class="col-sm-4 col-form-label"><?php echo display('bank_list') ?>
                                             <i class="text-danger">*</i></label>
                                         <div class="col-sm-8">
@@ -155,39 +169,20 @@
     $(document).ready(function() {
         $(document).on('change', '#invoice_no', function() {
             var val = $(this).val();
-            
-            // alert(val);
             $('option#invid').each(function(inx, el) {
                 if ($(this).val() == val) {
                     $('#invoice_id').val($(this).attr('data-invoice-id'));
                 }
             });
-            // if (!val) {
-            //     return;
-            // }
+        });
+        $(document).on('change', '#payment_type', function() {
+            var val = $(this).val();
 
-            // var csrf_test_name = $('#CSRF_TOKEN').val();
-            // // var opts = "";
-            // // $.ajax({
-            // //     url: base_url + 'dashboard/Crefund/get_invoice_by_customer',
-            // //     method: 'post',
-            // //     dataType: 'json',
-            // //     data: {
-            // //         customer_id: val,
-            // //         csrf_test_name: csrf_test_name,
-            // //     },
-            // //     success: function(data) {
-            // //         for (i = 0; i < data.length; i++) {
-            // //             console.log(data[i]['product_name']);
-            // //             opts +=
-            // //                 "<option value='" +
-            // //                 data[i]['product_id'] +
-            // //                 "'>" +
-            // //                 data[i]['product_name'] +
-            // //                 '</option>';
-            // //         }
-            // //     },
-            // // });
+            if (val == 1) {
+                $('#bank_list_container').removeClass('hidden');
+            } else {
+                $('#bank_list_container').addClass('hidden');
+            }
         });
     });
 </script>
