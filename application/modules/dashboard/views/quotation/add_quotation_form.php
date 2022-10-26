@@ -336,7 +336,7 @@
                                                                                                             ?>
                                         <!--</th>-->
                                         <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('rate') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center"><?php echo display('price') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('discount') ?> </th>
                                         <th class="text-center"><?php echo display('total') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('action') ?></th>

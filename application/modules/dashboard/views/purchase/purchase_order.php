@@ -118,7 +118,10 @@
 										</td>
 										<td>
 											<center>
-												<a href="<?php echo base_url().'dashboard/Cpurchase/purchase_order_print/'.$purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+											<?php if (!$purchase['receive_status']) { ?>
+												<a href="<?php echo base_url().'dashboard/Cpurchase/edit_purchase_order/'.$purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('edit_purorder') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+											<?php } ?>
+												<a href="<?php echo base_url().'dashboard/Cpurchase/manage_purorder/view/'.$purchase['pur_order_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
 											<?php if($this->permission->check_label('purchase_order')->update()->access()){ 
 												if($purchase['receive_status'] != '1'){
 											?>

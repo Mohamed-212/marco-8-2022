@@ -118,6 +118,10 @@ class Cstock_opening extends MX_Controller
                 $sub_total_price   = $this->input->post('sub_total_price', TRUE);
                 $grand_total_price = $this->input->post('grand_total_price', TRUE);
 
+                if (!empty($voucher_date) && strlen($voucher_date) > 2) {
+                    $voucher_date = date('Y-m-d', strtotime($voucher_date));
+                }
+
                 //Variant id required check
 //                $result = array();
 //                foreach ($p_id as $k => $v) {
@@ -135,6 +139,9 @@ class Cstock_opening extends MX_Controller
                     $product_id       = $p_id[$i];
                     $batch_no         = $batch[$i];
                     $expiry_date      = $expiry[$i];
+                    if (!empty($expiry_date) && strlen($expiry_date) > 2) {
+                        $expiry_date = date('Y-m-d', strtotime($expiry_date));
+                    }
                     $total_price      = $t_price[$i];
                     $variant          = $variant_id[$i];
                     $variant_color    = $color_variant[$i];

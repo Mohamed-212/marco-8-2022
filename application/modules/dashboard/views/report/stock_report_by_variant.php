@@ -32,7 +32,7 @@
             <div class="panel-body">
                 <div id="printableArea" class="ml_2">
                     <div class="table-responsive mt_10">
-                        <table id="" class="table table-bordered table-striped table-hover">
+                        <table id="" class="table table-bordered table-striped table-hover dataTablePagination">
                             <thead>
                             <tr>
                                 <th class="text-center"><?php echo display('product_name') ?></th>

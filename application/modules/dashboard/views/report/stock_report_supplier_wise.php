@@ -106,7 +106,7 @@
 								}
 							?>
 			                <div class="table-responsive mt_10">
-			                    <table id="" class="table table-bordered table-striped table-hover">
+			                    <table id="" class="table table-bordered table-striped table-hover dataTablePagination">
 			                        <thead>
 										<tr>
 											<th class="text-center"><?php echo display('sl') ?></th>

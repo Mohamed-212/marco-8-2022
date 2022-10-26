@@ -98,7 +98,7 @@
                                 <h4> <?php echo display('print_date') ?>: <?php echo date("d/m/Y h:i:s"); ?> </h4>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover">
+                                <table class="table table-bordered table-striped table-hover dataTablePagination">
                                     <thead>
                                         <tr>
                                             <th><?php echo display('sales_date') ?></th>

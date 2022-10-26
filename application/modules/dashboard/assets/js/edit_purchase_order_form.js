@@ -14,7 +14,7 @@ function bank_info_show(payment_type) {
 }
 
 //Product purchase or list
-function product_pur_or_list(sl) {
+function product_pur_or_list_old(sl) {
     var supplier_id = $("#supplier_id").val();
     var product_name = $("#product_name_" + sl).val();
 
@@ -91,6 +91,93 @@ function product_pur_or_list(sl) {
     });
 }
 
+function product_pur_or_list(sl) {
+    var supplier_id = $("#supplier_id").val();
+    var currency_id = $("#currency_id").val();
+    var product_name = $("#product_name_" + sl).val();
+
+    //Supplier id existing check
+    if (supplier_id == 0) {
+        alert(display("please_select_supplier"));
+        $("#product_name_" + sl).val("");
+        return false;
+    }
+
+    if (currency_id == 0) {
+        alert("Please Select Currency");
+        $("#product_name_" + sl).val("");
+        return false;
+    }
+
+    // Auto complete ajax
+    var options = {
+        minLength: 0,
+        source: function (request, response) {
+            $.ajax({
+                url: base_url + "dashboard/Cpurchase/product_search_by_supplier",
+                method: "post",
+                dataType: "json",
+                data: {
+                    csrf_test_name: csrf_test_name,
+                    term: request.term,
+                    supplier_id: $("#supplier_id").val(),
+                    product_name: product_name,
+                },
+                success: function (data) {
+                    response(data);
+                },
+            });
+        },
+        focus: function (event, ui) {
+            $(this).val(ui.item.label);
+            return false;
+        },
+        select: function (event, ui) {
+            $(this)
+                    .parent()
+                    .parent()
+                    .find(".autocomplete_hidden_value")
+                    .val(ui.item.value);
+            var sl = $(this).parent().parent().find(".sl").val();
+            var id = ui.item.value;
+            var store_id_tt = $("#store_id").val();
+            var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id + "&store_id=" + store_id_tt;
+            var avl_qntt = "avl_qntt_" + sl;
+            var price_item = "price_item_" + sl;
+            var price_item2 = "price_item2_" + sl;
+            var variant_id = "variant_id_" + sl;
+            var color_variant = "color_variant_" + sl;
+            var color = "color" + sl;
+            var size = "size" + sl;
+            $.ajax({
+                type: "POST",
+                url: base_url + "dashboard/Cstore/retrieve_product_data",
+                data: dataString,
+                cache: false,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    // $("#" + price_item).val(obj.supplier_price);
+                    $("#" + price_item).val(0);
+                    $("#" + price_item2).val(0);
+                    $("#" + avl_qntt).val(obj.total_product);
+                    $("#" + variant_id).html(obj.variant);
+                    $("#" + color_variant)
+                            .empty()
+                            .append(obj.variant_color);
+                    $("#" + size).val(obj.size);
+                    $("#" + color).val(obj.color);
+                },
+            });
+
+            $(this).unbind("change");
+            return false;
+        },
+    };
+    $("body").on("keydown.autocomplete", ".product_name", function () {
+        $(this).autocomplete(options);
+    });
+}
+
 // Counts and limit for purchase order
 var rows = $("#purchaseTable tbody tr").length;
 var count = rows + 1;
@@ -131,7 +218,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="size' +
                 count +
-                '" value=""></td><td class="text-center"><div><select name="color_variant[' +
+                '" value=""></td><td class="text-center"><div style="display: none;"><select name="color_variant[' +
                 count +
                 ']" id="color_variant_' +
                 count +

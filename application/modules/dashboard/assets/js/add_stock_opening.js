@@ -105,13 +105,13 @@ function addPurchaseOrderField(divName) {
       count +
       '"></td><td class="text-center"><div class="variant_id_div"><select name="variant_id[]" id="variant_id_' +
       count +
-      '" class="form-control variant_id width_100p" required=""><option value=""></option></select></div><div><select name="color_variant[]" id="color_variant_' +
+      '" class="form-control variant_id width_100p" required=""><option value=""></option></select></div><div style="display: none;"><select name="color_variant[]" id="color_variant_' +
       count +
-      '" class="form-control color_variant width_100p" ><option value=""></option></select></div></td><td class="text-right"><input type="text" id="batch_no_' +
+      '" class="form-control color_variant width_100p" ><option value=""></option></select></div></td><td style="display: none;" class="text-right"><input type="text" id="batch_no_' +
       count +
-      '" name="batch_no[]" required class="form-control text-right" placeholder="0" readonly /></td><td class="text-right"><input type="text" id="expiry_date_' +
+      '" name="batch_no[]" required class="form-control text-right" placeholder="0" readonly /></td><td style="display: none;" class="text-right"><input type="text" id="expiry_date_' +
       count +
-      '" name="expiry_date[]" class="form-control datepicker" placeholder="' +
+      '" name="expiry_date[]" class="form-control datepicker2" placeholder="' +
       display("enter_expire_date") +
       '"/></td><td class="text-right"><input type="number" id="avl_qntt_' +
       count +

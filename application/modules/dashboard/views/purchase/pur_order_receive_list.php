@@ -87,7 +87,7 @@
                                             <tr>
                                                 <td><?php echo $i++; ?></td>
                                                 <td>
-                                                    <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view/' . $purchase['pur_order_id']; ?>">
+                                                    <a href="<?php echo base_url().'dashboard/Cpurchase/manage_purorder/view/'.$purchase['pur_order_id']; ?>">
                                                         <?php echo html_escape($purchase['pur_order_no']) ?><i class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                                     </a>
                                                 </td>
@@ -121,7 +121,7 @@
                                         <center>
                                             <?php if ($this->permission->check_label('receive_item')->update()->access()) { ?>
                                                 <?php if (!$purchase['receive_status']) { ?>
-                                                    <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/view/' . $purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                                    <a href="<?php echo base_url().'dashboard/Cpurchase/manage_purorder/view/'.$purchase['pur_order_id']; ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('view_details') ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
 
                                                     <a href="<?php echo base_url() . 'dashboard/Cpurchase/manage_purorder/receive/' . $purchase['pur_order_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('receive_item') ?>"><i class="ti-plus"> </i></a>
                                                 <?php } ?>
