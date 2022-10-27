@@ -127,8 +127,9 @@
                             </div>
                         </div>
                         <?php echo form_close() ?>
+                    </div>
 
-
+                    <div class="panel-body mt-5">
                         <div class="table-responsive mt_10">
                             <table class="table table-bordered table-hover dataTablePagination" id="normalinvoice">
                                 <thead>
@@ -145,7 +146,7 @@
                                 <tbody id="addinvoiceItem">
                                     <?php foreach ($invoices as $inx => $inv) : ?>
                                         <tr>
-                                        <?php echo form_open(base_url() . '/dashboard/Crefund/new_return', ['method' => 'GET', 'class' => 'form-vertical new_return', 'id' => 'validate', 'name' => 'insert_invoice']) ?>
+                                            <?php echo form_open(base_url() . '/dashboard/Crefund/new_return', ['class' => 'form-vertical new_return', 'id' => 'validate', 'name' => 'insert_invoice']) ?>
                                             <input type="hidden" hidden name="customer_id" value="<?= $customer_id ?>" />
                                             <input type="hidden" hidden name="product_id" value="<?= $product_id ?>" />
                                             <input type="hidden" hidden name="invoice_no" value="<?= $inv->invoice ?>" />
@@ -175,8 +176,8 @@
                                             </td>
                                             <td>
                                                 <select class='form-control' id='price_type_<?= $inx + 1 ?>' required='required' name='price_type'>
-                                                    <option value='0'><?= display('sell_price') ?></option>
-                                                    <option value='1'><?= display('with_cases_price') ?></option>
+                                                    <option value='0' <?= $inv->rate != $inv->price ?: 'selected' ?>><?= display('sell_price') ?></option>
+                                                    <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
                                                 </select>
                                             </td>
                                             <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' value='0' max='<?= $inv->ava_quantity ?>' name='quantity'></td>
@@ -185,9 +186,9 @@
                                                 <button type="submit" class="btn btn-primary"><?= display('submit') ?></button>
                                             </td>
                                             <?php echo form_close() ?>
-                                        
+
                                         </tr>
-                                        <?php endforeach ?>
+                                    <?php endforeach ?>
                                 </tbody>
                                 <tfoot>
                                 </tfoot>
@@ -197,13 +198,10 @@
                             </div>
                             <!-- </form> -->
                         </div>
-                        <!-- view -->
-
-
-
                     </div>
-
-
+                </div>
+            </div>
+        </div>
     </section>
 </div>
 <!-- Invoice Report End -->

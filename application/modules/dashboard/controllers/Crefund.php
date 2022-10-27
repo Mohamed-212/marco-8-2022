@@ -147,13 +147,14 @@ class Crefund extends MX_Controller
     {
         $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
         $filter = array(
-            'invoice_no' =>  $this->input->get('invoice_no', TRUE),
-            'invoice_id' =>  $this->input->get('invoice_id', TRUE),
-            'product_id' =>  $this->input->get('product_id', TRUE),
-            'variant_id' =>  $this->input->get('variant_id', TRUE),
-            'status' =>  $this->input->get('status', TRUE),
-            'quantity' =>  $this->input->get('quantity', TRUE),
-            'payment_id' =>  $this->input->get('payment_id', TRUE),
+            'invoice_no' =>  $this->input->post('invoice_no', TRUE),
+            'invoice_id' =>  $this->input->post('invoice_id', TRUE),
+            'product_id' =>  $this->input->post('product_id', TRUE),
+            'variant_id' =>  $this->input->post('variant_id', TRUE),
+            'status' =>  $this->input->post('status', TRUE),
+            'quantity' =>  $this->input->post('quantity', TRUE),
+            'payment_id' =>  $this->input->post('payment_id', TRUE),
+            'price_type' =>  $this->input->post('price_type', TRUE),
         );
 
         if ($filter['quantity'] < 1) {
@@ -166,298 +167,316 @@ class Crefund extends MX_Controller
         // $result = $this->db->query($sql);
         // $customer_id  = $result->result_array();
         // $customer_id  = $customer_id[0]['customer_id'];
-        $customer_id = $this->input->get('customer_id', TRUE);
+        $customer_id = $this->input->post('customer_id', TRUE);
 
         $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
 
         $return_invoice_id = generator(15);
 
-        echo "<pre>"; 
+        // echo "<pre>"; 
         // var_dump($customer_head, $filter);exit;
         //get customer headcode
         // for ($j = 0; $j < count($filter['product_id']); $j++) {
-            $j = 0;
-            if ($filter['quantity'] > 0) {
-                // echo $filter['quantity'];
-                // dd($filter['quantity']);
-                // get invoice details record 
-                $sql = "select I.* from invoice_details I where I.variant_id ='" . $filter['variant_id'] . "' and I.product_id ='" . $filter['product_id'] . "' and I.invoice_id ='" . $filter['invoice_id'] . "';";
-                $result = $this->db->query($sql);
-                $invoice_details  = $result->result_array();
+        $j = 0;
+        if ($filter['quantity'] > 0) {
+            // echo $filter['quantity'];
+            // dd($filter['quantity']);
+            // get invoice details record 
+            $sql = "select I.* from invoice_details I where I.variant_id ='" . $filter['variant_id'] . "' and I.product_id ='" . $filter['product_id'] . "' and I.invoice_id ='" . $filter['invoice_id'] . "';";
+            $result = $this->db->query($sql);
+            $invoice_details  = $result->result_array();
 
-                $this->db->select('*');
-                $this->db->from('assembly_products');
-                $this->db->where('parent_product_id', $filter['product_id']);
-                $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
-                $query = $this->db->get();
-                $product_list = $query->result();
+            $this->db->select('*');
+            $this->db->from('assembly_products');
+            $this->db->where('parent_product_id', $filter['product_id']);
+            $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
+            $query = $this->db->get();
+            $product_list = $query->result();
 
-                if ($filter['status'] == 0) //fit
-                {
-                    if (!empty($product_list)) {
-                        foreach ($product_list as $product) {
-                            $sql = "update invoice_stock_tbl set quantity=quantity-" . $filter['quantity'] . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $product['product_id'] . "';";
-                            $result = $this->db->query($sql);
-                        }
-                    } else {
-                        // update stock
-                        $sql = "update invoice_stock_tbl set quantity=quantity-" . $filter['quantity'] . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $invoice_details[0]['product_id'] . "';";
+            if ($filter['status'] == 0) //fit
+            {
+                if (!empty($product_list)) {
+                    foreach ($product_list as $product) {
+                        $sql = "update invoice_stock_tbl set quantity=quantity-" . $filter['quantity'] . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $product['product_id'] . "';";
                         $result = $this->db->query($sql);
                     }
-                    // echo json_encode($sql);
                 } else {
-                    if (!empty($product_list)) {
-                        foreach ($product_list as $product) {
-                            $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $filter['invoice_id'] . "','" . $product['product_id'] . "','" . $filter['variant_id'] . "'," . $filter['quantity'] . "," . $filter['status'] . ")";
-                            $result = $this->db->query($sql);
-                        }
-                    } else {
-                        $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $filter['invoice_id'] . "','" . $filter['product_id'] . "','" . $filter['variant_id'] . "'," . $filter['quantity'] . "," . $filter['status'] . ")";
-                        $result = $this->db->query($sql);
-                    }
-                }
-
-                //update invoice_details
-                $sql = "update invoice_details set return_quantity= return_quantity+" . $filter['quantity'] . " where invoice_details_id='" . $invoice_details[0]['invoice_details_id'] . "';";
-                $result = $this->db->query($sql);
-
-                //invoice
-                $sql = "select I.* from invoice I where I.invoice_id ='" . $filter['invoice_id'] . "';";
-                $result = $this->db->query($sql);
-                $invoice  = $result->result_array();
-
-                //acc_transaction
-                $receive_by = $this->session->userdata('user_id');
-                //calc total price of returned qunty of product
-                $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
-                $total_discount = $invoice_details[0]['discount'] * $filter['quantity'];
-                $total_discount += $invoice_details[0]['invoice_discount'] * $filter['quantity'];
-                $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $filter['quantity'])) - $total_discount;
-                $total_return_without_discount = $total_return + $total_discount;
-
-                //total vat
-                $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'])->get()->row();
-                if (!empty($i_vat) && $invoice[0]['is_quotation'] == 0) {
-                    $tota_vat = ($product_price * ($i_vat->tax_percentage / 100)) * $filter['quantity'];
-                } else {
-                    $tota_vat = 0;
-                }
-                $createdate = date('Y-m-d H:i:s');
-                // total supplier price
-                $cogs_price = $invoice_details[0]['supplier_rate'] * $filter['quantity'];
-                $bank_return = $total_return + $tota_vat;
-                //return installment
-                if ($invoice[0]['is_installment']) {
-                    $total_installment_return = $total_return + $tota_vat;
-                    $temp = 0;
-                    $return = 0;
-                    $sql = "select * from invoice_installment where invoice_id ='" . $filter['invoice_id'] . "';";
+                    // update stock
+                    $sql = "update invoice_stock_tbl set quantity=quantity-" . $filter['quantity'] . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $invoice_details[0]['product_id'] . "';";
                     $result = $this->db->query($sql);
-                    $invoice_installment  = $result->result_array();
-                    $invoice_installment  = array_reverse($invoice_installment);
-
-                    for ($i = 0; $i < count($invoice_installment); $i++) {
-                        $temp += $invoice_installment[$i]['amount'];
-
-
-                        if ($invoice_installment[$i]['status']) {
-                            $return += $invoice_installment[$i]['payment_amount'];
-                        }
-
-                        if ((int)$temp < (int)$total_installment_return) {
-                            $sql = "delete from invoice_installment where id='" . $invoice_installment[$i]['id'] . "';";
-                            $result = $this->db->query($sql);
-                        }
-
-                        if ((int)$temp == (int)$total_installment_return) {
-                            $sql = "delete from invoice_installment where id='" . $invoice_installment[$i]['id'] . "';";
-                            $result = $this->db->query($sql);
-                            break;
-                        }
-
-                        if ((int)$temp > (int)$total_installment_return) {
-
-                            $total_installment_return = $temp - $total_installment_return;
-                            $return = $total_installment_return;
-                            $sql = "update invoice_installment set amount='" . $total_installment_return . "' where id='" . $invoice_installment[$i]['id'] . "';";
-                            $result = $this->db->query($sql);
-                            break;
-                        }
+                }
+                // echo json_encode($sql);
+            } else {
+                if (!empty($product_list)) {
+                    foreach ($product_list as $product) {
+                        $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $filter['invoice_id'] . "','" . $product['product_id'] . "','" . $filter['variant_id'] . "'," . $filter['quantity'] . "," . $filter['status'] . ")";
+                        $result = $this->db->query($sql);
                     }
-                    $bank_return = $return;
+                } else {
+                    $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $filter['invoice_id'] . "','" . $filter['product_id'] . "','" . $filter['variant_id'] . "'," . $filter['quantity'] . "," . $filter['status'] . ")";
+                    $result = $this->db->query($sql);
                 }
-
-                $customer_ledger_data = array(
-                    'transaction_id' => generator(15),
-                    'customer_id' => $customer_id,
-                    'date' => date('Y-m-d'),
-                    'amount' => $bank_return,
-                    'payment_type' => 1,
-                    'description' => 'ITP',
-                    'status' => 1
-                );
-                $this->db->insert('customer_ledger', $customer_ledger_data);
-
-                //1st debit (Sales return for Showroom sales) with total price before discount
-                $customer_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'SR-' . $return_invoice_id,
-                    'Vtype' => 'Sales return',
-                    'VDate' => $createdate,
-                    'COAID' => $customer_head->HeadCode, // account payable game 11
-                    'Narration' => 'Sales return" total with vat" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $total_return + $tota_vat,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    'IsAppove' => 1
-                );
-                //7th paid_amount depit if full paid 
-                // $customer_depit = array(
-                //     'fy_id' => $find_active_fiscal_year->id,
-                //     'VNo' => 'Inv-' . $filter['invoice_id'],
-                //     'Vtype' => 'Sales',
-                //     'VDate' => $createdate,
-                //     'COAID' => $customer_head->HeadCode,
-                //     'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                //     'Debit' => $total_return+$tota_vat,
-                //     'Credit' => 0,
-                //     'IsPosted' => 1,
-                //     'CreateBy' => $receive_by,
-                //     'CreateDate' => $createdate,
-                //     //'IsAppove' => 0
-                //     'IsAppove' => 1
-                // );
-                $this->db->insert('acc_transaction', $customer_credit);
-                // 2nd Allowed Discount credit
-                $allowed_discount_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'SR-' . $return_invoice_id,
-                    'Vtype' => 'Sales return',
-                    'VDate' => $createdate,
-                    'COAID' => 4114,
-                    'Narration' => 'Sales return "total discount" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $total_discount,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $allowed_discount_credit);
-
-                //3rd Showroom Sales depit
-                $showroom_sales_depit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'SR-' . $return_invoice_id,
-                    'Vtype' => 'Sales return',
-                    'VDate' => $createdate,
-                    'COAID' => 5121, // account payable game 11
-                    'Narration' => 'Sales return for Showroom sales "total price before discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $total_return_without_discount,
-                    'Credit' => 0,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $showroom_sales_depit);
-
-                //4th VAT on Sales
-                $vat_depit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'SR-' . $return_invoice_id,
-                    'Vtype' => 'Sales return',
-                    'VDate' => $createdate,
-                    'COAID' => 2114, // account payable game 11
-                    'Narration' => 'Sales return "total vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $tota_vat,
-                    'Credit' => 0,
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $vat_depit);
-
-                //5th cost of goods sold Credit
-                $cogs_credit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'SR-' . $return_invoice_id,
-                    'Vtype' => 'Sales return',
-                    'VDate' => $createdate,
-                    'COAID' => 4111,
-                    'Narration' => 'Sales return inventory "COGS" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => 0,
-                    'Credit' => $cogs_price, //sales price asbe
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $cogs_credit);
-
-                //6th cost of goods sold Main warehouse depit
-                $cogs_main_warehouse_depit = array(
-                    'fy_id' => $find_active_fiscal_year->id,
-                    'VNo' => 'SR-' . $return_invoice_id,
-                    'Vtype' => 'Sales return',
-                    'VDate' => $createdate,
-                    'COAID' => 1141,
-                    'Narration' => 'Sales return "COGS" debited in Main Warehouse by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-                    'Debit' => $cogs_price,
-                    'Credit' => 0, //supplier price asbe
-                    'IsPosted' => 1,
-                    'CreateBy' => $receive_by,
-                    'CreateDate' => $createdate,
-                    //'IsAppove' => 0
-                    'IsAppove' => 1
-                );
-                $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
-
-                if ($filter['payment_id'] != "" && $this->input->get('payment_type', TRUE) == 1) {
-                    $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
-                    $bank_credit = array(
-                        'fy_id' => $find_active_fiscal_year->id,
-                        'VNo' => 'SR-' . $return_invoice_id,
-                        'Vtype' => 'Sales',
-                        'VDate' => $createdate,
-                        'COAID' => $payment_head->HeadCode,
-                        'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $filter['payment_id'] . ')',
-                        'Debit' => 0,
-                        'Credit' => $bank_return,
-                        'IsPosted' => 1,
-                        'CreateBy' => $receive_by,
-                        'CreateDate' => $createdate,
-                        'IsAppove' => 1
-                    );
-                    $this->db->insert('acc_transaction', $bank_credit);
-                }
-                $invoice_return = array(
-                    'return_invoice_id' => $return_invoice_id,
-                    'invoice_id'        => $filter['invoice_id'],
-                    'return_quantity'   => $filter['quantity'],
-                    'product_id'        => $filter['product_id'],
-                    'rate'              => $product_price,
-                    'customer_id'       => $customer_id,
-                    'employee_id'       => $invoice[0]['employee_id'],
-                    'total_discount'    => $total_discount,
-                    'total_return'      => $total_return + $tota_vat + $total_discount,
-                );
-                $this->db->insert('invoice_return', $invoice_return);
             }
 
-            // $returninvoice_id=$this->db->insert_id();
-            // update invoice paid amount
-            $invoiceData = $this->db->select('*')->from('invoice')->where('invoice_id', $filter['invoice_id'])->limit(1)->get()->row();
-            $this->db->set('paid_amount', $invoiceData->paid_amount + $total_return + $tota_vat)
-                ->set('due_amount', $invoiceData->due_amount - $total_return + $tota_vat)
-                ->where('invoice_id', $filter['invoice_id'])
-                ->update('invoice');
+            //update invoice_details
+            $sql = "update invoice_details set return_quantity= return_quantity+" . $filter['quantity'] . " where invoice_details_id='" . $invoice_details[0]['invoice_details_id'] . "';";
+            $result = $this->db->query($sql);
+
+            //invoice
+            $sql = "select I.* from invoice I where I.invoice_id ='" . $filter['invoice_id'] . "';";
+            $result = $this->db->query($sql);
+            $invoice  = $result->result_array();
+
+            //acc_transaction
+            $receive_by = $this->session->userdata('user_id');
+            //calc total price of returned qunty of product
+            $without_cases_price = $this->db->select('price')
+                ->from('product_information')
+                ->where('product_id', $filter['product_id'])
+                ->limit(1)
+                ->get()->row();
+            $with_cases_price = $this->db->select('product_price')
+                ->from('pricing_types_product')
+                ->where('product_id', $filter['product_id'])
+                ->where('pri_type_id', 1)
+                ->limit(1)
+                ->get()->row();
+            if ($filter['price_type'] == 1) {
+                // with Cases
+                $invoice_details[0]['total_price'] = $with_cases_price->product_price * $invoice_details[0]['quantity'];
+            } else {
+                // without cases
+                $invoice_details[0]['total_price'] = $without_cases_price->price * $invoice_details[0]['quantity'];
+            }
+            $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
+            $total_discount = $invoice_details[0]['discount'] * $filter['quantity'];
+            $total_discount += $invoice_details[0]['invoice_discount'] * $filter['quantity'];
+            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $filter['quantity'])) - $total_discount;
+            $total_return_without_discount = $total_return + $total_discount;
+
+            //total vat
+            $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'])->get()->row();
+            if (!empty($i_vat) && $invoice[0]['is_quotation'] == 0) {
+                $tota_vat = ($product_price * ($i_vat->tax_percentage / 100)) * $filter['quantity'];
+            } else {
+                $tota_vat = 0;
+            }
+            $createdate = date('Y-m-d H:i:s');
+            // total supplier price
+            $cogs_price = $invoice_details[0]['supplier_rate'] * $filter['quantity'];
+            $bank_return = $total_return + $tota_vat;
+            //return installment
+            if ($invoice[0]['is_installment']) {
+                $total_installment_return = $total_return + $tota_vat;
+                $temp = 0;
+                $return = 0;
+                $sql = "select * from invoice_installment where invoice_id ='" . $filter['invoice_id'] . "';";
+                $result = $this->db->query($sql);
+                $invoice_installment  = $result->result_array();
+                $invoice_installment  = array_reverse($invoice_installment);
+
+                for ($i = 0; $i < count($invoice_installment); $i++) {
+                    $temp += $invoice_installment[$i]['amount'];
+
+
+                    if ($invoice_installment[$i]['status']) {
+                        $return += $invoice_installment[$i]['payment_amount'];
+                    }
+
+                    if ((int)$temp < (int)$total_installment_return) {
+                        $sql = "delete from invoice_installment where id='" . $invoice_installment[$i]['id'] . "';";
+                        $result = $this->db->query($sql);
+                    }
+
+                    if ((int)$temp == (int)$total_installment_return) {
+                        $sql = "delete from invoice_installment where id='" . $invoice_installment[$i]['id'] . "';";
+                        $result = $this->db->query($sql);
+                        break;
+                    }
+
+                    if ((int)$temp > (int)$total_installment_return) {
+
+                        $total_installment_return = $temp - $total_installment_return;
+                        $return = $total_installment_return;
+                        $sql = "update invoice_installment set amount='" . $total_installment_return . "' where id='" . $invoice_installment[$i]['id'] . "';";
+                        $result = $this->db->query($sql);
+                        break;
+                    }
+                }
+                $bank_return = $return;
+            }
+
+            $customer_ledger_data = array(
+                'transaction_id' => generator(15),
+                'customer_id' => $customer_id,
+                'date' => date('Y-m-d'),
+                'amount' => $bank_return,
+                'payment_type' => 1,
+                'description' => 'ITP',
+                'status' => 1
+            );
+            $this->db->insert('customer_ledger', $customer_ledger_data);
+
+            //1st debit (Sales return for Showroom sales) with total price before discount
+            $customer_credit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => 'SR-' . $return_invoice_id,
+                'Vtype' => 'Sales return',
+                'VDate' => $createdate,
+                'COAID' => $customer_head->HeadCode, // account payable game 11
+                'Narration' => 'Sales return" total with vat" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                'Debit' => 0,
+                'Credit' => $total_return + $tota_vat,
+                'IsPosted' => 1,
+                'CreateBy' => $receive_by,
+                'CreateDate' => $createdate,
+                'IsAppove' => 1
+            );
+            //7th paid_amount depit if full paid 
+            // $customer_depit = array(
+            //     'fy_id' => $find_active_fiscal_year->id,
+            //     'VNo' => 'Inv-' . $filter['invoice_id'],
+            //     'Vtype' => 'Sales',
+            //     'VDate' => $createdate,
+            //     'COAID' => $customer_head->HeadCode,
+            //     'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+            //     'Debit' => $total_return+$tota_vat,
+            //     'Credit' => 0,
+            //     'IsPosted' => 1,
+            //     'CreateBy' => $receive_by,
+            //     'CreateDate' => $createdate,
+            //     //'IsAppove' => 0
+            //     'IsAppove' => 1
+            // );
+            $this->db->insert('acc_transaction', $customer_credit);
+            // 2nd Allowed Discount credit
+            $allowed_discount_credit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => 'SR-' . $return_invoice_id,
+                'Vtype' => 'Sales return',
+                'VDate' => $createdate,
+                'COAID' => 4114,
+                'Narration' => 'Sales return "total discount" debit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                'Debit' => 0,
+                'Credit' => $total_discount,
+                'IsPosted' => 1,
+                'CreateBy' => $receive_by,
+                'CreateDate' => $createdate,
+                //'IsAppove' => 0
+                'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $allowed_discount_credit);
+
+            //3rd Showroom Sales depit
+            $showroom_sales_depit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => 'SR-' . $return_invoice_id,
+                'Vtype' => 'Sales return',
+                'VDate' => $createdate,
+                'COAID' => 5121, // account payable game 11
+                'Narration' => 'Sales return for Showroom sales "total price before discount" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                'Debit' => $total_return_without_discount,
+                'Credit' => 0,
+                'IsPosted' => 1,
+                'CreateBy' => $receive_by,
+                'CreateDate' => $createdate,
+                //'IsAppove' => 0
+                'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $showroom_sales_depit);
+
+            //4th VAT on Sales
+            $vat_depit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => 'SR-' . $return_invoice_id,
+                'Vtype' => 'Sales return',
+                'VDate' => $createdate,
+                'COAID' => 2114, // account payable game 11
+                'Narration' => 'Sales return "total vat" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                'Debit' => $tota_vat,
+                'Credit' => 0,
+                'IsPosted' => 1,
+                'CreateBy' => $receive_by,
+                'CreateDate' => $createdate,
+                'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $vat_depit);
+
+            //5th cost of goods sold Credit
+            $cogs_credit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => 'SR-' . $return_invoice_id,
+                'Vtype' => 'Sales return',
+                'VDate' => $createdate,
+                'COAID' => 4111,
+                'Narration' => 'Sales return inventory "COGS" debited by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                'Debit' => 0,
+                'Credit' => $cogs_price, //sales price asbe
+                'IsPosted' => 1,
+                'CreateBy' => $receive_by,
+                'CreateDate' => $createdate,
+                //'IsAppove' => 0
+                'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $cogs_credit);
+
+            //6th cost of goods sold Main warehouse depit
+            $cogs_main_warehouse_depit = array(
+                'fy_id' => $find_active_fiscal_year->id,
+                'VNo' => 'SR-' . $return_invoice_id,
+                'Vtype' => 'Sales return',
+                'VDate' => $createdate,
+                'COAID' => 1141,
+                'Narration' => 'Sales return "COGS" debited in Main Warehouse by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
+                'Debit' => $cogs_price,
+                'Credit' => 0, //supplier price asbe
+                'IsPosted' => 1,
+                'CreateBy' => $receive_by,
+                'CreateDate' => $createdate,
+                //'IsAppove' => 0
+                'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
+
+            if ($filter['payment_id'] != "" && $this->input->post('payment_type', TRUE) == 1) {
+                $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
+                $bank_credit = array(
+                    'fy_id' => $find_active_fiscal_year->id,
+                    'VNo' => 'SR-' . $return_invoice_id,
+                    'Vtype' => 'Sales',
+                    'VDate' => $createdate,
+                    'COAID' => $payment_head->HeadCode,
+                    'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $filter['payment_id'] . ')',
+                    'Debit' => 0,
+                    'Credit' => $bank_return,
+                    'IsPosted' => 1,
+                    'CreateBy' => $receive_by,
+                    'CreateDate' => $createdate,
+                    'IsAppove' => 1
+                );
+                $this->db->insert('acc_transaction', $bank_credit);
+            }
+            $invoice_return = array(
+                'return_invoice_id' => $return_invoice_id,
+                'invoice_id'        => $filter['invoice_id'],
+                'return_quantity'   => $filter['quantity'],
+                'product_id'        => $filter['product_id'],
+                'rate'              => $product_price,
+                'customer_id'       => $customer_id,
+                'employee_id'       => $invoice[0]['employee_id'],
+                'total_discount'    => $total_discount,
+                'total_return'      => $total_return + $tota_vat + $total_discount,
+            );
+            $this->db->insert('invoice_return', $invoice_return);
+        }
+
+        // $returninvoice_id=$this->db->insert_id();
+        // update invoice paid amount
+        $invoiceData = $this->db->select('*')->from('invoice')->where('invoice_id', $filter['invoice_id'])->limit(1)->get()->row();
+        $this->db->set('paid_amount', $invoiceData->paid_amount + $total_return + $tota_vat)
+            ->set('due_amount', $invoiceData->due_amount - $total_return + $tota_vat)
+            ->where('invoice_id', $filter['invoice_id'])
+            ->update('invoice');
         // }
 
 
