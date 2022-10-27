@@ -314,9 +314,10 @@ function calculateSum() {
 
 //Inovice paid amount
 function invoice_paidamount() {
+    var customer_balance = $('#customer_balance').val();
     var t = $("#grandTotal").val(),
             a = $("#paidAmount").val(),
-            e = t - a;
+            e = (t - Math.abs(customer_balance)) - a;
     var test = e.toFixed(2);
     $("#dueAmmount").val(test);
     $('.installment_setup').hide();
@@ -443,6 +444,7 @@ function add_month() {
 
 //Invoice full paid
 function full_paid() {
+    var customer_balance = $('#customer_balance').val();
     var elem = $("#is_quotation");
     if (elem.prop('checked') == true) {
         calculateSumQuotation();
@@ -450,7 +452,7 @@ function full_paid() {
         calculateSum();
     }
     var grandTotal = $("#grandTotal").val();
-    $("#paidAmount").val(grandTotal);
+    $("#paidAmount").val(grandTotal - Math.abs(customer_balance));
     invoice_paidamount();
     $('.installment_setup').hide();
     $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');

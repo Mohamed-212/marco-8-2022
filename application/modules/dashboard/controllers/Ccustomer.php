@@ -250,4 +250,17 @@ class Ccustomer extends MX_Controller
         $content  = $this->lcustomer->customer_balance_report($from_date, $to_date);
         $this->template_lib->full_admin_html_view($content);
     }
+
+    public function get_customer_balance()
+    {
+        $customer_id = $this->input->post('customer_id', true);
+
+        $this->load->model('dashboard/Customers');
+
+        $summary = $this->Customers->customer_transection_summary($customer_id, null, null);
+
+        echo round(-$summary[1][0]['total_debit'] + $summary[0][0]['total_credit'], 2);
+
+        return;
+    }
 }

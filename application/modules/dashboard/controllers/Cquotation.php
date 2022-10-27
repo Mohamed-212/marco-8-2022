@@ -40,6 +40,7 @@ class Cquotation extends MX_Controller {
                 $bank_list = $this->Invoices->bank_list();
                 $payment_info = $this->Invoices->payment_info();
                 $all_pri_type = $this->Invoices->select_all_pri_type();
+				$summary = $this->Customers->customer_transection_summary($customer[0]['customer_id'], null, null);
                 $data = array(
                     'title' => display('new_quotation'),
                     'store_list' => $store_list,
@@ -49,6 +50,7 @@ class Cquotation extends MX_Controller {
                     'payment_info' => $payment_info,
                     'employee' => $this->empdropdown(),
                     'all_pri_type' => $all_pri_type,
+					'total_balance'	=> round(-$summary[1][0]['total_debit']+$summary[0][0]['total_credit'], 2),
                 );
                 $data['module'] = "dashboard";
                 $data['page'] = "quotation/add_quotation_form";

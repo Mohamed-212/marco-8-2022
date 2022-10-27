@@ -429,6 +429,7 @@ class Invoices extends CI_Model {
                     'order_id' => $order_id,
                     'quotation_id' => $quotation_id,
                     'product_type' => $product_type,
+                    'customer_balance' => $this->input->post('customer_balance', TRUE),
                 );
                 $this->db->insert('invoice', $data);
 
@@ -1237,7 +1238,8 @@ class Invoices extends CI_Model {
                 'created_at' => date('Y-m-d h:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                 'order_id' => $order_id,
                 'quotation_id' => $quotation_id,
-                'product_type' => $product_type
+                'product_type' => $product_type,
+                'customer_balance' => $this->input->post('customer_balance', TRUE),
             );
             $this->db->insert('invoice', $data);
 
