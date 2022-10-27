@@ -1,9 +1,18 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
+<script>
+    // window.ASD = 'wewewewe';
+    // var trans_messages = {
+    //     warranty: "";
+    //     fit: "<?=display('fit')?>";
+    //     damaged: "<?=display('damaged')?>";
+    // };
+</script>
 <!-- Customer js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer_add_refund.js.php"></script>
 <!-- Product invoice js -->
 <!-- <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script> -->
 <!-- Invoice js -->
+
 
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_refund_form.js'; ?>"></script>
 <link rel="stylesheet" href="<?php echo MOD_URL . 'dashboard/assets/css/invoice/add_invoice_form.css' ?>">
@@ -135,7 +144,7 @@
                                             <th class="text-center"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
                                             <th class="text-center" width="130"><?php echo display('size') ?> <i class="text-danger">*</i></th>
 
-                                            <th class="text-center"><?php echo display('status') ?></th>
+                                            <th class="text-center" id="trans" data-fit="<?=display('fit')?>" data-warranty="<?=display('no warranty')?>"  data-damaged="<?=display('damaged')?>"><?php echo display('status') ?></th>
 
                                             <th class="text-center"><?php echo display('available_quantity') ?> <i class="text-danger">*</i></th>
                                             <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>

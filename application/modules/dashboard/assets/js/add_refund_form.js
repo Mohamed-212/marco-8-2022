@@ -3,6 +3,11 @@ var productArr={};
 	$("#invoice_no").on('change', function(){
 		var invoice_no = $(this).val();
 		var csrf_test_name = $("#CSRF_TOKEN").val();
+    var messages = {
+      fit: $('#trans').attr('data-fit'),
+      warranty: $('#trans').attr('data-warranty'),
+      damaged: $('#trans').attr('data-damaged'),
+    };
 	    $.ajax({
         url: base_url + "dashboard/Crefund/get_invoice_products",
         method: "post",
@@ -21,7 +26,7 @@ var productArr={};
             $('#normalinvoice').find('tbody').append("<td hidden><input class='form-control' id='product_id_"+i+"' value='"+data[i]['product_id']+"' name='product_id[]' readonly='' ></td>");
             $('#normalinvoice').find('tbody').append("<td class='text-center'><input class='form-control' id='variant_name_"+i+"' required='required' name='variant_name[]' value='"+data[i]['variant_name']+"' readonly='' ></td>");
             $('#normalinvoice').find('tbody').append("<td class='text-center' hidden><input class='form-control' id='variant_id_"+i+"' required='required' name='variant_id[]' value='"+data[i]['variant_id']+"' readonly='' ></td>");
-            $('#normalinvoice').find('tbody').append("<td><select class='form-control' id='status_"+i+"' required='required' name='status[]'><option value='0'>Fit</option><option value='1'>Damaged</option><option value='2'>No warranty</option></select></td>");
+            $('#normalinvoice').find('tbody').append("<td><select class='form-control' id='status_"+i+"' required='required' name='status[]'><option value='0'>"+messages.fit+"</option><option value='1'>"+messages.damaged+"</option><option value='2'>"+messages.warranty+"</option></select></td>");
             $('#normalinvoice').find('tbody').append("<td><input type='text' id='available_quantity_"+i+"' name='available_quantity[]' class='form-control text-right available_quantity_"+i+"' id='avl_qntt_"+i+"' value='"+data[i]['quantity']+"' readonly='' /></td>");
             $('#normalinvoice').find('tbody').append("<td><input type='number' class='form-control' id='quantity_"+i+" required='required' min='0' value='0' max='"+data[i]['quantity']+"' name='quantity[]'></td></tr>");
 
@@ -86,7 +91,11 @@ function addInputField2(t) {
       var a = "product_name" + count,
       e = document.createElement("tr");
      
-     
+      var messages = {
+        fit: $('#trans').attr('data-fit'),
+        warranty: $('#trans').attr('data-warranty'),
+        damaged: $('#trans').attr('data-damaged'),
+      };
       
       var invoice_no = $("#invoice_no").val();
       var csrf_test_name = $("#CSRF_TOKEN").val();
@@ -109,7 +118,7 @@ function addInputField2(t) {
         });
         var html = "<td><select class='form-control' id='product_id_"+count+"' onchange='get_variant("+count+")' required='required' name='product_id[]'>"+opts+"</select></td>"
         html+="<td class='text-center'><select class='form-control' id='variant_id_"+count+"' onchange='get_qnty("+count+")' required='required' name='variant_id[]''></select></td>"
-        html+="<td><select class='form-control' id='status_"+count+"' required='required' name='status[]'><option value='0'>fit</option><option value='1'>damaged</option><option value='2'>no warranty</option></select></td>"
+        html+="<td><select class='form-control' id='status_"+count+"' required='required' name='status[]'><option value='0'>"+messages.fit+"</option><option value='1'>"+messages.damaged+"</option><option value='2'>"+messages.warranty+"</option></select></td>"
         html+="<td><input type='text' id='available_quantity_"+count+"' name='available_quantity[]' class='form-control text-right available_quantity_"+count+"' id='avl_qntt_1' placeholder='0' readonly='' /></td>"
         html+="<td><input type='number' class='form-control' id='quantity_'+count+'' required='required' min='0' value='0' max='0' name='quantity[]'></td>"
         html+="<td><button style='text-align: right;' class='btn btn-danger' type='button' value='Delete' onclick='deleteRow(this)'>Delete</button></td>"
