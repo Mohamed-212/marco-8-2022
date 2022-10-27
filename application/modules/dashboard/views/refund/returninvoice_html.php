@@ -376,7 +376,7 @@
                                                                     <th><?php echo display('product_name') ?></th>
                                                                      <th><?php echo display('quantity') ?></th>
                                                                     <th><?php echo display('price') ?></th>                                                                   
-                                                                    <th><?php echo display('sell_price') ?></th>
+                                                                    <th><?php echo display('customer_price') ?></th>
                                                                     <th><?php echo display('total_value') ?></th>
                                                                 </tr>
                                                             </thead>
@@ -389,8 +389,8 @@
                                                             <?php for($i=0;$i<count($invoice_return);$i++){ ?>
                                                                         <tr>
                                                                             <td><?php echo html_escape($i+1); ?></td>
-                                                                            <td>
-                                                                                <strong><?php echo html_escape($product[$i]['product_name']); ?> </strong><br>
+                                                                            <td style="width: 24rem;">
+                                                                                <strong style="font-size: 12px;"><?php echo html_escape($product[$i]['product_name']); ?> </strong><br>
                                                                             </td>
                                                                             <td><?php echo html_escape($invoice_return[$i]['return_quantity']);?></td>
                                                                             <td><?php echo html_escape($invoice_return[$i]['rate']); ?></td>
