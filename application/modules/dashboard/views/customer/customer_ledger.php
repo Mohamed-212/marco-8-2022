@@ -123,10 +123,10 @@
 							<br>
 							<table class="table table-striped table-condensed table-bordered">
 
-								<tr>
+								<!-- <tr>
 									<td> <?php echo display('previous_balance') ?> </td>
 									<td class="text-right mr_20"> <?php echo (($position == 0) ? $currency . " " . $previous_balance : $previous_balance . " " . $currency) ?></td>
-								</tr>
+								</tr> -->
 								<tr>
 									<td> <?php echo display('debit_ammount') ?> </td>
 									<td class="text-right mr_20"> <?php echo (($position == 0) ? $currency . " " . $total_debit : $total_debit . " " . $currency) ?></td>

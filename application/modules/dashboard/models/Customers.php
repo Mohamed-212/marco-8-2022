@@ -462,14 +462,14 @@ class Customers extends CI_Model
 		$customer = $this->db->select('previous_balance')->from('customer_information')->where('customer_id', $customer_id)->limit(1)->get()->row();
 
 
-		if ($customer->previous_balance > 0 && $result[0][0]['total_credit'] > 0) {
-			// previous_balance is credit
-			$result[0][0]['total_credit'] = (float)$result[0][0]['total_credit'] - (float)$customer->previous_balance;
+		// if ($customer->previous_balance > 0 && $result[0][0]['total_credit'] > 0) {
+		// 	// previous_balance is credit
+		// 	$result[0][0]['total_credit'] = (float)$result[0][0]['total_credit'] - (float)$customer->previous_balance;
 
-		} elseif ($customer->previous_balance < 0 && $result[1][0]['total_debit'] > 0) {
-			// previous_balance is debit
-			$result[1][0]['total_debit'] = (float)$result[1][0]['total_debit'] - (float)$customer->previous_balance;
-		}
+		// } elseif ($customer->previous_balance < 0 && $result[1][0]['total_debit'] > 0) {
+		// 	// previous_balance is debit
+		// 	$result[1][0]['total_debit'] = (float)$result[1][0]['total_debit'] - (float)$customer->previous_balance;
+		// }
 
 		$result[2][0]['previous_balance'] = $customer->previous_balance;
 
