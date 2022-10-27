@@ -49,6 +49,11 @@
                     <a
                         href="<?php echo base_url('dashboard/Crefund/return_report') ?>"><?php echo display('return_product_report') ?></a>
                 </li>
+
+                <li class="<?php echo (($this->uri->segment(3) == 'return_quantity_adjustment' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Crefund/return_quantity_adjustment') ?>"><?php echo display('return_quantity_adjustment') ?></a>
+                </li>
                
             </ul>
         </li>

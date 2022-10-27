@@ -62,9 +62,9 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <?php echo form_open(base_url() . '/dashboard/Crefund/get_invoice_by_product', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_invoice')) ?>
+                        <?php echo form_open(base_url() . '/dashboard/Crefund/return_quantity_adjustment', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_invoice')) ?>
                         <div class="row">
-                            <div class="col-sm-6" id="payment_from_1">
+                            <!-- <div class="col-sm-6" id="payment_from_1">
                                 <div class="form-group row">
                                     <label for="customer_name" class="col-sm-4 col-form-label"><?php echo display('customer_name') ?> <i class="text-danger">*</i></label>
                                     <div class="col-sm-8">
@@ -72,7 +72,7 @@
                                         <input id="SchoolHiddenId" value="<?php echo html_escape($customer_id) ?>" class="customer_hidden_value" type="hidden" name="customer_id" required>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="row">
@@ -119,85 +119,37 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><?php echo display('quantity') ?>:</label>
+                                    <div class="col-sm-8">
+                                        <input type='number' class='form-control' id='quantity' required='required' min='0' value='0' name='quantity'>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><?php echo display('status') ?>:</label>
+                                    <div class="col-sm-8">
+                                        <select class='form-control' id='status' required='required' name='status'>
+                                            <option value='1'><?= display('damaged') ?></option>
+                                            <option value='2'><?= display('no warranty') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
                                     <label class="col-sm-4 col-form-label"></label>
                                     <div class="col-sm-8">
-                                        <button type="submit" class="btn btn-success"><?= display('search') ?></button>
+                                        <button type="submit" class="btn btn-success"><?= display('submit') ?></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <?php echo form_close() ?>
-                    </div>
-
-                    <div class="panel-body mt-5">
-                        <div class="table-responsive mt_10">
-                            <table class="table table-bordered table-hover dataTablePagination" id="normalinvoice">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center"><?php echo display('invoice') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('price') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('available_quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center" id="trans" data-fit="<?= display('fit') ?>" data-warranty="<?= display('no warranty') ?>" data-damaged="<?= display('damaged') ?>"><?php echo display('status') ?></th>
-                                        <th class="text-center"><?php echo display('return_price') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('action') ?> <i class="text-danger">*</i></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="addinvoiceItem">
-                                    <?php foreach ($invoices as $inx => $inv) : ?>
-                                        <tr>
-                                            <?php echo form_open(base_url() . '/dashboard/Crefund/return_quantity_adjustment', ['class' => 'form-vertical return_quantity_adjustment', 'id' => 'validate', 'name' => 'insert_invoice']) ?>
-                                            <input type="hidden" hidden name="customer_id" value="<?= $customer_id ?>" />
-                                            <input type="hidden" hidden name="product_id" value="<?= $product_id ?>" />
-                                            <input type="hidden" hidden name="invoice_no" value="<?= $inv->invoice ?>" />
-                                            <input type="hidden" hidden name="invoice_id" value="<?= $inv->invoice_id ?>" />
-                                            <input type="hidden" hidden name="variant_id" value="<?= $inv->variant_id ?>" />
-                                            <td>
-                                                <a href="<?= base_url() ?>/dashboard/Cinvoice/invoice_inserted_data/<?= $inv->invoice_id ?>"><?= $inv->invoice ?></a>
-                                            </td>
-                                            <td>
-                                                <?php
-                                                $item_discount = round(((float)$inv->item_invoice_discount * (float)$inv->quantity) + ((float)$inv->discount * (float)$inv->quantity), 2);
-                                                $total_price_after_discount = round((float)$inv->total_price - (float)$item_discount, 2);
-
-                                                // var_dump($item_discount, $total_price_after_discount, $inv->total_price);
-                                                echo $total_price_after_discount;
-                                                ?>
-                                                <input type="hidden" hidden name="rate_<?= $inx + 1 ?>" value="<?= $inv->rate ?>" />
-                                            </td>
-                                            <td><input type='text' id='available_quantity_<?= $inx + 1 ?>' name='available_quantity[]' class='form-control text-right available_quantity_<?= $inx + 1 ?>' id='avl_qntt_<?= $inx + 1 ?>' placeholder='0' readonly='' value="<?= $inv->ava_quantity ?>" /></td>
-                                            </td>
-                                            <td>
-                                                <select class='form-control' id='status_<?= $inx + 1 ?>' required='required' name='status'>
-                                                    <option value='0'><?= display('fit') ?></option>
-                                                    <option value='1'><?= display('damaged') ?></option>
-                                                    <option value='2'><?= display('no warranty') ?></option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select class='form-control' id='price_type_<?= $inx + 1 ?>' required='required' name='price_type'>
-                                                    <option value='0' <?= $inv->rate != $inv->price ?: 'selected' ?>><?= display('sell_price') ?></option>
-                                                    <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
-                                                </select>
-                                            </td>
-                                            <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' value='0' max='<?= $inv->ava_quantity ?>' name='quantity'></td>
-                                            <td>
-
-                                                <button type="submit" class="btn btn-primary"><?= display('submit') ?></button>
-                                            </td>
-                                            <?php echo form_close() ?>
-
-                                        </tr>
-                                    <?php endforeach ?>
-                                </tbody>
-                                <tfoot>
-                                </tfoot>
-                            </table>
-                            <div style="text-align: center;">
-                                <!-- <button type="submit" class="btn btn-primary"><?= display('submit') ?></button> -->
-                            </div>
-                            <!-- </form> -->
-                        </div>
                     </div>
                 </div>
             </div>

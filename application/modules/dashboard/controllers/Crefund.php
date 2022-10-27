@@ -650,6 +650,13 @@ class Crefund extends MX_Controller
     {
 
         $product_id = $this->input->post('product_id', true);
+        $quantity = $this->input->post('quantity', true);
+        $status = $this->input->post('status', true);
+
+
+        if ($product_id && $quantity && $status) {
+            // change the world
+        }
 
         $data = [
             'product_id' => $product_id,
