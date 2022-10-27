@@ -441,7 +441,8 @@ class Lorder {
             'ship_customer_email'=>$order_detail[0]['ship_customer_email'],
             'cardpayments'	     =>$cardpayments,
             'percentage_discount' => $order_detail[0]['percentage_discount'],
-            'hide_discount' => $hide_discount
+            'hide_discount' => $hide_discount,
+            'customer_balance' => $order_detail[0]['customer_balance'],
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
 		$emp_name = $emp_id = null;

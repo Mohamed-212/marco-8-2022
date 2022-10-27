@@ -288,8 +288,8 @@
 
                                                                     foreach ($invoice_all_data as $invoice) {
                                                                 ?>
-                                                                        <tr class="<?=$invoice['category_id'] == $acc_cate_id->category_id && $product_type == 2 ? 'print-none' : ''?>">
-                                                                            <td><?php echo html_escape($invoice['sl']); ?></td>
+                                                                        <tr class="<?=$invoice['category_id'] == $acc_cate_id->category_id && $product_type == 2 ? 'print-none' : 'shown'?>">
+                                                                            <td class="sl"><?php echo html_escape($invoice['sl']); ?></td>
                                                                             <!-- <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td> -->
                                                                             <!--                                                                            <td class='hide-me'>-->
                                                                             <!--                                                                                <img src="--><?php //echo base_url() . (!empty(html_escape($invoice['image_thumb'])) ? html_escape($invoice['image_thumb']) : 'assets/img/icons/default.jpg') 
@@ -639,3 +639,16 @@
         </div>
     </section> <!-- /.content -->
 </div> <!-- /.content-wrapper -->
+<script>
+    $(document).ready(function() {
+        // $('.print-btn').click(function() {
+            var len = $('.shown').length;
+            $('.print-none .sl').each(function(inx, el) {
+                $(this).text('---');
+            });
+            $('.shown .sl').each(function(inx, el) {
+                $(this).text(inx+1);
+            });
+        // });
+    });
+</script>

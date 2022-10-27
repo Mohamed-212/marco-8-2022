@@ -10,7 +10,7 @@
     ?>
 </script>
 <!-- Customer js php -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/add_invoice_customer.js.php"></script>
 <!-- Product invoice js -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
 <!-- Invoice js -->
@@ -580,6 +580,13 @@
                                         </td>
                                         <td class="text-right" colspan="2">
                                             <input type="text" id="grandTotal" class="form-control text-right" name="grand_total_price" value="{total_amount}" readonly="readonly" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-right"><b><?php echo display('balance') ?> :</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="text" id="customer_balance" class="form-control text-right" name="customer_balance" placeholder="0.00" readonly="readonly" value="<?=$total_balance?>" />
                                         </td>
                                     </tr>
                                     <tr>

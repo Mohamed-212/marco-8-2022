@@ -27,25 +27,21 @@ $(function() {
 			$(this).parent().find(".customer_hidden_value").val(ui.item.value);
 			$(this).val(ui.item.label);
 
-            var opts = "";
-            $.ajax({
-                url: base_url + 'dashboard/Crefund/get_invoice_by_customer',
-                method: 'post',
+			$.ajax({
+                type: "post",
+                async: false,
+                url: base_url +
+                    "dashboard/Ccustomer/get_customer_balance",
                 data: {
-                    customer_id: ui.item.value,
                     csrf_test_name: csrf_test_name,
+                    customer_id: ui.item.value,
                 },
-                success: function(data) {
-                    var obj = JSON.parse(data);
-                    for (var i = 0;i < obj.length; i++) {
-                        opts += '<option id="invid" data-invoice-id="' + obj[i].invoice_id + '" value="' + obj[i].invoice.replace('Inv-', '') + '">' + obj[i].invoice.replace('Inv-', '') + '</option>';
-                    }
-                    $('#invoice_no').html(opts);
-                    $('#invoice_no').trigger('change');
+                success: function(result) {
+                    $('#customer_balance').val(result);
                 },
             });
-            
 
+			$(this).unbind("change");
 			return false;
 		}
 	});

@@ -796,7 +796,8 @@ class Orders extends CI_Model
                     // 'created_at' => date("Y-m-d H:i:s"),
                     'pricing_type' => $pricing_type,
                     'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
-                    'product_type' => $product_type
+                    'product_type' => $product_type,
+                    'customer_balance' => $this->input->post('customer_balance', TRUE),
                 );
                 $this->db->insert('order', $data);
 

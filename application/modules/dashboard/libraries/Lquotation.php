@@ -475,7 +475,8 @@ class Lquotation {
             'ship_customer_email'=>$invoice_detail[0]['ship_customer_email'],
             'cardpayments'	     =>$cardpayments,
             'percentage_discount' => $invoice_detail[0]['percentage_discount'],
-			'hide_discount' => $hide_discount
+			'hide_discount' => $hide_discount,
+			'customer_balance' => $invoice_detail[0]['customer_balance'],
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
 		$emp_name = $emp_id = null;

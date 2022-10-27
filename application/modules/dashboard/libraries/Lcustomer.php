@@ -360,7 +360,7 @@ class Lcustomer {
 			'total_credit'		=> number_format($summary[0][0]['total_credit'], 2, '.', ','),
 			'total_debit'		=> number_format($summary[1][0]['total_debit'], 2, '.', ','),
 			'total_balance'		=> number_format(-$summary[1][0]['total_debit']+$summary[0][0]['total_credit'], 2, '.', ','),
-			'previous_balance'  => number_format($summary[2][0]['previous_balance'], 2, '.', ','),
+			// 'previous_balance'  => number_format($summary[2][0]['previous_balance'], 2, '.', ','),
 			'company_info'		=> $company_info,
 			'currency' => $currency_details[0]['currency_icon'],
 			'position' => $currency_details[0]['currency_position'],

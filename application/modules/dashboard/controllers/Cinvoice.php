@@ -60,6 +60,7 @@ class Cinvoice extends MX_Controller
                 $bank_list = $this->Invoices->bank_list();
                 $payment_info = $this->Invoices->payment_info();
                 $all_pri_type = $this->Invoices->select_all_pri_type();
+                $summary = $this->Customers->customer_transection_summary($customer[0]['customer_id'], null, null);
                 $data = array(
                     'title' => display('new_invoice'),
                     'store_list' => $store_list,
@@ -70,6 +71,7 @@ class Cinvoice extends MX_Controller
                     'payment_info' => $payment_info,
                     'employee' => $this->empdropdown(),
                     'all_pri_type' => $all_pri_type,
+                    'total_balance'	=> round(-$summary[1][0]['total_debit']+$summary[0][0]['total_credit'], 2),
                 );
                 $data['module'] = "dashboard";
                 $data['page'] = "invoice/add_invoice_form";
@@ -1645,7 +1647,7 @@ class Cinvoice extends MX_Controller
 
 
 
-        $invoices = $this->db->select('invoice_id, invoice')->from('invoice')->get()->result();
+        $invoices = $this->db->select('invoice_id, invoice')->from('invoice')->order_by('invoice', 'desc')->get()->result();
 
         $invoice_no = $this->input->post('invoice_no', true);
 
@@ -1659,6 +1661,8 @@ class Cinvoice extends MX_Controller
             ->join('product_information p', 'p.product_id = d.product_id', 'left')
             ->where('d.invoice_id', $invoice->invoice_id)
             ->get()->result();
+
+        // echo "<pre>";var_dump($details);exit;
 
         $data = [
             'title'    => display('invoice_images'),

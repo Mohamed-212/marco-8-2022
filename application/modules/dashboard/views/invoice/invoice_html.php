@@ -403,7 +403,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                                                                                                     ?>
                                                                     <!--</th>-->
                                                                     <th><?php echo display('product_name') ?></th>
-                                                                    <th class="hide-me"><?php echo display('size') ?></th>
+                                                                    <th class="hide-me" style="padding-right: 5rem;"><?php echo display('size') ?></th>
                                                                     <!--                                                                    <th class="hide-me">--><?php //echo display('unit') 
                                                                                                                                                                     ?>
                                                                     <!--</th>-->
@@ -443,16 +443,16 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
 
                                                                     foreach ($invoice_all_data as $invoice) {
                                                                 ?>
-                                                                        <tr class="<?= $invoice['category_id'] == $acc_cate_id->category_id && $product_type == 2 ? 'print-none' : '' ?>">
-                                                                            <td><?php echo html_escape($invoice['sl']); ?></td>
+                                                                        <tr class="<?= $invoice['category_id'] == $acc_cate_id->category_id && $product_type == 2 ? 'print-none' : 'shown' ?>">
+                                                                            <td class="sl"><?php echo html_escape($invoice['sl']); ?></td>
                                                                             <!-- <td class='hide-me'><?php echo html_escape($invoice['product_id']); ?></td> -->
                                                                             <!--                                                                            <td class='hide-me'>-->
                                                                             <!--                                                                                <img src="--><?php //echo base_url() . (!empty(html_escape($invoice['image_thumb'])) ? html_escape($invoice['image_thumb']) : 'assets/img/icons/default.jpg') 
                                                                                                                                                                                 ?>
                                                                             <!--" width="50" height="50">-->
                                                                             <!--                                                                            </td>-->
-                                                                            <td>
-                                                                                <strong><?php echo html_escape($invoice['product_name']); ?> </strong><br>
+                                                                            <td style="width: 24rem;">
+                                                                                <strong style="font-size: 12px;"><?php echo html_escape($invoice['product_name']); ?> </strong><br>
                                                                                 <?php
                                                                                 $arabic_name = $this->db->select('trans_name')->from('product_translation')->where('language', 'Arabic')->where('product_id', $invoice['product_id'])->get()->row();
                                                                                 if (!empty($arabic_name->trans_name)) { ?>
@@ -462,7 +462,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
 
                                                                                 ?>
                                                                             </td>
-                                                                            <td class='hide-me'><?php echo html_escape($invoice['variant_name']);
+                                                                            <td class='hide-me' style="font-size: 12px;"><?php echo html_escape($invoice['variant_name']);
                                                                                                 if (!empty($invoice['variant_color'])) {
                                                                                                     $cvarinfo = $this->db->select('variant_name')->from('variant')->where('variant_id', $invoice['variant_color'])->get()->row();
                                                                                                     if (!empty($cvarinfo)) {
@@ -719,7 +719,16 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                     <tr class="borderd">
                                                                                         <th class="grand_total"> <?php echo display('total'); ?>:</th>
                                                                                         <td class="grand_total">
+                                                                                            
                                                                                             <?php echo (($position == 0) ? $currency . " " . $total_amount : $total_amount . " " . $currency) ?>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th class="bt_bb_0"><?php echo display('customer_balance') ?>
+                                                                                            :
+                                                                                        </th>
+                                                                                        <td class="bt_bb_0">
+                                                                                            <?php echo (($position == 0) ? $currency . " " . $customer_balance : $customer_balance . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
@@ -788,7 +797,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                         <?php if ($this->permission->check_label('manage_sale')->read()->access()) { ?>
                             <a class="btn btn-danger" href="<?php echo base_url(isset($is_order) ? 'dashboard/Corder/manage_order' : 'dashboard/Cinvoice/manage_invoice'); ?>"><?php echo display('back') ?></a>
                         <?php } ?>
-                        <a class="btn btn-info" href="<?php echo current_url(); ?>" onclick="printPageDiv('printableArea')"><span class="fa fa-print"></span>
+                        <a class="btn btn-info print-btn" href="javascript:void(0)" onclick="printPageDiv('printableArea')"><span class="fa fa-print"></span>
                         </a>
                     </div>
                 </div>
@@ -796,3 +805,16 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
         </div>
     </section> <!-- /.content -->
 </div> <!-- /.content-wrapper -->
+<script>
+    $(document).ready(function() {
+        // $('.print-btn').click(function() {
+            var len = $('.shown').length;
+            $('.print-none .sl').each(function(inx, el) {
+                $(this).text('---');
+            });
+            $('.shown .sl').each(function(inx, el) {
+                $(this).text(inx+1);
+            });
+        // });
+    });
+</script>
