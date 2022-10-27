@@ -461,6 +461,7 @@ class Products extends CI_Model
                 a.*,
                 a.created_at as date_time,
                 b.*,
+                b.invoice_discount as item_invoice_discount,
                 sum(b.quantity) as t_qty,
                 sum(b.total_price) - (b.discount * sum(b.quantity)) as total_price,
                 c.customer_name,
@@ -472,7 +473,7 @@ class Products extends CI_Model
         $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
         $this->db->where('b.product_id', $product_id);
         $this->db->group_by('a.invoice_id');
-        $this->db->order_by('a.invoice_id', 'asc');
+        $this->db->order_by('a.invoice', 'desc');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -687,7 +688,7 @@ class Products extends CI_Model
         $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
         $this->db->where('b.product_id', $product_id);
         // $this->db->group_by('a.invoice_id');
-        $this->db->order_by('a.invoice_id', 'asc');
+        $this->db->order_by('ib.invoice', 'desc');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();

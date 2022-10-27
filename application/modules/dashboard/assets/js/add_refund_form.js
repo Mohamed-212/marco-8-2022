@@ -121,10 +121,10 @@ function addInputField2(t) {
         html+="<td><select class='form-control' id='status_"+count+"' required='required' name='status[]'><option value='0'>"+messages.fit+"</option><option value='1'>"+messages.damaged+"</option><option value='2'>"+messages.warranty+"</option></select></td>"
         html+="<td><input type='text' id='available_quantity_"+count+"' name='available_quantity[]' class='form-control text-right available_quantity_"+count+"' id='avl_qntt_1' placeholder='0' readonly='' /></td>"
         html+="<td><input type='number' class='form-control' id='quantity_'+count+'' required='required' min='0' value='0' max='0' name='quantity[]'></td>"
-        html+="<td><button style='text-align: right;' class='btn btn-danger' type='button' value='Delete' onclick='deleteRow(this)'>Delete</button></td>"
-        e.innerHTML=html
-        document.getElementById(t).appendChild(e)
-      count++
+        html+="<td><button style='text-align: right;' class='btn btn-danger' type='button' value='Delete' onclick='deleteRow(this)'>Delete</button></td>";
+        e.innerHTML=html;
+        document.getElementById(t).appendChild(e);
+      count++;
   }
 }
 

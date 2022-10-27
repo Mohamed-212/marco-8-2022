@@ -9,13 +9,10 @@
     echo "accessories_category_id = '" . $access->category_id . "';";
     ?>
 </script>
-<?php
-    $randStr = bin2hex(random_bytes(20));
-?>
 <!-- Customer js php -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php?t=<?=$randStr?>"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
 <!-- Product invoice js -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php?t=<?=$randStr?>"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
 <!-- Invoice js -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/invoice.js" type="text/javascript"></script>
 
