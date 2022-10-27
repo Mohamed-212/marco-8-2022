@@ -230,10 +230,14 @@ function submit_form(e) {
                 return;
             }
 
-            if ($('#payment_id').val() != '') {
-                $("form#validate, form#normalinvoice").submit();
+            if (Math.round($('#paidAmount').val()) > 0) {
+                if ($('#payment_id').val() != '') {
+                    $("form#validate, form#normalinvoice").submit();
+                } else {
+                    alert(payment_bank_not_selected);
+                }
             } else {
-                alert(payment_bank_not_selected);
+                $("form#validate, form#normalinvoice").submit();
             }
         });
     });
@@ -394,6 +398,11 @@ function invoice_paidamount() {
             a = $("#paidAmount").val(),
             e = (t - Math.abs(customer_balance)) - a;
     var test = (Math.abs(e)).toFixed(2);
+
+    if (parseFloat(customer_balance) > parseFloat(t)) {
+        test = 0;
+    }
+    
     $("#dueAmmount").val(test);
     $('.installment_setup').hide();
     $("#is_installment").val(0);
@@ -527,7 +536,11 @@ function full_paid() {
         calculateSum();
     }
     var grandTotal = $("#grandTotal").val();
-    $("#paidAmount").val(grandTotal - Math.abs(customer_balance));
+    if (parseFloat(customer_balance) > parseFloat(grandTotal)) {
+        $("#paidAmount").val(0);
+    } else {
+        $("#paidAmount").val(grandTotal - Math.abs(customer_balance));
+    }
     invoice_paidamount();
     $('.installment_setup').hide();
     $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
