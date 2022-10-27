@@ -3,6 +3,9 @@
 
 $cache_file = "product.json";
     header('Content-Type: text/javascript; charset=utf8');
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+   header("Cache-Control: post-check=0, pre-check=0", false);
+   header("Pragma: no-cache");
 ?>
 //var productList = <?php //echo file_get_contents($cache_file); ?>// ;
 var csrf_test_name=  $("#CSRF_TOKEN").val();

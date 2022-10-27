@@ -1,16 +1,11 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<script>
-    // window.ASD = 'wewewewe';
-    // var trans_messages = {
-    //     warranty: "";
-    //     fit: "<?=display('fit')?>";
-    //     damaged: "<?=display('damaged')?>";
-    // };
-</script>
+<?php
+    $randStr = bin2hex(random_bytes(20));
+?>
 <!-- Customer js php -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer_add_refund.js.php"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer_add_refund.js.php?t=<?=$randStr?>"></script>
 <!-- Product invoice js -->
-<!-- <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script> -->
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php?t=<?=$randStr?>"></script>
 <!-- Invoice js -->
 
 
