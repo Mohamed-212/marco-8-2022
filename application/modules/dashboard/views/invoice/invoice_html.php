@@ -719,7 +719,16 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                     <tr class="borderd">
                                                                                         <th class="grand_total"> <?php echo display('total'); ?>:</th>
                                                                                         <td class="grand_total">
+                                                                                            
                                                                                             <?php echo (($position == 0) ? $currency . " " . $total_amount : $total_amount . " " . $currency) ?>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th class="bt_bb_0"><?php echo display('customer_balance') ?>
+                                                                                            :
+                                                                                        </th>
+                                                                                        <td class="bt_bb_0">
+                                                                                            <?php echo (($position == 0) ? $currency . " " . $customer_balance : $customer_balance . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>

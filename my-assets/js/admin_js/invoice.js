@@ -318,7 +318,7 @@ function invoice_paidamount() {
     var t = $("#grandTotal").val(),
             a = $("#paidAmount").val(),
             e = (t - Math.abs(customer_balance)) - a;
-    var test = e.toFixed(2);
+    var test = (Math.abs(e)).toFixed(2);
     $("#dueAmmount").val(test);
     $('.installment_setup').hide();
     $("#is_installment").val(0);

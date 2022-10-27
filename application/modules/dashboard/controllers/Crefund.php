@@ -645,4 +645,21 @@ class Crefund extends MX_Controller
         $data['page'] = "refund/add_refund_form";
         echo Modules::run('template/layout', $data);
     }
+
+    public function return_quantity_adjustment()
+    {
+
+        $product_id = $this->input->post('product_id', true);
+
+        $data = [
+            'product_id' => $product_id,
+            'customer_name' => $this->input->post('customer_name', true),
+            'product_name' => $this->input->post('product_name', true),
+            'variant_id' => is_array($this->input->post('variant_id', true)) ? $this->input->post('variant_id', true)[0] : $this->input->post('variant_id', true),
+        ];
+
+        $data['module'] = "dashboard";
+        $data['page'] = "refund/refund_adjustment_form";
+        echo Modules::run('template/layout', $data);
+    }
 }
