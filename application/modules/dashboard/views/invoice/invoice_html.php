@@ -403,7 +403,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                                                                                                     ?>
                                                                     <!--</th>-->
                                                                     <th><?php echo display('product_name') ?></th>
-                                                                    <th class="hide-me" style="padding-right: 6rem;"><?php echo display('size') ?></th>
+                                                                    <th class="hide-me" style="padding-right: 5rem;"><?php echo display('size') ?></th>
                                                                     <!--                                                                    <th class="hide-me">--><?php //echo display('unit') 
                                                                                                                                                                     ?>
                                                                     <!--</th>-->
@@ -451,8 +451,8 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                                                                                                                 ?>
                                                                             <!--" width="50" height="50">-->
                                                                             <!--                                                                            </td>-->
-                                                                            <td>
-                                                                                <strong><?php echo html_escape($invoice['product_name']); ?> </strong><br>
+                                                                            <td style="width: 24rem;">
+                                                                                <strong style="font-size: 12px;"><?php echo html_escape($invoice['product_name']); ?> </strong><br>
                                                                                 <?php
                                                                                 $arabic_name = $this->db->select('trans_name')->from('product_translation')->where('language', 'Arabic')->where('product_id', $invoice['product_id'])->get()->row();
                                                                                 if (!empty($arabic_name->trans_name)) { ?>
@@ -462,7 +462,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
 
                                                                                 ?>
                                                                             </td>
-                                                                            <td class='hide-me'><?php echo html_escape($invoice['variant_name']);
+                                                                            <td class='hide-me' style="font-size: 12px;"><?php echo html_escape($invoice['variant_name']);
                                                                                                 if (!empty($invoice['variant_color'])) {
                                                                                                     $cvarinfo = $this->db->select('variant_name')->from('variant')->where('variant_id', $invoice['variant_color'])->get()->row();
                                                                                                     if (!empty($cvarinfo)) {
