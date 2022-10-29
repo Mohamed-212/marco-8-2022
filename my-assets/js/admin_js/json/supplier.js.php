@@ -6,7 +6,7 @@ $cache_file = "supplier.json";
    header("Cache-Control: post-check=0, pre-check=0", false);
    header("Pragma: no-cache");
 ?>
-var supplierList = <?php echo file_get_contents($cache_file); ?> ; 
+//var supplierList = <?php //echo file_get_contents($cache_file); ?>// ;
 var csrf_test_name=  $("#CSRF_TOKEN").val();
 
 var APchange = function(event, ui){
@@ -16,7 +16,21 @@ var APchange = function(event, ui){
       
         $( ".supplierSelection" ).autocomplete(
 		{
-            source:supplierList,
+            //source:supplierList,
+            source:function (request, response) {
+                $.ajax({
+                    url: base_url + "dashboard/Cinvoice/supplier_search_all_suppliers",
+                    method: "post",
+                    dataType: "json",
+                    data: {
+                        csrf_test_name: csrf_test_name,
+                        customer_name: customer_name,
+                    },
+                    success: function (data) {
+                        response(data);
+                    },
+                });
+            },
 			delay:300,
 			focus: function(event, ui) {
 				$(this).parent().find(".supplier_hidden_value").val(ui.item.value);

@@ -1613,7 +1613,7 @@ class Cinvoice extends MX_Controller
         echo json_encode($result);
     }
 
-    //purchase search by model
+    //product search by model
     public function product_search_all_products()
     {
         $product_name = $this->input->post('product_name', TRUE);
@@ -1638,6 +1638,38 @@ class Cinvoice extends MX_Controller
         }
 
         echo json_encode($json_product);
+    }
+
+    //customer search by model
+    public function customer_search_all_customers()
+    {
+        $customer_name = $this->input->post('customer_name', TRUE);
+
+        $query = $this->db->query("SELECT * FROM `customer_information` WHERE (`customer_name` LIKE '%" . $customer_name . "%' OR `customer_mobile` = '" . $customer_name . "')");
+        $customer_info = $query->result_array();
+        $json_customer = [];
+        foreach ($customer_info as $value) {
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_customer[] = array('label' => $value['customer_name'], 'value' => $value['customer_id']);
+        }
+
+        echo json_encode($json_customer);
+    }
+
+    //supplier search by model
+    public function supplier_search_all_suppliers()
+    {
+        $supplier_name = $this->input->post('supplier_name', TRUE);
+
+        $query = $this->db->query("SELECT * FROM `supplier_information` WHERE (`supplier_name` LIKE '%" . $supplier_name . "%')");
+        $supplier_info = $query->result_array();
+        $json_supplier = [];
+        foreach ($supplier_info as $value) {
+            //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
+            $json_supplier[] = array('label' => $value['supplier_name'], 'value' => $value['supplier_id']);
+        }
+
+        echo json_encode($json_supplier);
     }
 
     public function invoice_images()

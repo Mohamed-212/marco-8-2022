@@ -3,7 +3,7 @@
 	$cache_file = dirname('__FILE__')."/../../../../../my-assets/js/admin_js/json/customer.json";
     header('Content-Type: text/javascript; charset=utf8');
 ?>
-var customerList = <?php echo file_get_contents($cache_file); ?> ; 
+//var customerList = <?php //echo file_get_contents($cache_file); ?>// ;
 var csrf_test_name=  $("#CSRF_TOKEN").val();
 
 var APchange = function(event, ui){
@@ -12,7 +12,21 @@ var APchange = function(event, ui){
 $(function() {
     $( ".customerSelection" ).autocomplete(
 	{
-        source:customerList,
+        //source:customerList,
+        source:function (request, response) {
+            $.ajax({
+                url: base_url + "dashboard/Cinvoice/customer_search_all_customers",
+                method: "post",
+                dataType: "json",
+                data: {
+                    csrf_test_name: csrf_test_name,
+                    customer_name: customer_name,
+                },
+                success: function (data) {
+                    response(data);
+                },
+            });
+        },
 		delay:300,
 		focus: function(event, ui) {
 			$(this).parent().find(".customer_hidden_value").val(ui.item.value);
