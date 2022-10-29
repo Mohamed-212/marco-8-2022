@@ -2392,6 +2392,8 @@ class Cproduct extends MX_Controller
                 $product_quantity = (int)$sheetdata[$i][10];
                 $product_rate = (float)$sheetdata[$i][11]; // supplier price
 
+                if (empty($brand_id) && empty($product_model_only) && empty($category_id)) continue;
+
                 // if category is accessories then color and model only is not needed
                 if ($category_id == 'ACCESSORIES') {
                     $product_model_only = null;
