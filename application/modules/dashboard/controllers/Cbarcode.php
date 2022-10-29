@@ -32,23 +32,16 @@ class Cbarcode extends MX_Controller
         $company_info = $this->Invoices->retrieve_company();
         $currency_details = $this->Soft_settings->retrieve_currency_info();
 
-        // get current stock for this product
-        $totalPurchase = 0;
-        $purchaseData = $this->Products->product_purchase_info($product_id);
-        if (!empty($purchaseData)) {
-            foreach ($purchaseData as $k => $v) {
-                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
-            }
-        }
-        $totalSales = 0;
-        $salesData = $this->Products->invoice_data($product_id);
-        if (!empty($salesData)) {
-            foreach ($salesData as $k => $v) {
-                $totalSales = ($totalSales + $salesData[$k]['t_qty']);               
-            }
-        }
-        // $stock = ($totalPurchase + $product_info[0]['open_quantity']) - $totalSales;
-        $stock = $totalPurchase - $totalSales;
+        $this->db->select("SUM(quantity) as totalPurchaseQnty");
+        $this->db->from('purchase_stock_tbl');
+        $this->db->where('product_id',$product_id);
+        $purchase = $this->db->get()->row();
+
+        $this->db->select("SUM(quantity) as totalSalesQnty");
+        $this->db->from('invoice_stock_tbl');
+        $this->db->where('product_id',$product_id);
+        $sales = $this->db->get()->row();
+        $stock = ($purchase->totalPurchaseQnty - $sales->totalSalesQnty);
 
         // get product size varient
         $sizeId = $product_all_data['size'];
@@ -82,8 +75,6 @@ class Cbarcode extends MX_Controller
             'model_only' => $model_only,
             'is_sunglasses_category' => $is_sunglasses_category,
         );
-
-
         $data['setting'] = $this->Template_model->setting();
         $data['module'] = "dashboard";
         $data['page'] = 'product/barcode_print_page';

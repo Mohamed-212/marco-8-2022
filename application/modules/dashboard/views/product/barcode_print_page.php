@@ -98,15 +98,9 @@
                                         $counter = 0;
                                         // for ($i=0; $i < 60 ; $i++) {
                                         // for ($i=0; $i < $open_quantity ; $i++) {
-                                        $stock = 2;
-                                        for ($i = 0; $i < $stock; $i++) {
-                                            ?>
-                                            <?php if ($counter == 5) { ?>
-                                                <tr>
-                                                <?php $counter = 0; ?>
-                                            <?php } ?>
-
-                                            <td class="td_text" style="display: block; padding-left: 75px;border:0">
+                                        for ($i = 0; $i < $stock; $i++) {?>
+                                            <tr>
+                                            <td class="td_text" style="display: block;border:0">
                                                 <div class="barcode-inner barcode_div"
                                                      style="width: 150px;height: 95px;">
                                                     <div class="product-name barcode_cominfo"
@@ -153,11 +147,7 @@
 													</div> -->
                                                 </div>
                                             </td>
-                                            <?php if ($counter == 5) { ?>
-                                                </tr>
-                                                <?php $counter = 0; ?>
-                                            <?php } ?>
-                                            <?php $counter++; ?>
+                                            </tr>
                                             <?php
                                         }
                                         ?>

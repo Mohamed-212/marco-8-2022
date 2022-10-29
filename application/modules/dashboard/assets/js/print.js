@@ -23,10 +23,10 @@ function barcodePrintDiv(divName) {
     w = window.open();
 
     w.document.write(printContents);
-    //w.document.write('<script type="text/javascript">' + 'window.onload = function() { window.print(); window.close(); };' + '</script>');
+    w.document.write('<script type="text/javascript">' + 'window.onload = function() { window.print(); window.close(); };' + '</script>');
 
-    //w.document.close(); // necessary for IE >= 10
-    //w.focus(); // necessary for IE >= 10
+    w.document.close(); // necessary for IE >= 10
+    w.focus(); // necessary for IE >= 10
 
     return true;
 }
