@@ -106,7 +106,7 @@
                                                 <?php $counter = 0; ?>
                                             <?php } ?>
 
-                                            <td class="td_text" style="display: block; padding-left: 75px">
+                                            <td class="td_text" style="display: block; padding-left: 75px;border:0">
                                                 <div class="barcode-inner barcode_div"
                                                      style="width: 150px;height: 95px;">
                                                     <div class="product-name barcode_cominfo"
