@@ -18,16 +18,16 @@ $(function() {
 	{
         //source:customerList,
         source:function (request, response) {
+            var customer_name = $("#customer_name").val();
             $.ajax({
                 url: base_url + "dashboard/Cinvoice/customer_search_all_customers",
                 method: "post",
-                dataType: "json",
                 data: {
                     csrf_test_name: csrf_test_name,
                     customer_name: customer_name,
                 },
                 success: function (data) {
-                    response(data);
+                    response(jQuery.parseJSON(data));
                 },
             });
         },
@@ -62,7 +62,6 @@ $(function() {
 
 	$( ".customerSelection" ).focus(function(){
 		$(this).change(APchange);
-	
 	});
 	
 });

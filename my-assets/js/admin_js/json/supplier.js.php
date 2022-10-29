@@ -18,16 +18,17 @@ var APchange = function(event, ui){
 		{
             //source:supplierList,
             source:function (request, response) {
+                var supplier_name = $("#supplier_name").val();
                 $.ajax({
                     url: base_url + "dashboard/Cinvoice/supplier_search_all_suppliers",
                     method: "post",
                     dataType: "json",
                     data: {
                         csrf_test_name: csrf_test_name,
-                        customer_name: customer_name,
+                        customer_name: supplier_name,
                     },
                     success: function (data) {
-                        response(data);
+                        response(jQuery.parseJSON(data));
                     },
                 });
             },
@@ -46,6 +47,5 @@ var APchange = function(event, ui){
 		});
 			$( ".supplierSelection" ).focus(function(){
 				$(this).change(APchange);
-			
 			});
     });

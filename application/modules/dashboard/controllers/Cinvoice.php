@@ -1650,7 +1650,7 @@ class Cinvoice extends MX_Controller
         $json_customer = [];
         foreach ($customer_info as $value) {
             //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
-            $json_customer[] = array('label' => $value['customer_name'], 'value' => $value['customer_id']);
+            $json_customer[] = array('label' => $value['customer_name'] . ' (' . $value['customer_mobile'] . ')', 'value' => $value['customer_id']);
         }
 
         echo json_encode($json_customer);

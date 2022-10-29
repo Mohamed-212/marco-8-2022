@@ -18,6 +18,7 @@ $(function() {
 	{
         //source:customerList,
         source:function (request, response) {
+            var customer_name = $("#customer_name").val();
             $.ajax({
                 url: base_url + "dashboard/Cinvoice/customer_search_all_customers",
                 method: "post",
@@ -27,7 +28,7 @@ $(function() {
                     customer_name: customer_name,
                 },
                 success: function (data) {
-                    response(data);
+                    response(jQuery.parseJSON(data));
                 },
             });
         },

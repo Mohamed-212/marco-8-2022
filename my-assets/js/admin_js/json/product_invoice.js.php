@@ -77,7 +77,7 @@ function invoice_productList(cName) {
                     success: function (data) {
 
                         var obj = jQuery.parseJSON(data);
-                        console.log(obj);
+                        //console.log(obj);
                         $('.' + qnttClass).val(obj.cartoon_quantity);
                         $('.' + priceClass).val(obj.price);
                         $('.' + total_tax_price).val(obj.tax);
