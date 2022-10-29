@@ -82,7 +82,7 @@
 											body{display: flex;align-items: center;margin: 0;justify-content: center;justify-items: center;}
 										}
 									</style>
-									<table id="table" class="table bcollapse" style="width: 100%" border="0">
+									<table id="table" class="table table-bordered bcollapse">
 										<?php
 										$counter = 0;
 										// for ($i=0; $i < 60 ; $i++) { 
@@ -94,7 +94,7 @@
 												<tr>
 													<?php $counter = 0; ?>
 												<?php } ?>
-												<td class="td_text" style="text-align: start;width: 108mm;max-width: 108mm;display:inherit;padding: 25px;">
+												<td class="td_text">
 													<div class="barcode-inner barcode_div" style="margin: 5px;">
 														<div class="product-name barcode_cominfo" style="text-align: start;">
 															<table style="width: 100%;">
