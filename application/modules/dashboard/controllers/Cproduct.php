@@ -2525,23 +2525,25 @@ class Cproduct extends MX_Controller
                 }
 
                 // get first filter and material filter id
-                $filter_1_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', $sheetdata[0][4])->get()->row();
+                $filter_1_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', 'GENDER')->get()->row();
                 if (!$filter_1_type_id) {
                     // first filter type is not found
                     // then create one
                     $filter_type_data = array(
-                        'fil_type_name' => $sheetdata[0][4]
+                        'fil_type_name' => 'GENDER'
                     );
                     $this->db->insert('filter_types', $filter_type_data);
                     $filter_1_type_id = $this->db->insert_id();
                 } else {
                     $filter_1_type_id = $filter_1_type_id->fil_type_id;
                 }
+
                 // check for filter_1 item
                 $filter_1_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', $filter_1)->get()->row();
+
                 if (!$filter_1_item_id) {
                     // check if name is empty then set as default
-                    if (empty($filter_1_item_id)) {
+                    if (empty($filter_1)) {
                         $defaultFilter_1 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', 'Default')->get()->row();
                         if (!$defaultFilter_1) {
                             // if not found then create one
@@ -2569,13 +2571,15 @@ class Cproduct extends MX_Controller
                     $filter_1 = $filter_1_item_id->item_id;
                 }
 
+                // echo"<pre>";var_dump($filter_1_type_id, $filter_1, $filter_1_item_id);exit;
+
                 // get second filter and material filter id
-                $filter_2_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', $sheetdata[0][5])->get()->row();
+                $filter_2_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', 'MATERIAL')->get()->row();
                 if (!$filter_2_type_id) {
                     // second filter type is not found
                     // then create one
                     $filter_type_data_2 = array(
-                        'fil_type_name' => $sheetdata[0][5]
+                        'fil_type_name' => 'MATERIAL'
                     );
                     $this->db->insert('filter_types', $filter_type_data_2);
                     $filter_2_type_id = $this->db->insert_id();
@@ -2586,7 +2590,7 @@ class Cproduct extends MX_Controller
                 $filter_2_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', $filter_2)->get()->row();
                 if (!$filter_2_item_id) {
                     // check if name is empty then set as default
-                    if (empty($filter_2_item_id)) {
+                    if (empty($filter_2)) {
                         $defaultFilter_2 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', 'Default')->get()->row();
                         if (!$defaultFilter_2) {
                             // if not found then create one
