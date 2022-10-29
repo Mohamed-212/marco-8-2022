@@ -653,16 +653,16 @@ class Crefund extends MX_Controller
         $quantity = $this->input->post('quantity', true);
         $status = $this->input->post('status', true);
 
-
         if ($product_id && $quantity && $status) {
-            // change the world
+            $product = $this->db->select('*')->from('product_information')->where('product_id', $product_id[0])->get()->result_array();
+            $sql = "INSERT INTO `product_return`(`product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $product_id[0] . "','" . $product[0]['variants'] . "','" . $quantity . "','" . $status . "')";
+            $this->db->query($sql);
         }
 
         $data = [
             'product_id' => $product_id,
-            'customer_name' => $this->input->post('customer_name', true),
-            'product_name' => $this->input->post('product_name', true),
-            'variant_id' => is_array($this->input->post('variant_id', true)) ? $this->input->post('variant_id', true)[0] : $this->input->post('variant_id', true),
+            'quantity' => $quantity,
+            'status' => $status,
         ];
 
         $data['module'] = "dashboard";
