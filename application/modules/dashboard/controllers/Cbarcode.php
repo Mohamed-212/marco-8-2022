@@ -60,7 +60,7 @@ class Cbarcode extends MX_Controller
         }
 
         $product_name_only = trim(str_replace('- ' . $product_info[0]['product_model'], '', $product_info[0]['product_name']));
-        $model_only = (trim(preg_replace("/- C.*/i", "", $product_info[0]['product_model'])));
+        $model_only = $product_info[0]['product_model'];//(trim(preg_replace("/- C.*/i", "", $product_info[0]['product_model'])));
 
         $is_sunglasses_category = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->where('category_id', $product_info[0]['category_id'])->get()->num_rows() > 0;
        
