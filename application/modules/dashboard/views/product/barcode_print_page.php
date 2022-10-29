@@ -132,9 +132,9 @@
                                                             <tr>
 
                                                                 <td style="text-align: start;font-size: 13px;font-weight: 600;"><?= $size ?></td>
-                                                                <?php if ($is_sunglasses_category) : ?>
-                                                                    <td style="text-align: end;">Polarized</td>
-                                                                <?php endif ?>
+<!--                                                                --><?php //if ($is_sunglasses_category) : ?>
+<!--                                                                    <td style="text-align: end;">Polarized</td>-->
+<!--                                                                --><?php //endif ?>
                                                             </tr>
                                                             </tbody>
                                                         </table>
