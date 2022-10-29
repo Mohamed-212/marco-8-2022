@@ -2729,6 +2729,10 @@ class Cproduct extends MX_Controller
                     'pri_type_id' => 2,
                     'product_price' => $excel['s_price'],
                 );
+                $this->db->reset_query();
+                $this->db->where('product_id', $product_id);
+                $this->db->delete('pricing_types_product');
+                $this->db->reset_query();
                 $this->db->insert_batch('pricing_types_product', $price_types_list);
                 // delete old
                 $this->db->reset_query();
