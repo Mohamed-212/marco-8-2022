@@ -106,7 +106,7 @@
                                                 <?php $counter = 0; ?>
                                             <?php } ?>
 
-                                            <td class="td_text" style="display: block; padding-left: 75px;border:0">
+                                            <td class="td_text" style="display: block; padding-left: 75px">
                                                 <div class="barcode-inner barcode_div"
                                                      style="width: 150px;height: 95px;">
                                                     <div class="product-name barcode_cominfo"
@@ -146,7 +146,7 @@
                                                     ?>
                                                     <img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/' . $product_id . '/' . $year) ?>"
                                                          class="img-responsive center-block pbarimag"
-                                                         style="margin-left: 0;margin-right: 0;width: 100%;height: 35px" alt="">
+                                                         style="margin-left: 0;margin-right: 0;width: 95%;height: 35px" alt="">
                                                     <!-- <div class="product-name-details pname_details">{product_name}</div> -->
                                                     <!-- <div class="price price_text"><?php echo(($position == 0) ? "$currency {price}" : "{price} $currency") ?>
 														<small class="excl_vat"><?php echo display('size') ?>: <?= $size ?></small>
