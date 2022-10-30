@@ -179,7 +179,7 @@
                             <h4><?php echo display('import_product_excel') ?></h4>
                         </div>
                     </div>
-                    <?php echo form_open_multipart('dashboard/Cproduct/product_excel_insert', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_product')) ?>
+                    <?php echo form_open_multipart('dashboard/Cproduct/product_excel_insert_old', array('class' => 'form-vertical', 'id' => 'validate', 'name' => 'insert_product')) ?>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-6">
