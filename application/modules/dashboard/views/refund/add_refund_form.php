@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Customer js php -->
-<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer.js.php"></script>
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/customer_add_refund.js.php"></script>
 <!-- Product invoice js -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
 <!-- Invoice js -->
