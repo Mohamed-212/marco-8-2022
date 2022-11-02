@@ -327,7 +327,7 @@
                                                         <img class="show" src="<?= base_url() ?>/assets/img/header.png" style="width: 100%;height: auto;" />
                                                     </div>
                                                 </div>
-                                                <div style="padding: 0 25px;">
+                                                <div style="padding: 0;">
                                                     <div class="row">
                                                         <div class="col-xs-5">
                                                             <h3><?php echo display('invoice_to'); ?> : <?php echo html_escape($customer['customer_name']); ?></h3>

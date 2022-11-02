@@ -201,7 +201,7 @@ $Soft_settings = $CI->Soft_settings->retrieve_setting_editdata();
                                                         </h2>
                                                     </div>
                                                 </div>
-                                                <div style="padding: 0 25px;">
+                                                <div style="padding: 0;">
                                                     <div class="row">
                                                         <div class="col-xs-5">
                                                             <h3><?php echo display('inventory_voucher_no'); ?> : <?php echo html_escape($adj[0]->adjustment_id); ?></h3>
