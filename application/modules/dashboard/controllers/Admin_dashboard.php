@@ -434,6 +434,83 @@ class Admin_dashboard extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
+    #============customer wise sales report==============#
+    public function sales_report_all_details()
+    {
+
+        // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $product_id = $this->input->post('product_id',TRUE);
+        $pricing_type = $this->input->post('pri_type',TRUE);
+        $category_id = $this->input->post('category_id',TRUE);
+        $product_type = $this->input->post('product_type',TRUE);
+        $general_filter = $this->input->post('general_filter',TRUE);
+        $material_filter = $this->input->post('material_filter',TRUE);
+        $start_date = $this->input->post('start_date',TRUE);
+        $end_date = $this->input->post('end_date',TRUE);
+
+        // sales
+        $sales_from = $this->input->post('sales_from',TRUE);
+        $sales_to = $this->input->post('sales_to',TRUE);
+        // purchase
+        $purchase_from = $this->input->post('purchase_from',TRUE);
+        $purchase_to = $this->input->post('purchase_to',TRUE);
+        // balance
+        $balance_from = $this->input->post('balance_from',TRUE);
+        $balance_to = $this->input->post('balance_to',TRUE);
+
+        // supplier
+        $supplier_from = $this->input->post('supplier_from',TRUE);
+        $supplier_to = $this->input->post('supplier_to',TRUE);
+        // total_supplier
+        $total_supplier_from = $this->input->post('total_supplier_from',TRUE);
+        $total_supplier_to = $this->input->post('total_supplier_to',TRUE);
+
+        // sell
+        $sell_from = $this->input->post('sell_from',TRUE);
+        $sell_to = $this->input->post('sell_to',TRUE);
+        // total_sell
+        $total_sell_from = $this->input->post('total_sell_from',TRUE);
+        $total_sell_to = $this->input->post('total_sell_to',TRUE);
+
+        // var_dump($this->input->post('reset',TRUE));
+        if ($this->input->post('reset',TRUE)) {
+            $product_id = $pricing_type = $category_id = $product_type = $general_filter = $material_filter = $start_date =  $end_date = $sales_from = $sales_to = $purchase_from = $purchase_to = $balance_from = $balance_to = $supplier_from = $supplier_to = $total_supplier_from = $total_supplier_to = $sell_from = $sell_to = $total_sell_from = $total_sell_to = null;
+        }
+
+        $data = [
+            'title' => display('sales_report_all_details'),
+        ];
+
+        // $content = $this->parser->parse('dashboard/report/sales_report_all_details', $data, true);
+        $content = $this->lreport->retrieve_sales_report_all_details(
+            $product_id,
+            $pricing_type,
+            $category_id,
+            $product_type,
+            $general_filter,
+            $material_filter,
+            $sales_from,
+            $sales_to,
+            $purchase_from,
+            $purchase_to,
+            $balance_from,
+            $balance_to,
+            $supplier_from,
+            $supplier_to,
+            $total_supplier_from,
+            $total_supplier_to,
+            $sell_from,
+            $sell_to,
+            $total_sell_from,
+            $total_sell_to,
+            $start_date,
+            $end_date
+        );
+        $this->template_lib->full_admin_html_view($content);
+
+    }
+
     /** Purchaes reports */
 
     /** purchase report product wise */

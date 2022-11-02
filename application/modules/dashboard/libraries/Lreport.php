@@ -79,7 +79,7 @@ class Lreport
         $CI->load->library('dashboard/occational');
 
         $unpaid_installments = $CI->Reports->unpaid_installments($from_date, $to_date, $customer_id);
-       
+
         if (!empty($unpaid_installments)) {
             $i = 0;
             foreach ($unpaid_installments as $k => $v) {
@@ -88,7 +88,7 @@ class Lreport
             }
         }
 
-        $customers_list = $CI->Customers->customer_list(); 
+        $customers_list = $CI->Customers->customer_list();
 
         $data = array(
             'title' => display('unpaid_installment'),
@@ -622,18 +622,18 @@ class Lreport
         // get employees with that cities
         $query = $CI->db->select('e.id')->from('employee_history e');
         foreach ($cities as $city) {
-            $query->or_where('FIND_IN_SET("'.$city.'", e.cities) >', 0);
+            $query->or_where('FIND_IN_SET("' . $city . '", e.cities) >', 0);
         }
         $employee_ids = $query->get()->result();
-        
+
         $sales_reports = [];
 
         foreach ($employee_ids as $empId) {
             $sales_reports[] = $CI->Reports->retrieve_sales_report_employee_wise($empId->id, $start_date, $end_date);
         }
         // echo "<pre>";var_dump($sales_reports);exit;
-        
-        $country = $CI->input->post('country',TRUE);
+
+        $country = $CI->input->post('country', TRUE);
         $states = [];
         if ($country) {
             $states = $CI->States->get_states_by_country($country);
@@ -732,7 +732,7 @@ class Lreport
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Stores');
         $sales_reports = $CI->Reports->retrieve_sales_report_latest_customers($start_date, $end_date);
-       
+
         // $return_reports = $CI->Reports->retrieve_return_report_summary_wise($start_date, $end_date);
         $data = [
             'sales_reports' => $sales_reports,
@@ -741,6 +741,190 @@ class Lreport
         ];
         // echo "<pre>";var_dump($reports);exit;
         $reportList = $CI->parser->parse('dashboard/report/sales_report_latest_customers', $data, true);
+        return $reportList;
+    }
+
+    public function retrieve_sales_report_all_details(
+        $product_id = null,
+        $pricing_type = null,
+        $category_id = null,
+        $product_type = null,
+        $general_filter = null,
+        $material_filter = null,
+        $sales_from = null,
+        $sales_to = null,
+        $purchase_from = null,
+        $purchase_to = null,
+        $balance_from = null,
+        $balance_to = null,
+        $supplier_from = null,
+        $supplier_to = null,
+        $total_supplier_from = null,
+        $total_supplier_to = null,
+        $sell_from = null,
+        $sell_to = null,
+        $total_sell_from = null,
+        $total_sell_to = null,
+        $start_date = null,
+        $end_date = null,
+        $store_id = null
+    ) {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Suppliers');
+        $CI->load->model('dashboard/Products');
+        $CI->load->model('dashboard/Stores');
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Categories');
+        $CI->load->library('dashboard/occational');
+
+        if (empty($store_id)) {
+            $start_date = date('Y-m-d');
+
+            $end_date = date('Y-m-d');
+            $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+            $store_id = $result->store_id;
+        }
+
+        $product_ids = [];
+        if ($general_filter) {
+            $CI->db->reset_query();
+            $generalProducts = $CI->db->select('product_id')
+                ->from('filter_product')
+                ->where('filter_type_id', 1)
+                ->where('filter_item_id', $general_filter)
+                ->get()->result_array();
+            foreach ($generalProducts as $prod) {
+                $product_ids[] = $prod['product_id'];
+            }
+        }
+
+        if ($material_filter) {
+            $CI->db->reset_query();
+            $materialProducts = $CI->db->select('product_id')
+                ->from('filter_product')
+                ->where('filter_type_id', 2)
+                ->where('filter_item_id', $material_filter)
+                ->get()->result_array();
+            foreach ($materialProducts as $prod) {
+                $product_ids[] = $prod['product_id'];
+            }
+        }
+        $CI->db->reset_query();
+        $products = $CI->db->select('p.product_id')->from('product_information p');
+
+        if (!$product_id) {
+            // $product_id = '92886343';
+            // if ($store_id) {
+            //     $products->where('store_id', $store_id);
+            // }
+
+            if ($category_id) {
+                $products->where('p.category_id', $category_id);
+            }
+
+            if ($product_type) {
+                $products->where('p.assembly', $product_type);
+            }
+
+            if ($general_filter) {
+                $products->where_in('p.product_id', $product_ids);
+            }
+
+            if ($material_filter) {
+                $products->where_in('p.product_id', $product_ids);
+            }
+        } else {
+            $products->where('p.product_id', $product_id);
+        }
+
+        $products->where('product_name LIKE "%1001%"', null, false);
+
+        $products = $products->limit(50)->order_by('product_name', 'asc')->get()->result_array();
+
+        // echo "<pre>";var_dump($products);exit;
+
+        $product_list = $CI->Products->product_list();
+        $category_list = $CI->Categories->category_list();
+        $store_list = $CI->Stores->store_list();
+        $all_pri_type = $CI->Invoices->select_all_pri_type();
+        $filter_1_list = $CI->db->select('fi.*')
+            ->from('filter_items fi')
+            ->where('fi.type_id = 1')
+            ->get()->result_array();
+        $filter_2_list = $CI->db->select('fi.*')
+            ->from('filter_items fi')
+            ->where('fi.type_id = 2')
+            ->get()->result_array();
+
+        $stock_reports = [];
+
+        // echo "<pre>";
+
+        foreach ($products as $prod) {
+            $item = $CI->Reports->sales_report_all_details(
+                $prod['product_id'],
+                $store_id,
+                $pricing_type,
+                $start_date,
+                $end_date,
+            );
+
+            // $sales_quantity = (int)$item[1]->total_invoice_quantity + (int)$item[2]->total_purchase_return_quantity;
+            // $purchase_quantity = (int)$item[3]->total_purchase_quantity + (int)$item[4]->total_invoice_return;
+            $sales_quantity = (int)$item[6];
+            $purchase_quantity = (int)$item[5];
+            $balance = $purchase_quantity - $sales_quantity;
+            $supplier_price_total = abs(round((float)$item[0]['supplier_price'] * $balance, 2));
+            $sell_price_total = abs(round((float)$item[0]['selected_price'] * $balance, 2));
+
+            if ($sales_from && $sales_quantity < (int)$sales_from) continue;
+            if ($sales_to && $sales_quantity > (int)$sales_to) continue;
+
+            if ($purchase_from && $purchase_quantity < (int)$purchase_from) continue;
+            if ($purchase_to && $purchase_quantity > (int)$purchase_to) continue;
+
+            if ($balance_from && abs($balance) < (int)$balance_from) continue;
+            if ($balance_to && abs($balance) > (int)$balance_to) continue;
+
+            if ($supplier_from && (float)($item[0]['supplier_price']) < (float)$supplier_from) continue;
+            if ($supplier_to && (float)($item[0]['supplier_price']) > (float)$supplier_to) continue;
+
+            if ($total_supplier_from && $supplier_price_total < (float)$total_supplier_from) continue;
+            if ($total_supplier_to && $supplier_price_total > (float)$total_supplier_to) continue;
+
+            if ($sell_from && (float)($item[0]['selected_price']) < (float)$sell_from) continue;
+            if ($sell_to && (float)($item[0]['selected_price']) > (float)$sell_to) continue;
+
+            if ($total_sell_from && $sell_price_total < (float)$total_sell_from) continue;
+            if ($total_sell_to && $sell_price_total > (float)$total_sell_to) continue;
+
+            $stock_reports[] = $item;
+        }
+
+        // var_dump($balance_from, $balance_to);exit;
+
+
+        // echo "<pre>";
+        // var_dump($stock_reports);
+        // exit;
+
+
+
+        $data = array(
+            'title'          => display('sales_report_all_details'),
+            'stock_reports'    => $stock_reports,
+            'product_list'   => $product_list,
+            'category_list' => $category_list,
+            'store_list'     => $store_list,
+            'filter_1_list' => $filter_1_list,
+            'filter_2_list' => $filter_2_list,
+            'start_date'   => $start_date,
+            'end_date'   => $end_date,
+            'all_pri_type' => $all_pri_type,
+        );
+        // echo "<pre>";var_dump($reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/sales_report_all_details', $data, true);
         return $reportList;
     }
 
@@ -785,7 +969,7 @@ class Lreport
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Web_settings');
         $CI->load->library('dashboard/occational');
-        
+
         $sales_report = $CI->Reports->retrieve_dateWise_SalesReports($start_date, $end_date, $employee_id, $city);
 
         $sales_amount = 0;
@@ -929,7 +1113,7 @@ class Lreport
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Stores');
         $sales_reports = $CI->Reports->retrieve_purchase_report_latest_suppliers($start_date, $end_date);
-       
+
         // $return_reports = $CI->Reports->retrieve_return_report_summary_wise($start_date, $end_date);
         $data = [
             'sales_reports' => $sales_reports,
@@ -1275,7 +1459,7 @@ class Lreport
         ];
         $products_balance = $CI->Reports->products_balance($from_date, $to_date, $store_id, $product_id);
 
-       
+
         if (!empty($products_balance)) {
             $i = 0;
             foreach ($products_balance as $k => $v) {

@@ -938,7 +938,7 @@ class Cproduct extends MX_Controller
             $files = $_FILES;
             //print_r($files);
             //echo $_FILES['imageUpload']['name'];
-            $cpt = count($_FILES['imageUpload']['name']);
+            $cpt = count(is_array($_FILES['imageUpload']['name']) ? $_FILES['imageUpload']['name'] : []);
 
             $m = 0;
             $n = 0;

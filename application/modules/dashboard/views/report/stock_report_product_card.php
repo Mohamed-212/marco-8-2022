@@ -195,7 +195,7 @@
                                             <?= $stok_report[1] ?>
                                             </td>
                                             <td class="text-center">
-                                                --
+                                                
                                             </td>
                                             <td align="center">
                                                 <?= $stok_report[0]->price ?>
@@ -203,9 +203,9 @@
                                             <td align="center">
                                                 <?= $stok_report[0]->price * $stok_report[1] ?>
                                             </td>
-                                            <td align="center">
-                                                --
-                                            </td>
+                                            <!-- <td align="center">
+
+                                            </td> -->
                                         </tr>
                                         <?php
                                         if (!empty($stok_report[2])) {
@@ -226,7 +226,7 @@
                                                     </td>
 
                                                     <td align="center">
-                                                        --
+                                                        
                                                     </td>
 
                                                     <td align="center">
@@ -239,9 +239,9 @@
                                                     <td align="center">
                                                         <?= $stock['rate'] * $stock['quantity'] ?>
                                                     </td>
-                                                    <td>
-                                                        --
-                                                    </td>
+                                                    <!-- <td>
+
+                                                    </td> -->
                                                 </tr>
                                         <?php }
                                         } ?>
@@ -264,7 +264,7 @@
                                                     </td>
 
                                                     <td align="center">
-                                                        --
+                                                        
                                                     </td>
 
                                                     <td align="center">
@@ -277,21 +277,19 @@
                                                     <td align="center">
                                                         <?= $stock['rate'] * $stock['quantity'] ?>
                                                     </td>
-                                                    <td>
-                                                        --
-                                                    </td>
+                                                    <!-- <td>
+
+                                                    </td> -->
                                                 </tr>
                                         <?php }
                                         } ?>
                                         <!-- total in -->
                                         <tr>
-                                        <td>--</td>
-                                        <td>--</td>
-                                            <th style="text-align: center">
+                                            <th colspan="3" style="text-align: center">
                                                 <?= display('grand_total') ?>
                                             </th>
                                             <td align="center">
-                                                --
+                                                
                                             </td>
                                             <td align="center">
                                             <?= $all_in_quantity ?>
@@ -303,7 +301,6 @@
                                             <td align="center">
                                                 <?= $all_in_quantity * $all_in_sales ?>
                                             </td>
-                                            <td>--</td>
                                         </tr>
 
                                         <!-- purchase -->
@@ -332,7 +329,7 @@
                                                     </td>
 
                                                     <td align="center">
-                                                        --
+
                                                     </td>
 
                                                     <td class="text-center">
@@ -341,9 +338,9 @@
                                                     <td align="center">
                                                         <?= $stock['rate'] * $stock['quantity'] ?>
                                                     </td>
-                                                    <td>
-                                                        --
-                                                    </td>
+                                                    <!-- <td>
+
+                                                    </td> -->
                                                 </tr>
                                         <?php }
                                         } ?>
@@ -372,7 +369,7 @@
                                                     </td>
 
                                                     <td align="center">
-                                                        --
+
                                                     </td>
 
                                                     <td class="text-center">
@@ -381,25 +378,23 @@
                                                     <td align="center">
                                                         <?= $stock['rate'] * $stock['return_quantity'] ?>
                                                     </td>
-                                                    <td>
-                                                        --
-                                                    </td>
+                                                    <!-- <td>
+
+                                                    </td> -->
                                                 </tr>
                                         <?php }
                                         } ?>
 
                                         <!-- total out -->
                                         <tr>
-                                        <td>--</td>
-                                        <td>--</td>
-                                            <th style="text-align: center">
+                                            <th colspan="3" style="text-align: center">
                                                 <?= display('grand_total') ?>
                                             </th>
                                             <td align="center">
                                                 <?= $all_out_quantity ?>
                                             </td>
                                             <td align="center">
-                                                --
+
                                             </td>
                                             <td align="center">
                                                 <?= $all_out_sales ?>
@@ -407,23 +402,18 @@
                                             <td align="center">
                                                 <?= $all_out_quantity * $all_out_sales ?>
                                             </td>
-                                            <td>--</td>
                                         </tr>
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <td>--</td>
-                                        <td>--</td>
-                                            <th style="text-align: center">
+                                            <th colspan="3" style="text-align: center">
                                                 <?= display('grand_total') ?>
                                             </th>
-                                            <td align="center">
+                                            <td align="center" colspan="2">
                                                 <!-- <?= ($all_in_quantity + $stok_report[1]) - $all_out_quantity ?> -->
-                                                --
                                             </td>
-                                            <td>--</td>
                                             <td align="center">
-                                                <?= ($all_in_sales) - $all_out_sales ?>
+                                                <!-- <?= ($all_in_sales) - $all_out_sales ?> -->
                                             </td>
                                             <td align="center">
                                             <?= ($all_in_sales) - $all_out_sales ?>

@@ -849,10 +849,10 @@
                         href="<?php echo base_url('dashboard/Creport/stock_report_store_wise') ?>"><?php echo display('stock_report_store_wise') ?></a>
                 </li>
                 <?php }?>
-                <li class="<?php echo (($this->uri->segment(3) == 'stock_report_product_card' ? 'active' : '')) ?>">
+                <!-- <li class="<?php echo (($this->uri->segment(3) == 'stock_report_product_card' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Creport/stock_report_product_card') ?>"><?php echo display('stock_report_product_card') ?></a>
-                </li>
+                </li> -->
                 <?php if ($this->permission->check_label('stock_adjustment')->create()->access()) : ?>
                     <li class="<?php echo (($this->uri->segment(3) == 'stock_adjustment' ? 'active' : '')) ?>">
                     <a
@@ -937,6 +937,8 @@
         || $this->uri->segment(3) == ("retrieve_sales_report_city_wise") 
         || $this->uri->segment(3) == ("sales_report_product_wise") 
         || $this->uri->segment(3) == ("retrieve_sales_report_product_wise") 
+        || $this->uri->segment(3) == ("sales_report_all_details") 
+        || $this->uri->segment(3) == ("retrieve_sales_report_all_details") 
         || $this->uri->segment(3) == ("transfer_report") 
         || $this->uri->segment(3) == ("product_sales_reports_date_wise") 
         || $this->uri->segment(3) == ("total_profit_report") 
@@ -968,6 +970,10 @@
                 </span>
             </a>
             <ul class="treeview-menu">
+                <li class="<?php echo (($this->uri->segment(3) == 'sales_report_all_details' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_all_details') ?>"><?php echo display('sales_report_all_details') ?></a>
+                </li>    
                 <?php if ($this->permission->check_label('sales_report')->access()) { ?>
                 <li
                     class="<?php echo (($this->uri->segment(3) == 'todays_sales_report' || ($this->uri->segment(3) == 'retrieve_dateWise_SalesReports') ? 'active' : '')) ?>">

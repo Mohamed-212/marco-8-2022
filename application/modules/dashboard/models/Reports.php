@@ -13,6 +13,7 @@ class Reports extends CI_Model
             'dashboard/Variants',
             'dashboard/Soft_settings',
             'template/Template_model',
+            'dashboard/Products',
         ));
     }
 
@@ -2135,57 +2136,197 @@ class Reports extends CI_Model
          */
         //  invoices
         // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        $this->db->select('a.created_at as date_time, a.invoice_id, a.invoice, b.quantity, b.rate')
-            ->from('invoice a')
-            ->join('invoice_details b', 'b.product_id = "' . $product_id . '" AND b.invoice_id = a.invoice_id')
-            ->where('a.store_id', $store_id);
-        if ($dateRange) {
-            $this->db->where($dateRange, NULL, FALSE);
-        }
+        // $this->db->select('a.created_at as date_time, a.invoice_id, a.invoice, b.quantity, b.rate')
+        //     ->from('invoice a')
+        //     ->join('invoice_details b', 'b.product_id = "' . $product_id . '" AND b.invoice_id = a.invoice_id')
+        //     ->where('a.store_id', $store_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
 
-        $invoices = $this->db->order_by('created_at', 'asc')
-            ->get()
-            ->result_array();
-        // purchase return
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        $this->db->select('a.created_at as date_time, a.purchase_return_id, b.quantity, b.rate')
-            ->from('product_purchase_return a')
-            ->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = "' . $product_id . '"')
-            ->where('a.store_id', $store_id);
-        if ($dateRange) {
-            $this->db->where($dateRange, NULL, FALSE);
-        }
-        $purchase_return = $this->db->order_by('created_at', 'asc')
-            ->get()
-            ->result_array();
+        // $invoices = $this->db->order_by('created_at', 'asc')
+        //     ->get()
+        //     ->result_array();
+        // // purchase return
+        // // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $this->db->select('a.created_at as date_time, a.purchase_return_id, b.quantity, b.rate')
+        //     ->from('product_purchase_return a')
+        //     ->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = "' . $product_id . '"')
+        //     ->where('a.store_id', $store_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+        // $purchase_return = $this->db->order_by('created_at', 'asc')
+        //     ->get()
+        //     ->result_array();
 
         /**
          * purchase || imports || out quantity
          */
         // purchases
         // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        $this->db->select('a.purchase_id, a.invoice, a.created_at as date_time, b.quantity, b.rate')
-            ->from('product_purchase a')
-            ->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = "' . $product_id . '"')
-            ->where('a.store_id', $store_id);
-        if ($dateRange) {
-            $this->db->where($dateRange, NULL, FALSE);
-        }
-        $purchases = $this->db->order_by('created_at', 'asc')
-            ->get()
-            ->result_array();
+        // $this->db->select('a.purchase_id, a.invoice, a.created_at as date_time, b.quantity, b.rate')
+        //     ->from('product_purchase a')
+        //     ->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = "' . $product_id . '"')
+        //     ->where('a.store_id', $store_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+        // $purchases = $this->db->order_by('created_at', 'asc')
+        //     ->get()
+        //     ->result_array();
 
-        // invoice return
+        // // invoice return
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $this->db->select('a.id, a.return_invoice_id, a.return_quantity, a.rate, a.created_at as date_time')
+        //     ->from('invoice_return a')
+        //     ->join('invoice b', 'b.invoice_id = a.invoice_id AND b.store_id = "' . $store_id . '"', 'left')
+        //     ->where('a.product_id', $product_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+        // $invoice_return = $this->db->get()->result_array();
+
+
+        $totalPurchase = 0;
+        $purchaseData = $this->Products->product_purchase_info($product_id);
+        if (!empty($purchaseData)) {
+            foreach ($purchaseData as $k => $v) {
+                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+            }
+        }
+        $totalPurchase += $product->open_quantity;
+        $salesData = $this->Products->invoice_data($product_id);
+        $totalSales = 0;
+        if (!empty($salesData)) {
+            foreach ($salesData as $k => $v) {
+                $totalSales = ($totalSales + $salesData[$k]['t_qty']);
+            }
+        }
+
+        return [$product, $openQuantity, 0, 0, 0,0, $totalPurchase, $totalSales];
+    }
+
+    public function sales_report_all_details(
+        $product_id = null,
+        $store_id = null,
+        $pricing_type = null,
+        $from_date = null,
+        $to_date = null,
+    ) {
+
+        $product = $this->db->select('p.*, c.category_name')->from('product_information p')
+            ->join('product_category c', 'c.category_id = p.category_id', 'left')
+            ->where('p.product_id', $product_id)
+            ->get()->result_array()[0];
+
+        // get item filters
+        $product['filters'] = $this->db->select('fi.item_name')
+            ->from('filter_product fp')
+            ->join('filter_items fi', 'fi.item_id = fp.filter_item_id', 'left')
+            ->where('fp.product_id', $product_id)
+            ->order_by('fp.filter_type_id', 'asc')
+            ->get()->result_array();
+
+        // get item pricing types
+        $product['prices'] = $this->db->select('product_price, pri_type_id')
+            ->from('pricing_types_product')
+            ->where('product_id', $product_id)
+            ->order_by('pri_type_id', 'asc')
+            ->get()->result_array();
+
+        // set product selected price
+        $product['selected_price'] = $product['price']; // without cases
+        if ($pricing_type == 1) {
+            // withcases / whole price
+            $product['selected_price'] = $product['prices'][0]['product_price'];
+        } elseif ($pricing_type == 2) {
+            // customer price
+            $product['selected_price'] = $product['prices'][1]['product_price'];
+        }
+
+        $default_store_id = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+        $default_store_id = $default_store_id->store_id;
+        $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $product->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
+
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        $this->db->select('a.id, a.return_invoice_id, a.return_quantity, a.rate, a.created_at as date_time')
-            ->from('invoice_return a')
-            ->join('invoice b', 'b.invoice_id = a.invoice_id AND b.store_id = "' . $store_id . '"', 'left')
-            ->where('a.product_id', $product_id);
-        if ($dateRange) {
-            $this->db->where($dateRange, NULL, FALSE);
-        }
-        $invoice_return = $this->db->get()->result_array();
 
-        return [$product, $openQuantity, $invoices, $purchase_return, $purchases, $invoice_return];
+        /**
+         * transfer || exports || in quantity
+         */
+        //  invoices
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $this->db->select('SUM(b.quantity) as total_invoice_quantity')
+        //     ->from('invoice a')
+        //     ->join('invoice_details b', 'b.product_id = "' . $product_id . '" AND b.invoice_id = a.invoice_id')
+        //     ->where('a.store_id', $store_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+
+        // $invoices = $this->db->group_by('b.product_id')
+        //     ->get()
+        //     ->row();
+        // // purchase return
+        // // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $this->db->select('SUM(b.quantity) as total_purchase_return_quantity')
+        //     ->from('product_purchase_return a')
+        //     ->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = "' . $product_id . '"')
+        //     ->where('a.store_id', $store_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+        // $purchase_return = $this->db->group_by('b.product_id')
+        //     ->get()
+        //     ->row();
+
+        /**
+         * purchase || imports || out quantity
+         */
+        // purchases
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $this->db->select('SUM(b.quantity) as total_purchase_quantity')
+        //     ->from('product_purchase a')
+        //     ->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = "' . $product_id . '"')
+        //     ->where('a.store_id', $store_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+        // $purchases = $this->db->group_by('b.product_id')
+        //     ->get()
+        //     ->row();
+
+        // // invoice return
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $this->db->select('SUM(a.return_quantity) as total_invoice_return')
+        //     ->from('invoice_return a')
+        //     ->join('invoice b', 'b.invoice_id = a.invoice_id AND b.store_id = "' . $store_id . '"', 'left')
+        //     ->where('a.product_id', $product_id);
+        // if ($dateRange) {
+        //     $this->db->where($dateRange, NULL, FALSE);
+        // }
+        // $invoice_return = $this->db->group_by('a.product_id')
+        //     ->get()
+        //     ->row();
+
+        $totalPurchase = 0;
+        $purchaseData = $this->Products->product_purchase_info($product_id);
+        if (!empty($purchaseData)) {
+            foreach ($purchaseData as $k => $v) {
+                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+            }
+        }
+        $totalPurchase += $product['open_quantity'];
+        $salesData = $this->Products->invoice_data($product_id);
+        $returnData = $this->Products->return_invoice_data($product_id);
+        $totalSales = 0;
+        if (!empty($salesData)) {
+            foreach ($salesData as $k => $v) {
+                $totalSales = ($totalSales + $salesData[$k]['t_qty']);
+            }
+        }
+
+
+        return [$product, 0, 0, 0, 0, $totalPurchase, $totalSales];
     }
 }
