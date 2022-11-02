@@ -2382,7 +2382,7 @@ class Cproduct extends MX_Controller
         }
     }
 
-    public function product_excel_insert_old()
+    public function product_excel_insert()
     {
         ini_set('memory_limit', '5000000000M');
         set_time_limit(5000000000);
@@ -2857,13 +2857,13 @@ class Cproduct extends MX_Controller
                 }
             }
 
-            $this->print_mem();
+            // $this->print_mem();
             $this->session->set_userdata(array('message' => display('successfully_added')));
             // redirect('dashboard/Cproduct/manage_product');
         }
     }
 
-    public function product_excel_insert()
+    public function product_excel_insert_new()
     {
         ini_set('memory_limit', '5000000000M');
         set_time_limit(5000000000);
@@ -3350,7 +3350,7 @@ class Cproduct extends MX_Controller
                 }
             }
 
-            $this->print_mem();
+            // $this->print_mem();
 
             unset($sheetdata);
 
