@@ -253,7 +253,8 @@ class Crefund extends MX_Controller
                 $product_price = $without_cases_price->price;
             }
 
-            if ($without_cases_price->category_id === $accessoriesCategory->category_id) {
+            if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
+                // assemply
                 if ($filter['price_type'] == 1) {
                     // with Cases
                     $invoice_details[0]['total_price'] = 0;
