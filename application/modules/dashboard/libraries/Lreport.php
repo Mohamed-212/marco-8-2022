@@ -840,7 +840,7 @@ class Lreport
 
         $products->where('product_name LIKE "%1001%"', null, false);
 
-        $products = $products->limit(50)->order_by('product_name', 'asc')->get()->result_array();
+        $products = $products->limit(300)->order_by('product_name', 'asc')->get()->result_array();
 
         // echo "<pre>";var_dump($products);exit;
 
