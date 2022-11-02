@@ -189,7 +189,7 @@
 										<th><?php echo display('variant') ?></th>
 										<th><?php echo display('quantity') ?></th>
 										<th><?php echo display('rate') ?></th>
-										<th><?php echo display('discount') ?></th>
+										<th><?php echo display('total_discount') ?></th>
 										<th class="text-right"><?php echo display('total_ammount') ?></th>
 									</tr>
 								</thead>

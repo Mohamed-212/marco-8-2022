@@ -230,7 +230,7 @@ class Crefund extends MX_Controller
             //acc_transaction
             $receive_by = $this->session->userdata('user_id');
             //calc total price of returned qunty of product
-            $without_cases_price = $this->db->select('price')
+            $without_cases_price = $this->db->select('price, category_id, product_name, product_model')
                 ->from('product_information')
                 ->where('product_id', $filter['product_id'])
                 ->limit(1)
@@ -241,14 +241,56 @@ class Crefund extends MX_Controller
                 ->where('pri_type_id', 1)
                 ->limit(1)
                 ->get()->row();
+            $accessoriesCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
+            $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
             if ($filter['price_type'] == 1) {
                 // with Cases
                 $invoice_details[0]['total_price'] = $with_cases_price->product_price * $invoice_details[0]['quantity'];
+                $product_price = $with_cases_price->product_price;
             } else {
                 // without cases
                 $invoice_details[0]['total_price'] = $without_cases_price->price * $invoice_details[0]['quantity'];
+                $product_price = $without_cases_price->price;
             }
-            $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
+
+            if ($without_cases_price->category_id === $accessoriesCategory->category_id) {
+                if ($filter['price_type'] == 1) {
+                    // with Cases
+                    $invoice_details[0]['total_price'] = 0;
+                    $product_price = 0;
+                } else {
+                    // without cases
+
+                    // get all products from this invoice
+                    $invProducts = $this->db->select('product_id')
+                        ->from('invoice_details')
+                        ->where('invoice_id', $invoice_details[0]['invoice_id'])
+                        ->where('product_id !=', $filter['product_id'])
+                        ->get()->result();
+
+                    $invProductsIds = [];
+                    foreach ($invProducts as $invProd) {
+                        $invProductsIds[] = $invProd->product_id;
+                    }
+
+                    // get the first product with same brand name in this invoice
+                    $sameProduct = $this->db->select('p.product_id, p.price, a.product_price')
+                        ->from('product_information p')
+                        ->join('pricing_types_product a', 'a.product_id = p.product_id AND a.pri_type_id = 1')
+                        ->where(
+                            'product_name LIKE "%' . str_replace($without_cases_price->product_model, '', $without_cases_price->product_name) . '%"'
+                        )
+                        ->where_in('p.product_id', $invProductsIds)
+                        ->limit(1)
+                        ->order_by('p.product_id')
+                        ->get()->row();
+
+                    // product price = sameProduct.withCases.price - sameProduct.withoutCases.price
+                    $invoice_details[0]['total_price'] = ($sameProduct->product_price - $sameProduct->price) * $invoice_details[0]['quantity'];
+                    $product_price = $sameProduct->product_price - $sameProduct->price;
+                }
+            }
+
             $total_discount = $invoice_details[0]['discount'] * $filter['quantity'];
             $total_discount += $invoice_details[0]['invoice_discount'] * $filter['quantity'];
             $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $filter['quantity'])) - $total_discount;

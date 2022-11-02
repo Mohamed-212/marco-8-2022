@@ -2672,6 +2672,7 @@ class Cproduct extends MX_Controller
                     'variants' => $variants,
                 );
 
+
                 $product_id = $this->generator(8);
                 $product_details = array(
                     'product_id' => $product_id,
@@ -2859,7 +2860,7 @@ class Cproduct extends MX_Controller
 
             // $this->print_mem();
             $this->session->set_userdata(array('message' => display('successfully_added')));
-            // redirect('dashboard/Cproduct/manage_product');
+            redirect('dashboard/Cproduct/manage_product');
         }
     }
 
