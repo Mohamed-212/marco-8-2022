@@ -31,13 +31,13 @@
 							<div class="col-sm-6">
 								<div class="form-group row">
 									<label for="store_name" class="col-sm-4 col-form-label"><?php echo display('store') ?>
-										
+
 									</label>
 									<div class="col-sm-8">
 										<select class="form-control" id="store_id" name="store_id"="">
 											<option value="">select <?php echo display('store') ?></option>
 											<?php foreach ($store_list as $st) : ?>
-												<option value="<?=$st['store_id']?>" <?=$st['store_id'] == $store_id ? 'selected' : ''?> ><?=$st['store_name']?></option>
+												<option value="<?= $st['store_id'] ?>" <?= $st['store_id'] == $store_id ? 'selected' : '' ?>><?= $st['store_name'] ?></option>
 											<?php endforeach ?>
 										</select>
 									</div>
@@ -49,12 +49,12 @@
 							<div class="col-sm-6">
 								<div class="form-group row">
 									<label for="store_name" class="col-sm-4 col-form-label"><?php echo display('product_name') ?>
-										
+
 									</label>
 									<div class="col-sm-8">
-										<input type="text" name="product_name" onkeyup="invoice_productList(1);" class="form-control productSelection" placeholder='<?php echo display('product_name') ?>' value="<?=$product_name?>" id="product_name_1">
+										<input type="text" name="product_name" onkeyup="invoice_productList(1);" class="form-control productSelection" placeholder='<?php echo display('product_name') ?>' value="<?= $product_name ?>" id="product_name_1">
 
-										<input type="hidden" class="autocomplete_hidden_value product_id_1" name="product_id" value="<?=$product_id?>" />
+										<input type="hidden" class="autocomplete_hidden_value product_id_1" name="product_id" value="<?= $product_id ?>" />
 
 										<input type="hidden" class="sl" value="1">
 										<input type="hidden" name="assembly" id="assembly1" value="">
@@ -119,12 +119,13 @@
 					</div>
 					<div class="panel-body">
 						<div class="table-responsive mt_10">
+							<style>
+								thead tr {
+									text-align: center;
+								}
+							</style>
 							<table class="table table-bordered table-striped table-hover stripe dataTablePagination" id="example">
-								<style>
-									thead tr {
-										text-align: center;
-									}
-								</style>
+
 								<thead>
 									<tr>
 										<th class="text-center"><?php echo display('sl') ?></th>

@@ -2122,9 +2122,9 @@ class Reports extends CI_Model
         $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $product->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
 
         // TODO change this
-        if (empty($first_purchase->quantity)) {
-            $first_purchase->quantity = $product->open_quantity;
-        }
+        // if (empty($first_purchase->quantity)) {
+        //     $first_purchase->quantity = $product->open_quantity;
+        // }
 
         $openQuantity = (int)$first_purchase->quantity;
 
