@@ -618,7 +618,7 @@
                                         <td class="text-right" colspan="5"><b><?php echo display('paid_ammount') ?>
                                                 :</b></td>
                                         <td class="text-right" colspan="2">
-                                            <input type="text" id="paidAmount" onkeyup="invoice_paidamount();" class="form-control text-right" name="paid_amount" placeholder="0.00" />
+                                            <input type="text" id="paidAmount" onkeyup="invoice_paidamount();" class="form-control text-right" name="paid_amount" placeholder="0.00" value="0" />
                                         </td>
                                     </tr>
                                     <tr>

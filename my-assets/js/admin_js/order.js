@@ -393,19 +393,22 @@ function calculateSum() {
 
 //Inovice paid amount
 function invoice_paidamount() {
-    var customer_balance = $('#customer_balance').val();
-    var t = $("#grandTotal").val(),
-            a = $("#paidAmount").val(),
-            e = (t - Math.abs(customer_balance)) - a;
-    var test = (Math.abs(e)).toFixed(2);
+    var customer_balance = parseFloat(
+        $('#customer_balance').val().replace(/\,/gi, '').replace(/\./gi, '')
+    );
+    customer_balance = customer_balance >= 0 ? customer_balance : 0;
+    var t = parseFloat($('#grandTotal').val()),
+        a = parseFloat($('#paidAmount').val()),
+        e = t - customer_balance - a;
+    var test = e.toFixed(2);
 
-    if (parseFloat(customer_balance) > parseFloat(t)) {
+    if (customer_balance >= t) {
         test = 0;
     }
-    
-    $("#dueAmmount").val(test);
+
+    $('#dueAmmount').val(test);
     $('.installment_setup').hide();
-    $("#is_installment").val(0);
+    $('#is_installment').val(0);
 }
 
 //Stock limit check
@@ -528,19 +531,20 @@ function add_month() {
 
 //Invoice full paid
 function full_paid() {
-    var customer_balance = $('#customer_balance').val();
+    // var customer_balance = $('#customer_balance').val();
     var elem = $("#is_quotation");
     if (elem.prop('checked') == true) {
         calculateSumQuotation();
     } else {
         calculateSum();
     }
-    var grandTotal = $("#grandTotal").val();
-    if (parseFloat(customer_balance) > parseFloat(grandTotal)) {
-        $("#paidAmount").val(0);
-    } else {
-        $("#paidAmount").val(grandTotal - Math.abs(customer_balance));
-    }
+    // var grandTotal = $("#grandTotal").val();
+    // if (parseFloat(customer_balance) > parseFloat(grandTotal)) {
+    //     $("#paidAmount").val(0);
+    // } else {
+    //     $("#paidAmount").val(grandTotal - Math.abs(customer_balance));
+    // }
+    $('#paidAmount').val(parseFloat($('#dueAmmount').val()));
     invoice_paidamount();
     $('.installment_setup').hide();
     $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
