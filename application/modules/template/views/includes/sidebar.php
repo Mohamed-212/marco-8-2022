@@ -763,6 +763,7 @@
                         <?php echo display($groupLabel) ?>
                     </a>
                 </li>
+                <!-- some change -->
                 <?php
                                                 }
                                             } else {
