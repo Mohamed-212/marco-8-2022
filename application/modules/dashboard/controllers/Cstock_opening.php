@@ -134,15 +134,15 @@ class Cstock_opening extends MX_Controller
                 //Stock opening Details
                 $cogs_price = 0;
                 for ($i = 0, $n = count($p_id); $i < $n; $i++) {
-                    $product_quantity = $quantity[$i];
-                    $product_rate     = $rate[$i];
+                    $product_quantity = (int)$quantity[$i];
+                    $product_rate     = (float)$rate[$i];
                     $product_id       = $p_id[$i];
                     $batch_no         = $batch[$i];
                     $expiry_date      = $expiry[$i];
                     if (!empty($expiry_date) && strlen($expiry_date) > 2) {
                         $expiry_date = date('Y-m-d', strtotime($expiry_date));
                     }
-                    $total_price      = $t_price[$i];
+                    $total_price      = (float)$t_price[$i];
                     $variant          = $variant_id[$i];
                     $variant_color    = $color_variant[$i];
                     $cogs_price       += ($product_rate * $product_quantity);
