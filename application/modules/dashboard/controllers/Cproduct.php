@@ -481,6 +481,7 @@ class Cproduct extends MX_Controller
         $this->permission->check_label('manage_product')->read()->redirect();
         $filter = array(
             'product_name' => $this->input->get('product_name', TRUE),
+            'product_id' => $this->input->get('product_id', TRUE),
             'supplier_id' => $this->input->get('supplier_id', TRUE),
             'category_id' => $this->input->get('category_id', TRUE),
             'unit_id' => $this->input->get('unit_id', TRUE),

@@ -72,6 +72,9 @@ class Products extends CI_Model
         if (!empty($filter['product_name'])) {
             $this->db->like('product_information.product_name', $filter['product_name'], 'both');
         }
+        // if (!empty($filter['product_id'])) {
+        //     $this->db->where('product_information.product_id', $filter['product_id']);
+        // }
         if (!empty($filter['supplier_id'])) {
             $this->db->where('product_information.supplier_id', $filter['supplier_id']);
         }
