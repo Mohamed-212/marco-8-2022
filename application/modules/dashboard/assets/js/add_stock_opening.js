@@ -544,3 +544,11 @@ function stock_by_product_variant_id(sl) {
         },
     });
 }
+
+function select_all(){
+    if($('#all_pro').prop('checked') == true){
+        $('.check_pro_id').prop('checked', true);
+    }else{
+        $('.check_pro_id').prop('checked', false);
+    }
+}
