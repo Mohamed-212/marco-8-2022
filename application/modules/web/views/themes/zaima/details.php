@@ -89,7 +89,7 @@ $theme = $CI->Themes->get_theme();
                             <div class="col-3 col-sm-2">
                                 <!-- Begin product thumb nav -->
                                 <ul class="thumb-nav">
-                                    <li id="product-<?= $product_id ?>"><img data-src="<?php echo  base_url() . (!empty($image_thumb) ? $image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
+                                    <li id="product-<?= $product_id ?>"><img data-src="<?php echo  base_url() . (!empty($image_thumb) ? $image_thumb : 'my-assets/image/no-image.jpg') ?>" alt="<?php echo display('image') ?>"></li>
                                     <?php
                                     // if (!empty($product_gallery_img)) {
                                     // foreach ($product_gallery_img as $gallery) {
@@ -102,19 +102,28 @@ $theme = $CI->Themes->get_theme();
                                     // }
                                     ?>
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
-                                        <li id="product-<?= $var->product_id ?>"><img data-src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'assets/img/icons/default.jpg') ?>" alt="<?php echo display('image') ?>"></li>
+                                        <li id="product-<?= $var->product_id ?>"><img data-src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'my-assets/image/no-image.jpg') ?>" alt="<?php echo display('image') ?>"></li>
                                     <?php endforeach ?>
                                 </ul>
                                 <!-- End product thumb nav -->
                             </div>
+
                             <div class="col-9 col-sm-10" style="width: 100%;min-height: 250px;">
                                 <!-- Begin Product Images Slider -->
                                 <div class="main-img-slider">
-                                    <figure id="product-<?= $product_id ?>">
-                                        <a href="<?php echo base_url() . $image_large_details; ?>" data-size="1400x1400">
+                                    <?php foreach ($varients as $var) : $var = (object)$var; ?>
+                                        <figure id="product-<?= $var->product_id ?>">
+                                            <a href="<?php echo  base_url() . (!empty($var->image_large_details) ? $var->image_large_details : 'my-assets/image/no-image.jpg') ?>" data-size="1400x1400">
+                                                <img class="img-fluid" data-src="<?php echo  base_url() . (!empty($var->image_large_details) ? $var->image_large_details : 'my-assets/image/no-image.jpg') ?>" data-lazy="<?php echo  base_url() . (!empty($var->image_large_details) ? $var->image_large_details : 'my-assets/image/no-image.jpg') ?>" data-zoom-image="<?php echo  base_url() . (!empty($var->image_large_details) ? $var->image_large_details : 'my-assets/image/no-image.jpg') ?>" alt="<?php echo display('image') ?>" />
+                                            </a>
+                                        </figure>
+                                    <?php endforeach ?>
+                                    <!-- <figure id="product-<?= $product_id ?>">
+                                        <!-- <a href="<?php echo base_url() . $image_large_details; ?>" data-size="1400x1400">
                                             <img class="img-fluid" data-src="<?php echo base_url() . $image_large_details; ?>" data-lazy="<?php echo base_url() . $image_large_details; ?>" data-zoom-image="<?php echo base_url() . $image_large_details; ?>" alt="<?php echo display('image') ?>" />
-                                        </a>
-                                    </figure>
+                                        </a> -->
+
+                                    </figure> -->
                                     <?php
                                     /*
                                     if ($product_gallery_img) {
