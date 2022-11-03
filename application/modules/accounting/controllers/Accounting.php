@@ -50,7 +50,7 @@ class Accounting extends MX_Controller
       $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
 
       if ($this->form_validation->run() == TRUE) {
-        // $dtpDate = $this->input->post('dtpDate', TRUE);
+        $dtpDate = date('Y-m-d H:i:s');
         // $datecheck = $this->fiscal_date_check($dtpDate);
         // if (!$datecheck) {
         //   $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
@@ -182,6 +182,7 @@ class Accounting extends MX_Controller
 
       if ($this->form_validation->run() == TRUE) {
         // $dtpDate = $this->input->post('dtpDate', TRUE);
+        $dtpDate = date('Y-m-d H:i:s');
         // $datecheck = $this->fiscal_date_check($dtpDate);
         // if (!$datecheck) {
         //   $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
@@ -324,7 +325,8 @@ class Accounting extends MX_Controller
       $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
 
       if ($this->form_validation->run() == TRUE) {
-        $dtpDate = $this->input->post('dtpDate', TRUE);
+        // $dtpDate = $this->input->post('dtpDate', TRUE);
+        $dtpDate = date('Y-m-d H:i:s');
         // $datecheck = $this->fiscal_date_check($dtpDate);
         // if (!$datecheck) {
         //   $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
