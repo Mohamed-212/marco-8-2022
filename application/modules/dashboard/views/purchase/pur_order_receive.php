@@ -172,7 +172,7 @@
                                         </select>
                                     </div>
                                     <label for="conversion"
-                                           class="col-sm-2 col-form-label"> <?php echo display('rate') ?>
+                                           class="col-sm-2 col-form-label"> <?php echo display('purchase_rate') ?>
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-3">
