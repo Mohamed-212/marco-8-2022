@@ -471,12 +471,7 @@ class Admin_dashboard extends MX_Controller
         $sell_to = $this->input->post('sell_to',TRUE);
         // total_sell
         $total_sell_from = $this->input->post('total_sell_from',TRUE);
-        $total_sell_to = $this->input->post('total_sell_to',TRUE);
-
-        // var_dump($this->input->post('reset',TRUE));
-        if ($this->input->post('reset',TRUE)) {
-            $product_id = $pricing_type = $category_id = $product_type = $general_filter = $material_filter = $start_date =  $end_date = $sales_from = $sales_to = $purchase_from = $purchase_to = $balance_from = $balance_to = $supplier_from = $supplier_to = $total_supplier_from = $total_supplier_to = $sell_from = $sell_to = $total_sell_from = $total_sell_to = null;
-        }
+        $total_sell_to = $this->input->post('total_sell_to',TRUE);        
 
         $data = [
             'title' => display('sales_report_all_details'),

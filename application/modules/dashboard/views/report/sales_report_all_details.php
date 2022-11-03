@@ -87,7 +87,7 @@
 					<div class="panel-body">
 
 						<?php echo form_open('dashboard/Admin_dashboard/sales_report_all_details', array(
-							'class' => '', 'id' => 'validate', 'method' => 'POST'
+							'class' => 'filters_form', 'id' => 'validate', 'method' => 'POST'
 						)); ?>
 
 
@@ -120,7 +120,7 @@
 								<div class="form-group row">
 									<label for="product_id" class="col-sm-3 col-form-label"><?php echo display('product') ?>:</label>
 									<div class="col-sm-9">
-										<select class="form-control" name="product_id" id="product_id">
+										<select class="form-control select3" name="product_id" id="product_id">
 											<option value=""></option>
 											<?php foreach ($product_list as $product_item) { ?>
 												<option value="<?php echo $product_item['product_id'] ?>" <?php echo (($product_item['product_id'] == @$_POST['product_id']) ? 'selected' : '') ?>>
@@ -135,7 +135,7 @@
 								<div class="form-group row">
 									<label for="category_id" class="col-sm-3 col-form-label"><?php echo display('category') ?>:</label>
 									<div class="col-sm-9">
-										<select class="form-control" name="category_id" id="category_id">
+										<select class="form-control select3" name="category_id" id="category_id">
 											<option value=""></option>
 											<?php foreach ($category_list as $category_item) { ?>
 												<option value="<?php echo $category_item['category_id'] ?>" <?php echo (($category_item['category_id'] == @$_POST['category_id']) ? 'selected' : '') ?>>
@@ -153,7 +153,7 @@
 								<div class="form-group row">
 									<label for="currency" class="col-sm-4 col-form-label"><?php echo display('pricing') ?></label>
 									<div class="col-sm-8">
-										<select name="pri_type" id="pri_type" class="form-control">
+										<select name="pri_type" id="pri_type" class="form-control select3">
 											<option value=""></option>
 											<?php foreach ($all_pri_type as $pri_type) : ?>
 												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
@@ -172,7 +172,7 @@
 								<div class="form-group row">
 									<label for="filter_1_id" class="col-sm-3 col-form-label">GENDER:</label>
 									<div class="col-sm-9">
-										<select class="form-control" name="filter_1_id" id="filter_1_id">
+										<select class="form-control select3" name="filter_1_id" id="filter_1_id">
 											<option value=""></option>
 											<?php foreach ($filter_1_list as $filter_1_item) { ?>
 												<option value="<?php echo $filter_1_item['item_id'] ?>" <?php echo (($filter_1_item['item_id'] == @$_POST['filter_1_id']) ? 'selected' : '') ?>>
@@ -187,7 +187,7 @@
 								<div class="form-group row">
 									<label for="filter_2_id" class="col-sm-3 col-form-label">MATERIAL:</label>
 									<div class="col-sm-9">
-										<select class="form-control" name="filter_2_id" id="filter_2_id">
+										<select class="form-control select3" name="filter_2_id" id="filter_2_id">
 											<option value=""></option>
 											<?php foreach ($filter_2_list as $filter_2_item) { ?>
 												<option value="<?php echo $filter_2_item['item_id'] ?>" <?php echo (($filter_2_item['item_id'] == @$_POST['filter_2_id']) ? 'selected' : '') ?>>
@@ -312,8 +312,7 @@
 							<div class="col-sm-6">
 								<button type="submit" id="submit" class="btn btn-primary"><?php echo display('search') ?></button>
 								<a class="btn btn-warning" href="#" onclick="printDiv('printableArea')"><?php echo display('print') ?></a>
-								<!-- <button type="button" id="reset" class="btn btn-danger"><?php echo display('reset') ?></button>
-								<input type="hidden" id="reset_input" name="reset" value="0" />  -->
+								<button type="button" id="reset" class="btn btn-danger"><?php echo display('reset') ?></button>
 							</div>
 						</div>
 						<?php echo form_close() ?>
@@ -428,8 +427,17 @@
 		});
 
 		$('#reset').click(function() {
-			$('#reset_input').val(1);
-			$('#submit').click();
+			$('.filters_form input[type="text"]').each(function (nx, el) {
+				$(el).val('');
+			});
+			$('.filters_form select').each(function (nx, el) {
+				$(el).val(null).trigger('change');
+			});
+		});
+
+		$('.select3').select2({
+			placeholder: 'select one',
+			allowClear: true
 		});
 	});
 </script>
