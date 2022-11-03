@@ -119,9 +119,9 @@ $theme = $CI->Themes->get_theme();
                                         </figure>
                                     <?php endforeach ?>
                                     <!-- <figure id="product-<?= $product_id ?>">
-                                        <!-- <a href="<?php echo base_url() . $image_large_details; ?>" data-size="1400x1400">
+                                         <a href="<?php echo base_url() . $image_large_details; ?>" data-size="1400x1400">
                                             <img class="img-fluid" data-src="<?php echo base_url() . $image_large_details; ?>" data-lazy="<?php echo base_url() . $image_large_details; ?>" data-zoom-image="<?php echo base_url() . $image_large_details; ?>" alt="<?php echo display('image') ?>" />
-                                        </a> -->
+                                        </a>
 
                                     </figure> -->
                                     <?php
