@@ -1,7 +1,6 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <link rel="stylesheet" href="<?php echo MOD_URL . 'dashboard/assets/css/dashboard.css' ?>">
 
-
 <!-- add_stock_opening Start -->
 <div class="content-wrapper">
     <section class="content-header">
@@ -106,18 +105,66 @@
                             </div>
                         </div>
 
+                        <div class="row ">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <label for="model_no" class="col-sm-4 col-form-label"><?php echo display('item_code') ?> </label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control" placeholder="<?php echo display('item_code') ?>" id="model_no" tabindex="5" autocomplete="off">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="button" class="btn btn-primary btn-large" onclick="product_per_model();" value="<?php echo display('add') ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="modelModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog modal-md">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <div class="panel panel-bd">
+                                                    <div class="panel-body">
+                                                        <div class="table-responsive mt_10">
+                                                            <table class="table table-bordered table-hover" id="purchaseTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="text-center"><input type="checkbox" id="all_pro" onclick="select_all();">
+                                                                        </th>
+                                                                        <th class="text-center"><?php echo display('item_information') ?> </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="model_no_text"></tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="button" class="btn btn-primary btn-large" onclick="add_products_model();" value="<?php echo display('confirm') ?>" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="table-responsive mt_10">
                             <table class="table table-bordered table-hover" id="purchaseTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center" style="padding: 0px 10rem;"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center" width="130"><?php echo display('variant') ?> <i class="text-danger">*</i></th>
                                         <!-- <th class="text-center" width="130"><?php echo display('batch_no') ?><i class="text-danger">*</i></th> -->
                                         <!-- <th class="text-center" width="130"><?php echo display('expire_date') ?></th> -->
-                                        <th class="text-center"><?php echo display('available_quantity') ?> </th>
-                                        <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('rate') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('total') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center" style="padding: 0 3rem;"><?php echo display('available_quantity') ?> </th>
+                                        <th class="text-center" style="padding: 0 3rem;"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center" style="padding: 0 3rem;"><?php echo display('rate') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center" style="padding: 0 3rem;"><?php echo display('total') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('delete') ?> </th>
                                     </tr>
                                 </thead>
@@ -187,7 +234,7 @@
                                         <td class="text-right">
                                             <input type="text" id="subTotal" class="text-right form-control" name="sub_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
-                                        <td></td>
+                                        <!-- <td></td> -->
                                         <th>Total number of items</th>
                                         <td><input type="text" id="total_items" onchange="calculate_add_purchase_cost(1);" class="text-right form-control" name="sub_total_price" placeholder="0.00" readonly="readonly" /></td>
                                         <td class="text-right">
@@ -196,7 +243,7 @@
                                         <td class="text-right">
                                             <input type="text" id="grandTotal" class="text-right form-control" name="grand_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
-                                        <td colspan="2"></td>
+                                        <!-- <td colspan="2"></td> -->
                                     </tr>
                                 </tfoot>
                             </table>

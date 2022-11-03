@@ -278,3 +278,246 @@ function calculate_add_purchase_cost(c) {
   });
   $("#purchase_expences").val(total_cost);
 }
+
+// search product by model
+function product_per_model(){
+  var supplier_id = $("#supplier_id").val();
+  var currency_id = $("#currency_id").val();
+  var model_no = $("#model_no").val();
+  var base_url = $('.baseUrl').val();
+
+  //Supplier id existing check
+  if (supplier_id == 0) {
+      alert(display("please_select_supplier"));
+      return false;
+  }
+
+  if (currency_id == 0) {
+      alert("Please Select Currency");
+      return false;
+  }
+  $("#model_no_text").html('');
+  $.ajax({
+      url: base_url + "dashboard/Cinvoice/product_search_by_model",
+      method: "post",
+      dataType: "json",
+      data: {
+          csrf_test_name: csrf_test_name,
+          term: model_no,
+      },
+      success: function (data) {
+          $.each(data, function(k, v) {
+              $("#model_no_text").append('<tr>' +
+                  '<td class="text-center">' +
+                  '<input type="checkbox" class="check_pro_id" value="'+v.value+'">' +
+                  '<input type="hidden" class="check_pro_id" value="'+v.label+'">' +
+                  '</td>' +
+                  '<td class="text-center">'+v.label+'</td>' +
+                  '</tr>');
+          });
+          if(data.length > 0){
+              $("#modelModal").modal('show');
+          }else{
+              alert("No Item Found");
+          }
+      },
+  });
+}
+
+// add selected product to table
+function add_products_model(){
+  var ids = [];
+  var names = [];
+  $('.check_pro_id:checkbox:checked').each(function(index, value) {
+      ids.push(value.value);
+      names.push($(this).next().val());
+  });
+  $.each(ids, function(k, v) {
+      var base_url = $('.baseUrl').val();
+      var current_count = count-1;
+      if($("#product_name_"+(count-1)).next().val()){
+          current_count = count;
+          // addInputField('addinvoiceItem');
+          addPurchaseOrderField('addPurchaseItem');
+      }
+      $("#product_name_"+current_count).next().val(v);
+      $("#product_name_"+current_count).val(names[k]);
+      var sl = current_count;
+      var id = v;
+      var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id;
+      var qnttClass = 'ctnqntt' + current_count;
+      var priceClass = 'price_item' + current_count;
+      var total_tax_price = 'total_tax_' + current_count;
+      var available_quantity = 'available_quantity_' + current_count;
+      var unit = 'unit_' + current_count;
+      var cgst = 'cgst_' + current_count;
+      var sgst = 'sgst_' + current_count;
+      var igst = 'igst_' + current_count;
+      var variant = 'variant_' + current_count;
+      var cgst_id = 'cgst_id_' + current_count;
+      var sgst_id = 'sgst_id_' + current_count;
+      var igst_id = 'igst_id_' + current_count;
+      var variant_id = 'variant_id_' + current_count;
+      var variant_color = 'variant_color_id_' + current_count;
+//var pricing   ='pricing_'+current_count;
+      var color = 'color' + current_count;
+      var size = 'size' + current_count;
+      var assembly = 'assembly' + current_count;
+      var viewassembly = "viewassembly" + current_count;
+      var discount = 'discount_' + current_count;
+      var category_id = 'category_id_' + current_count;
+      var product_model = 'product_model_' + current_count;
+      $.ajax({
+          type: "POST",
+          url: base_url + "dashboard/Cinvoice/retrieve_product_data",
+          data: dataString,
+          cache: false,
+          success: function (data) {
+              var obj = jQuery.parseJSON(data);
+              $('.' + qnttClass).val(obj.cartoon_quantity);
+              $('.' + priceClass).val(obj.price);
+              $('.' + total_tax_price).val(obj.tax);
+              $('.' + unit).val(obj.unit);
+              $('#' + cgst).val(obj.cgst_tax);
+              $('#' + sgst).val(obj.sgst_tax);
+              $('#' + igst).val(obj.igst_tax);
+              $('#' + variant).val(obj.variant_id);
+              $('#' + cgst_id).val(obj.cgst_id);
+              $('#' + sgst_id).val(obj.sgst_id);
+              $('#' + igst_id).val(obj.igst_id);
+              $('#' + variant_id).html(obj.variant);
+              $('#' + variant_color).html(obj.colorhtml);
+//$('#'+pricing).html(obj.pricinghtml);
+              $('#' + discount).val(obj.discount);
+              $("#" + category_id).val(obj.category_id);
+              $('#' + product_model).val(obj.product_model);
+              $("#" + size).val(obj.size);
+              $("#" + color).val(obj.color);
+              $("#" + assembly).val(obj.assembly);
+              var assemplyvalue = obj.assembly;
+//This Function Stay on others.js page
+              stock_by_product_variant_id(current_count);
+              // stock_by_product_variant_color(current_count);
+//quantity_calculate(current_count);
+              if (assemplyvalue == 1) {
+                  $("#" + viewassembly).removeClass("hidden");
+              } else {
+                  $("#" + viewassembly).addClass("hidden");
+              }
+              // get_pri_type_rate1(current_count);
+
+              if (obj.category_id == accessories_category_id) {
+                  // this item is accessories
+                  // set price to zero if type is assemply
+                  if ($('#product_type').val() == '2') {
+                      // $('#price_item_' + current_count).val(0);
+                  }
+                  // get all items with same name sum quantity
+                  var totalQuantity = 0;
+                  // $('[name="product_name"]').each(function() {
+                  //     var itemName = $(this).val();
+                  //     var counter = $(this).attr('id').replace('product_name_', '');
+                  //     var itemCategoryId = $('#category_id_' + counter).val();
+                  //     var itemProductModel = $('#product_model_' + counter).val();
+                  //     var itemQuantity = $('#total_qntt_' + counter).val();
+                  //     itemName = itemName.replace(itemProductModel, '');
+                  //     if (itemCategoryId != accessories_category_id) {
+                  //         if (itemName.indexOf(obj.product_name.replace(obj.product_model, '')) > -1) {
+                  //             totalQuantity += parseInt(itemQuantity);
+                  //         }
+                  //         // console.log(current_count, itemName.indexOf(obj.product_name.replace(obj.product_model, '')), itemName, counter, itemCategoryId);
+                  //     }
+                  // }).promise().then(function() {
+                  //     $('#total_qntt_' + current_count).val(totalQuantity).trigger('keyup');
+                  //     console.log(totalQuantity);
+                  // });
+              }
+          },
+      });
+  });
+
+  $("#model_no").val('');
+  $("#model_no_text").html('');
+  $("#modelModal").modal('hide');
+  $('#all_pro').prop('checked', false)
+
+  $("#addPurchaseItem").scrollTop( $('#addPurchaseItem').height() );
+}
+
+//Select stock by product and variant id
+function stock_by_product_variant_id(sl) {
+  //  var sl = $(this).parent().parent().parent().find(".sl").val();
+  var product_id = $(".product_id_" + sl).val();
+  var avl_qntt = $("#avl_qntt_" + sl).val();
+  var store_id = $("#store_id").val();
+  var variant_id = $("#variant_id_" + sl).val();
+  var variant_color = $("#variant_color_id_" + sl).val();
+  var assembly = $("#assembly" + sl).val();
+
+  if (store_id == 0) {
+      alert(display("please_select_store"));
+      return false;
+  }
+  $.ajax({
+      type: "post",
+      async: false,
+      url: base_url + "dashboard/Cpurchase/check_admin_2d_variant_info",
+      data: {
+          csrf_test_name: csrf_test_name,
+          product_id: product_id,
+          variant_id: variant_id,
+          store_id: store_id,
+          variant_color: variant_color,
+          assembly:assembly,
+      },
+      success: function (result) {
+          var res = JSON.parse(result);
+          if (res[0] == "yes") {
+              $("#avl_qntt_" + sl).val(res[1]);
+              $("#discount_" + sl).val(res[3]);
+              $("#price_item_" + sl)
+                      .val(res[2])
+                      .change();
+              $("#batch_no_" + sl).html(res[4]);
+              $("#batch_no_" + sl).on("change", function () {
+                  var batch_no = $(this).val();
+                  $.ajax({
+                      type: "post",
+                      async: false,
+                      url:
+                              base_url +
+                              "dashboard/Cpurchase/check_admin_batch_wise_stock_info",
+                      data: {
+                          csrf_test_name: csrf_test_name,
+                          product_id: product_id,
+                          variant_id: variant_id,
+                          store_id: store_id,
+                          variant_color: variant_color,
+                          batch_no: batch_no,
+                      },
+                      success: function (result) {
+                          var res = JSON.parse(result);
+                          if (res[0] == "yes") {
+                              $("#avl_qntt_" + sl).val(res[1]);
+                          } else {
+                              $("#avl_qntt_" + sl).val("0");
+                              $("#total_qntt_" + sl).val("0");
+
+                              // alert(display("product_is_not_available_in_this_store"));
+                              return false;
+                          }
+                      },
+                  });
+              });
+          } else {
+              $("#avl_qntt_" + sl).val("0");
+              $("#total_qntt_" + sl).val("0");
+              // alert(display("product_is_not_available_in_this_store"));
+              return false;
+          }
+      },
+      error: function () {
+          alert("Request Failed, Please try again!");
+      },
+  });
+}
