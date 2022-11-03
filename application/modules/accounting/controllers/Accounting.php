@@ -46,16 +46,16 @@ class Accounting extends MX_Controller
     $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('headcode', display('account_head'), 'max_length[100]');
-      $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
+      // $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
       $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
 
       if ($this->form_validation->run() == TRUE) {
-        $dtpDate = $this->input->post('dtpDate', TRUE);
-        $datecheck = $this->fiscal_date_check($dtpDate);
-        if (!$datecheck) {
-          $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
-          redirect('accounting/opening_balance');
-        }
+        // $dtpDate = $this->input->post('dtpDate', TRUE);
+        // $datecheck = $this->fiscal_date_check($dtpDate);
+        // if (!$datecheck) {
+        //   $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
+        //   redirect('accounting/opening_balance');
+        // }
         $createby   = $this->session->userdata('user_id');
         $balance_type = $this->input->post('balance_type', TRUE);
         $postData = array(
@@ -177,16 +177,16 @@ class Accounting extends MX_Controller
     $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('headcode', display('account_head'), 'max_length[100]');
-      $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
+      // $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
       $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
 
       if ($this->form_validation->run() == TRUE) {
-        $dtpDate = $this->input->post('dtpDate', TRUE);
-        $datecheck = $this->fiscal_date_check($dtpDate);
-        if (!$datecheck) {
-          $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
-          redirect('accounting/customers_opening_balance');
-        }
+        // $dtpDate = $this->input->post('dtpDate', TRUE);
+        // $datecheck = $this->fiscal_date_check($dtpDate);
+        // if (!$datecheck) {
+        //   $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
+        //   redirect('accounting/customers_opening_balance');
+        // }
         $createby   = $this->session->userdata('user_id');
         $balance_type = $this->input->post('balance_type', TRUE);
         $postData = array(
@@ -320,16 +320,16 @@ class Accounting extends MX_Controller
     $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('headcode', display('account_head'), 'max_length[100]');
-      $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
+      // $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
       $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
 
       if ($this->form_validation->run() == TRUE) {
         $dtpDate = $this->input->post('dtpDate', TRUE);
-        $datecheck = $this->fiscal_date_check($dtpDate);
-        if (!$datecheck) {
-          $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
-          redirect('accounting/suppliers_opening_balance');
-        }
+        // $datecheck = $this->fiscal_date_check($dtpDate);
+        // if (!$datecheck) {
+        //   $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
+        //   redirect('accounting/suppliers_opening_balance');
+        // }
         $createby   = $this->session->userdata('user_id');
         $balance_type = $this->input->post('balance_type', TRUE);
         $postData = array(
