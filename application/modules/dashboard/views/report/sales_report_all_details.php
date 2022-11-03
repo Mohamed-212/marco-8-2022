@@ -362,7 +362,7 @@
 											// $purchase_quantity = (int)$repo[3]->total_purchase_quantity + (int)$repo[4]->total_invoice_return;
 											$sales_quantity = (int)$repo[6];
 											$purchase_quantity = (int)$repo[5];
-											$balance = $purchase_quantity - $sales_quantity;
+											$balance = (int)$repo[7];
 											$supplier_price_total = abs(round((float)$repo[0]['supplier_price'] * $balance, 2));
 											$sell_price_total = abs(round((float)$repo[0]['selected_price'] * $balance, 2));
 										?>

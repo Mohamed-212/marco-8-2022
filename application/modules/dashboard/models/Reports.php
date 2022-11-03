@@ -2251,64 +2251,6 @@ class Reports extends CI_Model
 
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
 
-        /**
-         * transfer || exports || in quantity
-         */
-        //  invoices
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('SUM(b.quantity) as total_invoice_quantity')
-        //     ->from('invoice a')
-        //     ->join('invoice_details b', 'b.product_id = "' . $product_id . '" AND b.invoice_id = a.invoice_id')
-        //     ->where('a.store_id', $store_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-
-        // $invoices = $this->db->group_by('b.product_id')
-        //     ->get()
-        //     ->row();
-        // // purchase return
-        // // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('SUM(b.quantity) as total_purchase_return_quantity')
-        //     ->from('product_purchase_return a')
-        //     ->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = "' . $product_id . '"')
-        //     ->where('a.store_id', $store_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-        // $purchase_return = $this->db->group_by('b.product_id')
-        //     ->get()
-        //     ->row();
-
-        /**
-         * purchase || imports || out quantity
-         */
-        // purchases
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('SUM(b.quantity) as total_purchase_quantity')
-        //     ->from('product_purchase a')
-        //     ->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = "' . $product_id . '"')
-        //     ->where('a.store_id', $store_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-        // $purchases = $this->db->group_by('b.product_id')
-        //     ->get()
-        //     ->row();
-
-        // // invoice return
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('SUM(a.return_quantity) as total_invoice_return')
-        //     ->from('invoice_return a')
-        //     ->join('invoice b', 'b.invoice_id = a.invoice_id AND b.store_id = "' . $store_id . '"', 'left')
-        //     ->where('a.product_id', $product_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-        // $invoice_return = $this->db->group_by('a.product_id')
-        //     ->get()
-        //     ->row();
-
         $totalPurchase = 0;
         $purchaseData = $this->Products->product_purchase_info($product_id);
         if (!empty($purchaseData)) {
@@ -2325,8 +2267,20 @@ class Reports extends CI_Model
                 $totalSales = ($totalSales + $salesData[$k]['t_qty']);
             }
         }
+        $total_return = 0;
+        foreach ($returnData as $return) {
+            $total_return += $return['return_quantity'];
+        }
+        $totalSales -= $total_return;
+
+        if ($product['assembly'] == 1) {
+            $stockData = $this->Products->check_variant_wise_stock2($product_id, $store_id, $product['variants']);
+        } else {
+            $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $product['variants']);
+        }
+        $balance = $stockData[0] - $stockData[1];
 
 
-        return [$product, 0, 0, 0, 0, $totalPurchase, $totalSales];
+        return [$product, 0, 0, 0, 0, $totalPurchase, $totalSales, $balance];
     }
 }

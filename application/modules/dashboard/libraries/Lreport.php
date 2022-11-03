@@ -875,7 +875,7 @@ class Lreport
             // $purchase_quantity = (int)$item[3]->total_purchase_quantity + (int)$item[4]->total_invoice_return;
             $sales_quantity = (int)$item[6];
             $purchase_quantity = (int)$item[5];
-            $balance = $purchase_quantity - $sales_quantity;
+            $balance = (int)$item[7];
             $supplier_price_total = abs(round((float)$item[0]['supplier_price'] * $balance, 2));
             $sell_price_total = abs(round((float)$item[0]['selected_price'] * $balance, 2));
 
