@@ -445,13 +445,17 @@ class Products extends CI_Model
     }
 
     // Product Purchase Report
-    public function product_purchase_info($product_id)
+    public function product_purchase_info($product_id, $from_date = null, $to_date = null)
     {
         $this->db->select('a.*, a.created_at as date_time,b.*,c.supplier_name, d.variant_name');
         $this->db->from('product_purchase a');
         $this->db->join('product_purchase_details b', 'b.purchase_id = a.purchase_id', 'left');
         $this->db->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left');
         $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
+        if ($from_date && $to_date) {
+            $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
         $this->db->where('b.product_id', $product_id);
         $this->db->order_by('a.purchase_id', 'asc');
         $query = $this->db->get();
@@ -462,7 +466,7 @@ class Products extends CI_Model
     }
 
     // Invoice Data for specific data
-    public function invoice_data($product_id)
+    public function invoice_data($product_id, $from_date = null, $to_date = null)
     {
         $this->db->select('
                 a.*,
@@ -478,9 +482,41 @@ class Products extends CI_Model
         $this->db->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left');
         $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
         $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
+        if ($from_date && $to_date) {
+            $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
         $this->db->where('b.product_id', $product_id);
         $this->db->group_by('a.invoice_id');
         $this->db->order_by('a.invoice', 'desc');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
+    }
+
+    public function return_invoice_data($product_id, $from_date = null, $to_date = null)
+    {
+        $this->db->select('
+                a.*,
+                a.created_at as date_time,
+                ib.invoice,
+                c.customer_name,
+                d.variant_name
+			');
+        $this->db->from('invoice_return a');
+        $this->db->join('invoice ib', 'ib.invoice_id = a.invoice_id', 'left');
+        $this->db->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left');
+        $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
+        $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
+        if ($from_date && $to_date) {
+            $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->where('b.product_id', $product_id);
+        // $this->db->group_by('a.invoice_id');
+        $this->db->order_by('ib.invoice', 'desc');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -677,29 +713,5 @@ class Products extends CI_Model
         foreach ($products as $prod) {
             $this->website_product_entry($prod);
         }
-    }
-
-    public function return_invoice_data($product_id)
-    {
-        $this->db->select('
-                a.*,
-                a.created_at as date_time,
-                ib.invoice,
-                c.customer_name,
-                d.variant_name
-			');
-        $this->db->from('invoice_return a');
-        $this->db->join('invoice ib', 'ib.invoice_id = a.invoice_id', 'left');
-        $this->db->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left');
-        $this->db->join('customer_information c', 'c.customer_id = a.customer_id', 'left');
-        $this->db->join('variant d', 'd.variant_id = b.variant_id', 'left');
-        $this->db->where('b.product_id', $product_id);
-        // $this->db->group_by('a.invoice_id');
-        $this->db->order_by('ib.invoice', 'desc');
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        }
-        return false;
     }
 }

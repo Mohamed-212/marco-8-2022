@@ -2252,15 +2252,16 @@ class Reports extends CI_Model
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
 
         $totalPurchase = 0;
-        $purchaseData = $this->Products->product_purchase_info($product_id);
+        $purchaseData = $this->Products->product_purchase_info($product_id, $from_date, $to_date);
+        
         if (!empty($purchaseData)) {
             foreach ($purchaseData as $k => $v) {
                 $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
             }
         }
         $totalPurchase += $product['open_quantity'];
-        $salesData = $this->Products->invoice_data($product_id);
-        $returnData = $this->Products->return_invoice_data($product_id);
+        $salesData = $this->Products->invoice_data($product_id, $from_date, $to_date);
+        $returnData = $this->Products->return_invoice_data($product_id, $from_date, $to_date);
         $totalSales = 0;
         if (!empty($salesData)) {
             foreach ($salesData as $k => $v) {
@@ -2273,12 +2274,7 @@ class Reports extends CI_Model
         }
         $totalSales -= $total_return;
 
-        if ($product['assembly'] == 1) {
-            $stockData = $this->Products->check_variant_wise_stock2($product_id, $store_id, $product['variants']);
-        } else {
-            $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $product['variants']);
-        }
-        $balance = $stockData[0] - $stockData[1];
+        $balance = $totalPurchase - $totalSales;
 
 
         return [$product, 0, 0, 0, 0, $totalPurchase, $totalSales, $balance];

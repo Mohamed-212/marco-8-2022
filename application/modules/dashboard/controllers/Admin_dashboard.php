@@ -446,8 +446,8 @@ class Admin_dashboard extends MX_Controller
         $product_type = $this->input->post('product_type',TRUE);
         $general_filter = $this->input->post('filter_1_id',TRUE);
         $material_filter = $this->input->post('filter_2_id',TRUE);
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('from_date',TRUE);
+        $end_date = $this->input->post('to_date',TRUE);
 
         // sales
         $sales_from = $this->input->post('sales_from',TRUE);

@@ -779,9 +779,6 @@ class Lreport
         $CI->load->library('dashboard/occational');
 
         if (empty($store_id)) {
-            $start_date = date('Y-m-d');
-
-            $end_date = date('Y-m-d');
             $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
             $store_id = $result->store_id;
         }
