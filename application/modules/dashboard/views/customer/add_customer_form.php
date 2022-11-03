@@ -121,7 +121,7 @@
                             <label for="password" class="col-sm-3 col-form-label"><?php echo display('customer_password') ?>
                                 <i class="text-danger">*</i></label>
                             <div class="col-sm-6">
-                                <input class="form-control" name="password" id="password" type="password" placeholder="<?php echo display('customer_password') ?>" required="" value="<?=substr(uniqid(), 3, 6)?>" maxlength="6">
+                                <input class="form-control" name="password" id="password" type="text" placeholder="<?php echo display('customer_password') ?>" required="" value="<?=substr(uniqid(), 3, 6)?>" maxlength="6">
                             </div>
                         </div>
 
