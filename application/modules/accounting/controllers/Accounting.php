@@ -57,10 +57,11 @@ class Accounting extends MX_Controller
           redirect('accounting/opening_balance');
         }
         $createby   = $this->session->userdata('user_id');
+        $balance_type = $this->input->post('balance_type', TRUE);
         $postData = array(
           'fy_id'          => $find_active_fiscal_year->id,
           'headcode'       => $this->input->post('headcode', true),
-          'amount'         => $this->input->post('amount', true),
+          'amount'         => ($balance_type == 2) ? -1 * $this->input->post('amount', true) : $this->input->post('amount', true),
           'adjustment_date' => $dtpDate,
           'created_by'     => $createby,
         );
@@ -83,7 +84,7 @@ class Accounting extends MX_Controller
           //     'status' => 1
           // );
           // $this->db->insert('customer_ledger', $cl_data);
-          $balance_type = $this->input->post('balance_type', TRUE);
+          
           if ($balance_type == 1) {
             // add acc trans
             $customer_credit = array(
@@ -187,10 +188,11 @@ class Accounting extends MX_Controller
           redirect('accounting/customers_opening_balance');
         }
         $createby   = $this->session->userdata('user_id');
+        $balance_type = $this->input->post('balance_type', TRUE);
         $postData = array(
           'fy_id'          => $find_active_fiscal_year->id,
           'headcode'       => $this->input->post('headcode', true),
-          'amount'         => $this->input->post('amount', true),
+          'amount'         => ($balance_type == 2) ? -1 * $this->input->post('amount', true) : $this->input->post('amount', true),
           'adjustment_date' => $dtpDate,
           'created_by'     => $createby,
         );
@@ -202,7 +204,7 @@ class Accounting extends MX_Controller
           $createdate = date('Y-m-d H:i:s');
           $date      = $createdate;
 
-          $balance_type = $this->input->post('balance_type', TRUE);
+          
           if ($balance_type == 1) {
             // credit
             // add to customer ledger
@@ -329,10 +331,11 @@ class Accounting extends MX_Controller
           redirect('accounting/suppliers_opening_balance');
         }
         $createby   = $this->session->userdata('user_id');
+        $balance_type = $this->input->post('balance_type', TRUE);
         $postData = array(
           'fy_id'          => $find_active_fiscal_year->id,
           'headcode'       => $this->input->post('headcode', true),
-          'amount'         => $this->input->post('amount', true),
+          'amount'         => ($balance_type == 2) ? -1 * $this->input->post('amount', true) : $this->input->post('amount', true),
           'adjustment_date' => $dtpDate,
           'created_by'     => $createby,
         );
@@ -344,7 +347,7 @@ class Accounting extends MX_Controller
           $createdate = date('Y-m-d H:i:s');
           $date      = $createdate;
 
-          $balance_type = $this->input->post('balance_type', TRUE);
+          
           if ($balance_type == 1) {
             // credit
             // add to customer ledger

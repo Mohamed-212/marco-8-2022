@@ -54,16 +54,16 @@
                     </div>
                     <div class="panel-body">
                         <?php echo  form_open_multipart('accounting/customers_opening_balance', 'id="validate"') ?>
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="date" class="col-sm-2 col-form-label"><?php echo display('date') ?><i
                                     class="text-danger">*</i></label>
                             <div class="col-sm-4">
-                                <input type="text" name="dtpDate" id="dtpDate" class="form-control"
-                                    value="<?php echo date('Y-m-d'); ?>" required>
+                                <input type="text" name="dtpDate" id="dtpDate" class="form-control datepicker2"
+                                    value="<?php echo date('d-m-Y'); ?>" required>
                                 <input type="hidden" name="limitDate" id="limitDate" class="form-control"
-                                    value="<?php echo  date('Y-m-d') ?>" required>
+                                    value="<?php echo  date('d-m-Y') ?>" required>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="account_head" class="col-sm-2 col-form-label"><?php
                                                                                         echo display('account_head');
@@ -114,3 +114,10 @@
     </section>
 </div>
 <?php $this->load->view('accounting/components/opening_balance_js') ?>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+            dateFormat: "dd-mm-yy"
+        });
+    });
+</script>

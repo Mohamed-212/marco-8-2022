@@ -22,10 +22,10 @@
         $message = $this->session->userdata('message');
         if (isset($message)) {
         ?>
-        <div class="alert alert-info alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $message ?>
-        </div>
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $message ?>
+            </div>
         <?php
             $this->session->unset_userdata('message');
         }
@@ -33,11 +33,11 @@
         $validatio_error = validation_errors();
         if (($error_message || $validatio_error)) {
         ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $error_message ?>
-            <?php echo $validatio_error ?>
-        </div>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $error_message ?>
+                <?php echo $validatio_error ?>
+            </div>
         <?php
             $this->session->unset_userdata('error_message');
         }
@@ -54,44 +54,38 @@
                     </div>
                     <div class="panel-body">
                         <?php echo  form_open_multipart('accounting/opening_balance', 'id="validate"') ?>
-                        <div class="form-group row">
-                            <label for="date" class="col-sm-2 col-form-label"><?php echo display('date') ?><i
-                                    class="text-danger">*</i></label>
+                        <!-- <div class="form-group row">
+                            <label for="date" class="col-sm-2 col-form-label"><?php echo display('date') ?><i class="text-danger">*</i></label>
                             <div class="col-sm-4">
-                                <input type="text" name="dtpDate" id="dtpDate" class="form-control"
-                                    value="<?php echo date('Y-m-d'); ?>" required>
-                                <input type="hidden" name="limitDate" id="limitDate" class="form-control"
-                                    value="<?php echo  date('Y-m-d') ?>" required>
+                                <input type="text" name="dtpDate" id="dtpDate" class="form-control datepicker2" value="<?php echo date('d-m-Y'); ?>" required>
+                                <input type="hidden" name="limitDate" id="limitDate" class="form-control" value="<?php echo  date('d-m-Y') ?>" required>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group row">
                             <label for="account_head" class="col-sm-2 col-form-label"><?php
                                                                                         echo display('account_head');
-                                                                                        ?> <i
-                                    class="text-danger">*</i></label>
+                                                                                        ?> <i class="text-danger">*</i></label>
                             <div class="col-sm-4">
                                 <select name="headcode" class="form-control" required="" tabindex="3">
                                     <option value="">Select One</option>
                                     <?php foreach ($headss as $acc_head) { ?>
-                                    <option value="<?php echo $acc_head->HeadCode; ?>">
-                                        <?php echo html_escape($acc_head->HeadName); ?>
-                                    </option>
+                                        <option value="<?php echo $acc_head->HeadCode; ?>">
+                                            <?php echo html_escape($acc_head->HeadName); ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="amount" class="col-sm-2 col-form-label"><?php echo display('amount') ?><i
-                                    class="text-danger">*</i></label>
+                            <label for="amount" class="col-sm-2 col-form-label"><?php echo display('amount') ?><i class="text-danger">*</i></label>
                             <div class="col-sm-4">
-                                <input type="text" name="amount" id="amount" class="form-control" value="" required
-                                    placeholder="0.00">
+                                <input type="text" name="amount" id="amount" class="form-control" value="" required placeholder="0.00">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="balance_type" class="col-sm-2 col-form-label"><?php echo display('balance_type') ?>
-                            <!-- <i class="text-danger">*</i> -->
-                        </label>
+                                <!-- <i class="text-danger">*</i> -->
+                            </label>
                             <div class="col-sm-4">
                                 <select class="form-control select2 width_100p" id="balance_type" name="balance_type">
                                     <option value="1"><?php echo display('credit') ?></option>
@@ -102,8 +96,7 @@
                         <div class="form-group row">
                             <label for="txtRemarks" class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-4">
-                                <input type="submit" id="add_receive" class="btn btn-success btn-large form-control"
-                                    name="save" value="<?php echo display('save') ?>" tabindex="9" />
+                                <input type="submit" id="add_receive" class="btn btn-success btn-large form-control" name="save" value="<?php echo display('save') ?>" tabindex="9" />
                             </div>
                         </div>
                         <?php echo form_close() ?>
@@ -114,3 +107,10 @@
     </section>
 </div>
 <?php $this->load->view('accounting/components/opening_balance_js') ?>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+            dateFormat: "dd-mm-yy"
+        });
+    });
+</script>
