@@ -304,6 +304,13 @@ class Products extends CI_Model
 
         $this->db->where('product_id', $product_id);
         $this->db->update('product_information', $data);
+        
+        // website
+        $this->db->reset_query();
+        $this->db->where('product_id', $product_id);
+        $this->db->update('website_product_information', $data);
+        $this->db->reset_query();
+
         $this->db->select('*');
         $this->db->from('product_information');
         $this->db->where('status', 1);

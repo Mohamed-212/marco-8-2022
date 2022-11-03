@@ -245,6 +245,8 @@ class Categories extends CI_Model
         $this->db->group_by('a.product_id');
         $query = $this->db->get();
         $w_cat_pro = $query->result();
+
+        // echo "<pre>";var_dump($w_cat_pro)
         if ($rate) {
             $w_cat_pro = $this->get_rating_product($w_cat_pro, $rate);
         }

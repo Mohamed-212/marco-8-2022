@@ -10,6 +10,7 @@ class Cpurchase_return extends MX_Controller {
         $this->auth->check_user_auth();
         $this->load->model(array(
             'dashboard/Suppliers',
+            'dashboard/Products',
             'dashboard/Invoices',
             'dashboard/Purchases',
             'dashboard/Stores',
@@ -315,8 +316,9 @@ class Cpurchase_return extends MX_Controller {
                                             'supplier_price' => $newrate,
                                         );
 
-                                        $this->db->where('product_id', $product_id);
-                                        $this->db->update('product_information', $supplier_price);
+                                        // $this->db->where('product_id', $product_id);
+                                        // $this->db->update('product_information', $supplier_price);
+                                        $this->Products->update_product($supplier_price, $product_id);
 
                                         $supplier_price2 = array(
                                             'child_product_price' => $newrate,

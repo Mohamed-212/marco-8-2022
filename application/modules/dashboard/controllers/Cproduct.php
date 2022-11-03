@@ -371,27 +371,31 @@ class Cproduct extends MX_Controller
                 $pricingbit = array(
                     'pricing' => 1,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $pricingbit);
+                $this->Products->update_product($pricingbit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $pricingbit);
             } else {
                 $pricingbit = array(
                     'pricing' => 0,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $pricingbit);
+                $this->Products->update_product($pricingbit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $pricingbit);
             }
             ///////End for pricing/////////////////////////////////////////////////////////////////////
             ///////Start for assembly////////////////////////////////////////////////////////////////////////
 
             $assembly_products = $this->input->post('assembly_product_id[]', TRUE);
             $assembly_products_price = $this->input->post('product_rate[]', TRUE);
-            foreach ($assembly_products as $key => $value) {
-                if (!empty($assembly_products[$key])) {
-                    $assembly_products_list[] = array(
-                        'parent_product_id' => $product_id,
-                        'child_product_id' => $assembly_products[$key],
-                        'child_product_price' => $assembly_products_price[$key],
-                    );
+            if (is_array($assembly_products)) {
+                foreach ($assembly_products as $key => $value) {
+                    if (!empty($assembly_products[$key])) {
+                        $assembly_products_list[] = array(
+                            'parent_product_id' => $product_id,
+                            'child_product_id' => $assembly_products[$key],
+                            'child_product_price' => $assembly_products_price[$key],
+                        );
+                    }
                 }
             }
             if (!empty($assembly_products_list)) {
@@ -399,14 +403,16 @@ class Cproduct extends MX_Controller
                 $assemblybit = array(
                     'assembly' => 1,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $assemblybit);
+                $this->Products->update_product($assemblybit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $assemblybit);
             } else {
                 $assemblybit = array(
                     'assembly' => 0,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $assemblybit);
+                $this->Products->update_product($assemblybit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $assemblybit);
             }
             ///////End for assembly/////////////////////////////////////////////////////////////////////
             //gallery image insert start
@@ -887,15 +893,17 @@ class Cproduct extends MX_Controller
                 $pricingbit = array(
                     'pricing' => 1,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $pricingbit);
+                $this->Products->update_product($pricingbit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $pricingbit);
             } else {
                 $this->db->delete('pricing_types_product', array('product_id' => $product_id));
                 $pricingbit = array(
                     'pricing' => 0,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $pricingbit);
+                $this->Products->update_product($pricingbit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $pricingbit);
             }
             ///////End for pricing/////////////////////////////////////////////////////////////////////
             ///////Start for assembly////////////////////////////////////////////////////////////////////////
@@ -919,15 +927,17 @@ class Cproduct extends MX_Controller
                 $assemblybit = array(
                     'assembly' => 1,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $assemblybit);
+                $this->Products->update_product($assemblybit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $assemblybit);
             } else {
                 $this->db->delete('assembly_products', array('parent_product_id' => $product_id));
                 $assemblybit = array(
                     'assembly' => 0,
                 );
-                $this->db->where('product_id', $product_id);
-                $this->db->update('product_information', $assemblybit);
+                $this->Products->update_product($assemblybit, $product_id);
+                // $this->db->where('product_id', $product_id);
+                // $this->db->update('product_information', $assemblybit);
             }
             ///////End for assembly/////////////////////////////////////////////////////////////////////
 
@@ -938,6 +948,7 @@ class Cproduct extends MX_Controller
             $files = $_FILES;
             //print_r($files);
             //echo $_FILES['imageUpload']['name'];
+            // echo"<pre>";var_dump($_FILES);exit;
             $cpt = count(is_array($_FILES['imageUpload']['name']) ? $_FILES['imageUpload']['name'] : []);
 
             $m = 0;

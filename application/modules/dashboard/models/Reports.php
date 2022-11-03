@@ -2212,7 +2212,7 @@ class Reports extends CI_Model
         $store_id = null,
         $pricing_type = null,
         $from_date = null,
-        $to_date = null,
+        $to_date = null
     ) {
 
         $product = $this->db->select('p.*, c.category_name')->from('product_information p')

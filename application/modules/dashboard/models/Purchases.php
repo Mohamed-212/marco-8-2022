@@ -411,8 +411,9 @@ class Purchases extends CI_Model
                                 'supplier_price' => $newrate,
                             );
 
-                            $this->db->where('product_id', $product_id);
-                            $this->db->update('product_information', $supplier_price);
+                            $this->Products->update_product($supplier_price, $product_id);
+                            // $this->db->where('product_id', $product_id);
+                            // $this->db->update('product_information', $supplier_price);
 
                             $supplier_price2 = array(
                                 'child_product_price' => $newrate,
@@ -1238,8 +1239,9 @@ class Purchases extends CI_Model
                                 'supplier_price' => $newrate,
                             );
 
-                            $this->db->where('product_id', $product_id);
-                            $this->db->update('product_information', $supplier_price);
+                            $this->Products->update_product($supplier_price, $product_id);
+                            // $this->db->where('product_id', $product_id);
+                            // $this->db->update('product_information', $supplier_price);
 
                             $supplier_price2 = array(
                                 'child_product_price' => $newrate,

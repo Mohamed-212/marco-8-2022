@@ -184,8 +184,9 @@ class Cstock_opening extends MX_Controller
                             'open_rate' => $product_rate,
                         );
 
-                        $this->db->where('product_id', $product_id);
-                        $this->db->update('product_information', $supplier_price);
+                        $this->Products->update_product($supplier_price, $product_id);
+                        // $this->db->where('product_id', $product_id);
+                        // $this->db->update('product_information', $supplier_price);
 
                         $this->db->insert('transfer', $store);
                         // stock 
