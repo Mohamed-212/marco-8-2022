@@ -787,29 +787,36 @@ class Lreport
         }
 
         $product_ids = [];
-        if ($general_filter) {
+        // if ($material_filter) {
+        //     $CI->db->reset_query();
+        //     $materialProducts = $CI->db->select('product_id')
+        //         ->from('filter_product')
+        //         ->where('filter_type_id', 2)
+        //         ->where('filter_item_id', $material_filter)
+        //         ->get()->result_array();
+        //     foreach ($materialProducts as $prod) {
+        //         $product_ids[] = $prod['product_id'];
+        //     }
+        // }
+
+        if ($general_filter || $material_filter) {
             $CI->db->reset_query();
-            $generalProducts = $CI->db->select('product_id')
-                ->from('filter_product')
-                ->where('filter_type_id', 1)
-                ->where('filter_item_id', $general_filter)
-                ->get()->result_array();
-            foreach ($generalProducts as $prod) {
+            $filter_products = $CI->db->select('a.product_id')
+                ->from('filter_product a, filter_product b');
+
+            if ($general_filter) {
+                $filter_products->where('a.filter_item_id', $general_filter);
+            }
+            if ($material_filter) {
+                $filter_products->where('b.filter_item_id', $material_filter);
+            }
+            $filter_products->where('a.product_id = b.product_id');
+            $filter_products = $filter_products->get()->result_array();
+            foreach ($filter_products as $prod) {
                 $product_ids[] = $prod['product_id'];
             }
         }
 
-        if ($material_filter) {
-            $CI->db->reset_query();
-            $materialProducts = $CI->db->select('product_id')
-                ->from('filter_product')
-                ->where('filter_type_id', 2)
-                ->where('filter_item_id', $material_filter)
-                ->get()->result_array();
-            foreach ($materialProducts as $prod) {
-                $product_ids[] = $prod['product_id'];
-            }
-        }
         $CI->db->reset_query();
         $products = $CI->db->select('p.product_id')->from('product_information p');
 
@@ -827,11 +834,7 @@ class Lreport
                 $products->where('p.assembly', $product_type);
             }
 
-            if ($general_filter) {
-                $products->where_in('p.product_id', $product_ids);
-            }
-
-            if ($material_filter) {
+            if (($general_filter || $material_filter) && count($product_ids)) {
                 $products->where_in('p.product_id', $product_ids);
             }
         } else {
