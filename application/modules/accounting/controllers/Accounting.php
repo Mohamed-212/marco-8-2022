@@ -11,8 +11,8 @@ class Accounting extends MX_Controller
   //tree view show
   public function chart_of_account()
   {
-    ini_set('pcre.backtrack_limit',50000000); 
-    ini_set('pcre.recursion_limit',50000000);
+    ini_set('pcre.backtrack_limit', 50000000);
+    ini_set('pcre.recursion_limit', 50000000);
     $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $data['title']   = display('chart_of_account');
@@ -73,29 +73,28 @@ class Accounting extends MX_Controller
           $date      = $createdate;
 
           // add to customer ledger
-          $cl_data = array(
-              'transaction_id' => generator(15),
-              'customer_id' => $headname->customer_id,
-              'date' => $date,
-              'amount' => $this->input->post('amount', true),
-              'payment_type' => 1,
-              'description' => 'ITP',
-              'status' => 1
-          );
-          $this->db->insert('customer_ledger', $cl_data);
-          $balance_type=$this->input->post('balance_type', TRUE);
-          if($balance_type==1)
-          {
+          // $cl_data = array(
+          //     'transaction_id' => generator(15),
+          //     'customer_id' => $headname->customer_id,
+          //     'date' => $date,
+          //     'amount' => $this->input->post('amount', true),
+          //     'payment_type' => 1,
+          //     'description' => 'ITP',
+          //     'status' => 1
+          // );
+          // $this->db->insert('customer_ledger', $cl_data);
+          $balance_type = $this->input->post('balance_type', TRUE);
+          if ($balance_type == 1) {
             // add acc trans
             $customer_credit = array(
               'fy_id' => $find_active_fiscal_year->id,
-              'VNo'   =>'OP-'.$headcode,
+              'VNo'   => 'OP-' . $headcode,
               'Vtype' => 'Sales',
               'VDate' => $date,
               'COAID' => $headcode, // account payable game 11
-              'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Narration' => 'Opening balance credired by customer id: ' . $headname->HeadName . '(' . $headname->customer_id . ')',
               'Debit' => 0,
-              'Credit' =>$this->input->post('amount', true),
+              'Credit' => $this->input->post('amount', true),
               'IsPosted' => 1,
               'CreateBy' => $createby,
               'CreateDate' => $createdate,
@@ -104,34 +103,32 @@ class Accounting extends MX_Controller
             $this->db->insert('acc_transaction', $customer_credit);
 
             $opening_balance_debit = array(
-              'fy_id'     =>$find_active_fiscal_year->id,
-              'VNo'       =>'OP-'.$headcode,
-              'Vtype'     =>'Sales',
-              'VDate'     =>$date,
-              'COAID'     =>3,
-              'Narration' =>'Opening balance dibited from "Owners Equity And Capital" from: '.$headname->HeadName,
-              'Debit'     =>$this->input->post('amount', true),
-              'Credit'    =>0,
-              'is_opening'=>1,
-              'IsPosted'  =>1,
-              'CreateBy'  =>$createby,
-              'CreateDate'=>$createdate,
-              'IsAppove'  =>1
+              'fy_id'     => $find_active_fiscal_year->id,
+              'VNo'       => 'OP-' . $headcode,
+              'Vtype'     => 'Sales',
+              'VDate'     => $date,
+              'COAID'     => 3,
+              'Narration' => 'Opening balance dibited from "Owners Equity And Capital" from: ' . $headname->HeadName,
+              'Debit'     => $this->input->post('amount', true),
+              'Credit'    => 0,
+              'is_opening' => 1,
+              'IsPosted'  => 1,
+              'CreateBy'  => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove'  => 1
             );
-            $this->db->insert('acc_transaction',$opening_balance_debit);
-          }
-          elseif($balance_type==2)
-          {
+            $this->db->insert('acc_transaction', $opening_balance_debit);
+          } elseif ($balance_type == 2) {
             // add acc trans
             $customer_debit = array(
               'fy_id' => $find_active_fiscal_year->id,
-              'VNo'   =>'OP-'.$headcode,
+              'VNo'   => 'OP-' . $headcode,
               'Vtype' => 'Sales',
               'VDate' => $date,
               'COAID' => $headcode, // account payable game 11
-              'Narration' => 'Opening balance debited by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Narration' => 'Opening balance debited by customer id: ' . $headname->HeadName . '(' . $headname->customer_id . ')',
               'Debit' => $this->input->post('amount', true),
-              'Credit' =>0,
+              'Credit' => 0,
               'IsPosted' => 1,
               'CreateBy' => $createby,
               'CreateDate' => $createdate,
@@ -140,21 +137,21 @@ class Accounting extends MX_Controller
             $this->db->insert('acc_transaction', $customer_debit);
 
             $opening_balance_credit = array(
-              'fy_id'     =>$find_active_fiscal_year->id,
-              'VNo'       =>'OP-'.$headcode,
-              'Vtype'     =>'Sales',
-              'VDate'     =>$date,
-              'COAID'     =>3,
-              'Narration' =>'Opening balance credited from "Owners Equity And Capital" from: '.$headname->HeadName,
-              'Debit'     =>0,
-              'Credit'    =>$this->input->post('amount', true),
-              'is_opening'=>1,
-              'IsPosted'  =>1,
-              'CreateBy'  =>$receive_by,
-              'CreateDate'=>$createdate,
-              'IsAppove'  =>1
+              'fy_id'     => $find_active_fiscal_year->id,
+              'VNo'       => 'OP-' . $headcode,
+              'Vtype'     => 'Sales',
+              'VDate'     => $date,
+              'COAID'     => 3,
+              'Narration' => 'Opening balance credited from "Owners Equity And Capital" from: ' . $headname->HeadName,
+              'Debit'     => 0,
+              'Credit'    => $this->input->post('amount', true),
+              'is_opening' => 1,
+              'IsPosted'  => 1,
+              'CreateBy'  => $receive_by,
+              'CreateDate' => $createdate,
+              'IsAppove'  => 1
             );
-            $this->db->insert('acc_transaction',$opening_balance_credit);
+            $this->db->insert('acc_transaction', $opening_balance_credit);
           }
 
           $this->session->set_flashdata('message', display('save_successfully'));
@@ -205,8 +202,11 @@ class Accounting extends MX_Controller
           $createdate = date('Y-m-d H:i:s');
           $date      = $createdate;
 
-          // add to customer ledger
-          $cl_data = array(
+          $balance_type = $this->input->post('balance_type', TRUE);
+          if ($balance_type == 1) {
+            // credit
+            // add to customer ledger
+            $cl_data = array(
               'transaction_id' => generator(15),
               'customer_id' => $headname->customer_id,
               'date' => $date,
@@ -214,21 +214,18 @@ class Accounting extends MX_Controller
               'payment_type' => 1,
               'description' => 'ITP',
               'status' => 1
-          );
-          $this->db->insert('customer_ledger', $cl_data);
-          $balance_type=$this->input->post('balance_type', TRUE);
-          if($balance_type==1)
-          {
+            );
+            $this->db->insert('customer_ledger', $cl_data);
             // add acc trans
             $customer_credit = array(
               'fy_id' => $find_active_fiscal_year->id,
-              'VNo'   =>'OP-'.$headcode,
+              'VNo'   => 'OP-' . $headcode,
               'Vtype' => 'Sales',
               'VDate' => $date,
               'COAID' => $headcode, // account payable game 11
-              'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Narration' => 'Opening balance credired by customer id: ' . $headname->HeadName . '(' . $headname->customer_id . ')',
               'Debit' => 0,
-              'Credit' =>$this->input->post('amount', true),
+              'Credit' => $this->input->post('amount', true),
               'IsPosted' => 1,
               'CreateBy' => $createby,
               'CreateDate' => $createdate,
@@ -237,34 +234,43 @@ class Accounting extends MX_Controller
             $this->db->insert('acc_transaction', $customer_credit);
 
             $customers_opening_balance_debit = array(
-              'fy_id'     =>$find_active_fiscal_year->id,
-              'VNo'       =>'OP-'.$headcode,
-              'Vtype'     =>'Sales',
-              'VDate'     =>$date,
-              'COAID'     =>3,
-              'Narration' =>'Opening balance dibited from "Owners Equity And Capital" from: '.$headname->HeadName,
-              'Debit'     =>$this->input->post('amount', true),
-              'Credit'    =>0,
-              'is_opening'=>1,
-              'IsPosted'  =>1,
-              'CreateBy'  =>$createby,
-              'CreateDate'=>$createdate,
-              'IsAppove'  =>1
+              'fy_id'     => $find_active_fiscal_year->id,
+              'VNo'       => 'OP-' . $headcode,
+              'Vtype'     => 'Sales',
+              'VDate'     => $date,
+              'COAID'     => 3,
+              'Narration' => 'Opening balance dibited from "Owners Equity And Capital" from: ' . $headname->HeadName,
+              'Debit'     => $this->input->post('amount', true),
+              'Credit'    => 0,
+              'is_opening' => 1,
+              'IsPosted'  => 1,
+              'CreateBy'  => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove'  => 1
             );
-            $this->db->insert('acc_transaction',$customers_opening_balance_debit);
-          }
-          elseif($balance_type==2)
-          {
+            $this->db->insert('acc_transaction', $customers_opening_balance_debit);
+          } elseif ($balance_type == 2) {
+            // debit
+            // add to customer ledger
+            $cl_data = array(
+              'transaction_id' => generator(15),
+              'receipt_no' => $this->auth->generator(15),
+              'customer_id' => $headname->customer_id,
+              'date' => $date,
+              'amount' => $this->input->post('amount', true),
+              'status' => 1
+            );
+            $this->db->insert('customer_ledger', $cl_data);
             // add acc trans
             $customer_debit = array(
               'fy_id' => $find_active_fiscal_year->id,
-              'VNo'   =>'OP-'.$headcode,
+              'VNo'   => 'OP-' . $headcode,
               'Vtype' => 'Sales',
               'VDate' => $date,
               'COAID' => $headcode, // account payable game 11
-              'Narration' => 'Opening balance debited by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Narration' => 'Opening balance debited by customer id: ' . $headname->HeadName . '(' . $headname->customer_id . ')',
               'Debit' => $this->input->post('amount', true),
-              'Credit' =>0,
+              'Credit' => 0,
               'IsPosted' => 1,
               'CreateBy' => $createby,
               'CreateDate' => $createdate,
@@ -273,21 +279,21 @@ class Accounting extends MX_Controller
             $this->db->insert('acc_transaction', $customer_debit);
 
             $customers_opening_balance_credit = array(
-              'fy_id'     =>$find_active_fiscal_year->id,
-              'VNo'       =>'OP-'.$headcode,
-              'Vtype'     =>'Sales',
-              'VDate'     =>$date,
-              'COAID'     =>3,
-              'Narration' =>'Opening balance credited from "Owners Equity And Capital" from: '.$headname->HeadName,
-              'Debit'     =>0,
-              'Credit'    =>$this->input->post('amount', true),
-              'is_opening'=>1,
-              'IsPosted'  =>1,
-              'CreateBy'  =>$receive_by,
-              'CreateDate'=>$createdate,
-              'IsAppove'  =>1
+              'fy_id'     => $find_active_fiscal_year->id,
+              'VNo'       => 'OP-' . $headcode,
+              'Vtype'     => 'Sales',
+              'VDate'     => $date,
+              'COAID'     => 3,
+              'Narration' => 'Opening balance credited from "Owners Equity And Capital" from: ' . $headname->HeadName,
+              'Debit'     => 0,
+              'Credit'    => $this->input->post('amount', true),
+              'is_opening' => 1,
+              'IsPosted'  => 1,
+              'CreateBy'  => $receive_by,
+              'CreateDate' => $createdate,
+              'IsAppove'  => 1
             );
-            $this->db->insert('acc_transaction',$customers_opening_balance_credit);
+            $this->db->insert('acc_transaction', $customers_opening_balance_credit);
           }
 
           $this->session->set_flashdata('message', display('save_successfully'));
@@ -300,6 +306,156 @@ class Accounting extends MX_Controller
       $data['title']      = display('customers_opening_balance');
       $data['headss']     = $this->account_model->opening_balance_customers_only();
       $content = $this->parser->parse('accounting/customers_opening_balance', $data, true);
+      $this->template_lib->full_admin_html_view($content);
+    } else {
+      $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
+      redirect('Admin_dashboard');
+    }
+  }
+
+  public function suppliers_opening_balance()
+  {
+    $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+    if (!empty($find_active_fiscal_year)) {
+      $this->form_validation->set_rules('headcode', display('account_head'), 'max_length[100]');
+      $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
+      $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
+
+      if ($this->form_validation->run() == TRUE) {
+        $dtpDate = $this->input->post('dtpDate', TRUE);
+        $datecheck = $this->fiscal_date_check($dtpDate);
+        if (!$datecheck) {
+          $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
+          redirect('accounting/suppliers_opening_balance');
+        }
+        $createby   = $this->session->userdata('user_id');
+        $postData = array(
+          'fy_id'          => $find_active_fiscal_year->id,
+          'headcode'       => $this->input->post('headcode', true),
+          'amount'         => $this->input->post('amount', true),
+          'adjustment_date' => $dtpDate,
+          'created_by'     => $createby,
+        );
+        $receive_by = $this->session->userdata('user_id');
+        if ($this->account_model->create_opening($postData)) {
+
+          $headcode  = $this->input->post('headcode', true);
+          $headname  = $this->db->select('HeadName, supplier_id')->from('acc_coa')->where('HeadCode', $headcode)->get()->row();
+          $createdate = date('Y-m-d H:i:s');
+          $date      = $createdate;
+
+          $balance_type = $this->input->post('balance_type', TRUE);
+          if ($balance_type == 1) {
+            // credit
+            // add to customer ledger
+            $sup_data = array(
+              'transaction_id' =>  $this->auth->generator(15),
+              'supplier_id'   =>  $headname->supplier_id,
+              'invoice_no'    =>  NULL,
+              'deposit_no'    =>  $this->auth->generator(10),
+              'amount'        =>  $this->input->post('amount', true),
+              'description'   =>  '',
+              'payment_type'  =>  1,
+              'date'          =>  date('Y-m-d'),
+              'status'        =>  1,
+              'sl_created_at' => date('Y-m-d H:i:s')
+          );
+          $this->db->insert('supplier_ledger', $sup_data);
+            // add acc trans
+            $customer_credit = array(
+              'fy_id' => $find_active_fiscal_year->id,
+              'VNo'   => 'OP-' . $headcode,
+              'Vtype' => 'Sales',
+              'VDate' => $date,
+              'COAID' => $headcode, // account payable game 11
+              'Narration' => 'Opening balance credired by supplier id: ' . $headname->HeadName . '(' . $headname->supplier_id . ')',
+              'Debit' => 0,
+              'Credit' => $this->input->post('amount', true),
+              'IsPosted' => 1,
+              'CreateBy' => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $customer_credit);
+
+            $custsuppliersning_balance_debit = array(
+              'fy_id'     => $find_active_fiscal_year->id,
+              'VNo'       => 'OP-' . $headcode,
+              'Vtype'     => 'Sales',
+              'VDate'     => $date,
+              'COAID'     => 3,
+              'Narration' => 'Opening balance dibited from "Owners Equity And Capital" from: ' . $headname->HeadName,
+              'Debit'     => $this->input->post('amount', true),
+              'Credit'    => 0,
+              'is_opening' => 1,
+              'IsPosted'  => 1,
+              'CreateBy'  => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove'  => 1
+            );
+            $this->db->insert('acc_transaction', $custsuppliersning_balance_debit);
+          } elseif ($balance_type == 2) {
+            // debit
+            // add to customer ledger
+            $sup_data = array(
+              'transaction_id' =>   $this->auth->generator(15),
+              'supplier_id'   =>  $headname->supplier_id,
+              'invoice_no'    =>  NULL,
+              'deposit_no'    =>  null,
+              'amount'        =>  $this->input->post('amount', true),
+              'description'   =>  '',
+              'payment_type'  =>  1,
+              'date'          =>  date('Y-m-d'),
+              'status'        =>  1,
+              'sl_created_at' => date('Y-m-d H:i:s')
+
+          );
+          $this->db->insert('supplier_ledger', $sup_data);
+            // add acc trans
+            $customer_debit = array(
+              'fy_id' => $find_active_fiscal_year->id,
+              'VNo'   => 'OP-' . $headcode,
+              'Vtype' => 'Sales',
+              'VDate' => $date,
+              'COAID' => $headcode, // account payable game 11
+              'Narration' => 'Opening balance debited by supplier id: ' . $headname->HeadName . '(' . $headname->customer_id . ')',
+              'Debit' => $this->input->post('amount', true),
+              'Credit' => 0,
+              'IsPosted' => 1,
+              'CreateBy' => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $customer_debit);
+
+            $custosuppliersing_balance_credit = array(
+              'fy_id'     => $find_active_fiscal_year->id,
+              'VNo'       => 'OP-' . $headcode,
+              'Vtype'     => 'Sales',
+              'VDate'     => $date,
+              'COAID'     => 3,
+              'Narration' => 'Opening balance credited from "Owners Equity And Capital" from: ' . $headname->HeadName,
+              'Debit'     => 0,
+              'Credit'    => $this->input->post('amount', true),
+              'is_opening' => 1,
+              'IsPosted'  => 1,
+              'CreateBy'  => $receive_by,
+              'CreateDate' => $createdate,
+              'IsAppove'  => 1
+            );
+            $this->db->insert('acc_transaction', $custosuppliersing_balance_credit);
+          }
+
+          $this->session->set_flashdata('message', display('save_successfully'));
+          redirect('accounting/suppliers_opening_balance');
+        } else {
+          $this->session->set_flashdata('exception', display('please_try_again'));
+          redirect('accounting/suppliers_opening_balance');
+        }
+      }
+      $data['title']      = display('suppliers_opening_balance');
+      $data['headss']     = $this->account_model->opening_balance_suppliers_only();
+      $content = $this->parser->parse('accounting/suppliers_opening_balance', $data, true);
       $this->template_lib->full_admin_html_view($content);
     } else {
       $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
@@ -662,7 +818,7 @@ class Accounting extends MX_Controller
   public function debit_voucher()
   {
     $print_after_save = $this->input->post('print_me', true);
-  
+
     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('cmbDebit', display('credit_account_head'), 'required|max_length[100]');
@@ -681,7 +837,7 @@ class Accounting extends MX_Controller
           $this->session->set_flashdata('message', display('save_successfully'));
           if ($print_after_save) {
             // echo "<pre>";print_r($inserted);exit;
-  
+
             $accounts = [];
             foreach ($inserted['dAID'] as $acId) {
               $debitvcode = $this->db->select('*')
@@ -755,7 +911,7 @@ class Accounting extends MX_Controller
         if ($inserted = $this->account_model->insert_creditvoucher(true)) {
           if ($print_after_save) {
             // echo "<pre>";
-  
+
             $accounts = [];
             foreach ($inserted['cAID'] as $acId) {
               $debitvcode = $this->db->select('*')
@@ -812,7 +968,7 @@ class Accounting extends MX_Controller
   public function bdtask_create_contra_voucher()
   {
     $print_after_save = $this->input->post('print_me', true);
-  
+
     $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
     if (!empty($find_active_fiscal_year)) {
       $this->form_validation->set_rules('cmbDebit', display('cmbDebit'), 'max_length[100]');
@@ -827,7 +983,7 @@ class Accounting extends MX_Controller
           $this->session->set_flashdata('message', display('save_successfully'));
           if ($print_after_save) {
             // echo "<pre>";print_r($inserted);exit;
-  
+
             $accounts = [];
             foreach ($inserted['cAID'] as $acId) {
               $debitvcode = $this->db->select('*')

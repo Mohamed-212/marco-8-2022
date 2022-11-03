@@ -74,7 +74,7 @@
                                     <option value="">Select One</option>
                                     <?php foreach ($headss as $acc_head) { ?>
                                     <option value="<?php echo $acc_head->HeadCode; ?>">
-                                        <?php echo html_escape($acc_head->HeadName); ?>
+                                        <?php echo $acc_head->supplier_no . ' - ' . $acc_head->HeadName; ?>
                                     </option>
                                     <?php } ?>
                                 </select>

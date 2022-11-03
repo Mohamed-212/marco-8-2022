@@ -234,7 +234,7 @@
                                                     <center>
                                                         <?php echo form_open() ?>
                                                         <?php if ($this->permission->check_label('manage_product')->read()->access()) { ?>
-                                                            <a href="<?php echo base_url() . 'dashboard/Cqrcode/qrgenerator/' . $v_product_list['product_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('qr_code') ?>"><i class="fa fa-qrcode" aria-hidden="true"></i></a>
+                                                            <!-- <a href="<?php echo base_url() . 'dashboard/Cqrcode/qrgenerator/' . $v_product_list['product_id']; ?>" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('qr_code') ?>"><i class="fa fa-qrcode" aria-hidden="true"></i></a> -->
                                                         <?php } ?>
                                                         <a href="<?php echo base_url() . 'dashboard/Cbarcode/barcode_print/' . $v_product_list['product_id']; ?>" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('barcode') ?>"><i class="fa fa-barcode" aria-hidden="true"></i></a>
                                                         <a href="<?php echo base_url() . 'product/' . remove_space($v_product_list['product_name']) . '/' . urlencode($v_product_list['product_id']); ?>" class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="left" title="<?php echo display('details') ?>" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a>

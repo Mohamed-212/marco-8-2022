@@ -68,8 +68,9 @@ class Account_model extends CI_Model
 
   function opening_balance_customers_only()
   {
-    $this->db->select('*');
-    $this->db->from('acc_coa');
+    $this->db->select('a.*, b.customer_no');
+    $this->db->from('acc_coa a');
+    $this->db->join('customer_information b', 'b.customer_id = a.customer_id');
     $this->db->where('IsActive', 1);
     $this->db->where('IsTransaction', 1);
     $this->db->where('PHeadCode', 1131);
@@ -84,8 +85,9 @@ class Account_model extends CI_Model
 
   function opening_balance_suppliers_only()
   {
-    $this->db->select('*');
-    $this->db->from('acc_coa');
+    $this->db->select('a.*, b.supplier_no');
+    $this->db->from('acc_coa a');
+    $this->db->join('supplier_information b', 'b.supplier_id = a.supplier_id');
     $this->db->where('IsActive', 1);
     $this->db->where('IsTransaction', 1);
     $this->db->where('PHeadCode', 2111);
@@ -97,6 +99,7 @@ class Account_model extends CI_Model
       return false;
     }
   }
+
 
   function get_bank_list()
   {
