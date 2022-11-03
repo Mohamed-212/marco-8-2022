@@ -301,7 +301,7 @@
 								<div class="form-group row">
 									<label for="to_date" class="col-sm-3 col-form-label"><?php echo display('end_date') ?>:</label>
 									<div class="col-sm-9">
-										<input type="text" name="to_date" class="form-control datepicker2" id="to_date" value="<?php echo $this->input->post('to_date', TRUE); ?>" placeholder="<?php echo display('end_date') ?>">
+										<input type="text" name="to_date" class="form-control datepicker2" id="to_date" value="<?= empty($this->input->post('to_date', TRUE)) ? date('d-m-Y') : $this->input->post('to_date', TRUE) ?>" placeholder="<?php echo display('end_date') ?>">
 									</div>
 								</div>
 							</div>
@@ -337,7 +337,7 @@
 										<tr>
 											<th class="text-center"><?php echo display('product_name') ?></th>
 											<th class="text-center"><?php echo display('category_name') ?></th>
-											<th class="text-center"><?php echo display('product_type') ?></th>
+											<!-- <th class="text-center"><?php echo display('product_type') ?></th> -->
 											<th class="text-center">GENDER</th>
 											<th class="text-center">MATERIAL</th>
 											<th class="text-center"><?php echo display('receive_quantity') ?></th>
@@ -375,9 +375,9 @@
 												<td>
 													<?= $repo[0]['category_name'] ?>
 												</td>
-												<td>
+												<!-- <td>
 													<?= display($repo[0]['assembly'] ? 'assemply' : 'normal') ?>
-												</td>
+												</td> -->
 												<td>
 													<?= $repo[0]['filters'][0]['item_name'] ?>
 												</td>
