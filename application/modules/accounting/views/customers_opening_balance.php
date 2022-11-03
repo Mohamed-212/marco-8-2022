@@ -8,11 +8,11 @@
         </div>
         <div class="header-title">
             <h1><?php echo display('accounts') ?></h1>
-            <small><?php echo display('chart_of_account') ?></small>
+            <small><?php echo display('customers_opening_balance') ?></small>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
                 <li><a href="#"><?php echo display('accounts') ?></a></li>
-                <li class="active"><?php echo display('chart_of_account') ?></li>
+                <li class="active"><?php echo display('customers_opening_balance') ?></li>
             </ol>
         </div>
     </section>
@@ -48,12 +48,12 @@
                     <div class="panel-heading">
                         <div class="panel-title">
                             <h4>
-                                <?php echo display('opening_balance') ?>
+                                <?php echo display('customers_opening_balance') ?>
                             </h4>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <?php echo  form_open_multipart('accounting/opening_balance', 'id="validate"') ?>
+                        <?php echo  form_open_multipart('accounting/customers_opening_balance', 'id="validate"') ?>
                         <div class="form-group row">
                             <label for="date" class="col-sm-2 col-form-label"><?php echo display('date') ?><i
                                     class="text-danger">*</i></label>

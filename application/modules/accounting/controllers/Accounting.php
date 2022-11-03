@@ -165,8 +165,141 @@ class Accounting extends MX_Controller
         }
       }
       $data['title']      = display('opening_balance');
-      $data['headss']     = $this->account_model->opening_balance_userlist();
+      $data['headss']     = $this->account_model->opening_balance_userlist_without_customers_or_suppliers();
       $content = $this->parser->parse('accounting/opening_balance', $data, true);
+      $this->template_lib->full_admin_html_view($content);
+    } else {
+      $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));
+      redirect('Admin_dashboard');
+    }
+  }
+
+  public function customers_opening_balance()
+  {
+    $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+    if (!empty($find_active_fiscal_year)) {
+      $this->form_validation->set_rules('headcode', display('account_head'), 'max_length[100]');
+      $this->form_validation->set_rules('dtpDate', display('date'), 'required|max_length[30]');
+      $this->form_validation->set_rules('amount', display('amount'), 'required|max_length[30]');
+
+      if ($this->form_validation->run() == TRUE) {
+        $dtpDate = $this->input->post('dtpDate', TRUE);
+        $datecheck = $this->fiscal_date_check($dtpDate);
+        if (!$datecheck) {
+          $this->session->set_userdata('error_message', 'Invalid date selection! Please select a date from active fiscal year.');
+          redirect('accounting/customers_opening_balance');
+        }
+        $createby   = $this->session->userdata('user_id');
+        $postData = array(
+          'fy_id'          => $find_active_fiscal_year->id,
+          'headcode'       => $this->input->post('headcode', true),
+          'amount'         => $this->input->post('amount', true),
+          'adjustment_date' => $dtpDate,
+          'created_by'     => $createby,
+        );
+        $receive_by = $this->session->userdata('user_id');
+        if ($this->account_model->create_opening($postData)) {
+
+          $headcode  = $this->input->post('headcode', true);
+          $headname  = $this->db->select('HeadName, customer_id')->from('acc_coa')->where('HeadCode', $headcode)->get()->row();
+          $createdate = date('Y-m-d H:i:s');
+          $date      = $createdate;
+
+          // add to customer ledger
+          $cl_data = array(
+              'transaction_id' => generator(15),
+              'customer_id' => $headname->customer_id,
+              'date' => $date,
+              'amount' => $this->input->post('amount', true),
+              'payment_type' => 1,
+              'description' => 'ITP',
+              'status' => 1
+          );
+          $this->db->insert('customer_ledger', $cl_data);
+          $balance_type=$this->input->post('balance_type', TRUE);
+          if($balance_type==1)
+          {
+            // add acc trans
+            $customer_credit = array(
+              'fy_id' => $find_active_fiscal_year->id,
+              'VNo'   =>'OP-'.$headcode,
+              'Vtype' => 'Sales',
+              'VDate' => $date,
+              'COAID' => $headcode, // account payable game 11
+              'Narration' => 'Opening balance credired by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Debit' => 0,
+              'Credit' =>$this->input->post('amount', true),
+              'IsPosted' => 1,
+              'CreateBy' => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $customer_credit);
+
+            $customers_opening_balance_debit = array(
+              'fy_id'     =>$find_active_fiscal_year->id,
+              'VNo'       =>'OP-'.$headcode,
+              'Vtype'     =>'Sales',
+              'VDate'     =>$date,
+              'COAID'     =>3,
+              'Narration' =>'Opening balance dibited from "Owners Equity And Capital" from: '.$headname->HeadName,
+              'Debit'     =>$this->input->post('amount', true),
+              'Credit'    =>0,
+              'is_opening'=>1,
+              'IsPosted'  =>1,
+              'CreateBy'  =>$createby,
+              'CreateDate'=>$createdate,
+              'IsAppove'  =>1
+            );
+            $this->db->insert('acc_transaction',$customers_opening_balance_debit);
+          }
+          elseif($balance_type==2)
+          {
+            // add acc trans
+            $customer_debit = array(
+              'fy_id' => $find_active_fiscal_year->id,
+              'VNo'   =>'OP-'.$headcode,
+              'Vtype' => 'Sales',
+              'VDate' => $date,
+              'COAID' => $headcode, // account payable game 11
+              'Narration' => 'Opening balance debited by customer id: ' .$headname->HeadName . '(' . $headname->customer_id . ')',
+              'Debit' => $this->input->post('amount', true),
+              'Credit' =>0,
+              'IsPosted' => 1,
+              'CreateBy' => $createby,
+              'CreateDate' => $createdate,
+              'IsAppove' => 1
+            );
+            $this->db->insert('acc_transaction', $customer_debit);
+
+            $customers_opening_balance_credit = array(
+              'fy_id'     =>$find_active_fiscal_year->id,
+              'VNo'       =>'OP-'.$headcode,
+              'Vtype'     =>'Sales',
+              'VDate'     =>$date,
+              'COAID'     =>3,
+              'Narration' =>'Opening balance credited from "Owners Equity And Capital" from: '.$headname->HeadName,
+              'Debit'     =>0,
+              'Credit'    =>$this->input->post('amount', true),
+              'is_opening'=>1,
+              'IsPosted'  =>1,
+              'CreateBy'  =>$receive_by,
+              'CreateDate'=>$createdate,
+              'IsAppove'  =>1
+            );
+            $this->db->insert('acc_transaction',$customers_opening_balance_credit);
+          }
+
+          $this->session->set_flashdata('message', display('save_successfully'));
+          redirect('accounting/customers_opening_balance');
+        } else {
+          $this->session->set_flashdata('exception', display('please_try_again'));
+          redirect('accounting/customers_opening_balance');
+        }
+      }
+      $data['title']      = display('customers_opening_balance');
+      $data['headss']     = $this->account_model->opening_balance_customers_only();
+      $content = $this->parser->parse('accounting/customers_opening_balance', $data, true);
       $this->template_lib->full_admin_html_view($content);
     } else {
       $this->session->set_userdata(array('error_message' => display('no_active_fiscal_year_found')));

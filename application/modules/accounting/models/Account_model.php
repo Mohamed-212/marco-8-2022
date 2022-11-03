@@ -45,6 +45,59 @@ class Account_model extends CI_Model
     }
   }
 
+  function opening_balance_userlist_without_customers_or_suppliers()
+  {
+    $this->db->select('*');
+    $this->db->from('acc_coa');
+    $this->db->where('IsActive', 1);
+    $this->db->where('IsTransaction', 1);
+    // remove customers
+    $this->db->where('PHeadCode !=', 113);
+    $this->db->where('PHeadCode !=', 1131);
+    // remove suppliers
+    $this->db->where('PHeadCode !=', 211);
+    $this->db->where('PHeadCode !=', 2111);
+    $this->db->order_by('HeadCode');
+    $query = $this->db->get();
+    if ($query->num_rows() >= 1) {
+      return $query->result();
+    } else {
+      return false;
+    }
+  }
+
+  function opening_balance_customers_only()
+  {
+    $this->db->select('*');
+    $this->db->from('acc_coa');
+    $this->db->where('IsActive', 1);
+    $this->db->where('IsTransaction', 1);
+    $this->db->where('PHeadCode', 1131);
+    $this->db->order_by('HeadCode');
+    $query = $this->db->get();
+    if ($query->num_rows() >= 1) {
+      return $query->result();
+    } else {
+      return false;
+    }
+  }
+
+  function opening_balance_suppliers_only()
+  {
+    $this->db->select('*');
+    $this->db->from('acc_coa');
+    $this->db->where('IsActive', 1);
+    $this->db->where('IsTransaction', 1);
+    $this->db->where('PHeadCode', 2111);
+    $this->db->order_by('HeadCode');
+    $query = $this->db->get();
+    if ($query->num_rows() >= 1) {
+      return $query->result();
+    } else {
+      return false;
+    }
+  }
+
   function get_bank_list()
   {
     $this->db->select('*');
