@@ -25,6 +25,16 @@ $HmvcMenu["accounting"] = array(
         "method"     => "opening_balance",
         "permission" => "read"
     ),
+    "customers_opening_balance" => array(
+        "controller" => "accounting",
+        "method"     => "customers_opening_balance",
+        "permission" => "read"
+    ),
+    "suppliers_opening_balance" => array(
+        "controller" => "accounting",
+        "method"     => "suppliers_opening_balance",
+        "permission" => "read"
+    ),
     "supplier_payment" => array(
         "controller" => "accounting",
         "method"     => "supplier_payment",

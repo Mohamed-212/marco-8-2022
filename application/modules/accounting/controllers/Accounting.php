@@ -418,7 +418,7 @@ class Accounting extends MX_Controller
               'Vtype' => 'Sales',
               'VDate' => $date,
               'COAID' => $headcode, // account payable game 11
-              'Narration' => 'Opening balance debited by supplier id: ' . $headname->HeadName . '(' . $headname->customer_id . ')',
+              'Narration' => 'Opening balance debited by supplier id: ' . $headname->HeadName . '(' . $headname->supplier_id . ')',
               'Debit' => $this->input->post('amount', true),
               'Credit' => 0,
               'IsPosted' => 1,
