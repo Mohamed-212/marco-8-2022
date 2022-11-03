@@ -1109,7 +1109,7 @@
         <!-- Report menu end -->
 
         <!-- pay with method menu start -->
-        <?php if ($this->permission->module('pay_with')->access()) { ?>
+        <?php if ($this->permission->module('pay_with')->access() && 0) { ?>
         <li class="treeview <?php if ($this->uri->segment(2) == ("Cpay_with")) {
                                         echo "active";
                                     } else {
@@ -1165,7 +1165,7 @@
         <!-- End of menu state -->
 
         <!-- Delivery system menu start -->
-        <?php if ($this->permission->module('delivery_system')->access()) { ?>
+        <?php if ($this->permission->module('delivery_system')->access() && 0) { ?>
         <li class="treeview <?php echo (($this->uri->segment(2) == 'cdelivery_system') ? 'active' : '') ?>">
             <a href="#">
                 <i class="fa fa-truck"></i><span><?php echo display('delivery_system') ?></span>
@@ -1275,7 +1275,7 @@
         <!-- End of menu delivery system -->
 
         <!-- Modules menu start -->
-        <?php if ($this->permission->module('modules')->access()) { ?>
+        <?php if ($this->permission->module('modules')->access() && 0) { ?>
         <li class="treeview <?php echo (($this->uri->segment(2) == 'module' ? 'active' : '')) ?>">
             <a href="<?php echo base_url('addon/module') ?>"><i
                     class="ti-package"></i><span><?php echo display('modules') ?> </span></a>
@@ -1283,7 +1283,7 @@
         </li>
         <?php } ?>
         <!-- theme menu start -->
-        <?php if ($this->permission->module('themes')->access()) { ?>
+        <?php if ($this->permission->module('themes')->access() && 0) { ?>
         <li class="treeview <?php echo (($this->uri->segment(2) == 'theme' ? 'active' : '')) ?>">
             <a href="<?php echo base_url('addon/theme') ?>"><i
                     class="fa fa-tint"></i><span><?php echo display('themes') ?></span>
@@ -1568,14 +1568,14 @@
             </ul>
         </li>
         <?php } ?>
-        <?php if ($this->permission->module('update')->access()) { ?>
+        <?php if ($this->permission->module('update')->access() && 0) { ?>
         <li class="treeview <?php echo (($this->uri->segment(1) == 'autoupdate' ? 'active' : '')) ?>">
             <a href="<?php echo base_url('autoupdate') ?>"><i class="fa fa-cloud-download"
                     aria-hidden="true"></i><span><?php echo display('update') ?></span>
             </a>
         </li>
         <?php } ?>
-        <?php if ($this->permission->module('backup_and_restore')->access()) { ?>
+        <?php if ($this->permission->module('backup_and_restore')->access() && 0) { ?>
         <li class="treeview <?php echo ($this->uri->segment(2) == "backup_restore" ? "active" : null) ?>">
             <a href="<?php echo base_url('dashboard/backup_restore/index') ?>"><i class="fa fa-database"></i>
                 <span><?php echo display('backup_and_restore') ?></span>
@@ -1691,8 +1691,8 @@
         </li>
         <?php } ?>
         <!-- ends of admin area -->
-        <?php if ($this->permission->module('android_apps')->access()) { ?>
-        <li class="<?php if ($this->uri->segment(3) == ("android_apps_view")) {
+        <?php if ($this->permission->module('android_apps')->access() && 0) { ?>
+        <li class="<?php if ($this->uri->segment(3) == ("android_apps_view") && 0) {
                             echo "active";
                         } else {
                             echo " ";
@@ -1707,7 +1707,7 @@
             </a>
         </li>
         <?php } ?>
-        <?php if ($this->permission->module('support')->access()) { ?>
+        <?php if ($this->permission->module('support')->access() && 0) { ?>
         <li>
             <a href="https://www.bdtask.com/blog/" target="_blank"><i class="ti-themify-favicon"></i>
                 <span><?php echo display('support') ?></span>
