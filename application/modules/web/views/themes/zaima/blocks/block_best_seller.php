@@ -67,7 +67,15 @@
             <?php } ?>
 
             <?php
-            $latest_products = $this->db->select('*')->from('product_information')->where('status','1')->order_by('id','desc')->limit(15)->get()->result();
+             $this->db->select('a.*,b.category_name,c.brand_name, pr.product_price as whole_price');
+             $this->db->from('product_information a');
+             $this->db->join('product_category b', 'a.category_id=b.category_id');
+             $this->db->join('brand c', 'a.brand_id=c.brand_id', 'left');
+             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+             $this->db->order_by('id', 'desc');
+             $this->db->limit(15);
+             $latest_products = $this->db->get()->result();
+            //  = $this->db->select('*')->from('product_information')->where('status','1')->order_by('id','desc')->limit(15)->get()->result();
             if(!empty($latest_products)){
              ?>
             <div class="col-md-4 col-sm-6 mb-3 mb-md-0">
