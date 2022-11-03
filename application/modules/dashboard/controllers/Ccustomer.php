@@ -49,6 +49,7 @@ class Ccustomer extends MX_Controller
             'customer_name'         => $this->input->post('customer_name', TRUE),
             'customer_mobile'       => $this->input->post('mobile', TRUE),
             'customer_email'        => $this->input->post('email', TRUE),
+            'password'              => $this->input->post('password', TRUE),
             'vat_no'                => $this->input->post('vat_no', TRUE),
             'cr_no'                 => $this->input->post('cr_no', TRUE),
             'previous_balance'      => $paymentType == 2 ? $this->input->post('previous_balance', TRUE) * -1 : $this->input->post('previous_balance', TRUE),
@@ -133,6 +134,7 @@ class Ccustomer extends MX_Controller
             'customer_name'         => $this->input->post('customer_name', TRUE),
             'customer_mobile'       => $this->input->post('mobile', TRUE),
             'customer_email'        => $this->input->post('email', TRUE),
+            'password'              => $this->input->post('password', TRUE),
             'vat_no'                => $this->input->post('vat_no', TRUE),
             'cr_no'                 => $this->input->post('cr_no', TRUE),
             'customer_short_address' => $this->input->post('address', TRUE),
@@ -144,6 +146,10 @@ class Ccustomer extends MX_Controller
             'zip'                   => $this->input->post('zip', TRUE),
             'status'                => 1
         );
+
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
 
         $this->Customers->update_customer($data, $customer_id);
 

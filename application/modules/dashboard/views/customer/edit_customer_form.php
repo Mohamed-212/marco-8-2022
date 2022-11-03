@@ -111,6 +111,15 @@
                                     type="number" placeholder="<?php echo display('customer_mobile') ?>" required="">
                             </div>
                         </div>
+                        
+                        <div class="form-group row">
+                            <label for="password" class="col-sm-3 col-form-label"><?php echo display('customer_password') ?>
+                                <i class="text-danger">*</i></label>
+                            <div class="col-sm-6">
+                                <input class="form-control" name="password" id="password" type="password" placeholder="<?php echo display('customer_password') ?>" maxlength="6">
+                            </div>
+                        </div>
+
                         <div class="form-group row">
                             <label for="vat_no" class="col-sm-3 col-form-label"><?php echo display('vat_no') ?></label>
                             <div class="col-sm-6">
@@ -209,7 +218,7 @@
                         <div class="form-group row">
                             <input type="hidden" hidden id="contact_info" name="contact_info" value="<?=json_encode($contact_info)?>" />
                             <div class="col-sm-12">
-                                <div class="card-body" style="margin-top: 35px;" <?php echo count($contact_info) < 1 ? "x-init='addOne'" : ''; ?>>
+                                <div class="card-body" style="margin-top: 35px;">
                                     <div class="row">
                                         <div class="col-sm-11">
                                             <div class="form-group row">

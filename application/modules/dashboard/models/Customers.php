@@ -122,6 +122,9 @@ class Customers extends CI_Model
 		if ($query->num_rows() > 0) {
 			return FALSE;
 		} else {
+			if (isset($data['password']) && !empty($data['password'])) {
+				$data['password'] = md5("gef" . $this->input->post('password', TRUE));
+			}
 			$result = $this->db->insert('customer_information', $data);
 			$customer_id = $data['customer_id'];
 			if ($result) {
@@ -479,6 +482,9 @@ class Customers extends CI_Model
 	//Update Categories
 	public function update_customer($data, $customer_id)
 	{
+		if (isset($data['password']) && !empty($data['password'])) {
+			$data['password'] = md5("gef" . $this->input->post('password', TRUE));
+		}
 		$this->db->where('customer_id', $customer_id);
 		$result = $this->db->update('customer_information', $data);
 
