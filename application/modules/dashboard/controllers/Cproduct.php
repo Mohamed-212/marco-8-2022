@@ -2871,6 +2871,7 @@ class Cproduct extends MX_Controller
 
             // $this->print_mem();
             $this->session->set_userdata(array('message' => display('successfully_added')));
+            $this->Products->copy_products_to_website_products();
             redirect('dashboard/Cproduct/manage_product');
         }
     }
