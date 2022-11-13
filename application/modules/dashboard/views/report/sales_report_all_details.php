@@ -320,8 +320,7 @@
 						</div>
 
 						<div class="form-group row">
-							<label for="supplier_name" class="col-sm-3 col-form-label"></label>
-							<div class="col-sm-6">
+							<div class="col-sm-12 text-center" > 
 								<button type="submit" id="submit" class="btn btn-primary"><?php echo display('search') ?></button>
 								<a class="btn btn-warning" href="#" onclick="printDiv('printableArea')"><?php echo display('print') ?></a>
 								<button type="button" id="reset" class="btn btn-danger"><?php echo display('reset') ?></button>
