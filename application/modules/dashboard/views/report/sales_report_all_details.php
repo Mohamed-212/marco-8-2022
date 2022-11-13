@@ -335,6 +335,7 @@
 								<table id="" class="table table-bordered table-striped table-hover dataTablePagination">
 									<thead>
 										<tr>
+											<th class="text-center"><?php echo display('sl') ?></th>
 											<th class="text-center"><?php echo display('product_name') ?></th>
 											<th class="text-center"><?php echo display('category_name') ?></th>
 											<!-- <th class="text-center"><?php echo display('product_type') ?></th> -->
@@ -352,11 +353,12 @@
 									<tbody>
 
 										<?php
-										$total_receive_quantity = 0;
+										$total_sales_quantity = 0;
 										$total_purchase_quantity = 0;
 										$total_balance = 0;
 										$total_supplier_price = 0;
 										$total_sell_price = 0;
+										$sl = 0;
 										foreach ($stock_reports as $repo) :
 											// $sales_quantity = (int)$repo[1]->total_invoice_quantity + (int)$repo[2]->total_purchase_return_quantity;
 											// $purchase_quantity = (int)$repo[3]->total_purchase_quantity + (int)$repo[4]->total_invoice_return;
@@ -365,8 +367,17 @@
 											$balance = (int)$repo[7];
 											$supplier_price_total = abs(round((float)$repo[0]['supplier_price'] * $balance, 2));
 											$sell_price_total = abs(round((float)$repo[0]['selected_price'] * $balance, 2));
+											
+											$total_sales_quantity += $sales_quantity;
+											$total_purchase_quantity += $purchase_quantity;
+											$total_balance += $balance;
+											$total_supplier_price += (float)$repo[0]['supplier_price'];
+											$total_sell_price += (float)$repo[0]['selected_price'];
 										?>
 											<tr>
+												<td>
+													<?=++$sl?>
+												</td>
 												<td>
 													<a href="<?= base_url() ?>/dashboard/Cproduct/product_details/<?= $repo[0]['product_id'] ?>">
 														<?= $repo[0]['product_name'] ?>
@@ -408,7 +419,28 @@
 											</tr>
 										<?php endforeach ?>
 									</tbody>
-
+									<tfoot>
+										<tr>
+											<td><?=$sl?></td>
+											<td align="center"><b><?=display('grand_total')?></b></td>
+											<td>--</td>
+											<td>--</td>
+											<td>--</td>
+											<td><?=$total_purchase_quantity?></td>
+											<td><?=$total_sales_quantity?></td>
+											<td><?=$total_balance?></td>
+											<td><?=round($total_supplier_price, 2)?></td>
+											<td>
+											<?=round($total_supplier_price * $total_balance, 2)?>
+											</td>
+											<td>
+												<?=round($total_sell_price, 2)?>
+											</td>
+											<td>
+												<?=round($total_sell_price * $total_balance, 2)?>
+											</td>
+										</tr>
+									</tfoot>
 								</table>
 							</div>
 						</div>
