@@ -1061,7 +1061,7 @@ class Lreport
             foreach ($filter_products as $prod) {
                 $product_ids[] = $prod['product_id'];
             }
-        }
+        } 
 
         $CI->db->reset_query();
         $products = $CI->db->select('p.product_id')->from('product_information p');
