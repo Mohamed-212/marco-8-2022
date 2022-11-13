@@ -121,7 +121,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-2">
+                            <!-- <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label"><?php echo display('unit') ?>:</label>
                                     <select class="form-control" name="unit_id">
@@ -138,7 +138,7 @@
                                         ?>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-sm-2">
                                 <div class="form-group">
                                     <label class="control-label"><?php echo display('item_code') ?>:</label>
@@ -175,10 +175,10 @@
                                         <th class="text-center"><?php echo display('sl') ?></th>
                                         <th class="text-center"><?php echo display('product_id') ?></th>
                                         <th class="text-center"><?php echo display('product_name') ?></th>
-                                        <th class="text-center"><?php echo display('supplier') ?></th>
                                         <th class="text-center"><?php echo display('category') ?></th>
-                                        <th class="text-center"><?php echo display('unit') ?></th>
+                                        <th class="text-center"><?php echo display('with_cases_price') ?></th>
                                         <th class="text-center"><?php echo display('sell_price') ?></th>
+                                        <th class="text-center"><?php echo display('customer_price') ?></th>
                                         <th class="text-center"><?php echo display('supplier_price') ?></th>
                                         <th class="text-center"><?php echo display('onsale_price') ?></th>
                                         <th class="text-center"><?php echo display('image') ?>s</th>
@@ -190,6 +190,8 @@
                                     if ($products_list) {
 
                                         foreach ($products_list as $v_product_list) :
+                                            $pri_types = $this->db->select('product_price')->from('pricing_types_product')->where('product_id', $v_product_list['product_id'])->order_by('pri_type_id')->get()->result_array();
+
                                     ?>
                                             <tr>
                                                 <td class="text-center"><?php echo $v_product_list['sl'] ?></td>
@@ -206,16 +208,16 @@
                                                         <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i></a>
                                                 </td>
                                                 <td class="text-center">
-                                                    <?php echo html_escape($v_product_list['supplier_name']) ?>
-                                                </td>
-                                                <td class="text-center">
                                                     <?php echo html_escape($v_product_list['category_name']) ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <?php echo html_escape($v_product_list['unit_short_name']) ?>
+                                                <?php echo html_escape($pri_types[0]['product_price']) ?>
                                                 </td>
                                                 <td class="text-right">
                                                     <?php echo (($position == 0) ? ($currency . ' ' . $v_product_list["price"]) : ($v_product_list["price"] . ' ' . $currency)) ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php echo html_escape($pri_types[1]['product_price']) ?>
                                                 </td>
                                                 <td class="text-right">
                                                     <?php echo (($position == 0) ? ($currency . ' ' . $v_product_list["supplier_price"]) : ($v_product_list["supplier_price"] . ' ' . $currency)) ?>
