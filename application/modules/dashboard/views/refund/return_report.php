@@ -63,7 +63,7 @@
                             <label for="status"><?php echo display('status') ?><span
                                     class="text-danger">*</span>:</label>
                             <select class='form-control' id='status'  name='status'>
-                             <option value=''>Select status</option>
+                             <option value=''><?=display('status')?></option>
                              <option value='1'><?php echo display('damaged')?></option>
                              <option value='2'><?php echo display('no warranty')?></option>
                             </select>
@@ -90,34 +90,38 @@
 
                                     <tr>
                                         <th colspan="8" class="text-center">
-                                            Date From :
+                                            <?=display('from_date')?> :
                                             <?php if (!empty($from_date)) {
                                                 echo $from_date;
                                             } else {
-                                                echo '(from date)';
+                                                echo display('from_date');
                                             } ?>
-                                            - :
+                                            <?=display('to_date')?> : - :
                                             <?php if (!empty($from_date)) {
                                                 echo $to_date;
                                             } else {
-                                                echo '(to date)';
+                                                echo display('to_date');
                                             } ?>
                                         </th>
                                     </tr>
 
                                     <tr>
-                                        <th class="text-center">NO</th>
-                                        <th class="text-center">product name</th>
-                                        <th class="text-center">variant name</th>
-                                        <th class="text-center">status</th>
-                                        <th class="text-center">quantity</th>
-                                        <th class="text-center">date</th>
+                                        <th class="text-center"><?=display('sl')?></th>
+                                        <th class="text-center"><?=display('product_name')?></th>
+                                        <th class="text-center"><?=display('variant_name')?></th>
+                                        <th class="text-center"><?=display('status')?></th>
+                                        <th class="text-center"><?=display('quantity')?></th>
+                                        <th class="text-center"><?=display('date')?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                     if (!empty($return_product_report)) {
+                                        $totalSl = 0;
+                                        $totalQuantity = 0;
                                         foreach ($return_product_report as $key => $return_report) {
+                                        $totalSl += $key+1;
+                                        $totalQuantity += (int)$return_report['quantity'];
                                     ?>
                                     <tr>
                                         <td><?php echo $key + 1; ?></td>
@@ -125,10 +129,20 @@
                                         <td><?php echo html_escape($return_report['variant_name']); ?></td>
                                         <td><?php echo($return_report['status']==1)?display('damaged'):display('no warranty') ?></td>
                                         <td><?php echo html_escape($return_report['quantity']); ?></td>
-                                        <td><?php echo html_escape($return_report['created_at']); ?></td>
+                                        <td><?php echo html_escape(date('d-m-Y', strtotime($return_report['created_at']))); ?></td>
                                     </tr>
-                                    <?php }
-                                    } ?>
+                                    <?php }?>
+                                    <tr>
+                                        <td><?php echo $totalSl; ?></td>
+                                        <td align="center">
+                                            <b><?=display('grand_total')?></b>
+                                        </td>
+                                        <td>--</td>
+                                        <td>--</td>
+                                        <td><?php echo $totalQuantity; ?></td>
+                                        <td>--</td>
+                                    </tr> 
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
