@@ -90,7 +90,7 @@
 					<div class="panel-body">
 
 						<?php echo form_open('dashboard/Admin_dashboard/sales_report_all_details', array(
-							'class' => 'filters_form', 'id' => 'validate', 'method' => 'POST'
+							'class' => 'filters_form', 'id' => 'validate', 'method' => 'GET'
 						)); ?>
 
 
@@ -126,7 +126,7 @@
 										<select class="form-control select3" name="product_id" id="product_id">
 											<option value=""></option>
 											<?php foreach ($product_list as $product_item) { ?>
-												<option value="<?php echo $product_item['product_id'] ?>" <?php echo (($product_item['product_id'] == @$_POST['product_id']) ? 'selected' : '') ?>>
+												<option value="<?php echo $product_item['product_id'] ?>" <?php echo (($product_item['product_id'] == @$_GET['product_id']) ? 'selected' : '') ?>>
 													<?php echo html_escape($product_item['product_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -135,9 +135,9 @@
 									<!-- <input type="text" class="form-control" name="product_name" value=""
                                            placeholder='<?php echo display('product_name') ?>'> -->
 									<div class="col-sm-9">
-										<input type="text" name="product_name" onkeyup="invoice_productList(1);" class="form-control productSelection" placeholder='<?php echo display('product_name') ?>' id="product_name_1" value="<?= @$_POST['product_name'] ?>">
+										<input type="text" name="product_name" class="form-control productSelection" placeholder='<?php echo display('product_name') ?>' id="product_name_1" value="<?= $product_name ?>">
 
-										<input type="hidden" class="autocomplete_hidden_value product_id_1" name="product_id" />
+										<!-- <input type="hidden" class="autocomplete_hidden_value product_id_1" name="product_id" /> -->
 									</div>
 								</div>
 							</div>
@@ -149,7 +149,7 @@
 										<select class="form-control select3" name="category_id[]" id="category_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($category_list as $category_item) { ?>
-												<option value="<?php echo $category_item['category_id'] ?>" <?= in_array($category_item['category_id'], @$_POST['category_id']) ? 'selected' : '' ?>>
+												<option value="<?php echo $category_item['category_id'] ?>" <?= in_array($category_item['category_id'], @$_GET['category_id']) ? 'selected' : '' ?>>
 													<?php echo html_escape($category_item['category_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -167,7 +167,7 @@
 										<select class="form-control select3" name="filter_1_id[]" id="filter_1_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($filter_1_list as $filter_1_item) { ?>
-												<option value="<?php echo $filter_1_item['item_id'] ?>" <?= in_array($filter_1_item['item_id'], @$_POST['filter_1_id']) ? 'selected' : '' ?>>
+												<option value="<?php echo $filter_1_item['item_id'] ?>" <?= in_array($filter_1_item['item_id'], @$_GET['filter_1_id']) ? 'selected' : '' ?>>
 													<?php echo html_escape($filter_1_item['item_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -182,7 +182,7 @@
 										<select class="form-control select3" name="filter_2_id[]" id="filter_2_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($filter_2_list as $filter_2_item) { ?>
-												<option value="<?php echo $filter_2_item['item_id'] ?>" <?= in_array($filter_2_item['item_id'], @$_POST['filter_2_id']) ? 'selected' : '' ?>>
+												<option value="<?php echo $filter_2_item['item_id'] ?>" <?= in_array($filter_2_item['item_id'], @$_GET['filter_2_id']) ? 'selected' : '' ?>>
 													<?php echo html_escape($filter_2_item['item_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -198,7 +198,7 @@
 										<select name="pri_type" id="pri_type" class="form-control select3">
 											<option value=""></option>
 											<?php foreach ($all_pri_type as $pri_type) : ?>
-												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pri_type['pri_type_id'] == @$_POST['pri_type'] ? 'selected' : ''?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pri_type['pri_type_id'] == @$_GET['pri_type'] ? 'selected' : ''?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
 											<?php
 											endforeach;
 											?>
@@ -216,10 +216,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-4 col-form-label"><?php echo display('receive_quantity') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="sales_from" class="form-control" id="sales_from" value="<?php echo $this->input->post('sales_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="sales_from" class="form-control" id="sales_from" value="<?php echo $this->input->get('sales_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="sales_to" class="form-control" id="sales_to" value="<?php echo $this->input->post('sales_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="sales_to" class="form-control" id="sales_to" value="<?php echo $this->input->get('sales_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
@@ -227,10 +227,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-4 col-form-label"><?php echo display('transfer_quantity') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="purchase_from" class="form-control" id="purchase_from" value="<?php echo $this->input->post('purchase_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="purchase_from" class="form-control" id="purchase_from" value="<?php echo $this->input->get('purchase_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="purchase_to" class="form-control" id="purchase_to" value="<?php echo $this->input->post('purchase_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="purchase_to" class="form-control" id="purchase_to" value="<?php echo $this->input->get('purchase_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
@@ -241,10 +241,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-2 col-form-label" style=""><?php echo display('balance') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="balance_from" class="form-control" id="balance_from" value="<?php echo $this->input->post('balance_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="balance_from" class="form-control" id="balance_from" value="<?php echo $this->input->get('balance_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="balance_to" class="form-control" id="balance_to" value="<?php echo $this->input->post('balance_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="balance_to" class="form-control" id="balance_to" value="<?php echo $this->input->get('balance_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</dvi>
@@ -255,10 +255,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-3 col-form-label"><?php echo display('cost_price') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="supplier_from" class="form-control" id="supplier_from" value="<?php echo $this->input->post('supplier_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="supplier_from" class="form-control" id="supplier_from" value="<?php echo $this->input->get('supplier_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="supplier_to" class="form-control" id="supplier_to" value="<?php echo $this->input->post('supplier_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="supplier_to" class="form-control" id="supplier_to" value="<?php echo $this->input->get('supplier_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
@@ -266,10 +266,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-3 col-form-label"><?php echo display('total_cost') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="total_supplier_from" class="form-control" id="total_supplier_from" value="<?php echo $this->input->post('total_supplier_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="total_supplier_from" class="form-control" id="total_supplier_from" value="<?php echo $this->input->get('total_supplier_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="total_supplier_to" class="form-control" id="total_supplier_to" value="<?php echo $this->input->post('total_supplier_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="total_supplier_to" class="form-control" id="total_supplier_to" value="<?php echo $this->input->get('total_supplier_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
@@ -280,10 +280,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-3 col-form-label"><?php echo display('price') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="sell_from" class="form-control" id="sell_from" value="<?php echo $this->input->post('sell_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="sell_from" class="form-control" id="sell_from" value="<?php echo $this->input->get('sell_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="sell_to" class="form-control" id="sell_to" value="<?php echo $this->input->post('sell_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="sell_to" class="form-control" id="sell_to" value="<?php echo $this->input->get('sell_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
@@ -291,10 +291,10 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-3 col-form-label"><?php echo display('total_value') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="total_sell_from" class="form-control" id="total_sell_from" value="<?php echo $this->input->post('total_sell_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+										<input type="text" name="total_sell_from" class="form-control" id="total_sell_from" value="<?php echo $this->input->get('total_sell_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
-										<input type="text" name="total_sell_to" class="form-control" id="total_sell_to" value="<?php echo $this->input->post('total_sell_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+										<input type="text" name="total_sell_to" class="form-control" id="total_sell_to" value="<?php echo $this->input->get('total_sell_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
@@ -305,7 +305,7 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-3 col-form-label"><?php echo display('start_date') ?>:</label>
 									<div class="col-sm-9">
-										<input type="text" name="from_date" class="form-control datepicker2" id="from_date" value="<?php echo $this->input->post('from_date', TRUE); ?>" placeholder="<?php echo display('start_date') ?>">
+										<input type="text" name="from_date" class="form-control datepicker2" id="from_date" value="<?php echo $this->input->get('from_date', TRUE); ?>" placeholder="<?php echo display('start_date') ?>">
 									</div>
 								</div>
 							</div>
@@ -313,7 +313,7 @@
 								<div class="form-group row">
 									<label for="to_date" class="col-sm-3 col-form-label"><?php echo display('end_date') ?>:</label>
 									<div class="col-sm-9">
-										<input type="text" name="to_date" class="form-control datepicker2" id="to_date" value="<?= empty($this->input->post('to_date', TRUE)) ? date('d-m-Y') : $this->input->post('to_date', TRUE) ?>" placeholder="<?php echo display('end_date') ?>">
+										<input type="text" name="to_date" class="form-control datepicker2" id="to_date" value="<?= empty($this->input->get('to_date', TRUE)) ? date('d-m-Y') : $this->input->get('to_date', TRUE) ?>" placeholder="<?php echo display('end_date') ?>">
 									</div>
 								</div>
 							</div>
@@ -343,7 +343,7 @@
 					<div class="panel-body">
 						<div id="printableArea" class="ml_2">
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover dataTablePagination">
+								<table id="" class="table table-bordered table-striped table-hover dataTableNoPagination">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('sl') ?></th>
@@ -430,7 +430,7 @@
 											</tr>
 										<?php endforeach ?>
 									</tbody>
-									<tfoot>
+									<!-- <tfoot>
 										<tr>
 											<td><?= $sl ?></td>
 											<td align="center"><b><?= display('grand_total') ?></b></td>
@@ -451,9 +451,12 @@
 												<?= round($total_sell_price * $total_balance, 2) ?>
 											</td>
 										</tr>
-									</tfoot>
+									</tfoot> -->
 								</table>
 							</div>
+							<div class="text-right">
+                                <?php echo htmlspecialchars_decode(@$links); ?>
+                            </div>
 						</div>
 					</div>
 				</div>

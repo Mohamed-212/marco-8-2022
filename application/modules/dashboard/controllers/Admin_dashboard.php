@@ -92,39 +92,41 @@ class Admin_dashboard extends MX_Controller
             'new_customers'              => $new_customers->new_customers,
             'returning_customers'        => $returning_customers->returning_customers,
             'monthly_new_customers'      => $monthly_new_customers,
-            'monthly_returning_customers'=> $monthly_returning_customers,
+            'monthly_returning_customers' => $monthly_returning_customers,
             'average_spending_per_visit' => $average_spending_per_visit,
-            'average_visits_per_customer'=> $average_visits_per_customer,
+            'average_visits_per_customer' => $average_visits_per_customer,
             'positive_review_count'      => $positive_review_count,
         );
 
-        $content = $this->parser->parse('dashboard/home/home',$data,true);
+        $content = $this->parser->parse('dashboard/home/home', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
-    public function latest_search_keywords(){
+    public function latest_search_keywords()
+    {
         $search_histories     = $this->Search_history->all_search_histries();
         $data = array(
             'title' => display('latest_search_keywords'),
             'search_histories' => $search_histories
         );
-        $content = $this->parser->parse('dashboard/product/latest_search_keywords',$data ,true);
+        $content = $this->parser->parse('dashboard/product/latest_search_keywords', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function all_category_products(){
+    public function all_category_products()
+    {
         $category_products = $this->Categories->all_category_products();
         $data = array(
             'title' => display('category_products'),
             'category_products' => $category_products
         );
-        $content = $this->parser->parse('dashboard/category/all_category_products',$data ,true);
+        $content = $this->parser->parse('dashboard/category/all_category_products', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
 
-    public function find_products(){
-        $product_name     = $this->input->post('product_name',TRUE);
+    public function find_products()
+    {
+        $product_name     = $this->input->post('product_name', TRUE);
         $retrive_products = $this->Products->retrive_products($product_name);
         foreach ($retrive_products as $value) {
             //$json_product[] = array('label' => $value['product_name'] . '-(' . $value['product_model'] . ')', 'value' => $value['product_id']);
@@ -135,33 +137,34 @@ class Admin_dashboard extends MX_Controller
 
     public function retrieve_product_data()
     {
-        $product_id = $this->input->post('product_id',TRUE);
+        $product_id = $this->input->post('product_id', TRUE);
         $product_info = $this->Purchases->get_total_product($product_id);
         echo json_encode($product_info);
     }
 
-    public function best_sale_products(){
+    public function best_sale_products()
+    {
         $best_sale_products = $this->Orders->all_best_sale_product();
         $data = array(
             'title' => display('best_sale_product'),
             'best_sale_products' => $best_sale_products
         );
-        $content = $this->parser->parse('dashboard/order/all_best_sale_products',$data ,true);
+        $content = $this->parser->parse('dashboard/order/all_best_sale_products', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
 
     public function monthly_best_sale_product()
     {
 
-        $from_date  = $this->input->get('from_date',TRUE);
-        $to_date    = $this->input->get('to_date',TRUE);
-        $product_id = $this->input->get('product_id',TRUE);
+        $from_date  = $this->input->get('from_date', TRUE);
+        $to_date    = $this->input->get('to_date', TRUE);
+        $product_id = $this->input->get('product_id', TRUE);
         $best_sale_products   = $this->Orders->all_best_sale_product($from_date, $to_date, $product_id);
         $data = array(
             'title' => display('monthly_best_sale_product'),
             'best_sale_products' => $best_sale_products
         );
-        $content = $this->parser->parse('dashboard/order/all_best_sale_products',$data ,true);
+        $content = $this->parser->parse('dashboard/order/all_best_sale_products', $data, true);
         $this->template_lib->full_admin_html_view($content);
     }
 
@@ -204,9 +207,8 @@ class Admin_dashboard extends MX_Controller
         #pagination ends
         # 
 
-        $content = $this->lreport->todays_sales_report($links,$config["per_page"],$page);
+        $content = $this->lreport->todays_sales_report($links, $config["per_page"], $page);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
 
@@ -223,7 +225,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_store_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============Date wise sales report==============#
@@ -231,13 +232,12 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('sales_report_store_wise')->read()->redirect();
 
-        $store_id = $this->input->post('store_id',TRUE);
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $store_id = $this->input->post('store_id', TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_store_wise($store_id, $start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function sales_report_employee_wise()
@@ -255,7 +255,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_employee_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============Date Employee wise sales report==============#
@@ -263,15 +262,14 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $employee_id = $this->input->post('employee_id',TRUE);
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $employee_id = $this->input->post('employee_id', TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_employee_wise($employee_id, $start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
-    
+
 
     public function sales_report_city_wise()
     {
@@ -286,7 +284,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_city_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============Date Employee wise sales report==============#
@@ -294,13 +291,12 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $cities = $this->input->post('cities',TRUE);
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $cities = $this->input->post('cities', TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_city_wise($cities, $start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function sales_report_product_wise()
@@ -314,7 +310,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_product_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============Product wise sales report==============#
@@ -322,12 +317,11 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_product_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============Invoice wise sales report==============#
@@ -342,19 +336,17 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_invoice_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function retrieve_sales_report_invoice_wise()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_invoice_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============customer wise sales report==============#
@@ -369,15 +361,14 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_customer_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function retrieve_sales_report_customer_wise()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_customer_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
@@ -394,15 +385,14 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->lreport->retrieve_sales_report_summary_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function retrieve_sales_report_summary_wise()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_summary_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
@@ -420,63 +410,107 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/sales_report_latest_customers', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function retrieve_sales_report_latest_customers()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_sales_report_latest_customers($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
     }
 
     #============customer wise sales report==============#
-    public function sales_report_all_details()
+    public function sales_report_all_details($page = 0)
     {
 
         // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $product_name = $this->input->post('product_name', true);
-        $product_id = $this->input->post('product_id',TRUE);
-        $pricing_type = $this->input->post('pri_type',TRUE);
-        $category_id = $this->input->post('category_id',TRUE);
-        $product_type = $this->input->post('product_type',TRUE);
-        $general_filter = $this->input->post('filter_1_id',TRUE);
-        $material_filter = $this->input->post('filter_2_id',TRUE);
-        $start_date = $this->input->post('from_date',TRUE);
-        $end_date = $this->input->post('to_date',TRUE);
-        
+        // $page = $this->input->get('page', true) ? $this->input->get('page', true) : 0;
+
+        $product_name = $this->input->get('product_name', true);
+        $product_id = $this->input->get('product_id', TRUE);
+        $pricing_type = $this->input->get('pri_type', TRUE);
+        $category_id = $this->input->get('category_id', TRUE);
+        $product_type = $this->input->get('product_type', TRUE);
+        $general_filter = $this->input->get('filter_1_id', TRUE);
+        $material_filter = $this->input->get('filter_2_id', TRUE);
+        $start_date = $this->input->get('from_date', TRUE);
+        $end_date = $this->input->get('to_date', TRUE);
+
         // sales
-        $sales_from = $this->input->post('sales_from',TRUE);
-        $sales_to = $this->input->post('sales_to',TRUE);
+        $sales_from = $this->input->get('sales_from', TRUE);
+        $sales_to = $this->input->get('sales_to', TRUE);
         // purchase
-        $purchase_from = $this->input->post('purchase_from',TRUE);
-        $purchase_to = $this->input->post('purchase_to',TRUE);
+        $purchase_from = $this->input->get('purchase_from', TRUE);
+        $purchase_to = $this->input->get('purchase_to', TRUE);
         // balance
-        $balance_from = $this->input->post('balance_from',TRUE);
-        $balance_to = $this->input->post('balance_to',TRUE);
+        $balance_from = $this->input->get('balance_from', TRUE);
+        $balance_to = $this->input->get('balance_to', TRUE);
 
         // supplier
-        $supplier_from = $this->input->post('supplier_from',TRUE);
-        $supplier_to = $this->input->post('supplier_to',TRUE);
+        $supplier_from = $this->input->get('supplier_from', TRUE);
+        $supplier_to = $this->input->get('supplier_to', TRUE);
         // total_supplier
-        $total_supplier_from = $this->input->post('total_supplier_from',TRUE);
-        $total_supplier_to = $this->input->post('total_supplier_to',TRUE);
+        $total_supplier_from = $this->input->get('total_supplier_from', TRUE);
+        $total_supplier_to = $this->input->get('total_supplier_to', TRUE);
 
         // sell
-        $sell_from = $this->input->post('sell_from',TRUE);
-        $sell_to = $this->input->post('sell_to',TRUE);
+        $sell_from = $this->input->get('sell_from', TRUE);
+        $sell_to = $this->input->get('sell_to', TRUE);
         // total_sell
-        $total_sell_from = $this->input->post('total_sell_from',TRUE);
-        $total_sell_to = $this->input->post('total_sell_to',TRUE);        
+        $total_sell_from = $this->input->get('total_sell_from', TRUE);
+        $total_sell_to = $this->input->get('total_sell_to', TRUE);
 
         $data = [
             'title' => display('sales_report_all_details'),
         ];
+
+        
+
+        #
+        #pagination starts
+        #
+        $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $pageUrl = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+        $config["base_url"] = base_url('/dashboard/Admin_dashboard/sales_report_all_details/');
+        $config["total_rows"] = (int)$this->lreport->retrieve_sales_report_all_details_count(
+            $category_id,
+            $product_type,
+            $general_filter,
+            $material_filter,
+            $product_name
+        )->products_count;
+        $config["per_page"] = 20;
+        $config["uri_segment"] = 4;
+        $config["num_links"] = 5;
+        /* This Application Must Be Used With BootStrap 3 * */
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tagl_close'] = "</li>";
+        $config['reuse_query_string'] = true;
+        /* ends of bootstrap */
+        $this->pagination->initialize($config);
+        // $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $links = $this->pagination->create_links();
+        #
+        #pagination ends
+        #
 
         // $content = $this->parser->parse('dashboard/report/sales_report_all_details', $data, true);
         $content = $this->lreport->retrieve_sales_report_all_details(
@@ -503,10 +537,12 @@ class Admin_dashboard extends MX_Controller
             $start_date,
             $end_date,
             null,
-            $product_name
+            $product_name,
+            $config["per_page"],
+            $page,
+            $links
         );
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     /** Purchaes reports */
@@ -523,7 +559,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/purchase_report_product_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============Product wise sales report==============#
@@ -531,12 +566,11 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('purchase_report')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_purchase_report_product_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     /** purchase report invoice wise */
@@ -551,7 +585,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/purchase_report_invoice_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============invoice wise sales report==============#
@@ -559,12 +592,11 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('purchase_report')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_purchase_report_invoice_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     /** purchase report customer wise */
@@ -579,7 +611,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/purchase_report_customer_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============customer wise sales report==============#
@@ -587,12 +618,11 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('purchase_report')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_purchase_report_customer_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     /** purchase report summary wise */
@@ -607,7 +637,6 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/purchase_report_summary_wise', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============summary wise sales report==============#
@@ -615,12 +644,11 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('purchase_report')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_purchase_report_summary_wise($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #============supplier wise purchase report==============#
@@ -635,15 +663,14 @@ class Admin_dashboard extends MX_Controller
 
         $content = $this->parser->parse('dashboard/report/purchase_report_latest_suppliers', $data, true);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     public function retrieve_purchase_report_latest_suppliers()
     {
         $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
-        $start_date = $this->input->post('start_date',TRUE);
-        $end_date = $this->input->post('end_date',TRUE);
+        $start_date = $this->input->post('start_date', TRUE);
+        $end_date = $this->input->post('end_date', TRUE);
 
         $content = $this->lreport->retrieve_purchase_report_latest_suppliers($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
@@ -653,8 +680,8 @@ class Admin_dashboard extends MX_Controller
     public function transfer_report()
     {
         $this->permission->check_label('transfer_report')->read()->redirect();
-        $from_date = $this->input->post('from_date',TRUE);
-        $to_date = $this->input->post('to_date',TRUE);
+        $from_date = $this->input->post('from_date', TRUE);
+        $to_date = $this->input->post('to_date', TRUE);
 
         $content = $this->lreport->transfer_report($from_date, $to_date);
         $this->template_lib->full_admin_html_view($content);
@@ -665,14 +692,13 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('store_to_store_transfer')->read()->redirect();
 
-        $from_date = $this->input->get('from_date',TRUE);
-        $to_date = $this->input->get('to_date',TRUE);
-        $from_store = $this->input->get('from_store',TRUE);
-        $to_store = $this->input->get('to_store',TRUE);
+        $from_date = $this->input->get('from_date', TRUE);
+        $to_date = $this->input->get('to_date', TRUE);
+        $from_store = $this->input->get('from_store', TRUE);
+        $to_store = $this->input->get('to_store', TRUE);
 
-        $content = $this->lreport->store_to_store_transfer($from_date,$to_date,$from_store,$to_store);
+        $content = $this->lreport->store_to_store_transfer($from_date, $to_date, $from_store, $to_store);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #==============Store To Wearhouse============#
@@ -685,9 +711,9 @@ class Admin_dashboard extends MX_Controller
         $from_store = $this->input->post('from_store', TRUE);
         $t_wearhouse    = $this->input->post('t_wearhouse', TRUE);
 
-        $content = $this->lreport->store_to_warehouse_transfer($from_date,$to_date,$from_store,$t_wearhouse);
+        $content = $this->lreport->store_to_warehouse_transfer($from_date, $to_date, $from_store, $t_wearhouse);
         $this->template_lib->full_admin_html_view($content);
-    }       
+    }
 
     #==============Wearhouse To Store============#
     public function warehouse_to_store_transfer()
@@ -699,9 +725,9 @@ class Admin_dashboard extends MX_Controller
         $wearhouse = $this->input->post('wearhouse', TRUE);
         $t_store   = $this->input->post('t_store', TRUE);
 
-        $content = $this->lreport->warehouse_to_store_transfer($from_date,$to_date,$wearhouse,$t_store);
+        $content = $this->lreport->warehouse_to_store_transfer($from_date, $to_date, $wearhouse, $t_store);
         $this->template_lib->full_admin_html_view($content);
-    }       
+    }
     #==============Wearhouse To Wearhouse============#
     public function warehouse_to_warehouse_transfer()
     {
@@ -712,7 +738,7 @@ class Admin_dashboard extends MX_Controller
         $wearhouse = $this->input->post('wearhouse', TRUE);
         $t_wearhouse   = $this->input->post('t_wearhouse', TRUE);
 
-        $content = $this->lreport->warehouse_to_warehouse_transfer($from_date,$to_date,$wearhouse,$t_wearhouse);
+        $content = $this->lreport->warehouse_to_warehouse_transfer($from_date, $to_date, $wearhouse, $t_wearhouse);
         $this->template_lib->full_admin_html_view($content);
     }
 
@@ -724,10 +750,9 @@ class Admin_dashboard extends MX_Controller
 
         $from_date = date("Y-m-d", strtotime($this->input->post('from_date', TRUE)));
         $to_date = date("Y-m-d", strtotime($this->input->post('to_date', TRUE)));
-        
-        $content = $this->lreport->tax_report($from_date,$to_date);
-        $this->template_lib->full_admin_html_view($content);
 
+        $content = $this->lreport->tax_report($from_date, $to_date);
+        $this->template_lib->full_admin_html_view($content);
     }
 
     #==============Tax Report Invoice Wise============#
@@ -737,8 +762,8 @@ class Admin_dashboard extends MX_Controller
 
         $from_date = date("Y-m-d", strtotime($this->input->post('from_date', TRUE)));
         $to_date = date("Y-m-d", strtotime($this->input->post('to_date', TRUE)));
-        
-        $content = $this->lreport->tax_report_invoice_wise($from_date,$to_date);
+
+        $content = $this->lreport->tax_report_invoice_wise($from_date, $to_date);
         $this->template_lib->full_admin_html_view($content);
     }
 
@@ -785,8 +810,8 @@ class Admin_dashboard extends MX_Controller
     public function retrieve_dateWise_profit_report()
     {
 
-        $start_date = $this->input->post('from_date',TRUE);
-        $end_date = $this->input->post('to_date',TRUE);
+        $start_date = $this->input->post('from_date', TRUE);
+        $end_date = $this->input->post('to_date', TRUE);
         $content = $this->lreport->retrieve_dateWise_profit_report($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
     }
@@ -796,10 +821,10 @@ class Admin_dashboard extends MX_Controller
     {
 
         $this->load->library('dashboard/lreport');
-        $from_date = $this->input->post('from_date',TRUE);
-        $to_date = $this->input->post('to_date',TRUE);
-        $employee_id = $this->input->post('employee_id',TRUE);
-        $city_name = $this->input->post('city_name',TRUE);
+        $from_date = $this->input->post('from_date', TRUE);
+        $to_date = $this->input->post('to_date', TRUE);
+        $employee_id = $this->input->post('employee_id', TRUE);
+        $city_name = $this->input->post('city_name', TRUE);
         $content = $this->lreport->retrieve_dateWise_SalesReports($from_date, $to_date, $employee_id, $city_name);
         $this->template_lib->full_admin_html_view($content);
     }
@@ -807,7 +832,7 @@ class Admin_dashboard extends MX_Controller
     #================todays_purchase_report========#
     public function todays_purchase_report()
     {
-       $this->permission->check_label('purchase_report')->read()->redirect();
+        $this->permission->check_label('purchase_report')->read()->redirect();
         #
         #pagination starts
         #
@@ -817,30 +842,29 @@ class Admin_dashboard extends MX_Controller
         $config["uri_segment"] = 4;
         $config["num_links"] = 5;
         /* This Application Must Be Used With BootStrap 3 * */
-        $config['full_tag_open']   ="<ul class='pagination'>";
-        $config['full_tag_close']  ="</ul>";
-        $config['num_tag_open']    ='<li>';
-        $config['num_tag_close']   ='</li>';
-        $config['cur_tag_open']    ="<li class='disabled'><li class='active'><a href='#'>";
-        $config['cur_tag_close']   ="<span class='sr-only'></span></a></li>";
-        $config['next_tag_open']   ="<li>";
-        $config['next_tag_close']  ="</li>";
-        $config['prev_tag_open']   ="<li>";
-        $config['prev_tagl_close'] ="</li>";
-        $config['first_tag_open']  ="<li>";
-        $config['first_tagl_close']="</li>";
-        $config['last_tag_open']   ="<li>";
-        $config['last_tagl_close'] ="</li>";
+        $config['full_tag_open']   = "<ul class='pagination'>";
+        $config['full_tag_close']  = "</ul>";
+        $config['num_tag_open']    = '<li>';
+        $config['num_tag_close']   = '</li>';
+        $config['cur_tag_open']    = "<li class='disabled'><li class='active'><a href='#'>";
+        $config['cur_tag_close']   = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open']   = "<li>";
+        $config['next_tag_close']  = "</li>";
+        $config['prev_tag_open']   = "<li>";
+        $config['prev_tagl_close'] = "</li>";
+        $config['first_tag_open']  = "<li>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open']   = "<li>";
+        $config['last_tagl_close'] = "</li>";
         /* ends of bootstrap */
         $this->pagination->initialize($config);
-        $page =($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
-        $links=$this->pagination->create_links();
+        $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
+        $links = $this->pagination->create_links();
         #
         #pagination ends
         # 
-        $content=$this->lreport->todays_purchase_report($links,$config["per_page"],$page);
+        $content = $this->lreport->todays_purchase_report($links, $config["per_page"], $page);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #==============Date wise purchase report=============#
@@ -848,20 +872,19 @@ class Admin_dashboard extends MX_Controller
     {
         $this->permission->check_label('purchase_report')->read()->redirect();
 
-        $start_date = $this->input->post('from_date',TRUE);
-        $end_date = $this->input->post('to_date',TRUE);
+        $start_date = $this->input->post('from_date', TRUE);
+        $end_date = $this->input->post('to_date', TRUE);
 
-        $content = $this->lreport->retrieve_dateWise_PurchaseReports($start_date,$end_date);
+        $content = $this->lreport->retrieve_dateWise_PurchaseReports($start_date, $end_date);
         $this->template_lib->full_admin_html_view($content);
-
     }
 
     #==============Product sales search reports============#
     public function product_sales_search_reports()
     {
 
-        $from_date = $this->input->post('from_date',TRUE);
-        $to_date = $this->input->post('to_date',TRUE);
+        $from_date = $this->input->post('from_date', TRUE);
+        $to_date = $this->input->post('to_date', TRUE);
         $content = $this->lreport->get_products_search_report($from_date, $to_date);
         $this->template_lib->full_admin_html_view($content);
     }
@@ -878,7 +901,7 @@ class Admin_dashboard extends MX_Controller
 
         $this->form_validation->set_rules('admin_email', display('email'), 'required|valid_email|max_length[100]|trim');
 
-        $email = $this->input->post('admin_email',TRUE);
+        $email = $this->input->post('admin_email', TRUE);
         if ($this->form_validation->run()) {
             $admin = $this->get_admin_info($email);
 
@@ -901,18 +924,16 @@ class Admin_dashboard extends MX_Controller
                 } else {
                     echo 2;
                 }
-
             } else {
                 echo 3;
             }
         } else {
             echo 4;
         }
-
     }
 
 
-//check user exists on the database or not
+    //check user exists on the database or not
     public function get_admin_info($email)
     {
         $result = $this->db->select('*')->from('user_login')->where('username =', $email)->get()->result_array();
@@ -939,8 +960,8 @@ class Admin_dashboard extends MX_Controller
     public function admin_password_update()
     {
         $data = [
-            'token' => $this->input->post('token',TRUE),
-            'password' => $this->input->post('admin_password',TRUE)
+            'token' => $this->input->post('token', TRUE),
+            'password' => $this->input->post('admin_password', TRUE)
         ];
 
         $password = md5("gef" . $data['password']);
@@ -1017,14 +1038,14 @@ class Admin_dashboard extends MX_Controller
         $this->auth->check_admin_store_auth();
         $this->load->model('dashboard/Users');
         $this->Users->profile_update();
-        $this->session->set_userdata(array('message'=> display('successfully_updated')));
+        $this->session->set_userdata(array('message' => display('successfully_updated')));
         redirect(base_url('dashboard/Admin_dashboard/edit_profile'));
     }
     #=============Change Password=========# 
     public function change_password_form()
     {
         $this->auth->check_admin_store_auth();
-        $content = $this->parser->parse('dashboard/user/change_password',array('title'=>"Change Password"),true);
+        $content = $this->parser->parse('dashboard/user/change_password', array('title' => "Change Password"), true);
         $this->template_lib->full_admin_html_view($content);
     }
 
@@ -1033,10 +1054,10 @@ class Admin_dashboard extends MX_Controller
     {
         $this->auth->check_admin_store_auth();
         $error = '';
-        $email = $this->input->post('email',TRUE);
-        $old_password = $this->input->post('old_password',TRUE);
-        $new_password = $this->input->post('password',TRUE);
-        $repassword = $this->input->post('repassword',TRUE);
+        $email = $this->input->post('email', TRUE);
+        $old_password = $this->input->post('old_password', TRUE);
+        $new_password = $this->input->post('password', TRUE);
+        $repassword = $this->input->post('repassword', TRUE);
 
         if ($email == '' || $old_password == '' || $new_password == '') {
             $error = display('blank_field_does_not_accept');

@@ -744,6 +744,69 @@ class Lreport
         return $reportList;
     }
 
+    public function retrieve_sales_report_all_details_count(
+        $category_id = null,
+        $product_type = null,
+        $general_filter = null,
+        $material_filter = null,
+        $product_name = null
+    ) {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Suppliers');
+        $CI->load->model('dashboard/Products');
+        $CI->load->model('dashboard/Stores');
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Categories');
+        $CI->load->library('dashboard/occational');
+
+        if (empty($store_id)) {
+            $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+            $store_id = $result->store_id;
+        }
+
+        $product_ids = [];
+
+        if ($general_filter || $material_filter) {
+            $CI->db->reset_query();
+            $filter_products = $CI->db->select('a.product_id')
+                ->from('filter_product a, filter_product b');
+
+            if ($general_filter) {
+                $filter_products->where_in('a.filter_item_id', $general_filter);
+            }
+            if ($material_filter) {
+                $filter_products->where_in('b.filter_item_id', $material_filter);
+            }
+            $filter_products->where('a.product_id = b.product_id');
+            $filter_products = $filter_products->get()->result_array();
+            foreach ($filter_products as $prod) {
+                $product_ids[] = $prod['product_id'];
+            }
+        }
+
+        $CI->db->reset_query();
+        $products = $CI->db->select('COUNT(p.product_id) as products_count')->from('product_information p');
+
+        if ($category_id) {
+            $products->where_in('p.category_id', $category_id);
+        }
+
+        if ($product_type) {
+            $products->where('p.assembly', $product_type);
+        }
+
+        if (($general_filter || $material_filter) && count($product_ids)) {
+            $products->where_in('p.product_id', $product_ids);
+        }
+
+        if ($product_name) {
+            $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
+        }
+
+        return $products->get()->row();
+    }
+
     public function retrieve_sales_report_all_details(
         $product_id = null,
         $pricing_type = null,
@@ -768,7 +831,10 @@ class Lreport
         $start_date = null,
         $end_date = null,
         $store_id = null,
-        $product_name = null
+        $product_name = null,
+        $per_page = 20,
+        $page = 0,
+        $links = []
     ) {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
@@ -840,9 +906,13 @@ class Lreport
             $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
         }
 
+        // if (!$product_name && !$category_id && !$product_type && empty($product_ids)) {
+        //     $products->limit(400);
         // }
 
-        $products = $products->limit(300)->order_by('product_name', 'asc')->get()->result_array();
+        // }
+
+        $products = $products->limit($per_page, $page)->order_by('product_name', 'asc')->get()->result_array();
 
         // echo "<pre>";var_dump($products);exit;
 
@@ -924,10 +994,107 @@ class Lreport
             'start_date'   => $start_date,
             'end_date'   => $end_date,
             'all_pri_type' => $all_pri_type,
+            'links' => $links,
+            'product_name' => $product_name,
         );
         // echo "<pre>";var_dump($reports);exit;
         $reportList = $CI->parser->parse('dashboard/report/sales_report_all_details', $data, true);
         return $reportList;
+    }
+
+    public function retrieve_sales_report_all_details_footer(
+        $product_id = null,
+        $pricing_type = null,
+        $category_id = null,
+        $product_type = null,
+        $general_filter = null,
+        $material_filter = null,
+        $sales_from = null,
+        $sales_to = null,
+        $purchase_from = null,
+        $purchase_to = null,
+        $balance_from = null,
+        $balance_to = null,
+        $supplier_from = null,
+        $supplier_to = null,
+        $total_supplier_from = null,
+        $total_supplier_to = null,
+        $sell_from = null,
+        $sell_to = null,
+        $total_sell_from = null,
+        $total_sell_to = null,
+        $start_date = null,
+        $end_date = null,
+        $store_id = null,
+        $product_name = null
+    )
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Suppliers');
+        $CI->load->model('dashboard/Products');
+        $CI->load->model('dashboard/Stores');
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Categories');
+        $CI->load->library('dashboard/occational');
+
+        if (empty($store_id)) {
+            $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+            $store_id = $result->store_id;
+        }
+
+        $product_ids = [];
+
+        if ($general_filter || $material_filter) {
+            $CI->db->reset_query();
+            $filter_products = $CI->db->select('a.product_id')
+                ->from('filter_product a, filter_product b');
+
+            if ($general_filter) {
+                $filter_products->where_in('a.filter_item_id', $general_filter);
+            }
+            if ($material_filter) {
+                $filter_products->where_in('b.filter_item_id', $material_filter);
+            }
+            $filter_products->where('a.product_id = b.product_id');
+            $filter_products = $filter_products->get()->result_array();
+            foreach ($filter_products as $prod) {
+                $product_ids[] = $prod['product_id'];
+            }
+        }
+
+        $CI->db->reset_query();
+        $products = $CI->db->select('p.product_id')->from('product_information p');
+
+
+        if ($category_id) {
+            $products->where_in('p.category_id', $category_id);
+        }
+
+        if ($product_type) {
+            $products->where('p.assembly', $product_type);
+        }
+
+        if (($general_filter || $material_filter) && count($product_ids)) {
+            $products->where_in('p.product_id', $product_ids);
+        }
+        // } else {
+        if ($product_name) {
+            $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
+        }
+
+        $products = $products->order_by('product_name', 'asc')->get()->result_array();
+
+        $ids = [];
+        foreach ($products as $prod) {
+            $ids[] = $prod['product_id'];
+        }
+
+        $ids = ['13743348', '87977793'];
+
+        $footer = $CI->Reports->sales_report_all_details_sum_all($ids, $pricing_type, $start_date, $end_date);
+
+        return $footer;
     }
 
     // Retrieve todays_sales_report

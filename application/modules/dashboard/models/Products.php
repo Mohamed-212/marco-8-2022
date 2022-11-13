@@ -307,7 +307,7 @@ class Products extends CI_Model
 
         $this->db->where('product_id', $product_id);
         $this->db->update('product_information', $data);
-        
+
         // website
         $this->db->reset_query();
         $this->db->where('product_id', $product_id);
@@ -468,6 +468,22 @@ class Products extends CI_Model
         return false;
     }
 
+    // Product Purchase data for multiable
+    public function product_purchase_info_sum($product_ids, $from_date = null, $to_date = null)
+    {
+        $this->db->select('SUM(b.quantity) as total_purchase_quantity');
+        $this->db->from('product_purchase a');
+        $this->db->join('product_purchase_details b', 'b.purchase_id = a.purchase_id', 'left');
+        if ($from_date && $to_date) {
+            $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->where_in('b.product_id', $product_ids);
+        $this->db->group_by('b.purchase_id');
+
+        return $this->db->get()->row();
+    }
+
     // Invoice Data for specific data
     public function invoice_data($product_id, $from_date = null, $to_date = null)
     {
@@ -499,6 +515,21 @@ class Products extends CI_Model
         return false;
     }
 
+    public function invoice_data_sum($product_ids, $from_date = null, $to_date = null)
+    {
+        $this->db->select('sum(b.quantity) as t_sales_qty');
+        $this->db->from('invoice a');
+        $this->db->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left');
+        if ($from_date && $to_date) {
+            $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->where_in('b.product_id', $product_ids);
+        $this->db->group_by('b.product_id');
+
+        return $this->db->get()->row();
+    }
+
     public function return_invoice_data($product_id, $from_date = null, $to_date = null)
     {
         $this->db->select('
@@ -525,6 +556,20 @@ class Products extends CI_Model
             return $query->result_array();
         }
         return false;
+    }
+
+    public function return_invoice_data_sum($product_ids, $from_date = null, $to_date = null)
+    {
+        $this->db->select('SUM(a.return_quantity) as t_return_quantity');
+        $this->db->from('invoice_return a');
+        if ($from_date && $to_date) {
+            $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+        $this->db->where_in('a.product_id', $product_ids);
+        $this->db->group_by('a.product_id');
+
+        return $this->db->get()->row();
     }
 
     public function previous_stock_data($product_id, $startdate)

@@ -2204,7 +2204,7 @@ class Reports extends CI_Model
             }
         }
 
-        return [$product, $openQuantity, 0, 0, 0,0, $totalPurchase, $totalSales];
+        return [$product, $openQuantity, 0, 0, 0, 0, $totalPurchase, $totalSales];
     }
 
     public function sales_report_all_details(
@@ -2245,15 +2245,15 @@ class Reports extends CI_Model
             $product['selected_price'] = $product['prices'][1]['product_price'];
         }
 
-        $default_store_id = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
-        $default_store_id = $default_store_id->store_id;
-        $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $product->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
+        // $default_store_id = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+        // $default_store_id = $default_store_id->store_id;
+        // $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $product->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
 
-        $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
 
         $totalPurchase = 0;
         $purchaseData = $this->Products->product_purchase_info($product_id, $from_date, $to_date);
-        
+
         if (!empty($purchaseData)) {
             foreach ($purchaseData as $k => $v) {
                 $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
@@ -2278,5 +2278,51 @@ class Reports extends CI_Model
 
 
         return [$product, 0, 0, 0, 0, $totalPurchase, $totalSales, $balance];
+    }
+
+    public function sales_report_all_details_sum_all(
+        $product_ids = [],
+        $pricing_type = null,
+        $from_date = null,
+        $to_date = null
+    ) {
+
+        $selectAddon = 'p.price';
+        if ($pricing_type) {
+            $selectAddon = 'pr.product_price';
+        }
+
+        $products = $this->db->select("SUM($selectAddon) as t_selected_price, SUM(supplier_price) as t_supplier_price")
+            ->from('product_information p');
+
+        if ($pricing_type) {
+            $products->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = ' . $pricing_type);
+        }
+
+        $products = $products->where_in('p.product_id', $product_ids)
+            ->get()->result_array();
+
+        // $totalPurchase = 0;
+        // $purchaseData = $this->Products->product_purchase_info_sum($product_ids, $from_date, $to_date);
+        $totalPurchase = $this->db->select('(SUM(open_quantity) + SUM(b.quantity)) as total_purchase')
+            ->from('product_information a')
+            ->join('product_purchase_details b', 'b.product_id = a.product_id', 'left')
+            ->where_in('a.product_id', $product_ids)
+            ->group_by('a.product_id')
+            ->having('total_purchase >', 500, true)
+            ->get()->row();
+
+        // var_dump($totalPurchase->total_purchase);exit;
+        // $totalPurchase = (int) $totalOpenQuantity->total_open_quantity + (int)$purchaseData->total_purchase_quantity;
+
+        $totalSales = 0;
+        $salesData = $this->Products->invoice_data_sum($product_ids, $from_date, $to_date);
+        $returnData = $this->Products->return_invoice_data_sum($product_ids, $from_date, $to_date);
+        $totalSales = (int)$salesData->t_sales_qty - (int)$returnData->t_return_quantity;
+
+        $balance = $totalPurchase - $totalSales;
+
+
+        return [$totalPurchase, $totalSales, $balance, $products];
     }
 }
