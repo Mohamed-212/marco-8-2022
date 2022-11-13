@@ -837,7 +837,7 @@ class Lreport
         }
         // } else {
         if ($product_name) {
-            $products->where('p.product_name LIKE', "%$product_name%");
+            $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
         }
 
         // }

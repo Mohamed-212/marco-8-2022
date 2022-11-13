@@ -359,7 +359,7 @@
 											<th class="text-center"><?php echo display('cost_price') ?></th>
 											<th class="text-center"><?php echo display('total_cost') ?></th>
 											<th class="text-center"><?php echo display('price') ?></th>
-											<th class="text-center"><?php echo display('total_value') ?></th>
+											<th class="text-center"><?php echo display('total_price') ?></th>
 										</tr>
 									</thead>
 									<tbody>
