@@ -22,25 +22,25 @@
         $message = $this->session->userdata('message');
         if (isset($message)) {
         ?>
-        <div class="alert alert-info alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $message ?>
-        </div>
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $message ?>
+            </div>
         <?php
             $this->session->unset_userdata('message');
         }
         $error_message = $this->session->userdata('error_message');
         if (isset($error_message)) {
         ?>
-        <div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <?php echo $error_message ?>
-        </div>
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <?php echo $error_message ?>
+            </div>
         <?php
             $this->session->unset_userdata('error_message');
         }
         ?>
-        
+
         <!-- Supplier select -->
         <div class="row">
             <div class="col-sm-12">
@@ -48,24 +48,19 @@
                     <div class="panel-body">
                         <?php echo form_open('dashboard/Crefund/return_report', array('class' => 'form-inline')); ?>
                         <div class="form-group">
-                            <label for="from_date"><?php echo display('from_date') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
-                                placeholder="<?php echo display('from_date'); ?>" name="from_date" required>
+                            <label for="from_date"><?php echo display('from_date') ?><span class="text-danger">*</span>:</label>
+                            <input type="text" class="form-control datepicker" autocomplete="off" placeholder="<?php echo display('from_date'); ?>" name="from_date" required>
                         </div>
                         <div class="form-group">
-                            <label for="to_date"><?php echo display('to_date') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <input type="text" class="form-control datepicker" autocomplete="off"
-                                placeholder="<?php echo display('to_date'); ?>" name="to_date" required>
+                            <label for="to_date"><?php echo display('to_date') ?><span class="text-danger">*</span>:</label>
+                            <input type="text" class="form-control datepicker" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" required>
                         </div>
                         <div class="form-group">
-                            <label for="status"><?php echo display('status') ?><span
-                                    class="text-danger">*</span>:</label>
-                            <select class='form-control' id='status'  name='status'>
-                             <option value=''><?=display('status')?></option>
-                             <option value='1'><?php echo display('damaged')?></option>
-                             <option value='2'><?php echo display('no warranty')?></option>
+                            <label for="status"><?php echo display('status') ?><span class="text-danger">*</span>:</label>
+                            <select class='form-control' id='status' name='status'>
+                                <option value=''><?= display('status') ?></option>
+                                <option value='1'><?php echo display('damaged') ?></option>
+                                <option value='2'><?php echo display('no warranty') ?></option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
@@ -85,18 +80,18 @@
                     </div>
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table id="dataTableExample2" class="table table-bordered table-striped table-hover">
+                            <table id="" class="table table-bordered table-striped table-hover dataTablePaginationNoSorting">
                                 <thead>
 
                                     <tr>
                                         <th colspan="8" class="text-center">
-                                            <?=display('from_date')?> :
+                                            <?= display('from_date') ?> :
                                             <?php if (!empty($from_date)) {
                                                 echo $from_date;
                                             } else {
                                                 echo display('from_date');
                                             } ?>
-                                            <?=display('to_date')?> : - :
+                                            <?= display('to_date') ?> : - :
                                             <?php if (!empty($from_date)) {
                                                 echo $to_date;
                                             } else {
@@ -106,12 +101,12 @@
                                     </tr>
 
                                     <tr>
-                                        <th class="text-center"><?=display('sl')?></th>
-                                        <th class="text-center"><?=display('product_name')?></th>
-                                        <th class="text-center"><?=display('variant_name')?></th>
-                                        <th class="text-center"><?=display('status')?></th>
-                                        <th class="text-center"><?=display('quantity')?></th>
-                                        <th class="text-center"><?=display('date')?></th>
+                                        <th class="text-center"><?= display('sl') ?></th>
+                                        <th class="text-center"><?= display('product_name') ?></th>
+                                        <th class="text-center"><?= display('variant_name') ?></th>
+                                        <th class="text-center"><?= display('status') ?></th>
+                                        <th class="text-center"><?= display('quantity') ?></th>
+                                        <th class="text-center"><?= display('date') ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -119,31 +114,35 @@
                                     if (!empty($return_product_report)) {
                                         $totalSl = 0;
                                         $totalQuantity = 0;
+                                        $sl = 0;
                                         foreach ($return_product_report as $key => $return_report) {
-                                        $totalSl += $key+1;
-                                        $totalQuantity += (int)$return_report['quantity'];
+                                            $totalSl += $key + 1;
+                                            $totalQuantity += (int)$return_report['quantity'];
                                     ?>
-                                    <tr>
-                                        <td><?php echo $key + 1; ?></td>
-                                        <td><?php echo html_escape($return_report['product_name']); ?></td>
-                                        <td><?php echo html_escape($return_report['variant_name']); ?></td>
-                                        <td><?php echo($return_report['status']==1)?display('damaged'):display('no warranty') ?></td>
-                                        <td><?php echo html_escape($return_report['quantity']); ?></td>
-                                        <td><?php echo html_escape(date('d-m-Y', strtotime($return_report['created_at']))); ?></td>
-                                    </tr>
-                                    <?php }?>
+                                            <tr>
+                                                <td><?php echo ++$sl; ?></td>
+                                                <td><?php echo html_escape($return_report['product_name']); ?></td>
+                                                <td><?php echo html_escape($return_report['variant_name']); ?></td>
+                                                <td><?php echo ($return_report['status'] == 1) ? display('damaged') : display('no warranty') ?></td>
+                                                <td><?php echo html_escape($return_report['quantity']); ?></td>
+                                                <td><?php echo html_escape(date('d-m-Y', strtotime($return_report['created_at']))); ?></td>
+                                            </tr>
+                                        <?php } ?>
+
+                                    <?php } ?>
+                                </tbody>
+                                <tfoot>
                                     <tr>
                                         <td><?php echo $totalSl; ?></td>
                                         <td align="center">
-                                            <b><?=display('grand_total')?></b>
+                                            <b><?= display('grand_total') ?></b>
                                         </td>
                                         <td>--</td>
                                         <td>--</td>
                                         <td><?php echo $totalQuantity; ?></td>
                                         <td>--</td>
-                                    </tr> 
-                                    <?php } ?>
-                                </tbody>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
