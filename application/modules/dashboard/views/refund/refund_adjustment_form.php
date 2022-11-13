@@ -129,6 +129,19 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><?php echo display('stock') ?>:</label>
+                                    <div class="col-sm-8">
+                                        <select class='form-control' id='stock' required='required' name='stock'>
+                                            <option value='1'><?= display('in') ?></option>
+                                            <option value='2'><?= display('out') ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
                                     <label class="col-sm-4 col-form-label"><?php echo display('status') ?>:</label>
                                     <div class="col-sm-8">
                                         <select class='form-control' id='status' required='required' name='status'>

@@ -695,9 +695,11 @@ class Crefund extends MX_Controller
         $product_id = $this->input->post('product_id', true);
         $quantity = $this->input->post('quantity', true);
         $status = $this->input->post('status', true);
+        $stock = $this->input->post('stock', true);
 
         if ($product_id && $quantity && $status) {
             $product = $this->db->select('*')->from('product_information')->where('product_id', $product_id[0])->get()->result_array();
+            $quantity = $stock == 1 ? $quantity : $quantity *-1;
             $sql = "INSERT INTO `product_return`(`product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $product_id[0] . "','" . $product[0]['variants'] . "','" . $quantity . "','" . $status . "')";
             $this->db->query($sql);
         }
