@@ -440,6 +440,7 @@ class Admin_dashboard extends MX_Controller
 
         // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
 
+        $product_name = $this->input->post('product_name', true);
         $product_id = $this->input->post('product_id',TRUE);
         $pricing_type = $this->input->post('pri_type',TRUE);
         $category_id = $this->input->post('category_id',TRUE);
@@ -448,7 +449,7 @@ class Admin_dashboard extends MX_Controller
         $material_filter = $this->input->post('filter_2_id',TRUE);
         $start_date = $this->input->post('from_date',TRUE);
         $end_date = $this->input->post('to_date',TRUE);
-
+        
         // sales
         $sales_from = $this->input->post('sales_from',TRUE);
         $sales_to = $this->input->post('sales_to',TRUE);
@@ -500,7 +501,9 @@ class Admin_dashboard extends MX_Controller
             $total_sell_from,
             $total_sell_to,
             $start_date,
-            $end_date
+            $end_date,
+            null,
+            $product_name
         );
         $this->template_lib->full_admin_html_view($content);
 

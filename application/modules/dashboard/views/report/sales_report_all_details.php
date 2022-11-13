@@ -2,6 +2,9 @@
 <!-- Product js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product.js.php"></script>
 
+<!-- Product invoice js -->
+<script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product_invoice.js.php"></script>
+
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/print.js'; ?>"></script>
 
 <!-- Stock List Supplier Wise Start -->
@@ -116,9 +119,9 @@
 								</div>
 							</div> -->
 
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group row">
-									<label for="product_id" class="col-sm-3 col-form-label"><?php echo display('product') ?>:</label>
+									<!-- <label for="product_id" class="col-sm-3 col-form-label"><?php echo display('product') ?>:</label>
 									<div class="col-sm-9">
 										<select class="form-control select3" name="product_id" id="product_id">
 											<option value=""></option>
@@ -127,18 +130,26 @@
 													<?php echo html_escape($product_item['product_name']) ?></option>
 											<?php } ?>
 										</select>
+									</div> -->
+									<label class="control-label col-sm-3"><?php echo display('product_name') ?>:</label>
+									<!-- <input type="text" class="form-control" name="product_name" value=""
+                                           placeholder='<?php echo display('product_name') ?>'> -->
+									<div class="col-sm-9">
+										<input type="text" name="product_name" onkeyup="invoice_productList(1);" class="form-control productSelection" placeholder='<?php echo display('product_name') ?>' id="product_name_1" value="<?= @$_POST['product_name'] ?>">
+
+										<input type="hidden" class="autocomplete_hidden_value product_id_1" name="product_id" />
 									</div>
 								</div>
 							</div>
 
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group row">
 									<label for="category_id" class="col-sm-3 col-form-label"><?php echo display('category') ?>:</label>
 									<div class="col-sm-9">
-										<select class="form-control select3" name="category_id" id="category_id">
+										<select class="form-control select3" name="category_id[]" id="category_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($category_list as $category_item) { ?>
-												<option value="<?php echo $category_item['category_id'] ?>" <?php echo (($category_item['category_id'] == @$_POST['category_id']) ? 'selected' : '') ?>>
+												<option value="<?php echo $category_item['category_id'] ?>" <?= in_array($category_item['category_id'], @$_POST['category_id']) ? 'selected' : '' ?>>
 													<?php echo html_escape($category_item['category_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -149,33 +160,14 @@
 
 
 						<div class="row">
-							<div class="col-md-4">
-								<div class="form-group row">
-									<label for="currency" class="col-sm-4 col-form-label"><?php echo display('pricing') ?></label>
-									<div class="col-sm-8">
-										<select name="pri_type" id="pri_type" class="form-control select3">
-											<option value=""></option>
-											<?php foreach ($all_pri_type as $pri_type) : ?>
-												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
-											<?php
-											endforeach;
-											?>
-											<option value="0">
-												<?= display('sell_price') ?>
-											</option>
-										</select>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group row">
 									<label for="filter_1_id" class="col-sm-3 col-form-label">GENDER:</label>
 									<div class="col-sm-9">
-										<select class="form-control select3" name="filter_1_id" id="filter_1_id">
+										<select class="form-control select3" name="filter_1_id[]" id="filter_1_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($filter_1_list as $filter_1_item) { ?>
-												<option value="<?php echo $filter_1_item['item_id'] ?>" <?php echo (($filter_1_item['item_id'] == @$_POST['filter_1_id']) ? 'selected' : '') ?>>
+												<option value="<?php echo $filter_1_item['item_id'] ?>" <?= in_array($filter_1_item['item_id'], @$_POST['filter_1_id']) ? 'selected' : '' ?>>
 													<?php echo html_escape($filter_1_item['item_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -183,16 +175,36 @@
 								</div>
 							</div>
 
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="form-group row">
 									<label for="filter_2_id" class="col-sm-3 col-form-label">MATERIAL:</label>
 									<div class="col-sm-9">
-										<select class="form-control select3" name="filter_2_id" id="filter_2_id">
+										<select class="form-control select3" name="filter_2_id[]" id="filter_2_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($filter_2_list as $filter_2_item) { ?>
-												<option value="<?php echo $filter_2_item['item_id'] ?>" <?php echo (($filter_2_item['item_id'] == @$_POST['filter_2_id']) ? 'selected' : '') ?>>
+												<option value="<?php echo $filter_2_item['item_id'] ?>" <?= in_array($filter_2_item['item_id'], @$_POST['filter_2_id']) ? 'selected' : '' ?>>
 													<?php echo html_escape($filter_2_item['item_name']) ?></option>
 											<?php } ?>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label for="currency" class="col-sm-4 col-form-label"><?php echo display('pricing') ?></label>
+									<div class="col-sm-8">
+										<select name="pri_type" id="pri_type" class="form-control select3">
+											<option value=""></option>
+											<?php foreach ($all_pri_type as $pri_type) : ?>
+												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pri_type['pri_type_id'] == @$_POST['pri_type'] ? 'selected' : ''?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+											<?php
+											endforeach;
+											?>
+											<option value="0">
+												<?= display('sell_price') ?>
+											</option>
 										</select>
 									</div>
 								</div>
@@ -367,7 +379,7 @@
 											$balance = (int)$repo[7];
 											$supplier_price_total = abs(round((float)$repo[0]['supplier_price'] * $balance, 2));
 											$sell_price_total = abs(round((float)$repo[0]['selected_price'] * $balance, 2));
-											
+
 											$total_sales_quantity += $sales_quantity;
 											$total_purchase_quantity += $purchase_quantity;
 											$total_balance += $balance;
@@ -376,7 +388,7 @@
 										?>
 											<tr>
 												<td>
-													<?=++$sl?>
+													<?= ++$sl ?>
 												</td>
 												<td>
 													<a href="<?= base_url() ?>/dashboard/Cproduct/product_details/<?= $repo[0]['product_id'] ?>">
@@ -421,23 +433,23 @@
 									</tbody>
 									<tfoot>
 										<tr>
-											<td><?=$sl?></td>
-											<td align="center"><b><?=display('grand_total')?></b></td>
+											<td><?= $sl ?></td>
+											<td align="center"><b><?= display('grand_total') ?></b></td>
 											<td>--</td>
 											<td>--</td>
 											<td>--</td>
-											<td><?=$total_purchase_quantity?></td>
-											<td><?=$total_sales_quantity?></td>
-											<td><?=$total_balance?></td>
-											<td><?=round($total_supplier_price, 2)?></td>
+											<td><?= $total_purchase_quantity ?></td>
+											<td><?= $total_sales_quantity ?></td>
+											<td><?= $total_balance ?></td>
+											<td><?= round($total_supplier_price, 2) ?></td>
 											<td>
-											<?=round($total_supplier_price * $total_balance, 2)?>
+												<?= round($total_supplier_price * $total_balance, 2) ?>
 											</td>
 											<td>
-												<?=round($total_sell_price, 2)?>
+												<?= round($total_sell_price, 2) ?>
 											</td>
 											<td>
-												<?=round($total_sell_price * $total_balance, 2)?>
+												<?= round($total_sell_price * $total_balance, 2) ?>
 											</td>
 										</tr>
 									</tfoot>
@@ -459,10 +471,10 @@
 		});
 
 		$('#reset').click(function() {
-			$('.filters_form input[type="text"]').each(function (nx, el) {
+			$('.filters_form input[type="text"]').each(function(nx, el) {
 				$(el).val('');
 			});
-			$('.filters_form select').each(function (nx, el) {
+			$('.filters_form select').each(function(nx, el) {
 				$(el).val(null).trigger('change');
 			});
 		});

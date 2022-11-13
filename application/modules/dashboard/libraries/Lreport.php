@@ -767,7 +767,8 @@ class Lreport
         $total_sell_to = null,
         $start_date = null,
         $end_date = null,
-        $store_id = null
+        $store_id = null,
+        $product_name = null
     ) {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
@@ -802,10 +803,10 @@ class Lreport
                 ->from('filter_product a, filter_product b');
 
             if ($general_filter) {
-                $filter_products->where('a.filter_item_id', $general_filter);
+                $filter_products->where_in('a.filter_item_id', $general_filter);
             }
             if ($material_filter) {
-                $filter_products->where('b.filter_item_id', $material_filter);
+                $filter_products->where_in('b.filter_item_id', $material_filter);
             }
             $filter_products->where('a.product_id = b.product_id');
             $filter_products = $filter_products->get()->result_array();
@@ -817,26 +818,29 @@ class Lreport
         $CI->db->reset_query();
         $products = $CI->db->select('p.product_id')->from('product_information p');
 
-        if (!$product_id) {
-            // $product_id = '92886343';
-            // if ($store_id) {
-            //     $products->where('store_id', $store_id);
-            // }
+        // if (!$product_id) {
+        // $product_id = '92886343';
+        // if ($store_id) {
+        //     $products->where('store_id', $store_id);
+        // }
 
-            if ($category_id) {
-                $products->where('p.category_id', $category_id);
-            }
-
-            if ($product_type) {
-                $products->where('p.assembly', $product_type);
-            }
-
-            if (($general_filter || $material_filter) && count($product_ids)) {
-                $products->where_in('p.product_id', $product_ids);
-            }
-        } else {
-            $products->where('p.product_id', $product_id);
+        if ($category_id) {
+            $products->where_in('p.category_id', $category_id);
         }
+
+        if ($product_type) {
+            $products->where('p.assembly', $product_type);
+        }
+
+        if (($general_filter || $material_filter) && count($product_ids)) {
+            $products->where_in('p.product_id', $product_ids);
+        }
+        // } else {
+        if ($product_name) {
+            $products->where('p.product_name LIKE', "%$product_name%");
+        }
+
+        // }
 
         $products = $products->limit(300)->order_by('product_name', 'asc')->get()->result_array();
 
