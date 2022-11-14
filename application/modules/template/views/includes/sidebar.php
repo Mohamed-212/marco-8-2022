@@ -397,10 +397,10 @@
                 </li>
                 <?php }
                         if ($this->permission->check_label('customer_balance_report')->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'customer_balance_report' ? 'active' : '')) ?>">
+                <!-- <li class="<?php echo (($this->uri->segment(3) == 'customer_balance_report' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Ccustomer/customer_balance_report') ?>"><?php echo display('customer_balance_report') ?></a>
-                </li>
+                </li> -->
                 <?php } ?>
             </ul>
         </li>
@@ -450,10 +450,10 @@
                 </li>
                 <?php }
                         if ($this->permission->check_label('supplier_balance_report')->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(3) == 'supplier_balance_report' ? 'active' : '')) ?>">
+                <!-- <li class="<?php echo (($this->uri->segment(3) == 'supplier_balance_report' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Csupplier/supplier_balance_report') ?>"><?php echo display('supplier_balance_report') ?></a>
-                </li>
+                </li> -->
                 <?php } ?>
             </ul>
         </li>

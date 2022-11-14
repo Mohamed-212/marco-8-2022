@@ -353,7 +353,7 @@ class Crefund extends MX_Controller
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
                 'date' => date('Y-m-d'),
-                'amount' => $bank_return,
+                'amount' => $total_return + $tota_vat,
                 'payment_type' => 1,
                 'description' => 'ITP',
                 'status' => 1
