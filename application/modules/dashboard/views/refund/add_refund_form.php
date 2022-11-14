@@ -78,44 +78,45 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
-                                    <label class="col-sm-4 col-form-label"><?php echo display('product_name') ?>:</label>
+                                    <label class="col-sm-4 col-form-label"><?php echo display('type') ?>:</label>
                                     <div class="col-sm-8">
-                                        <!-- <input type="text" class="form-control" name="invoice_no" id="invoice_no" value="<?php echo set_value('invoice_no', @$_GET['invoice_no']) ?>" placeholder='<?php echo display('invoice_no') ?>'> -->
-                                        <!-- <input type="hidden" class="form-control" name="product_id" id="product_id" value=""> -->
-                                        <input type="text" name="product_name" onkeyup="invoice_productList(1);" class="form-control productSelection" placeholder='<?php echo display('product_name') ?>' required="" id="product_name_1" value="<?= $product_name ?>">
-
-                                        <?php
-                                        $defaultStore = $this->db->select('store_id')
-                                            ->from('store_set')
-                                            ->where('default_status', 1)
-                                            ->limit(1)
-                                            ->get()
-                                            ->row();
-                                        ?>
-                                        <input type="hidden" hidden id="store_id" name="store_id" value="<?= $defaultStore->store_id ?>" />
-
-                                        <input type="hidden" class="autocomplete_hidden_value product_id_1" name="product_id[]" required value="<?= $product_id ?>" />
-
-                                        <input type="hidden" class="sl" value="1">
-                                        <input type="hidden" name="assembly[]" id="assembly1" value="">
-                                        <input type="hidden" name="colorv[]" id="color1" value="">
-                                        <input type="hidden" name="sizev[]" id="size1" value="">
-                                        <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
-                                        <input type="hidden" hidden name="category_id" id="category_id_1" value="" />
-                                        <input type="hidden" hidden name="product_model" id="product_model_1" value="" />
-                                        <div style="display: none;">
-                                            <select name="variant_id" id="variant_id_1" class="variant_id" style="display: none;" disabled="">
-                                                <?php if (!empty($variant_id)) : ?>
-                                                    <option value="<?= $variant_id ?>" selected><?= $variant_id ?></option>
-                                                <?php else : ?>
-                                                    <option value=""></option>
-                                                <?php endif ?>
-                                            </select>
-                                        </div>
+                                        <select name="type" id="type" class="form-control">
+                                            <option value="0"></option>
+                                            <option value="1"><?= display('invoice') ?></option>
+                                            <option value="2"><?= display('without') ?></option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row" id="invoice_id_div" style="display: none;">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><?php echo display('invoice') ?>:</label>
+                                    <div class="col-sm-8">
+                                        <select name="invoice_id" id="invoice_id" class="form-control select2" style="width: 100%;">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" id="product_id_div" style="display: none;">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><?php echo display('product_name') ?>:</label>
+                                    <div class="col-sm-8">
+                                        <select name="product_id[]" id="product_id" class="form-control select2" multiple data-multiple="true" style="width: 100%;">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group row">
@@ -131,71 +132,83 @@
 
                     <div class="panel-body mt-5">
                         <div class="table-responsive mt_10">
-                            <table class="table table-bordered table-hover dataTablePagination" id="normalinvoice">
+                            <?php echo form_open(base_url() . '/dashboard/Crefund/new_return', ['class' => 'form-vertical new_return', 'id' => 'validate', 'name' => 'insert_invoice']) ?>
+                            <table class="table table-bordered table-hover" id="normalinvoice">
                                 <thead>
                                     <tr>
+                                        <th class="text-center">
+                                            <input type="checkbox" name="select_all" id="select_all" value="" />
+                                        </th>
                                         <th class="text-center"><?php echo display('invoice') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center"><?php echo display('product_name') ?></i></th>
                                         <th class="text-center"><?php echo display('price') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('available_quantity') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center" id="trans" data-fit="<?= display('fit') ?>" data-warranty="<?= display('no warranty') ?>" data-damaged="<?= display('damaged') ?>"><?php echo display('status') ?></th>
                                         <th class="text-center"><?php echo display('return_price') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center"><?php echo display('action') ?> <i class="text-danger">*</i></th>
+                                        <!-- <th class="text-center"><?php echo display('action') ?> <i class="text-danger">*</i></th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="addinvoiceItem">
-                                    <?php foreach ($invoices as $inx => $inv) : ?>
-                                        <tr>
-                                            <?php echo form_open(base_url() . '/dashboard/Crefund/new_return', ['class' => 'form-vertical new_return', 'id' => 'validate', 'name' => 'insert_invoice']) ?>
-                                            <input type="hidden" hidden name="customer_id" value="<?= $customer_id ?>" />
-                                            <input type="hidden" hidden name="product_id" value="<?= $product_id ?>" />
-                                            <input type="hidden" hidden name="invoice_no" value="<?= $inv->invoice ?>" />
-                                            <input type="hidden" hidden name="invoice_id" value="<?= $inv->invoice_id ?>" />
-                                            <input type="hidden" hidden name="variant_id" value="<?= $inv->variant_id ?>" />
-                                            <td>
-                                                <a href="<?= base_url() ?>/dashboard/Cinvoice/invoice_inserted_data/<?= $inv->invoice_id ?>"><?= $inv->invoice ?></a>
-                                            </td>
-                                            <td>
-                                                <?php
-                                                $item_discount = round(((float)$inv->item_invoice_discount * (float)$inv->quantity) + ((float)$inv->discount * (float)$inv->quantity), 2);
-                                                $total_price_after_discount = round((float)$inv->total_price - (float)$item_discount, 2);
 
-                                                // var_dump($item_discount, $total_price_after_discount, $inv->total_price);
-                                                echo $total_price_after_discount;
-                                                ?>
-                                                <input type="hidden" hidden name="rate_<?= $inx + 1 ?>" value="<?= $inv->rate ?>" />
-                                            </td>
-                                            <td><input type='text' id='available_quantity_<?= $inx + 1 ?>' name='available_quantity[]' class='form-control text-right available_quantity_<?= $inx + 1 ?>' id='avl_qntt_<?= $inx + 1 ?>' placeholder='0' readonly='' value="<?= $inv->ava_quantity ?>" /></td>
-                                            </td>
-                                            <td>
-                                                <select class='form-control' id='status_<?= $inx + 1 ?>' required='required' name='status'>
-                                                    <option value='0'><?= display('fit') ?></option>
-                                                    <option value='1'><?= display('damaged') ?></option>
-                                                    <option value='2'><?= display('no warranty') ?></option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select class='form-control' id='price_type_<?= $inx + 1 ?>' required='required' name='price_type'>
-                                                    <option value='0' <?= $inv->rate != $inv->price ?: 'selected' ?>><?= display('sell_price') ?></option>
-                                                    <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
-                                                </select>
-                                            </td>
-                                            <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' value='0' max='<?= $inv->ava_quantity ?>' name='quantity'></td>
-                                            <td>
+                                    <?php if (!empty($invoices)) : ?>
+                                        <?php foreach ($invoices as $inx => $inv) : ?>
+                                            <tr>
 
-                                                <button type="submit" class="btn btn-primary"><?= display('submit') ?></button>
-                                            </td>
-                                            <?php echo form_close() ?>
+                                                <input type="hidden" hidden name="customer_id" value="<?= $customer_id ?>" />
+                                                <input type="hidden" hidden name="product_id" value="<?= $product_id ?>" />
+                                                <input type="hidden" hidden name="invoice_no" value="<?= $inv->invoice ?>" />
+                                                <input type="hidden" hidden name="invoice_id" value="<?= $inv->invoice_id ?>" />
+                                                <input type="hidden" hidden name="variant_id" value="<?= $inv->variant_id ?>" />
+                                                <td>
+                                                    <input class="select_product" type="checkbox" name="selected_products_inx[]" value="<?= $inx +1 ?>" />
+                                                </td>
+                                                <td>
+                                                    <a href="<?= base_url() ?>/dashboard/Cinvoice/invoice_inserted_data/<?= $inv->invoice_id ?>"><?= $inv->invoice ?></a>
+                                                    <input class="" type="hidden" hidden name="invoice_id_<?= $inx + 1 ?>" value="<?= $inv->invoice_id ?>" />
+                                                </td>
+                                                <td>
+                                                    <a href="<?= base_url() ?>/dashboard/Cproduct/product_details/<?= $inv->product_id ?>"><?= $inv->product_name ?></a>
+                                                    <input class="" type="hidden" hidden name="invoice_products_id_<?= $inx + 1 ?>" value="<?= $inv->product_id ?>" />
+                                                    <input class="" type="hidden" hidden name="variant_id_<?= $inx + 1 ?>" value="<?= $inv->variant_id ?>" />
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    $item_discount = round(((float)$inv->item_invoice_discount * (float)$inv->quantity) + ((float)$inv->discount * (float)$inv->quantity), 2);
+                                                    $total_price_after_discount = round((float)$inv->total_price - (float)$item_discount, 2);
 
-                                        </tr>
-                                    <?php endforeach ?>
+                                                    // var_dump($item_discount, $total_price_after_discount, $inv->total_price);
+                                                    echo $total_price_after_discount;
+                                                    ?>
+                                                    <input type="hidden" hidden name="rate_<?= $inx + 1 ?>" value="<?= $inv->rate ?>" />
+                                                </td>
+                                                <td><input type='text' id='available_quantity_<?= $inx + 1 ?>' name='available_quantity_<?= $inx + 1 ?>' class='form-control text-right available_quantity_<?= $inx + 1 ?>' id='avl_qntt_<?= $inx + 1 ?>' placeholder='0' readonly='' value="<?= $inv->ava_quantity ?>" /></td>
+                                                </td>
+                                                <td>
+                                                    <select class='form-control' id='status_<?= $inx + 1 ?>' required='required' name='status_<?= $inx + 1 ?>'>
+                                                        <option value='0'><?= display('fit') ?></option>
+                                                        <option value='1'><?= display('damaged') ?></option>
+                                                        <option value='2'><?= display('no warranty') ?></option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class='form-control' id='price_type_<?= $inx + 1 ?>' required='required' name='price_type_<?= $inx + 1 ?>'>
+                                                        <option value='0' <?= $inv->rate != $inv->price ?: 'selected' ?>><?= display('sell_price') ?></option>
+                                                        <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
+                                                    </select>
+                                                </td>
+                                                <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' value='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>'></td>
+                                            </tr>
+                                        <?php endforeach ?>
+                                    <?php endif; ?>
                                 </tbody>
                                 <tfoot>
                                 </tfoot>
                             </table>
                             <div style="text-align: center;">
-                                <!-- <button type="submit" class="btn btn-primary"><?= display('submit') ?></button> -->
+                                <button type="submit" class="btn btn-primary"><?= display('submit') ?></button>
                             </div>
+                            <?php echo form_close() ?>
                             <!-- </form> -->
                         </div>
                     </div>
@@ -207,6 +220,7 @@
 <!-- Invoice Report End -->
 <script>
     $(document).ready(function() {
+        var csrf_test_name = $("#CSRF_TOKEN").val();
         $(document).on('change', '#invoice_no', function() {
             var val = $(this).val();
             $('option#invid').each(function(inx, el) {
@@ -223,6 +237,56 @@
             } else {
                 $('#bank_list_container').addClass('hidden');
             }
+        });
+
+        $(document).on('change', '#type', function() {
+            var val = $(this).val();
+            var customer_id = $('#SchoolHiddenId').val();
+
+            if (val == 1) {
+                $('div#product_id_div').css('display', 'none');
+                // get customer invoices
+                $.ajax({
+                    url: base_url + "dashboard/Crefund/get_customer_invoices",
+                    method: "post",
+                    data: {
+                        csrf_test_name: csrf_test_name,
+                        customer_id: customer_id,
+                    },
+                    success: function(data) {
+                        $('select#invoice_id').html(data);
+                        $('div#invoice_id_div').css('display', 'block');
+                    },
+                });
+            } else {
+                $('div#invoice_id_div').css('display', 'none');
+                $.ajax({
+                    url: base_url + "dashboard/Crefund/get_customer_invoice_products",
+                    method: "post",
+                    data: {
+                        csrf_test_name: csrf_test_name,
+                        customer_id: customer_id,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('select#product_id').html(data);
+                        $('div#product_id_div').css('display', 'block');
+                    },
+                });
+            }
+        });
+        $(document).on('click', '#select_all', function() {
+            var val = $(this).prop('checked');
+            $('.select_product').each(function(inx, el) {
+                // console.log(el);
+
+                $(el).prop("checked", true);
+                if (val == true) {
+                    $(el).prop('checked', true);
+                } else {
+                    $(el).prop('checked', false);
+                }
+            });
         });
     });
 </script>

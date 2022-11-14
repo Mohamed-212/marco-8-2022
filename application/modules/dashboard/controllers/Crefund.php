@@ -155,75 +155,71 @@ class Crefund extends MX_Controller
             'quantity' =>  $this->input->post('quantity', TRUE),
             'payment_id' =>  $this->input->post('payment_id', TRUE),
             'price_type' =>  $this->input->post('price_type', TRUE),
+            'selected_products_inx' => $this->input->post('selected_products_inx', TRUE),
+            'invoice_products_id' => $this->input->post('invoice_products_id', TRUE)
         );
 
-        if ($filter['quantity'] < 1) {
-            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
-            $this->new_refund();
-            return;
-        }
-
-        // $sql = "SELECT `customer_id` FROM `invoice` WHERE `invoice_id` ='" . $filter['invoice_id'] . "';";
-        // $result = $this->db->query($sql);
-        // $customer_id  = $result->result_array();
-        // $customer_id  = $customer_id[0]['customer_id'];
         $customer_id = $this->input->post('customer_id', TRUE);
 
         $customer_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('customer_id', $customer_id)->get()->row();
 
         $return_invoice_id = generator(15);
 
-        // echo "<pre>"; 
-        // var_dump($customer_head, $filter);exit;
-        //get customer headcode
-        // for ($j = 0; $j < count($filter['product_id']); $j++) {
-        $j = 0;
-        if ($filter['quantity'] > 0) {
-            // echo $filter['quantity'];
-            // dd($filter['quantity']);
-            // get invoice details record 
-            $sql = "select I.* from invoice_details I where I.variant_id ='" . $filter['variant_id'] . "' and I.product_id ='" . $filter['product_id'] . "' and I.invoice_id ='" . $filter['invoice_id'] . "';";
+        foreach ($filter['selected_products_inx'] as $selectedInx) {
+            $product_id = $this->input->post('invoice_products_id_' . $selectedInx, TRUE);
+            $variant_id = $this->input->post('variant_id_' . $selectedInx, TRUE);
+            $invoice_id = $this->input->post('invoice_id_' . $selectedInx, TRUE);
+            $available_quantity = $this->input->post('available_quantity_' . $selectedInx, TRUE);
+            $status = $this->input->post('status_' . $selectedInx, TRUE);
+            $quantity = $this->input->post('quantity_' . $selectedInx, TRUE);
+            $price_type = $this->input->post('price_type_' . $selectedInx, TRUE);
+
+            if ($quantity < 1 || $available_quantity < 1) {
+                continue;
+            }
+
+            $sql = "select I.* from invoice_details I where I.product_id ='" . $product_id . "' and I.invoice_id ='" . $invoice_id . "';";
             $result = $this->db->query($sql);
             $invoice_details  = $result->result_array();
 
             $this->db->select('*');
             $this->db->from('assembly_products');
-            $this->db->where('parent_product_id', $filter['product_id']);
+            $this->db->where('parent_product_id', $product_id);
             $this->db->join('product_information', 'product_information.product_id = assembly_products.child_product_id');
             $query = $this->db->get();
             $product_list = $query->result();
 
-            if ($filter['status'] == 0) //fit
+            if ($status == 0) //fit
             {
                 if (!empty($product_list)) {
                     foreach ($product_list as $product) {
-                        $sql = "update invoice_stock_tbl set quantity=quantity-" . $filter['quantity'] . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $product['product_id'] . "';";
+                        $sql = "update invoice_stock_tbl set quantity=quantity-" . $quantity . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $product['product_id'] . "';";
                         $result = $this->db->query($sql);
                     }
                 } else {
                     // update stock
-                    $sql = "update invoice_stock_tbl set quantity=quantity-" . $filter['quantity'] . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $invoice_details[0]['product_id'] . "';";
+                    $sql = "update invoice_stock_tbl set quantity=quantity-" . $quantity . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $invoice_details[0]['product_id'] . "';";
                     $result = $this->db->query($sql);
                 }
                 // echo json_encode($sql);
             } else {
                 if (!empty($product_list)) {
                     foreach ($product_list as $product) {
-                        $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $filter['invoice_id'] . "','" . $product['product_id'] . "','" . $filter['variant_id'] . "'," . $filter['quantity'] . "," . $filter['status'] . ")";
+                        $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $invoice_id . "','" . $product['product_id'] . "','" . $variant_id . "'," . $quantity . "," . $status . ")";
                         $result = $this->db->query($sql);
                     }
                 } else {
-                    $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $filter['invoice_id'] . "','" . $filter['product_id'] . "','" . $filter['variant_id'] . "'," . $filter['quantity'] . "," . $filter['status'] . ")";
+                    $sql = "INSERT INTO `product_return`(`invoice_id`, `product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $invoice_id . "','" . $product_id . "','" . $variant_id . "'," . $quantity . "," . $status . ")";
                     $result = $this->db->query($sql);
                 }
             }
 
             //update invoice_details
-            $sql = "update invoice_details set return_quantity= return_quantity+" . $filter['quantity'] . " where invoice_details_id='" . $invoice_details[0]['invoice_details_id'] . "';";
+            $sql = "update invoice_details set return_quantity= return_quantity+" . $quantity . " where invoice_details_id='" . $invoice_details[0]['invoice_details_id'] . "';";
             $result = $this->db->query($sql);
 
             //invoice
-            $sql = "select I.* from invoice I where I.invoice_id ='" . $filter['invoice_id'] . "';";
+            $sql = "select I.* from invoice I where I.invoice_id ='" . $invoice_id . "';";
             $result = $this->db->query($sql);
             $invoice  = $result->result_array();
 
@@ -232,18 +228,18 @@ class Crefund extends MX_Controller
             //calc total price of returned qunty of product
             $without_cases_price = $this->db->select('price, category_id, product_name, product_model')
                 ->from('product_information')
-                ->where('product_id', $filter['product_id'])
+                ->where('product_id', $product_id)
                 ->limit(1)
                 ->get()->row();
             // $with_cases_price = $this->db->select('product_price')
             //     ->from('pricing_types_product')
-            //     ->where('product_id', $filter['product_id'])
+            //     ->where('product_id', $product_id)
             //     ->where('pri_type_id', 1)
             //     ->limit(1)
             //     ->get()->row();
             $accessoriesCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
             $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
-            if ($filter['price_type'] == 1) {
+            if ($price_type == 1) {
                 // with Cases
                 $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price'] * $invoice_details[0]['quantity'];
                 $product_price = $invoice_details[0]['whole_price'];
@@ -255,7 +251,7 @@ class Crefund extends MX_Controller
 
             if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
                 // assemply
-                if ($filter['price_type'] == 1) {
+                if ($price_type == 1) {
                     // with Cases
                     $invoice_details[0]['total_price'] = 0;
                     $product_price = 0;
@@ -266,7 +262,7 @@ class Crefund extends MX_Controller
                     $invProducts = $this->db->select('product_id')
                         ->from('invoice_details')
                         ->where('invoice_id', $invoice_details[0]['invoice_id'])
-                        ->where('product_id !=', $filter['product_id'])
+                        ->where('product_id !=', $product_id)
                         ->order_by('p.product_name')
                         ->get()->result();
 
@@ -299,28 +295,28 @@ class Crefund extends MX_Controller
                 }
             }
 
-            $total_discount = $invoice_details[0]['discount'] * $filter['quantity'];
-            $total_discount += $invoice_details[0]['invoice_discount'] * $filter['quantity'];
-            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $filter['quantity'])) - $total_discount;
+            $total_discount = $invoice_details[0]['discount'] * $quantity;
+            $total_discount += $invoice_details[0]['invoice_discount'] * $quantity;
+            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity)) - $total_discount;
             $total_return_without_discount = $total_return + $total_discount;
 
             //total vat
-            $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $filter['product_id'])->get()->row();
+            $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $product_id)->get()->row();
             if (!empty($i_vat) && $invoice[0]['is_quotation'] == 0) {
-                $tota_vat = ($product_price * ($i_vat->tax_percentage / 100)) * $filter['quantity'];
+                $tota_vat = ($product_price * ($i_vat->tax_percentage / 100)) * $quantity;
             } else {
                 $tota_vat = 0;
             }
             $createdate = date('Y-m-d H:i:s');
             // total supplier price
-            $cogs_price = $invoice_details[0]['supplier_rate'] * $filter['quantity'];
+            $cogs_price = $invoice_details[0]['supplier_rate'] * $quantity;
             $bank_return = $total_return + $tota_vat;
             //return installment
             if ($invoice[0]['is_installment']) {
                 $total_installment_return = $total_return + $tota_vat;
                 $temp = 0;
                 $return = 0;
-                $sql = "select * from invoice_installment where invoice_id ='" . $filter['invoice_id'] . "';";
+                $sql = "select * from invoice_installment where invoice_id ='" . $invoice_id . "';";
                 $result = $this->db->query($sql);
                 $invoice_installment  = $result->result_array();
                 $invoice_installment  = array_reverse($invoice_installment);
@@ -383,22 +379,7 @@ class Crefund extends MX_Controller
                 'CreateDate' => $createdate,
                 'IsAppove' => 1
             );
-            //7th paid_amount depit if full paid 
-            // $customer_depit = array(
-            //     'fy_id' => $find_active_fiscal_year->id,
-            //     'VNo' => 'Inv-' . $filter['invoice_id'],
-            //     'Vtype' => 'Sales',
-            //     'VDate' => $createdate,
-            //     'COAID' => $customer_head->HeadCode,
-            //     'Narration' => 'Sales "paid_amount" depit by customer id: ' . $customer_head->HeadName . '(' . $customer_id . ')',
-            //     'Debit' => $total_return+$tota_vat,
-            //     'Credit' => 0,
-            //     'IsPosted' => 1,
-            //     'CreateBy' => $receive_by,
-            //     'CreateDate' => $createdate,
-            //     //'IsAppove' => 0
-            //     'IsAppove' => 1
-            // );
+
             $this->db->insert('acc_transaction', $customer_credit);
             // 2nd Allowed Discount credit
             $allowed_discount_credit = array(
@@ -509,9 +490,9 @@ class Crefund extends MX_Controller
             }
             $invoice_return = array(
                 'return_invoice_id' => $return_invoice_id,
-                'invoice_id'        => $filter['invoice_id'],
-                'return_quantity'   => $filter['quantity'],
-                'product_id'        => $filter['product_id'],
+                'invoice_id'        => $invoice_id,
+                'return_quantity'   => $quantity,
+                'product_id'        => $product_id,
                 'rate'              => $product_price,
                 'customer_id'       => $customer_id,
                 'employee_id'       => $invoice[0]['employee_id'],
@@ -519,21 +500,15 @@ class Crefund extends MX_Controller
                 'total_return'      => $total_return + $tota_vat + $total_discount,
             );
             $this->db->insert('invoice_return', $invoice_return);
+
+            $invoiceData = $this->db->select('*')->from('invoice')->where('invoice_id', $invoice_id)->limit(1)->get()->row();
+            $this->db->set('paid_amount', $invoiceData->paid_amount + $total_return + $tota_vat)
+                ->set('due_amount', $invoiceData->due_amount - $total_return + $tota_vat)
+                ->where('invoice_id', $invoice_id)
+                ->update('invoice');
         }
 
-        // $returninvoice_id=$this->db->insert_id();
-        // update invoice paid amount
-        $invoiceData = $this->db->select('*')->from('invoice')->where('invoice_id', $filter['invoice_id'])->limit(1)->get()->row();
-        $this->db->set('paid_amount', $invoiceData->paid_amount + $total_return + $tota_vat)
-            ->set('due_amount', $invoiceData->due_amount - $total_return + $tota_vat)
-            ->where('invoice_id', $filter['invoice_id'])
-            ->update('invoice');
-        // }
-
-
         return redirect(base_url('dashboard/Crefund/return_invoice/' . $return_invoice_id));
-
-        // redirect('dashboard/Crefund/new_refund' . $filter['invoice_id']);
     }
 
     public function return_invoice($returninvoice_id)
@@ -653,16 +628,57 @@ class Crefund extends MX_Controller
         echo json_encode($result);
     }
 
+    public function get_customer_invoices()
+    {
+        $customer_id = $this->input->post('customer_id', true);
+
+        $invoices = $this->db->select('a.*')
+            ->from('invoice a')
+            ->where('a.customer_id', $customer_id)
+            ->order_by('a.invoice', 'desc')
+            ->get()
+            ->result();
+
+        $options = '';
+        foreach ($invoices as $inv) {
+            $options .= "<option value='{$inv->invoice_id}'>" . $inv->invoice . "</option>";
+        }
+
+        echo $options;
+    }
+
+    public function get_customer_invoice_products()
+    {
+        $customer_id = $this->input->post('customer_id', true);
+
+        $invoices = $this->db->select('p.*')
+            ->from('invoice a')
+            ->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left')
+            ->join('product_information p', 'p.product_id = b.product_id', 'left')
+            ->where('a.customer_id', $customer_id)
+            ->order_by('a.invoice', 'desc')
+            ->get()
+            ->result();
+
+        $options = '';
+        foreach ($invoices as $inv) {
+            $options .= "<option value='{$inv->product_id}'>" . $inv->product_name . "</option>";
+        }
+
+        echo $options;
+    }
+
     public function get_invoice_by_product()
     {
         $customer_id = $this->input->post('customer_id', true);
+        $type = $this->input->post('type', true);
+        $invoice_id = $this->input->post('invoice_id', true);
         $product_id = $this->input->post('product_id', true);
 
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('product_id[]', display('product_name'), 'required');
         $this->form_validation->set_rules('customer_id', display('customer_name'), 'required');
 
-        $product_id = is_array($product_id) ? $product_id[0] : $product_id;
+        // $product_id = is_array($product_id) ? $product_id[0] : $product_id;
 
         if ($this->form_validation->run() == false) {
             $this->session->set_userdata(array('error_message' => display('failed_try_again')));
@@ -670,15 +686,28 @@ class Crefund extends MX_Controller
             return;
         }
 
-        $invoices = $this->db->select('a.*,b.*, p.*, b.invoice_discount as item_invoice_discount, (b.quantity - b.return_quantity) as ava_quantity')
-            ->from('invoice a')
-            ->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left')
-            ->join('product_information p', 'p.product_id = b.product_id', 'left')
-            ->where('b.product_id', $product_id)
-            ->where('a.customer_id', $customer_id)
-            ->order_by('a.invoice', 'desc')
-            ->get()
-            ->result();
+        if ($type == 1) {
+            // select by invoice
+            $invoices = $this->db->select('a.*,b.*, p.*, b.invoice_discount as item_invoice_discount, (b.quantity - b.return_quantity) as ava_quantity')
+                ->from('invoice a')
+                ->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left')
+                ->join('product_information p', 'p.product_id = b.product_id', 'left')
+                ->where('b.invoice_id', $invoice_id)
+                ->where('a.customer_id', $customer_id)
+                ->order_by('a.invoice', 'desc')
+                ->get()
+                ->result();
+        } else {
+            $invoices = $this->db->select('a.*,b.*, p.*, b.invoice_discount as item_invoice_discount, (b.quantity - b.return_quantity) as ava_quantity')
+                ->from('invoice a')
+                ->join('invoice_details b', 'b.invoice_id = a.invoice_id', 'left')
+                ->join('product_information p', 'p.product_id = b.product_id', 'left')
+                ->where_in('b.product_id', $product_id)
+                ->where('a.customer_id', $customer_id)
+                ->order_by('a.invoice', 'desc')
+                ->get()
+                ->result();
+        }
 
         // echo "<pre>";var_dump($invoices);exit;
 
@@ -690,7 +719,6 @@ class Crefund extends MX_Controller
             'product_id' => $product_id,
             'customer_name' => $this->input->post('customer_name', true),
             'product_name' => $this->input->post('product_name', true),
-            'variant_id' => is_array($this->input->post('variant_id', true)) ? $this->input->post('variant_id', true)[0] : $this->input->post('variant_id', true),
         ];
         $data['module'] = "dashboard";
         $data['page'] = "refund/add_refund_form";
