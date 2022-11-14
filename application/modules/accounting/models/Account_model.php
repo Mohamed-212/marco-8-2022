@@ -315,7 +315,7 @@ class Account_model extends CI_Model
         ->where('IsAppove', 1)
         ->where('VDate >= ', $fiscal_year->start_date)
         ->where('VDate <= ', $dtpFromDate)
-        ->where('VNo != ','OP-'.$rdata->HeadCode)
+        ->where('VNo != ', 'OP-' . $rdata->HeadCode)
         ->where('COAID', $rdata->HeadCode)
         ->group_by('acc_transaction.COAID')
         ->get()
@@ -1186,7 +1186,7 @@ class Account_model extends CI_Model
         'IsPosted'  => $IsPosted,
         'CreateBy'  => $createdby,
         'CreateDate' => $createdate,
-        'IsAppove'  => 0
+        'IsAppove'  => 1
       );
       $this->db->insert('acc_transaction', $debitinsert);
       $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $cAID)->get()->row();
@@ -1202,9 +1202,22 @@ class Account_model extends CI_Model
         'IsPosted'  => $IsPosted,
         'CreateBy'  => $createdby,
         'CreateDate' => $createdate,
-        'IsAppove'  => 0
+        'IsAppove'  => 1
       );
       $this->db->insert('acc_transaction', $cinsert);
+
+      if (substr($dbtid, 0, 3) === '113') {
+        $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dbtid)->get()->row();
+        $data2 = array(
+          'transaction_id' => generator(15),
+          'receipt_no' => $this->auth->generator(15),
+          'customer_id' => $customer->customer_id,
+          'date' => date('Y-m-d', $createdate),
+          'amount' => $Damnt,
+          'status' => 1
+        );
+        $this->db->insert('customer_ledger', $data2);
+      }
     }
     if ($returnData) {
       $debit = $Debit;
@@ -1257,7 +1270,7 @@ class Account_model extends CI_Model
         'IsPosted'  => $IsPosted,
         'CreateBy'  => $createdby,
         'CreateDate' => $createdate,
-        'IsAppove'  => 0
+        'IsAppove'  => 1
       );
       $this->db->insert('acc_transaction', $debitinsert);
       $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dAID)->get()->row();
@@ -1273,9 +1286,25 @@ class Account_model extends CI_Model
         'IsPosted'  => $IsPosted,
         'CreateBy'  => $createdby,
         'CreateDate' => $createdate,
-        'IsAppove'  => 0
+        'IsAppove'  => 1
       );
       $this->db->insert('acc_transaction', $cinsert);
+
+      if (substr($crtid, 0, 3) === '113') {
+        $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
+        $data2 = array(
+          'transaction_id' => generator(15),
+          'customer_id' => $customer->customer_id,
+          'date' => date('Y-m-d', $createdate),
+          'amount' => $Cramnt,
+          'payment_type' => 1,
+          'description' => 'ITP',
+          'status' => 1
+        );
+        $this->db->insert('customer_ledger', $data2);
+      }
+
+
       $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dAID)->get()->row();
     }
     if ($returnData) {
@@ -1405,7 +1434,7 @@ class Account_model extends CI_Model
         'IsPosted'  => $IsPosted,
         'CreateBy'  => $CreateBy,
         'CreateDate' => $createdate,
-        'IsAppove'  => 0,
+        'IsAppove'  => 1,
       );
       $this->db->insert('acc_transaction', $contrainsert);
     }
@@ -1458,9 +1487,37 @@ class Account_model extends CI_Model
         'IsPosted'  => $IsPosted,
         'CreateBy'  => $CreateBy,
         'CreateDate' => $createdate,
-        'IsAppove'  => 0
+        'IsAppove'  => 1
       );
       $this->db->insert('acc_transaction', $contrainsert);
+
+      if (substr($crtid, 0, 3) === '113') {
+        $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
+        if ((float)$Cramnt > 0) {
+          $data2 = array(
+            'transaction_id' => generator(15),
+            'customer_id' => $customer->customer_id,
+            'date' => date('Y-m-d', $createdate),
+            'amount' => $Cramnt,
+            'payment_type' => 1,
+            'description' => 'ITP',
+            'status' => 1
+          );
+          $this->db->insert('customer_ledger', $data2);
+        }
+
+        if ((float)$debits > 0) {
+          $data2 = array(
+            'transaction_id' => generator(15),
+            'receipt_no' => $this->auth->generator(15),
+            'customer_id' => $customer->customer_id,
+            'date' => date('Y-m-d', $createdate),
+            'amount' => $debits,
+            'status' => 1
+          );
+          $this->db->insert('customer_ledger', $data2);
+        }
+      }
     }
     if ($returnData) {
       return compact('voucher_no', 'dAID', 'cAID', 'debit', 'credit', 'VDate', 'Narration');
@@ -1494,21 +1551,21 @@ class Account_model extends CI_Model
 
         if (in_array($trans->Vtype, ['CV', 'DV', 'JV']) && substr($trans->COAID, 0, 3) === '113') {
           // echo "<pre>";var_dump($trans);exit;
-    
+
           // insert into customer ledger
           if ($trans->Vtype == 'CV' || ($trans->Vtype == 'JV' && (float)$trans->Credit > 0)) {
-              $data2 = array(
-                'transaction_id' => generator(15),
-                'customer_id' => $customer->customer_id,
-                'date' => date('Y-m-d', strtotime($trans->CreateDate)),
-                'amount' => $trans->Credit,
-                'payment_type' => 1,
-                'description' => 'ITP',
-                'status' => 1
+            $data2 = array(
+              'transaction_id' => generator(15),
+              'customer_id' => $customer->customer_id,
+              'date' => date('Y-m-d', strtotime($trans->CreateDate)),
+              'amount' => $trans->Credit,
+              'payment_type' => 1,
+              'description' => 'ITP',
+              'status' => 1
             );
             $this->db->insert('customer_ledger', $data2);
-          } 
-          
+          }
+
           if ($trans->Vtype == 'DV' || ($trans->Vtype == 'JV' && (float)$trans->Debit > 0)) {
             //Insert to customer ledger Table 
             $data2 = array(
@@ -1524,7 +1581,7 @@ class Account_model extends CI_Model
         }
       }
     }
-    
+
     return $this->db->where('VNo', $data['VNo'])
       ->update('acc_transaction', $data);
   }
