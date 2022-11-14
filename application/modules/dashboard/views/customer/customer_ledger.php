@@ -80,6 +80,7 @@
 								<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?= $this->input->post('to_date', TRUE); ?>" required>
 							</div>
 							<button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
+							<button type="submit" formaction="<?=base_url('dashboard/Ccustomer/customer_ledger_print')?>" class="btn btn-primary"><?php echo display('print') ?></button>
 							<?php echo form_close() ?>
 						</div>
 					</div>
@@ -189,8 +190,8 @@
 									<tr>
 										<th><?php echo display('date') ?></th>
 										<th><?php echo display('invoice_no') ?></th>
-										<th><?php echo display('receipt_no') ?></th>
-										<th><?php echo display('description') ?></th>
+										<!-- <th><?php echo display('receipt_no') ?></th>
+										<th><?php echo display('description') ?></th> -->
 										<th class="text-right mr_20"><?php echo display('debit') ?></th>
 										<th class="text-right mr_20"><?php echo display('credit') ?></th>
 										<th class="text-right mr_20"><?php echo display('balance') ?></th>
@@ -238,12 +239,12 @@
 														} ?>
 													<?php endif ?>
 												</td>
-												<td>
+												<!-- <td>
 													<?php echo html_escape($v_ledger['receipt_no']); ?>
 												</td>
 												<td>
 													<?php html_escape($v_ledger['description']) ?>
-												</td>
+												</td> -->
 												<td class="text-right">
 
 													<?php

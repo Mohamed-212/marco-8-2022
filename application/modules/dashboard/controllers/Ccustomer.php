@@ -227,6 +227,19 @@ class Ccustomer extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
+    //Customer Ledger Report
+    public function customer_ledger_print()
+    {
+        $customer_id = $this->input->post('customer_id', TRUE);
+        $from_date   = $this->input->post('from_date', TRUE);
+        $to_date     = $this->input->post('to_date', TRUE);
+
+        
+        $content = $this->lcustomer->customerledger_data_print($customer_id, $from_date, $to_date);
+        
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     //Customer Final Ledger
     public function customerledger($customer_id)
     {

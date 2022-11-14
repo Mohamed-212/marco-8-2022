@@ -373,6 +373,94 @@ class Lcustomer {
 		$singlecustomerdetails = $CI->parser->parse('dashboard/customer/customer_ledger',$data,true);
 		return $singlecustomerdetails;
 	}
+
+	public function customerledger_data_print($customer_id, $from_date = null, $to_date = null)
+	{
+		$CI =& get_instance();
+		$CI->load->model('dashboard/Customers');
+		$CI->load->model('web/Homes');
+		$CI->load->model('dashboard/Soft_settings');
+		$CI->load->library('dashboard/occational');
+		$CI->load->model('dashboard/Customer_contact_info');
+		$not_report = false;
+		if ($from_date === 'no') {
+			$from_date = null;
+			$not_report = true;
+		}
+		$customer_detail = $CI->Customers->customer_personal_data($customer_id);
+		$ledger 	    =$CI->Customers->customerledger_tradational($customer_id,$from_date,$to_date);
+		$summary 	    =$CI->Customers->customer_transection_summary($customer_id,$from_date,$to_date);
+		$contact_info = $CI->Customer_contact_info->get_contact_info_data($customer_id);
+		$customers_list =$CI->Customers->customer_list(); 
+
+		$balance = 0;
+		if(!empty($ledger)){
+			foreach($ledger as $index=>$value){
+				$ledger[$index]['final_date'] = $CI->occational->dateConvert($ledger[$index]['date']);
+				
+				// get invoice no
+				if (!empty($ledger[$index]['invoice_no'])) {
+					$invoice = $CI->db->select('invoice')->from('invoice')->where('invoice_id', $ledger[$index]['invoice_no'])->get()->row();
+					$ledger[$index]['invoice'] = $invoice->invoice;
+				}
+				
+
+				if(empty($ledger[$index]['receipt_no']))
+				{
+					$ledger[$index]['debit']=$ledger[$index]['amount'];
+					$ledger[$index]['balance']=$balance-$ledger[$index]['amount'];
+					$ledger[$index]['credit']="";
+					$balance=$ledger[$index]['balance'];
+					
+				}
+				else
+				{
+					$ledger[$index]['credit']=$ledger[$index]['amount'];
+					$ledger[$index]['balance']=$balance+$ledger[$index]['amount'];
+					$ledger[$index]['debit']="";
+					$balance=$ledger[$index]['balance'];
+				}
+				
+			}
+		}
+		$country_name = $CI->Homes->get_country_name($customer_detail[0]['country']);
+		if(!empty($country_name)){
+		    $country_name=$country_name->name;
+		}else{
+		    $country_name='';
+		}
+		$company_info 	= $CI->Customers->retrieve_company();
+		$currency_details = $CI->Soft_settings->retrieve_currency_info();
+
+		$data=array(
+			'title'				=> display('customer_ledger'),
+			'customer_id' 		=> $customer_detail[0]['customer_id'],
+			'customer_name' 	=> $customer_detail[0]['customer_name'],
+			'customer_address' 	=> $customer_detail[0]['customer_short_address'],
+			'customer_address_1' 	=> $customer_detail[0]['customer_address_1'],
+			'customer_mobile' 	=> $customer_detail[0]['customer_mobile'],
+			'customer_email' 	=> $customer_detail[0]['customer_email'],
+			'city' 				=> $customer_detail[0]['city'],
+			'state' 			=> $customer_detail[0]['state'],
+			'country' 			=> $country_name,
+			'zip' 				=> $customer_detail[0]['zip'],
+			'company' 			=> $customer_detail[0]['company'],
+			'ledger' 			=> $ledger,
+			'total_credit'		=> number_format($summary[0][0]['total_credit'], 2, '.', ','),
+			'total_debit'		=> number_format($summary[1][0]['total_debit'], 2, '.', ','),
+			'total_balance'		=> number_format(-$summary[1][0]['total_debit']+$summary[0][0]['total_credit'], 2, '.', ','),
+			// 'previous_balance'  => number_format($summary[2][0]['previous_balance'], 2, '.', ','),
+			'company_info'		=> $company_info,
+			'currency' => $currency_details[0]['currency_icon'],
+			'position' => $currency_details[0]['currency_position'],
+			'contact_info' => $contact_info,
+			'customers_list' => $customers_list,
+			'not_report' => $not_report,
+			);
+
+		$singlecustomerdetails = $CI->parser->parse('dashboard/customer/customer_ledger_print',$data,true);
+		return $singlecustomerdetails;
+	}
 	//Search customer
 	public function customer_search_list($cat_id,$company_id)
 	{
