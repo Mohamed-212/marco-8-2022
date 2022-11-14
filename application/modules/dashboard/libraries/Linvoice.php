@@ -290,6 +290,7 @@ class Linvoice {
             'cardpayments'	     =>$cardpayments,
 			'hide_discount' => $hide_discount,
 			'customer_balance' => $invoice_detail[0]['customer_balance'],
+			'customer_balance_after' => $invoice_detail[0]['customer_balance_after'],
 			);
 		$data['Soft_settings'] = $CI->Soft_settings->retrieve_setting_editdata();
 		$emp_name = $emp_id = null;

@@ -724,11 +724,19 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <th class="bt_bb_0"><?php echo display('customer_balance') ?>
+                                                                                        <th class="bt_bb_0"><?php echo display('customer_balance_before') ?>
                                                                                             :
                                                                                         </th>
                                                                                         <td class="bt_bb_0">
                                                                                             <?php echo (($position == 0) ? $currency . " " . $customer_balance : $customer_balance . " " . $currency) ?>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th class="bt_bb_0"><?php echo display('customer_balance_after') ?>
+                                                                                            :
+                                                                                        </th>
+                                                                                        <td class="bt_bb_0">
+                                                                                            <?php echo (($position == 0) ? $currency . " " . $customer_balance_after : $customer_balance_after . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>

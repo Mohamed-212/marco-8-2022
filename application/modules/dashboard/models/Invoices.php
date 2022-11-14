@@ -287,7 +287,7 @@ class Invoices extends CI_Model {
                 }
 
                 //payment account existing check
-                if ((float)$this->input->post('paid_amount', TRUE) > 0 && $payment_id == null) {
+                if ((float)$this->input->post('paid_amount', TRUE) > 0 && empty($payment_id)) {
                     $this->session->set_userdata(array('error_message' => display('please_select_payment')));
                     redirect('dashboard/Cinvoice');
                 }
@@ -394,6 +394,10 @@ class Invoices extends CI_Model {
                     // $this->db->insert('customer_ledger', $data2);
                 // }
 
+                // get current customer balance after invoice creating
+                $customerSummaryAfterInvoice = $this->Customers->customer_transection_summary($customer_id);
+                $customerBalanceAfterInvoice = number_format(-$customerSummaryAfterInvoice[1][0]['total_debit']+$customerSummaryAfterInvoice[0][0]['total_credit'], 2, '.', ',');
+
                 //Data inserting into invoice table
                 (($this->input->post('total_cgst', true) && $this->input->post('is_quotation', true) == 0) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
                 (($this->input->post('total_sgst', true)) ? $total_sgsti = $this->input->post('total_sgst', true) : $total_sgsti = 0);
@@ -430,6 +434,7 @@ class Invoices extends CI_Model {
                     'quotation_id' => $quotation_id,
                     'product_type' => $product_type,
                     'customer_balance' => $this->input->post('customer_balance', TRUE),
+                    'customer_balance_after' => $customerBalanceAfterInvoice,
                 );
                 $this->db->insert('invoice', $data);
 
