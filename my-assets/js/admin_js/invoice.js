@@ -298,8 +298,8 @@ function submit_form(e) {
                             .done(function () {
                                 if (!valid) return;
                                 if (
-                                    Math.round(dueAmount) ==
-                                    Math.round(installmentAmount)
+                                    parseFloat(dueAmount) ==
+                                    parseFloat(installmentAmount)
                                 ) {
                                     $(
                                         'form#validate, form#normalinvoice'
@@ -313,7 +313,7 @@ function submit_form(e) {
                         return;
                     }
 
-                    if (Math.round($('#paidAmount').val()) > 0) {
+                    if (parseFloat($('#paidAmount').val()) > 0) {
                         if ($('#payment_id').val() != '') {
                             $('form#validate, form#normalinvoice').submit();
                         } else {
@@ -499,8 +499,8 @@ function invoice_paidamount() {
     );
     // customer_balance = 500;
     customer_balance = customer_balance >= 0 ? customer_balance : 0;
-    var t = parseFloat($('#grandTotal').val()),
-        a = parseFloat($('#paidAmount').val()),
+    var t = parseFloat($('#grandTotal').val() || '0.00'),
+        a = parseFloat($('#paidAmount').val() || '0.00'),
         e = t - customer_balance - a;
     var test = e.toFixed(2);
 

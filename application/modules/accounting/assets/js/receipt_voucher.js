@@ -131,8 +131,8 @@ function calculateSum() {
 
 //Inovice paid amount
 function invoice_paidamount() {
-    var t = $("#grandTotal").val(),
-            a = $("#paidAmount").val(),
+    var t = parseFloat($("#grandTotal").val() || '0.00'),
+            a = parseFloat($("#paidAmount").val() || '0.00'),
             e = t - a;
     var test = e.toFixed(2);
     $("#dueAmmount").val(test)

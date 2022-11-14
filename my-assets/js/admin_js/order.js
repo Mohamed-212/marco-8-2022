@@ -219,7 +219,7 @@ function submit_form(e) {
                     installmentAmount += parseFloat(this.value);
                 }).promise().done(function () {
                     if (!valid) return;
-                    if (Math.round(dueAmount) == Math.round(installmentAmount)) {
+                    if (parseFloat(dueAmount) == parseFloat(installmentAmount)) {
                         $("form#validate, form#normalinvoice").submit();
                     } else {
                         alert(installment_amount_is_not_valid);
@@ -230,7 +230,7 @@ function submit_form(e) {
                 return;
             }
 
-            if (Math.round($('#paidAmount').val()) > 0) {
+            if (parseFloat($('#paidAmount').val()) > 0) {
                 if ($('#payment_id').val() != '') {
                     $("form#validate, form#normalinvoice").submit();
                 } else {
@@ -396,11 +396,14 @@ function invoice_paidamount() {
     var customer_balance = parseFloat(
         $('#customer_balance').val().replace(/\,/gi, '').replace(/\./gi, '')
     );
+    // customer_balance = 500;
     customer_balance = customer_balance >= 0 ? customer_balance : 0;
-    var t = parseFloat($('#grandTotal').val()),
-        a = parseFloat($('#paidAmount').val()),
+    var t = parseFloat($('#grandTotal').val() || '0.00'),
+        a = parseFloat($('#paidAmount').val() || '0.00'),
         e = t - customer_balance - a;
     var test = e.toFixed(2);
+
+    console.log(t, customer_balance, a);
 
     if (customer_balance >= t) {
         test = 0;
@@ -531,24 +534,31 @@ function add_month() {
 
 //Invoice full paid
 function full_paid() {
-    // var customer_balance = $('#customer_balance').val();
-    var elem = $("#is_quotation");
+    var customer_balance = parseFloat(
+        $('#customer_balance').val().replace(/\,/gi, '').replace(/\./gi, '')
+    );
+    // customer_balance = 500;
+    var elem = $('#is_quotation');
     if (elem.prop('checked') == true) {
         calculateSumQuotation();
     } else {
         calculateSum();
     }
-    // var grandTotal = $("#grandTotal").val();
-    // if (parseFloat(customer_balance) > parseFloat(grandTotal)) {
-    //     $("#paidAmount").val(0);
+    var grandTotal = parseFloat($('#grandTotal').val());
+    // if (customer_balance > grandTotal) {
+    //     $('#paidAmount').val(0);
     // } else {
-    //     $("#paidAmount").val(grandTotal - Math.abs(customer_balance));
+    //     $('#paidAmount').val(grandTotal - Math.abs(customer_balance));
     // }
+
     $('#paidAmount').val(parseFloat($('#dueAmmount').val()));
+
     invoice_paidamount();
     $('.installment_setup').hide();
-    $('#installment_id, #full').removeClass('btn-success').addClass('btn-warning');
-    $("#is_installment").val(0);
+    $('#installment_id, #full')
+        .removeClass('btn-success')
+        .addClass('btn-warning');
+    $('#is_installment').val(0);
     $('#full').removeClass('btn-warning').addClass('btn-success');
 }
 
