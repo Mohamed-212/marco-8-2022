@@ -10,6 +10,7 @@
 $CI =& get_instance();
 $CI->load->model('dashboard/Color_backends');
 $colors = $CI->Color_backends->retrieve_color_editdata();
+
 ?>
 <!-- Favicon and touch icons -->
 <link rel="shortcut icon" href="<?php echo base_url((!empty($setting['favicon'])?$setting['favicon']:'assets/img/icons/favicon.png')) ?>" type="image/x-icon">
@@ -115,5 +116,14 @@ $colors = $CI->Color_backends->retrieve_color_editdata();
 <script defer src="<?php echo base_url('assets/js/alpinejs.min.js') ?>"></script>
 <!-- Dynamic color -->
 <?php $this->load->view('template/includes/color', array('colors' => $colors));?>
+
+<?php if ($setting['language'] == 'arabic') : ?>
+    <style>
+        .dashbox .icon {
+            left: 10px !important;
+            right: 50%;
+        }
+    </style>
+<?php endif?>
 
 
