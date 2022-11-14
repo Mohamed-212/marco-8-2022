@@ -606,7 +606,7 @@
                                     <tr>
                                         <td align="center">
                                             <input type="hidden" name="baseUrl" class="baseUrl" value="<?php echo base_url(); ?>" />
-                                            <input class="btn btn-warning" id="full" value="<?php echo display('full_paid') ?>" tabindex="15" onclick="full_paid();" type="button">
+                                            <input style="visibility: hidden;" class="btn btn-warning" id="full" value="<?php echo display('full_paid') ?>" tabindex="15" onclick="full_paid();" type="button">
 
                                             <input type="hidden" name="is_installment" id="is_installment" value="0">
                                             <?php if (!isset($order)) : ?>

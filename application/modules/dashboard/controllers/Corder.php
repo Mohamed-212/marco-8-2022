@@ -73,7 +73,7 @@ class Corder extends MX_Controller
                     'employee' => $this->empdropdown(),
                     'all_pri_type' => $all_pri_type,
                     'order' => true,
-                    'total_balance'	=> round(-$summary[1][0]['total_debit']+$summary[0][0]['total_credit'], 2),
+                    'total_balance'    => round(-$summary[1][0]['total_debit'] + $summary[0][0]['total_credit'], 2),
                 );
                 $data['module'] = "dashboard";
                 $data['page'] = "order/add_order_form";
@@ -195,33 +195,33 @@ class Corder extends MX_Controller
     //Insert new invoice
     public function insert_order()
     {
-        if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
-            $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
+        // if ($this->input->post('due_amount', TRUE) > 0 && $this->input->post('is_installment', TRUE) == 0) {
+        //     $this->session->set_userdata(array('error_message' => display('choose_installment_if_invoice_not_full_paid')));
+        //     $this->new_order();
+        // } else {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
+        // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
+        // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
+        $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
+
+        $this->form_validation->set_rules('available_quantity[]', display('available_quantity'), 'required|greater_than[0]');
+        $this->form_validation->set_rules('product_quantity[]', display('quantity'), 'required|greater_than[0]');
+
+        if ($this->form_validation->run() == false) {
+            $this->session->set_userdata(array('error_message' => display('failed_try_again')));
+            // $this->index();
             $this->new_order();
         } else {
-            $this->load->library('form_validation');
-            $this->form_validation->set_rules('product_id[]', display('product_id'), 'required');
-            // $this->form_validation->set_rules('variant_id[]', display('variant'), 'required');
-            // $this->form_validation->set_rules('batch_no[]', display('batch_no'), 'required');
-            $this->form_validation->set_rules('employee_id', display('employee_id'), 'required');
-
-            $this->form_validation->set_rules('available_quantity[]', display('available_quantity'), 'required|greater_than[0]');
-            $this->form_validation->set_rules('product_quantity[]', display('quantity'), 'required|greater_than[0]');
-
-            if ($this->form_validation->run() == false) {
-                $this->session->set_userdata(array('error_message' => display('failed_try_again')));
-                // $this->index();
-                $this->new_order();
+            $order_id = $this->Orders->order_entry();
+            $this->session->set_userdata(array('message' => display('successfully_added')));
+            if ($this->input->post('pos', TRUE) === 'pos') {
+                redirect('dashboard/Corder/pos_order_inserted_data_redirect/' . $order_id . '?place=pos');
             } else {
-                $order_id = $this->Orders->order_entry();
-                $this->session->set_userdata(array('message' => display('successfully_added')));
-                if ($this->input->post('pos', TRUE) === 'pos') {
-                    redirect('dashboard/Corder/pos_order_inserted_data_redirect/' . $order_id . '?place=pos');
-                } else {
-                    redirect('dashboard/Corder/order_inserted_data/' . $order_id);
-                }
+                redirect('dashboard/Corder/order_inserted_data/' . $order_id);
             }
         }
+        // }
     }
 
     //Retrive right now inserted data to cretae html
