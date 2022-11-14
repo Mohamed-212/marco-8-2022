@@ -1214,7 +1214,8 @@ class Account_model extends CI_Model
           'customer_id' => $customer->customer_id,
           'date' => date('Y-m-d', $createdate),
           'amount' => $Damnt,
-          'status' => 1
+          'status' => 1,
+          'voucher' => 'DV'
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1299,7 +1300,8 @@ class Account_model extends CI_Model
           'amount' => $Cramnt,
           'payment_type' => 1,
           'description' => 'ITP',
-          'status' => 1
+          'status' => 1,
+          'voucher' => 'CV'
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1501,7 +1503,8 @@ class Account_model extends CI_Model
             'amount' => $Cramnt,
             'payment_type' => 1,
             'description' => 'ITP',
-            'status' => 1
+            'status' => 1,
+            'voucher' => 'JV'
           );
           $this->db->insert('customer_ledger', $data2);
         }
@@ -1513,7 +1516,8 @@ class Account_model extends CI_Model
             'customer_id' => $customer->customer_id,
             'date' => date('Y-m-d', $createdate),
             'amount' => $debits,
-            'status' => 1
+            'status' => 1,
+            'voucher' => 'JV'
           );
           $this->db->insert('customer_ledger', $data2);
         }

@@ -356,7 +356,8 @@ class Crefund extends MX_Controller
                 'amount' => $total_return + $tota_vat,
                 'payment_type' => 1,
                 'description' => 'ITP',
-                'status' => 1
+                'status' => 1,
+                'voucher' => 'return'
             );
             $this->db->insert('customer_ledger', $customer_ledger_data);
 

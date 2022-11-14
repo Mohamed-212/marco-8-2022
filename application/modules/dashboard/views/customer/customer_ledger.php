@@ -193,7 +193,7 @@
 										<th><?php echo display('description') ?></th>
 										<th class="text-right mr_20"><?php echo display('debit') ?></th>
 										<th class="text-right mr_20"><?php echo display('credit') ?></th>
-										<!-- <th class="text-right mr_20"><?php echo display('balance') ?></th> -->
+										<th class="text-right mr_20"><?php echo display('balance') ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -205,11 +205,34 @@
 											<tr>
 												<td><?php echo empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) ? '' : html_escape(date('d-m-Y', strtotime($v_ledger['cl_created_at']))); ?></td>
 												<td>
+													<?= empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) && empty($v_ledger['voucher']) ? display('previous_balance') : ''?>
+
+													<?php
+														if (!empty($v_ledger['voucher'])) {
+															if ($v_ledger['voucher'] == 'CV') {
+																echo display('credit_voucher');
+															}
+															if ($v_ledger['voucher'] == 'DV') {
+																echo display('debit_voucher');
+															}
+															if ($v_ledger['voucher'] == 'JV') {
+																echo display('journal_voucher');
+															}
+															if ($v_ledger['voucher'] == 'return') {
+																echo display('return');
+															}
+														}
+													?>
+													
+
 													<?php if (!empty($v_ledger['invoice_no'])) : ?>
 														<?php if ($this->permission->check_label('new_sale')->access()) {
 															if ($v_ledger['invoice_no'] != 'NA') { ?>
 																<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $v_ledger['invoice_no']; ?>">
-																	<?php echo  html_escape($v_ledger['invoice_no']); ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+																<?php
+																	$invoice = $this->db->select('invoice')->from('invoice')->where('invoice_id', $v_ledger['invoice_no'])->get()->row();
+																?>
+																	<?php echo  html_escape($invoice->invoice); ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
 																</a>
 														<?php }
 														} ?>
@@ -218,7 +241,9 @@
 												<td>
 													<?php echo html_escape($v_ledger['receipt_no']); ?>
 												</td>
-												<td><?php echo html_escape($v_ledger['description']) ?></td>
+												<td>
+													<?php html_escape($v_ledger['description']) ?>
+												</td>
 												<td class="text-right">
 
 													<?php
@@ -226,7 +251,7 @@
 
 												</td>
 												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['credit'] : $v_ledger['credit'] . ' ' . $currency) ?></td>
-												<!-- <td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td> -->
+												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
 											</tr>
 
 									<?php
