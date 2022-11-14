@@ -981,6 +981,36 @@ class Lreport
         // var_dump($stock_reports);
         // exit;
 
+        // $footer = $this->retrieve_sales_report_all_details_footer(
+        //     $product_id = null,
+        //     $pricing_type = null,
+        //     $category_id = null,
+        //     $product_type = null,
+        //     $general_filter = null,
+        //     $material_filter = null,
+        //     $sales_from = null,
+        //     $sales_to = null,
+        //     $purchase_from = null,
+        //     $purchase_to = null,
+        //     $balance_from = null,
+        //     $balance_to = null,
+        //     $supplier_from = null,
+        //     $supplier_to = null,
+        //     $total_supplier_from = null,
+        //     $total_supplier_to = null,
+        //     $sell_from = null,
+        //     $sell_to = null,
+        //     $total_sell_from = null,
+        //     $total_sell_to = null,
+        //     $start_date = null,
+        //     $end_date = null,
+        //     $store_id = null,
+        //     $product_name = null
+        // );
+
+        // var_dump($footer);
+        // exit;
+
 
 
         $data = array(
@@ -1027,8 +1057,7 @@ class Lreport
         $end_date = null,
         $store_id = null,
         $product_name = null
-    )
-    {
+    ) {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
         $CI->load->model('dashboard/Suppliers');
@@ -1061,7 +1090,7 @@ class Lreport
             foreach ($filter_products as $prod) {
                 $product_ids[] = $prod['product_id'];
             }
-        } 
+        }
 
         $CI->db->reset_query();
         $products = $CI->db->select('p.product_id')->from('product_information p');
@@ -1092,7 +1121,26 @@ class Lreport
 
         $ids = ['13743348', '87977793'];
 
-        $footer = $CI->Reports->sales_report_all_details_sum_all($ids, $pricing_type, $start_date, $end_date);
+        $footer = $CI->Reports->sales_report_all_details_sum_all(
+            $ids,
+            $pricing_type,
+            $sales_from,
+            $sales_to,
+            $purchase_from,
+            $purchase_to,
+            $balance_from,
+            $balance_to,
+            $supplier_from,
+            $supplier_to,
+            $total_supplier_from,
+            $total_supplier_to,
+            $sell_from,
+            $sell_to,
+            $total_sell_from,
+            $total_sell_to,
+            $start_date,
+            $end_date
+        );
 
         return $footer;
     }

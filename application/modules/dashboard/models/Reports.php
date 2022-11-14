@@ -2283,6 +2283,20 @@ class Reports extends CI_Model
     public function sales_report_all_details_sum_all(
         $product_ids = [],
         $pricing_type = null,
+        $sales_from = null,
+        $sales_to = null,
+        $purchase_from = null,
+        $purchase_to = null,
+        $balance_from = null,
+        $balance_to = null,
+        $supplier_from = null,
+        $supplier_to = null,
+        $total_supplier_from = null,
+        $total_supplier_to = null,
+        $sell_from = null,
+        $sell_to = null,
+        $total_sell_from = null,
+        $total_sell_to = null,
         $from_date = null,
         $to_date = null
     ) {
@@ -2304,13 +2318,29 @@ class Reports extends CI_Model
 
         // $totalPurchase = 0;
         // $purchaseData = $this->Products->product_purchase_info_sum($product_ids, $from_date, $to_date);
-        $totalPurchase = $this->db->select('(SUM(open_quantity) + SUM(b.quantity)) as total_purchase')
+        $totalPurchase = $this->db->select('(SUM(open_quantity) + SUM(b.quantity)) as total_purchase, (SUM(ind.quantity) ) as total_sales, ')
             ->from('product_information a')
             ->join('product_purchase_details b', 'b.product_id = a.product_id', 'left')
+            ->join('invoice_details ind', 'ind.product_id = a.product_id', 'left')
+            // ->join('invoice_return inr', 'inr.product_id = a.product_id', 'left')
             ->where_in('a.product_id', $product_ids)
-            ->group_by('a.product_id')
-            ->having('total_purchase >', 500, true)
-            ->get()->row();
+            ->group_by('a.product_id');
+
+        if ($purchase_from) {
+            $totalPurchase->having('total_purchase >=', $sales_from);
+        }
+        if ($purchase_to) {
+            $totalPurchase->having('total_purchase <=', $sales_from);
+        }
+
+        if ($sales_from) {
+            $totalPurchase->having('total_sales >=', $sales_from);
+        }
+        if ($sales_to) {
+            $totalPurchase->having('total_sales <=', $sales_to);
+        }
+
+        $totalPurchase = $totalPurchase->get()->row();
 
         // var_dump($totalPurchase->total_purchase);exit;
         // $totalPurchase = (int) $totalOpenQuantity->total_open_quantity + (int)$purchaseData->total_purchase_quantity;
