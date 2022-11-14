@@ -231,20 +231,26 @@ class Crefund extends MX_Controller
                 ->where('product_id', $product_id)
                 ->limit(1)
                 ->get()->row();
-            // $with_cases_price = $this->db->select('product_price')
-            //     ->from('pricing_types_product')
-            //     ->where('product_id', $product_id)
-            //     ->where('pri_type_id', 1)
-            //     ->limit(1)
-            //     ->get()->row();
+            $with_cases_price = $this->db->select('product_price')
+                ->from('pricing_types_product')
+                ->where('product_id', $product_id)
+                ->where('pri_type_id', 1)
+                ->limit(1)
+                ->get()->row();
             $accessoriesCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
             $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
             if ($price_type == 1) {
                 // with Cases
+                if (empty($invoice_details[0]['whole_price'])) {
+                    $invoice_details[0]['whole_price'] = $with_cases_price->product_price;
+                }
                 $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price'] * $invoice_details[0]['quantity'];
                 $product_price = $invoice_details[0]['whole_price'];
             } else {
                 // without cases
+                if (empty($invoice_details[0]['whole_price'])) {
+                    $invoice_details[0]['sale_price'] = $without_cases_price->price;
+                }
                 $invoice_details[0]['total_price'] = $invoice_details[0]['sale_price'] * $invoice_details[0]['quantity'];
                 $product_price = $invoice_details[0]['sale_price'];
             }
