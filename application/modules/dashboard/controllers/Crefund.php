@@ -235,22 +235,22 @@ class Crefund extends MX_Controller
                 ->where('product_id', $filter['product_id'])
                 ->limit(1)
                 ->get()->row();
-            $with_cases_price = $this->db->select('product_price')
-                ->from('pricing_types_product')
-                ->where('product_id', $filter['product_id'])
-                ->where('pri_type_id', 1)
-                ->limit(1)
-                ->get()->row();
+            // $with_cases_price = $this->db->select('product_price')
+            //     ->from('pricing_types_product')
+            //     ->where('product_id', $filter['product_id'])
+            //     ->where('pri_type_id', 1)
+            //     ->limit(1)
+            //     ->get()->row();
             $accessoriesCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
             $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
             if ($filter['price_type'] == 1) {
                 // with Cases
-                $invoice_details[0]['total_price'] = $with_cases_price->product_price * $invoice_details[0]['quantity'];
-                $product_price = $with_cases_price->product_price;
+                $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price'] * $invoice_details[0]['quantity'];
+                $product_price = $invoice_details[0]['whole_price'];
             } else {
                 // without cases
-                $invoice_details[0]['total_price'] = $without_cases_price->price * $invoice_details[0]['quantity'];
-                $product_price = $without_cases_price->price;
+                $invoice_details[0]['total_price'] = $invoice_details[0]['sale_price'] * $invoice_details[0]['quantity'];
+                $product_price = $invoice_details[0]['sale_price'];
             }
 
             if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
@@ -267,6 +267,7 @@ class Crefund extends MX_Controller
                         ->from('invoice_details')
                         ->where('invoice_id', $invoice_details[0]['invoice_id'])
                         ->where('product_id !=', $filter['product_id'])
+                        ->order_by('p.product_name')
                         ->get()->result();
 
                     $invProductsIds = [];
@@ -275,20 +276,26 @@ class Crefund extends MX_Controller
                     }
 
                     // get the first product with same brand name in this invoice
-                    $sameProduct = $this->db->select('p.product_id, p.price, a.product_price')
+                    $sameProduct = $this->db->select('p.product_id')
                         ->from('product_information p')
-                        ->join('pricing_types_product a', 'a.product_id = p.product_id AND a.pri_type_id = 1')
                         ->where(
                             'product_name LIKE "%' . str_replace($without_cases_price->product_model, '', $without_cases_price->product_name) . '%"'
                         )
                         ->where_in('p.product_id', $invProductsIds)
                         ->limit(1)
-                        ->order_by('p.product_id')
+                        ->get()->row();
+
+                    $invProduct = $this->db->select('whole_price, sale_price')
+                        ->from('invoice_details')
+                        ->where('invoice_id', $invoice_details[0]['invoice_id'])
+                        ->where('product_id', $sameProduct->product_id)
                         ->get()->row();
 
                     // product price = sameProduct.withCases.price - sameProduct.withoutCases.price
-                    $invoice_details[0]['total_price'] = ($sameProduct->product_price - $sameProduct->price) * $invoice_details[0]['quantity'];
-                    $product_price = $sameProduct->product_price - $sameProduct->price;
+                    // $invoice_details[0]['total_price'] = ($sameProduct->product_price - $sameProduct->price) * $invoice_details[0]['quantity'];
+                    // $product_price = $sameProduct->product_price - $sameProduct->price;
+                    $invoice_details[0]['total_price'] = ($invProduct->whole_price - $invProduct->sale_price) * $invoice_details[0]['quantity'];
+                    $product_price = $invProduct->whole_price - $invProduct->sale_price;
                 }
             }
 
@@ -700,7 +707,7 @@ class Crefund extends MX_Controller
 
         if ($product_id && $quantity && $status) {
             $product = $this->db->select('*')->from('product_information')->where('product_id', $product_id[0])->get()->result_array();
-            $quantity = $stock == 1 ? $quantity : $quantity *-1;
+            $quantity = $stock == 1 ? $quantity : $quantity * -1;
             $sql = "INSERT INTO `product_return`(`product_id`, `variant_id`, `quantity`, `status`) VALUES ('" . $product_id[0] . "','" . $product[0]['variants'] . "','" . $quantity . "','" . $status . "')";
             $this->db->query($sql);
         }
