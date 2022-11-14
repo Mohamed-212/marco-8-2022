@@ -317,18 +317,19 @@ class Lcustomer {
 				}
 				
 
-				if(empty($ledger[$index]['receipt_no'])or  $ledger[$index]['receipt_no']=="NA")
-				{
-					$ledger[$index]['credit']=$ledger[$index]['amount'];
-					$ledger[$index]['balance']=$balance+$ledger[$index]['amount'];
-					$ledger[$index]['debit']="";
-					$balance=$ledger[$index]['balance'];
-				}
-				else
+				if(empty($ledger[$index]['receipt_no']))
 				{
 					$ledger[$index]['debit']=$ledger[$index]['amount'];
 					$ledger[$index]['balance']=$balance-$ledger[$index]['amount'];
 					$ledger[$index]['credit']="";
+					$balance=$ledger[$index]['balance'];
+					
+				}
+				else
+				{
+					$ledger[$index]['credit']=$ledger[$index]['amount'];
+					$ledger[$index]['balance']=$balance+$ledger[$index]['amount'];
+					$ledger[$index]['debit']="";
 					$balance=$ledger[$index]['balance'];
 				}
 				
