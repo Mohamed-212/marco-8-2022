@@ -477,7 +477,7 @@ class Invoices extends CI_Model {
                 //Invoice details for invoice
                 for ($i = 0, $n = count($quantity); $i < $n; $i++) {
                     $product_assembly = $assembly[$i];
-                    // $prices = $this->select('a.price, b.product_price')->from('product_information a')->join('')
+                    $prices = $this->db->select('a.price, b.product_price')->from('product_information a')->join('pricing_types_product b', 'b.product_id = a.product_id')->where('a.product_id', $p_id[$i])->get()->row();
                     if ($product_assembly == 1) {
                         $product_quantity = $quantity[$i];
                         $product_rate = $rate[$i];
@@ -507,7 +507,9 @@ class Invoices extends CI_Model {
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
                             'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
-                            'status' => 1
+                            'status' => 1,
+                            'whole_price' => $prices->product_price,
+                            'sale_price' => $prices->price
                         );
 
                         if (!empty($quantity)) {
@@ -655,7 +657,9 @@ class Invoices extends CI_Model {
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
                             'invoice_discount' => (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity),
-                            'status' => 1
+                            'status' => 1,
+                            'whole_price' => $prices->product_price,
+                            'sale_price' => $prices->price
                         );
 
                         if (!empty($quantity)) {
