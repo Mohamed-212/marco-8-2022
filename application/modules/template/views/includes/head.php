@@ -125,5 +125,10 @@ $colors = $CI->Color_backends->retrieve_color_editdata();
         }
     </style>
 <?php endif?>
+<style>
+    .pointer:hover {
+        cursor: pointer;
+    }
+</style>
 
 

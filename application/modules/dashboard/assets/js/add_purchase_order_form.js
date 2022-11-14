@@ -49,10 +49,10 @@ function product_per_model(){
             $.each(data, function(k, v) {
                 $("#model_no_text").append('<tr>' +
                     '<td class="text-center">' +
-                    '<input type="checkbox" class="check_pro_id" value="'+v.value+'">' +
+                    '<input type="checkbox" class="check_pro_id" id="prod'+v.value+'" value="'+v.value+'">' +
                     '<input type="hidden" class="check_pro_id" value="'+v.label+'">' +
                     '</td>' +
-                    '<td class="text-center">'+v.label+'</td>' +
+                    '<td class="text-center"><label class="pointer" for="prod'+v.value+'">'+v.label+'</lable></td>' +
                     '</tr>');
             });
             if(data.length > 0){
