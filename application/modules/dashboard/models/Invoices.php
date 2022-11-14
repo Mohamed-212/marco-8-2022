@@ -477,6 +477,7 @@ class Invoices extends CI_Model {
                 //Invoice details for invoice
                 for ($i = 0, $n = count($quantity); $i < $n; $i++) {
                     $product_assembly = $assembly[$i];
+                    // $prices = $this->select('a.price, b.product_price')->from('product_information a')->join('')
                     if ($product_assembly == 1) {
                         $product_quantity = $quantity[$i];
                         $product_rate = $rate[$i];

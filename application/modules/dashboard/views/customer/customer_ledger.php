@@ -189,7 +189,7 @@
 								<thead>
 									<tr>
 										<th><?php echo display('date') ?></th>
-										<th><?php echo display('invoice_no') ?></th>
+										<th><?php echo display('transaction_type') ?></th>
 										<!-- <th><?php echo display('receipt_no') ?></th>
 										<th><?php echo display('description') ?></th> -->
 										<th class="text-right mr_20"><?php echo display('debit') ?></th>
@@ -248,10 +248,10 @@
 												<td class="text-right">
 
 													<?php
-													echo (($position == 0) ? $currency . ' ' . $v_ledger['debit'] : $v_ledger['debit'] . ' ' . $currency) ?>
+													echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['debit'] : (float)$v_ledger['debit'] . ' ' . $currency) ?>
 
 												</td>
-												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['credit'] : $v_ledger['credit'] . ' ' . $currency) ?></td>
+												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['credit'] : (float)$v_ledger['credit'] . ' ' . $currency) ?></td>
 												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
 											</tr>
 
