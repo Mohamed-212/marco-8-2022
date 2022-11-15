@@ -441,6 +441,16 @@ class Admin_dashboard extends MX_Controller
         $start_date = $this->input->get('from_date', TRUE);
         $end_date = $this->input->get('to_date', TRUE);
 
+        if (isset($category_id[0]) && empty($category_id[0])) {
+            $category_id = null;
+        }
+        if (isset($general_filter[0]) && empty($general_filter[0])) {
+            $general_filter = null;
+        }
+        if (isset($material_filter[0]) && empty($material_filter[0])) {
+            $material_filter = null;
+        }
+
         // sales
         $sales_from = $this->input->get('sales_from', TRUE);
         $sales_to = $this->input->get('sales_to', TRUE);

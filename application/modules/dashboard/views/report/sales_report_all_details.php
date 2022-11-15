@@ -7,6 +7,22 @@
 
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/print.js'; ?>"></script>
 
+<style>
+	@media print {
+		.dt-buttons.btn-group {
+			display: none !important;
+		}
+	}
+
+	.dt-buttons.btn-group {
+		display: none !important;
+	}
+
+	tfoot tr td {
+		font-weight: bold;
+	}
+</style>
+
 <!-- Stock List Supplier Wise Start -->
 <div class="content-wrapper">
 	<section class="content-header">
@@ -149,7 +165,7 @@
 										<select class="form-control select3" name="category_id[]" id="category_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($category_list as $category_item) { ?>
-												<option value="<?php echo $category_item['category_id'] ?>" <?= in_array($category_item['category_id'], @$_GET['category_id']) ? 'selected' : '' ?>>
+												<option value="<?php echo $category_item['category_id'] ?>" <?= in_array($category_item['category_id'], $_GET['category_id'] ?? []) ? 'selected' : '' ?>>
 													<?php echo html_escape($category_item['category_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -167,7 +183,7 @@
 										<select class="form-control select3" name="filter_1_id[]" id="filter_1_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($filter_1_list as $filter_1_item) { ?>
-												<option value="<?php echo $filter_1_item['item_id'] ?>" <?= in_array($filter_1_item['item_id'], @$_GET['filter_1_id']) ? 'selected' : '' ?>>
+												<option value="<?php echo $filter_1_item['item_id'] ?>" <?= in_array($filter_1_item['item_id'], $_GET['filter_1_id'] ?? []) ? 'selected' : '' ?>>
 													<?php echo html_escape($filter_1_item['item_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -182,7 +198,7 @@
 										<select class="form-control select3" name="filter_2_id[]" id="filter_2_id" multiple data-multiple="true">
 											<option value=""></option>
 											<?php foreach ($filter_2_list as $filter_2_item) { ?>
-												<option value="<?php echo $filter_2_item['item_id'] ?>" <?= in_array($filter_2_item['item_id'], @$_GET['filter_2_id']) ? 'selected' : '' ?>>
+												<option value="<?php echo $filter_2_item['item_id'] ?>" <?= in_array($filter_2_item['item_id'], $_GET['filter_2_id'] ?? []) ? 'selected' : '' ?>>
 													<?php echo html_escape($filter_2_item['item_name']) ?></option>
 											<?php } ?>
 										</select>
@@ -198,7 +214,7 @@
 										<select name="pri_type" id="pri_type" class="form-control select3">
 											<option value=""></option>
 											<?php foreach ($all_pri_type as $pri_type) : ?>
-												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?=$pri_type['pri_type_id'] == @$_GET['pri_type'] ? 'selected' : ''?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?= $pri_type['pri_type_id'] == $_GET['pri_type'] ? 'selected' : '' ?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
 											<?php
 											endforeach;
 											?>
@@ -320,7 +336,7 @@
 						</div>
 
 						<div class="form-group row">
-							<div class="col-sm-12 text-center" > 
+							<div class="col-sm-12 text-center">
 								<button type="submit" id="submit" class="btn btn-primary"><?php echo display('search') ?></button>
 								<a class="btn btn-warning" href="#" onclick="printDiv('printableArea')"><?php echo display('print') ?></a>
 								<button type="button" id="reset" class="btn btn-danger"><?php echo display('reset') ?></button>
@@ -364,99 +380,97 @@
 									<tbody>
 
 										<?php
-										$total_sales_quantity = 0;
-										$total_purchase_quantity = 0;
-										$total_balance = 0;
-										$total_supplier_price = 0;
-										$total_sell_price = 0;
+										// $total_sales_quantity = 0;
+										// $total_purchase_quantity = 0;
+										// $total_balance = 0;
+										// $total_supplier_price = 0;
+										// $total_sell_price = 0;
 										$sl = 0;
 										foreach ($stock_reports as $repo) :
-											// $sales_quantity = (int)$repo[1]->total_invoice_quantity + (int)$repo[2]->total_purchase_return_quantity;
-											// $purchase_quantity = (int)$repo[3]->total_purchase_quantity + (int)$repo[4]->total_invoice_return;
-											$sales_quantity = (int)$repo[6];
-											$purchase_quantity = (int)$repo[5];
-											$balance = (int)$repo[7];
-											$supplier_price_total = abs(round((float)$repo[0]['supplier_price'] * $balance, 2));
-											$sell_price_total = abs(round((float)$repo[0]['selected_price'] * $balance, 2));
+											$sales_quantity = (int)$repo['totalSalesQnty'];
+											$purchase_quantity = (int)$repo['totalPurchaseQnty'];
+											$balance = $purchase_quantity - $sales_quantity;
+											$supplier_price_total = abs(round((float)$repo['supplier_price'] * $balance, 2));
+											$sell_price_total = abs(round((float)$repo['selected_price'] * $balance, 2));
 
-											$total_sales_quantity += $sales_quantity;
-											$total_purchase_quantity += $purchase_quantity;
-											$total_balance += $balance;
-											$total_supplier_price += (float)$repo[0]['supplier_price'];
-											$total_sell_price += (float)$repo[0]['selected_price'];
+											// $total_sales_quantity += $sales_quantity;
+											// $total_purchase_quantity += $purchase_quantity;
+											// $total_balance += $balance;
+											// $total_supplier_price += (float)$repo['supplier_price'];
+											// $total_sell_price += (float)$repo['selected_price'];
 										?>
 											<tr>
 												<td>
 													<?= ++$sl ?>
 												</td>
 												<td>
-													<a href="<?= base_url() ?>/dashboard/Cproduct/product_details/<?= $repo[0]['product_id'] ?>">
-														<?= $repo[0]['product_name'] ?>
+													<a href="<?= base_url() ?>/dashboard/Cproduct/product_details/<?= $repo['product_id'] ?>">
+														<?= $repo['product_name'] ?>
 													</a>
 												</td>
 												<td>
-													<?= $repo[0]['category_name'] ?>
+													<?= $repo['category_name'] ?>
 												</td>
 												<!-- <td>
-													<?= display($repo[0]['assembly'] ? 'assemply' : 'normal') ?>
+													<?= display($repo['assembly'] ? 'assemply' : 'normal') ?>
 												</td> -->
 												<td>
-													<?= $repo[0]['filters'][0]['item_name'] ?>
+													<?= $repo['filter_1'] ?>
 												</td>
 												<td>
-													<?= $repo[0]['filters'][1]['item_name'] ?>
+													<?= $repo['filter_2'] ?>
 												</td>
 												<td>
-													<?= $purchase_quantity ?>
+													<?= number_format($purchase_quantity) ?>
 												</td>
 												<td>
-													<?= $sales_quantity ?>
+													<?= number_format($sales_quantity) ?>
 												</td>
 												<td>
-													<?= $balance ?>
+													<?= number_format($balance) ?>
 												</td>
 												<td>
-													<?= round($repo[0]['supplier_price'], 2) ?>
+													<?= number_format($repo['supplier_price'], 2) ?>
 												</td>
 												<td>
-													<?= $supplier_price_total ?>
+													<?= number_format($supplier_price_total, 2) ?>
 												</td>
 												<td>
-													<?= round($repo[0]['selected_price'], 2) ?>
+													<?= number_format($repo['selected_price'], 2) ?>
 												</td>
 												<td>
-													<?= $sell_price_total ?>
+													<?= number_format($sell_price_total, 2) ?>
 												</td>
 											</tr>
 										<?php endforeach ?>
 									</tbody>
-									<!-- <tfoot>
+									<tfoot>
 										<tr>
-											<td><?= $sl ?></td>
-											<td align="center"><b><?= display('grand_total') ?></b></td>
-											<td>--</td>
-											<td>--</td>
-											<td>--</td>
-											<td><?= $total_purchase_quantity ?></td>
-											<td><?= $total_sales_quantity ?></td>
-											<td><?= $total_balance ?></td>
-											<td><?= round($total_supplier_price, 2) ?></td>
-											<td>
-												<?= round($total_supplier_price * $total_balance, 2) ?>
-											</td>
-											<td>
-												<?= round($total_sell_price, 2) ?>
-											</td>
-											<td>
-												<?= round($total_sell_price * $total_balance, 2) ?>
-											</td>
+											<th><?= $sl ?></th>
+											<th align="center"><b><?= display('grand_total') ?></b></th>
+											<th>--</th>
+											<th>--</th>
+											<th>--</th>
+											<th><?= number_format($footer['totalPurchase']) ?></th>
+											<th><?= number_format($footer['totalSales']) ?></th>
+											<th><?= number_format($footer['totalBalance']) ?></th>
+											<th><?= number_format($footer['totalSupplierPrice'], 2, '.', ',') ?></th>
+											<th>
+												<?= number_format($footer['totalSupplierPrice'] * $footer['totalBalance'], 2) ?>
+											</th>
+											<th>
+												<?= number_format($footer['totalSellPrice'], 2) ?>
+											</th>
+											<th>
+												<?= number_format($footer['totalSellPrice'] * $footer['totalBalance'], 2) ?>
+											</th>
 										</tr>
-									</tfoot> -->
+									</tfoot>
 								</table>
 							</div>
 							<div class="text-right">
-                                <?php echo htmlspecialchars_decode(@$links); ?>
-                            </div>
+								<?php echo htmlspecialchars_decode(@$links); ?>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -477,7 +491,7 @@
 				$(el).val('');
 			});
 			$('.filters_form select').each(function(nx, el) {
-				$(el).val(null).trigger('change');
+				$(el).val('').trigger('change');
 			});
 		});
 

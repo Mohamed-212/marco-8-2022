@@ -2251,28 +2251,41 @@ class Reports extends CI_Model
 
         // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
 
-        $totalPurchase = 0;
-        $purchaseData = $this->Products->product_purchase_info($product_id, $from_date, $to_date);
+        // $totalPurchase = 0;
+        // $purchaseData = $this->Products->product_purchase_info($product_id, $from_date, $to_date);
 
-        if (!empty($purchaseData)) {
-            foreach ($purchaseData as $k => $v) {
-                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
-            }
-        }
-        $totalPurchase += $product['open_quantity'];
-        $salesData = $this->Products->invoice_data($product_id, $from_date, $to_date);
-        $returnData = $this->Products->return_invoice_data($product_id, $from_date, $to_date);
-        $totalSales = 0;
-        if (!empty($salesData)) {
-            foreach ($salesData as $k => $v) {
-                $totalSales = ($totalSales + $salesData[$k]['t_qty']);
-            }
-        }
-        $total_return = 0;
-        foreach ($returnData as $return) {
-            $total_return += $return['return_quantity'];
-        }
-        $totalSales -= $total_return;
+        // if (!empty($purchaseData)) {
+        //     foreach ($purchaseData as $k => $v) {
+        //         $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+        //     }
+        // }
+        // $totalPurchase += $product['open_quantity'];
+        // $salesData = $this->Products->invoice_data($product_id, $from_date, $to_date);
+        // $returnData = $this->Products->return_invoice_data($product_id, $from_date, $to_date);
+        // $totalSales = 0;
+        // if (!empty($salesData)) {
+        //     foreach ($salesData as $k => $v) {
+        //         $totalSales = ($totalSales + $salesData[$k]['t_qty']);
+        //     }
+        // }
+        // $total_return = 0;
+        // foreach ($returnData as $return) {
+        //     $total_return += $return['return_quantity'];
+        // }
+        // $totalSales -= $total_return;
+
+        $total = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+            ->from('purchase_stock_tbl p')
+            ->join('invoice_stock_tbl i', 'i.product_id = p.product_id')
+            ->where('p.product_id', $product_id)
+            ->group_by('p.product_id', 'i.product_id')
+            ->get()
+            ->row();
+
+        // var_dump($total);exit;
+        $totalPurchase = $total->totalPurchaseQnty;
+        $totalSales = $total->totalSalesQnty;
+
 
         $balance = $totalPurchase - $totalSales;
 
@@ -2298,61 +2311,143 @@ class Reports extends CI_Model
         $total_sell_from = null,
         $total_sell_to = null,
         $from_date = null,
-        $to_date = null
+        $to_date = null,
+        $per_page = null
     ) {
 
-        $selectAddon = 'p.price';
+        $selectAddon = 'pi.price';
         if ($pricing_type) {
             $selectAddon = 'pr.product_price';
         }
 
-        $products = $this->db->select("SUM($selectAddon) as t_selected_price, SUM(supplier_price) as t_supplier_price")
-            ->from('product_information p');
+        // $prods = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty, pi.supplier_price as supplier_price, $selectAddon as selected_price")
+        //     ->from('product_information pi')
+        //     ->join('purchase_stock_tbl p', 'p.product_id = pi.product_id', 'left')
+        //     ->join('invoice_stock_tbl i', 'i.product_id = pi.product_id', 'left')
+        //     ->where_in('pi.product_id', $product_ids)
+        //     ->group_by('pi.product_id')
+        //     ->get()->result();
 
+        // echo "<pre>";
+        // print_r($product_ids);
+        // exit;
+
+
+        $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, fi1.item_name as filter_1, fi2.item_name as filter_2, pi.supplier_price as supplier_price, $selectAddon as selected_price, SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+            ->from('product_information pi')
+            ->join('product_category c', 'c.category_id = pi.category_id', 'left')
+            ->join('filter_product fp1', 'fp1.product_id = pi.product_id AND fp1.filter_type_id = 1', 'left')
+            ->join('filter_items fi1', 'fi1.item_id = fp1.filter_item_id', 'left')
+            ->join('filter_product fp2', 'fp2.product_id = pi.product_id AND fp2.filter_type_id = 2', 'left')
+            ->join('filter_items fi2', 'fi2.item_id = fp2.filter_item_id', 'left')
+            ->join('purchase_stock_tbl p', 'p.product_id = pi.product_id', 'left')
+            ->join('invoice_stock_tbl i', 'i.product_id = pi.product_id', 'left');
         if ($pricing_type) {
-            $products->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = ' . $pricing_type);
+            $total->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = ' . $pricing_type, 'left');
         }
 
-        $products = $products->where_in('p.product_id', $product_ids)
-            ->get()->result_array();
-
-        // $totalPurchase = 0;
-        // $purchaseData = $this->Products->product_purchase_info_sum($product_ids, $from_date, $to_date);
-        $totalPurchase = $this->db->select('(SUM(open_quantity) + SUM(b.quantity)) as total_purchase, (SUM(ind.quantity) ) as total_sales, ')
-            ->from('product_information a')
-            ->join('product_purchase_details b', 'b.product_id = a.product_id', 'left')
-            ->join('invoice_details ind', 'ind.product_id = a.product_id', 'left')
-            // ->join('invoice_return inr', 'inr.product_id = a.product_id', 'left')
-            ->where_in('a.product_id', $product_ids)
-            ->group_by('a.product_id');
+        $total->where_in('pi.product_id', $product_ids);
 
         if ($purchase_from) {
-            $totalPurchase->having('total_purchase >=', $sales_from);
+            $total->having('totalPurchaseQnty >=', $sales_from);
         }
         if ($purchase_to) {
-            $totalPurchase->having('total_purchase <=', $sales_from);
+            $total->having('totalPurchaseQnty <=', $sales_from);
         }
 
         if ($sales_from) {
-            $totalPurchase->having('total_sales >=', $sales_from);
+            $total->having('totalSalesQnty >=', $sales_from);
         }
         if ($sales_to) {
-            $totalPurchase->having('total_sales <=', $sales_to);
+            $total->having('totalSalesQnty <=', $sales_to);
         }
 
-        $totalPurchase = $totalPurchase->get()->row();
+        if ($balance_from) {
+            $total->having('(totalPurchaseQnty - totalSalesQnty) >=', $balance_from);
+        }
+        if ($balance_to) {
+            $total->having('(totalPurchaseQnty - totalSalesQnty) <=', $balance_to);
+        }
 
-        // var_dump($totalPurchase->total_purchase);exit;
-        // $totalPurchase = (int) $totalOpenQuantity->total_open_quantity + (int)$purchaseData->total_purchase_quantity;
+        if ($supplier_from) {
+            $total->having('supplier_price >=', $supplier_from);
+        }
+        if ($supplier_to) {
+            $total->having('supplier_price <=', $supplier_to);
+        }
 
-        $totalSales = 0;
-        $salesData = $this->Products->invoice_data_sum($product_ids, $from_date, $to_date);
-        $returnData = $this->Products->return_invoice_data_sum($product_ids, $from_date, $to_date);
-        $totalSales = (int)$salesData->t_sales_qty - (int)$returnData->t_return_quantity;
+        if ($total_supplier_from) {
+            $total->having('(supplier_price * (totalPurchaseQnty - totalSalesQnty)) >=', $total_supplier_from);
+        }
+        if ($total_supplier_to) {
+            $total->having('(supplier_price * (totalPurchaseQnty - totalSalesQnty)) <=', $total_supplier_to);
+        }
 
-        $balance = $totalPurchase - $totalSales;
+        if ($sell_from) {
+            $total->having('selected_price >=', $sell_from);
+        }
+        if ($sell_to) {
+            $total->having('selected_price <=', $sell_to);
+        }
+
+        if ($total_sell_from) {
+            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) >=', $sell_from);
+        }
+        if ($total_sell_to) {
+            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) <=', $sell_to);
+        }
+
+        if ($from_date && $to_date) {
+            $dateRangePurchase = "DATE(p.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $dateRangeSales = "DATE(i.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+            $total->where($dateRangePurchase, null, true)->or_where($dateRangeSales, null, true);
+        }
+
+        $total = $total->group_by('pi.product_id')->get()->result_array();
+
+        return $total;
+        // echo "<pre>";
+        // print_r($total);
+        // print_r($product_ids);
+        // exit;
+
+        // $totalPurchase = 0;
+        // $purchaseData = $this->Products->product_purchase_info_sum($product_ids, $from_date, $to_date);
+        // $totalPurchase = $this->db->select('(SUM(open_quantity) + SUM(b.quantity)) as total_purchase, (SUM(ind.quantity) ) as total_sales, ')
+        //     ->from('product_information a')
+        //     ->join('product_purchase_details b', 'b.product_id = a.product_id', 'left')
+        //     ->join('invoice_details ind', 'ind.product_id = a.product_id', 'left')
+        //     // ->join('invoice_return inr', 'inr.product_id = a.product_id', 'left')
+        //     ->where_in('a.product_id', $product_ids)
+        //     ->group_by('a.product_id');
+
+        // if ($purchase_from) {
+        //     $totalPurchase->having('total_purchase >=', $sales_from);
+        // }
+        // if ($purchase_to) {
+        //     $totalPurchase->having('total_purchase <=', $sales_from);
+        // }
+
+        // if ($sales_from) {
+        //     $totalPurchase->having('total_sales >=', $sales_from);
+        // }
+        // if ($sales_to) {
+        //     $totalPurchase->having('total_sales <=', $sales_to);
+        // }
+
+        // $totalPurchase = $totalPurchase->get()->row();
+
+        // // var_dump($totalPurchase->total_purchase);exit;
+        // // $totalPurchase = (int) $totalOpenQuantity->total_open_quantity + (int)$purchaseData->total_purchase_quantity;
+
+        // $totalSales = 0;
+        // $salesData = $this->Products->invoice_data_sum($product_ids, $from_date, $to_date);
+        // $returnData = $this->Products->return_invoice_data_sum($product_ids, $from_date, $to_date);
+        // $totalSales = (int)$salesData->t_sales_qty - (int)$returnData->t_return_quantity;
+
+        // $balance = $totalPurchase - $totalSales;
 
 
-        return [$totalPurchase, $totalSales, $balance, $products];
+        // return [$totalPurchase, $totalSales, $balance];
     }
 }

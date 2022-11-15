@@ -863,15 +863,15 @@ class Lreport
         //     }
         // }
 
-        if ($general_filter || $material_filter) {
+        if (!empty($general_filter) || !empty($material_filter)) {
             $CI->db->reset_query();
             $filter_products = $CI->db->select('a.product_id')
                 ->from('filter_product a, filter_product b');
 
-            if ($general_filter) {
+            if (!empty($general_filter)) {
                 $filter_products->where_in('a.filter_item_id', $general_filter);
             }
-            if ($material_filter) {
+            if (!empty($material_filter)) {
                 $filter_products->where_in('b.filter_item_id', $material_filter);
             }
             $filter_products->where('a.product_id = b.product_id');
@@ -890,7 +890,7 @@ class Lreport
         //     $products->where('store_id', $store_id);
         // }
 
-        if ($category_id) {
+        if (!empty($category_id) && !empty($category_id[0])) {
             $products->where_in('p.category_id', $category_id);
         }
 
@@ -902,7 +902,7 @@ class Lreport
             $products->where_in('p.product_id', $product_ids);
         }
         // } else {
-        if ($product_name) {
+        if (!empty($product_name)) {
             $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
         }
 
@@ -929,50 +929,78 @@ class Lreport
             ->where('fi.type_id = 2')
             ->get()->result_array();
 
-        $stock_reports = [];
+        // $stock_reports = [];
 
         // echo "<pre>";
 
+        // foreach ($products as $prod) {
+        //     $item = $CI->Reports->sales_report_all_details(
+        //         $prod['product_id'],
+        //         $store_id,
+        //         $pricing_type,
+        //         $start_date,
+        //         $end_date,
+        //     );
+
+        //     // $sales_quantity = (int)$item[1]->total_invoice_quantity + (int)$item[2]->total_purchase_return_quantity;
+        //     // $purchase_quantity = (int)$item[3]->total_purchase_quantity + (int)$item[4]->total_invoice_return;
+        //     $sales_quantity = (int)$item[6];
+        //     $purchase_quantity = (int)$item[5];
+        //     $balance = (int)$item[7];
+        //     $supplier_price_total = abs(round((float)$item[0]['supplier_price'] * $balance, 2));
+        //     $sell_price_total = abs(round((float)$item[0]['selected_price'] * $balance, 2));
+
+        //     if ($sales_from && $sales_quantity < (int)$sales_from) continue;
+        //     if ($sales_to && $sales_quantity > (int)$sales_to) continue;
+
+        //     if ($purchase_from && $purchase_quantity < (int)$purchase_from) continue;
+        //     if ($purchase_to && $purchase_quantity > (int)$purchase_to) continue;
+
+        //     if ($balance_from && abs($balance) < (int)$balance_from) continue;
+        //     if ($balance_to && abs($balance) > (int)$balance_to) continue;
+
+        //     if ($supplier_from && (float)($item[0]['supplier_price']) < (float)$supplier_from) continue;
+        //     if ($supplier_to && (float)($item[0]['supplier_price']) > (float)$supplier_to) continue;
+
+        //     if ($total_supplier_from && $supplier_price_total < (float)$total_supplier_from) continue;
+        //     if ($total_supplier_to && $supplier_price_total > (float)$total_supplier_to) continue;
+
+        //     if ($sell_from && (float)($item[0]['selected_price']) < (float)$sell_from) continue;
+        //     if ($sell_to && (float)($item[0]['selected_price']) > (float)$sell_to) continue;
+
+        //     if ($total_sell_from && $sell_price_total < (float)$total_sell_from) continue;
+        //     if ($total_sell_to && $sell_price_total > (float)$total_sell_to) continue;
+
+        //     $stock_reports[] = $item;
+        // }
+
+        $ids = [];
         foreach ($products as $prod) {
-            $item = $CI->Reports->sales_report_all_details(
-                $prod['product_id'],
-                $store_id,
-                $pricing_type,
-                $start_date,
-                $end_date,
-            );
-
-            // $sales_quantity = (int)$item[1]->total_invoice_quantity + (int)$item[2]->total_purchase_return_quantity;
-            // $purchase_quantity = (int)$item[3]->total_purchase_quantity + (int)$item[4]->total_invoice_return;
-            $sales_quantity = (int)$item[6];
-            $purchase_quantity = (int)$item[5];
-            $balance = (int)$item[7];
-            $supplier_price_total = abs(round((float)$item[0]['supplier_price'] * $balance, 2));
-            $sell_price_total = abs(round((float)$item[0]['selected_price'] * $balance, 2));
-
-            if ($sales_from && $sales_quantity < (int)$sales_from) continue;
-            if ($sales_to && $sales_quantity > (int)$sales_to) continue;
-
-            if ($purchase_from && $purchase_quantity < (int)$purchase_from) continue;
-            if ($purchase_to && $purchase_quantity > (int)$purchase_to) continue;
-
-            if ($balance_from && abs($balance) < (int)$balance_from) continue;
-            if ($balance_to && abs($balance) > (int)$balance_to) continue;
-
-            if ($supplier_from && (float)($item[0]['supplier_price']) < (float)$supplier_from) continue;
-            if ($supplier_to && (float)($item[0]['supplier_price']) > (float)$supplier_to) continue;
-
-            if ($total_supplier_from && $supplier_price_total < (float)$total_supplier_from) continue;
-            if ($total_supplier_to && $supplier_price_total > (float)$total_supplier_to) continue;
-
-            if ($sell_from && (float)($item[0]['selected_price']) < (float)$sell_from) continue;
-            if ($sell_to && (float)($item[0]['selected_price']) > (float)$sell_to) continue;
-
-            if ($total_sell_from && $sell_price_total < (float)$total_sell_from) continue;
-            if ($total_sell_to && $sell_price_total > (float)$total_sell_to) continue;
-
-            $stock_reports[] = $item;
+            $ids[] = $prod['product_id'];
         }
+
+        // var_dump(count($ids));exit;
+
+        $stock_reports = $CI->Reports->sales_report_all_details_sum_all(
+            $ids,
+            $pricing_type,
+            $sales_from,
+            $sales_to,
+            $purchase_from,
+            $purchase_to,
+            $balance_from,
+            $balance_to,
+            $supplier_from,
+            $supplier_to,
+            $total_supplier_from,
+            $total_supplier_to,
+            $sell_from,
+            $sell_to,
+            $total_sell_from,
+            $total_sell_to,
+            $start_date,
+            $end_date
+        );
 
         // var_dump($balance_from, $balance_to);exit;
 
@@ -981,32 +1009,32 @@ class Lreport
         // var_dump($stock_reports);
         // exit;
 
-        // $footer = $this->retrieve_sales_report_all_details_footer(
-        //     $product_id = null,
-        //     $pricing_type = null,
-        //     $category_id = null,
-        //     $product_type = null,
-        //     $general_filter = null,
-        //     $material_filter = null,
-        //     $sales_from = null,
-        //     $sales_to = null,
-        //     $purchase_from = null,
-        //     $purchase_to = null,
-        //     $balance_from = null,
-        //     $balance_to = null,
-        //     $supplier_from = null,
-        //     $supplier_to = null,
-        //     $total_supplier_from = null,
-        //     $total_supplier_to = null,
-        //     $sell_from = null,
-        //     $sell_to = null,
-        //     $total_sell_from = null,
-        //     $total_sell_to = null,
-        //     $start_date = null,
-        //     $end_date = null,
-        //     $store_id = null,
-        //     $product_name = null
-        // );
+        $footer = $this->retrieve_sales_report_all_details_footer(
+            $product_id,
+            $pricing_type,
+            $category_id,
+            $product_type,
+            $general_filter,
+            $material_filter,
+            $sales_from,
+            $sales_to,
+            $purchase_from,
+            $purchase_to,
+            $balance_from,
+            $balance_to,
+            $supplier_from,
+            $supplier_to,
+            $total_supplier_from,
+            $total_supplier_to,
+            $sell_from,
+            $sell_to,
+            $total_sell_from,
+            $total_sell_to,
+            $start_date,
+            $end_date,
+            $store_id,
+            $product_name
+        );
 
         // var_dump($footer);
         // exit;
@@ -1026,6 +1054,7 @@ class Lreport
             'all_pri_type' => $all_pri_type,
             'links' => $links,
             'product_name' => $product_name,
+            'footer' => $footer
         );
         // echo "<pre>";var_dump($reports);exit;
         $reportList = $CI->parser->parse('dashboard/report/sales_report_all_details', $data, true);
@@ -1119,8 +1148,6 @@ class Lreport
             $ids[] = $prod['product_id'];
         }
 
-        $ids = ['13743348', '87977793'];
-
         $footer = $CI->Reports->sales_report_all_details_sum_all(
             $ids,
             $pricing_type,
@@ -1141,8 +1168,20 @@ class Lreport
             $start_date,
             $end_date
         );
+        $totalPurchase = 0;
+        $totalSales = 0;
+        $totalBalance = 0;
+        $totalSupplierPrice = 0;
+        $totalSellPrice = 0;
+        foreach ($footer as $fo) {
+            $totalPurchase += (int)$fo['totalPurchaseQnty'];
+            $totalSales += (int)$fo['totalSalesQnty'];
+            $totalBalance += (int)$fo['totalPurchaseQnty'] - (int)$fo['totalSalesQnty'];
+            $totalSupplierPrice += (float)$fo['supplier_price'];
+            $totalSellPrice += (float)$fo['selected_price'];
+        }
 
-        return $footer;
+        return compact('totalPurchase', 'totalSales', 'totalBalance', 'totalSupplierPrice', 'totalSellPrice');
     }
 
     // Retrieve todays_sales_report
