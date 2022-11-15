@@ -810,6 +810,22 @@ class Account_model extends CI_Model
     $supplier_id = $sup_id;
     $supinfo = $this->db->select('*')->from('supplier_information')->where('supplier_id', $supplier_id)->get()->row();
     $find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+
+    $data2 = array(
+      'invoice_no'    =>  null,
+      'deposit_no'    =>  null,
+      'transaction_id' => generator(15),
+      'supplier_id' => $supplier_id,
+      'date' => date('Y-m-d', $createdate),
+      'amount' => $Debit,
+      'status' => 1,
+      'voucher' => 'CV',
+      'payment_type'  =>  1,
+      'sl_created_at' => $createdate,
+      'description' => 'ITP'
+    );
+    $this->db->insert('supplier_ledger', $data2);
+
     $supplierdebit = array(
       'fy_id' => $find_active_fiscal_year->id,
       'VNo' => $voucher_no,
@@ -1520,6 +1536,43 @@ class Account_model extends CI_Model
             'voucher' => 'JV'
           );
           $this->db->insert('customer_ledger', $data2);
+        }
+      }
+
+      if (substr($crtid, 0, 4) === '2111') {
+        $supplier = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
+        if ((float)$Cramnt > 0) {
+          $data2 = array(
+            'invoice_no'    =>  null,
+            'deposit_no'    =>  $this->auth->generator(10),
+            'transaction_id' => generator(15),
+            'supplier_id' => $supplier->supplier_id,
+            'date' => date('Y-m-d', $createdate),
+            'amount' => $Cramnt,
+            'description' => 'ITP',
+            'status' => 1,
+            'voucher' => 'JV',
+            'payment_type'  =>  1,
+            'sl_created_at' => $createdate
+          );
+          $this->db->insert('supplier_ledger', $data2);
+        }
+
+        if ((float)$debits > 0) {
+          $data2 = array(
+            'invoice_no'    =>  null,
+            'deposit_no'    =>  null,
+            'transaction_id' => generator(15),
+            'supplier_id' => $supplier->supplier_id,
+            'date' => date('Y-m-d', $createdate),
+            'amount' => $debits,
+            'status' => 1,
+            'voucher' => 'JV',
+            'payment_type'  =>  1,
+            'sl_created_at' => $createdate,
+            'description' => 'ITP'
+          );
+          $this->db->insert('supplier_ledger', $data2);
         }
       }
     }
