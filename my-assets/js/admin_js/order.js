@@ -301,10 +301,20 @@ function calculateSumQuotation() {
             ser_chg = $("#service_charge").val();
     shipping_charge = (($("#shipping_charge").val()) ? $("#shipping_charge").val() : 0);
 
-    sum = +cgst + +sgst + +igst + +e + -f + -inv_dis + +ser_chg + +shipping_charge;
-    percentage_dis = (parseFloat($("#percentage_discount").val() || 0)/100)*sum;
+    sum =
+        +cgst +
+        +sgst +
+        +igst +
+        +e +
+        -f +
+        //-inv_dis +
+        +ser_chg +
+        +shipping_charge;
+    percentage_dis = (parseFloat($('#percentage_discount').val() || 0) / 100) * sum;
 
-    sum =  sum + -percentage_dis ;
+    sum = sum + -percentage_dis;
+
+    sum -= inv_dis;
 
     $("#grandTotal").val(sum.toFixed(2));
     $(".total_bill").text(sum.toFixed(2));
@@ -374,16 +384,26 @@ function calculateSum() {
             ser_chg = $("#service_charge").val();
     shipping_charge = (($("#shipping_charge").val()) ? $("#shipping_charge").val() : 0);
 
-    var dataVal = parseFloat($("#percentage_discount").attr('data-value'));
+    var dataVal = parseFloat($("#percentage_discount").attr('data-value') || 0);
         if (dataVal > 0) {
             $("#percentage_discount").val(dataVal);
             $("#percentage_discount").attr('data-value', -1);
         }
 
-    sum = +cgst + +sgst + +igst + +e + -f + -inv_dis + +ser_chg + +shipping_charge;
-    percentage_dis = (parseFloat($("#percentage_discount").val() || 0)/100)*sum;
+    sum =
+        +cgst +
+        +sgst +
+        +igst +
+        +e +
+        -f +
+        //-inv_dis +
+        +ser_chg +
+        +shipping_charge;
+    percentage_dis = (parseFloat($('#percentage_discount').val() || 0) / 100) * sum;
 
-    sum =  sum + -percentage_dis;
+    sum = sum + -percentage_dis;
+
+    sum -= inv_dis;
 
     $("#grandTotal").val(sum.toFixed(2));
     $(".total_bill").text(sum.toFixed(2));

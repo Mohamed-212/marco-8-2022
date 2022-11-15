@@ -396,12 +396,14 @@ function calculateSumQuotation() {
         +igst +
         +e +
         -f +
-        -inv_dis +
+        //-inv_dis +
         +ser_chg +
         +shipping_charge;
-    percentage_dis = ($('#percentage_discount').val() / 100) * sum;
+    percentage_dis = (parseFloat($('#percentage_discount').val() || 0) / 100) * sum;
 
     sum = sum + -percentage_dis;
+
+    sum -= inv_dis;
 
     $('#grandTotal').val(sum.toFixed(2));
     $('.total_bill').text(sum.toFixed(2));
@@ -479,12 +481,14 @@ function calculateSum() {
         +igst +
         +e +
         -f +
-        -inv_dis +
+        //-inv_dis +
         +ser_chg +
         +shipping_charge;
-    percentage_dis = ($('#percentage_discount').val() / 100) * sum;
+    percentage_dis = (parseFloat($('#percentage_discount').val() || 0) / 100) * sum;
 
     sum = sum + -percentage_dis;
+
+    sum -= inv_dis;
 
     $('#grandTotal').val(sum.toFixed(2));
     $('.total_bill').text(sum.toFixed(2));
