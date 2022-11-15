@@ -208,7 +208,7 @@ class Lsupplier {
 	}	
 
 	//Ledger report Maintaining information....
-	public function supplier_ledger_report($supplier_id=null,$from_date=null,$to_date=null)
+	public function supplier_ledger_report($supplier_id=null,$from_date=null,$to_date=null, $print = null)
 	{
 		$CI =& get_instance();
 		$CI->load->model('dashboard/Suppliers');
@@ -259,7 +259,7 @@ class Lsupplier {
 			'from_date' 	 =>$from_date,
 			'to_date' 		 =>$to_date,
 			);
-		$singlecustomerdetails = $CI->parser->parse('supplier/supplier_ledger_report',$data,true);
+		$singlecustomerdetails = $CI->parser->parse('supplier/supplier_ledger_report' . ($print ? '_print' : ''),$data,true);
 		return $singlecustomerdetails;
 	}
 

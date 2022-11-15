@@ -1,62 +1,8 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- Supplier Ledger Start -->
 <div class="content-wrapper">
-    <section class="content-header">
-        <div class="header-icon">
-            <i class="pe-7s-note2"></i>
-        </div>
-        <div class="header-title">
-            <h1><?php echo display('supplier_ledger') ?></h1>
-            <small><?php echo display('manage_supplier_ledger') ?></small>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="pe-7s-home"></i> <?php echo display('home') ?></a></li>
-                <li><a href="#"><?php echo display('supplier') ?></a></li>
-                <li class="active"><?php echo display('supplier_ledger') ?></li>
-            </ol>
-        </div>
-    </section>
-
     <!-- Supplier information -->
     <section class="content">
-        <!-- Alert Message -->
-        <?php
-        $message = $this->session->userdata('message');
-        if (isset($message)) {
-        ?>
-            <div class="alert alert-info alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <?php echo $message ?>
-            </div>
-        <?php
-            $this->session->unset_userdata('message');
-        }
-        $error_message = $this->session->userdata('error_message');
-        if (isset($error_message)) {
-        ?>
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <?php echo $error_message ?>
-            </div>
-        <?php
-            $this->session->unset_userdata('error_message');
-        }
-        ?>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="column">
-                    <?php if ($this->permission->check_label('add_supplier')->create()->access()) { ?>
-                        <a href="<?php echo base_url('dashboard/Csupplier') ?>" class="btn btn-success m-b-5 m-r-2"><i class="ti-plus"> </i> <?php echo display('add_supplier') ?></a>
-                    <?php }
-                    if ($this->permission->check_label('manage_supplier')->read()->access()) {
-                    ?>
-                        <a href="<?php echo base_url('dashboard/Csupplier/manage_supplier') ?>" class="btn btn-success m-b-5 m-r-2"><i class="ti-align-justify"> </i>
-                            <?php echo display('manage_supplier') ?></a>
-                    <?php } ?>
-
-                </div>
-            </div>
-        </div>
 
         <!-- Supplier select -->
         <div class="row">
@@ -162,33 +108,6 @@
                             <div class="table-responsive">
                                 <table id="dataTableExample2" class="table table-bordered table-striped table-hover">
                                     <thead>
-
-                                        <!-- <tr>
-                                            <th colspan="9" class="text-center">
-                                                Date : {from_date} - {to_date}
-                                            </th>
-                                        </tr>
-
-                                        <tr>
-                                            <th colspan="2" class="text-right">Supplier's Commercial Registration Number:
-                                            </th>
-                                            <th colspan="1" class="text-left">{cr_no}</th>
-                                            <th colspan="1" class="text-right">Mobile Number:</th>
-                                            <th colspan="1" class="text-left">{supplier_mobile}</th>
-                                            <th colspan="2" class="text-right">Supplier TAX Number:</th>
-                                            <th colspan="1" class="text-left">{vat_no}</th>
-                                        </tr>
-
-                                        <tr>
-                                            <th class="text-center">NO</th>
-                                            <th class="text-center">The Document</th>
-                                            <th class="text-center">Document Number</th>
-                                            <th class="text-center">Date</th>
-                                            <th class="text-center">Debit</th>
-                                            <th class="text-center">Credit</th>
-                                            <th class="text-center">Balance</th>
-                                            <th class="text-center">Notes</th>
-                                        </tr> -->
                                         <tr>
                                             <th><?php echo display('date') ?></th>
                                             <th><?php echo display('transaction_type') ?></th>
@@ -199,34 +118,6 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // $this->db->select('a.HeadCode,b.*');
-                                        // $this->db->from('acc_coa a');
-                                        // $this->db->where('a.supplier_id', $supplier_id);
-                                        // $this->db->join('acc_transaction b', 'b.COAID=a.HeadCode', 'left');
-                                        // $this->db->where('b.is_opening', 1);
-                                        // $supplier_openning_info = $this->db->get()->row();
-                                        ?>
-                                        <?php
-                                        if (!empty($supplier_openning_info)) {
-                                        ?>
-                                            <!-- <tr>
-                                                <td class="text-center">1</td>
-                                                <td><?php echo html_escape($supplier_openning_info->Vtype) ?></td>
-                                                <td><?php echo $supplier_openning_info->ID ?></td>
-                                                <td><?php echo html_escape($supplier_openning_info->VDate) ?></td>
-                                                <td class="text-right">
-        <?php echo (($position == 0) ? $currency . " " . $supplier_openning_info->Debit : $supplier_openning_info->Debit . " " . $currency) ?>
-                                                </td>
-                                                <td class="text-right">
-                                            <?php echo (($position == 0) ? $currency . " " . $supplier_openning_info->Credit : $supplier_openning_info->Credit . " " . $currency) ?>
-                                                </td>
-                                                <td class="text-right"><?= $supplier_openning_info->Debit - $supplier_openning_info->Credit ?></td>
-                                                <td><?php echo html_escape($supplier_openning_info->Narration) ?></td>
-                                            </tr> -->
-                                        <?php
-                                        }
-                                        ?>
-                                        <?php
                                         if ($ledger) {
                                             $total_sup_debit = $total_sup_credit = $total_sup_balance = 0;
                                             foreach ($ledger as $key => $ledger) {
@@ -236,27 +127,16 @@
                                                     <td class="text-center">
                                                         <?= date('d-m-Y', strtotime($ledger['sl_created_at'])) ?>
                                                     </td>
-                                                    <!-- <td>
-                                                        <?php
-                                                        $transaction_info = $this->db->select('Vtype,Narration')->from('acc_transaction')->where('VNo', $ledger['invoice'])->get()->row();
-                                                        if (!empty($transaction_info)) {
-                                                            echo $transaction_info->Vtype;
-                                                        }
-                                                        ?>
-                                                    </td> -->
                                                     <td>
                                                         <?php if (empty($invoice)) : ?>
                                                             <?php
-                                                                if (empty($ledger['voucher'])) {
-                                                                    echo display('previous_balance');
-                                                                } else {
-                                                                    if ($ledger['voucher'] == 'JV') {
-                                                                        echo display('journal_voucher');
-                                                                    }
-                                                                    if ($ledger['voucher'] == 'CV') {
-                                                                        echo display('credit_voucher');
-                                                                    }
+                                                            if (empty($ledger['voucher'])) {
+                                                                echo display('previous_balance');
+                                                            } else {
+                                                                if ($ledger['voucher'] == 'JV') {
+                                                                    echo display('journal_voucher');
                                                                 }
+                                                            }
                                                             ?>
                                                         <?php else : ?>
                                                             <a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_details_data/' . $ledger['purchase_id']; ?>"><?php echo $invoice->invoice; ?>

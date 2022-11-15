@@ -405,7 +405,7 @@ class Suppliers extends CI_Model {
             // $this->db->where("STR_TO_DATE(supplier_ledger.date, '%Y-%m-%d')<=DATE('" . $newformat2. "')");
             $this->db->where("DATE(supplier_ledger.sl_created_at) <= DATE('" . date('Y-m-d', strtotime($newformat2)). "')");
         }
-        $this->db->order_by('supplier_ledger.invoice_no', 'desc');
+        $this->db->order_by('supplier_ledger.sl_created_at', 'asc');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();

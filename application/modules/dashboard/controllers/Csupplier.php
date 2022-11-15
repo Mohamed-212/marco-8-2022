@@ -170,6 +170,19 @@ class Csupplier extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
+     //Supplier Ledger Report print
+     public function supplier_ledger_report_print()
+     {
+         $this->permission->check_label('supplier_ledger')->read()->redirect();
+ 
+         $supplier_id = $this->input->post('supplier_id', TRUE);
+         $from_date  = $this->input->post('from_date', TRUE);
+         $to_date    = $this->input->post('to_date', TRUE);
+         $this->supplier_id = $supplier_id;
+         $content = $this->lsupplier->supplier_ledger_report_print($supplier_id, $from_date, $to_date);
+         $this->template_lib->full_admin_html_view($content);
+     }
+
     // Supplier wise sales report details
     public function supplier_sales_details($supplier_id)
     {
