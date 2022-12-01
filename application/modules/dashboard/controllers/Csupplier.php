@@ -179,7 +179,7 @@ class Csupplier extends MX_Controller
          $from_date  = $this->input->post('from_date', TRUE);
          $to_date    = $this->input->post('to_date', TRUE);
          $this->supplier_id = $supplier_id;
-         $content = $this->lsupplier->supplier_ledger_report_print($supplier_id, $from_date, $to_date);
+         $content = $this->lsupplier->supplier_ledger_report($supplier_id, $from_date, $to_date, true);
          $this->template_lib->full_admin_html_view($content);
      }
 

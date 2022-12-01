@@ -18,7 +18,7 @@
 		display: none !important;
 	}
 
-	tfoot tr td {
+	.footer tr td {
 		font-weight: bold;
 	}
 </style>
@@ -443,9 +443,7 @@
 												</td>
 											</tr>
 										<?php endforeach ?>
-									</tbody>
-									<tfoot>
-										<tr>
+										<tr class="footer">
 											<th><?= $sl ?></th>
 											<th align="center"><b><?= display('grand_total') ?></b></th>
 											<th>--</th>
@@ -465,7 +463,7 @@
 												<?= number_format($footer['totalSellPrice'] * $footer['totalBalance'], 2) ?>
 											</th>
 										</tr>
-									</tfoot>
+									</tbody>
 								</table>
 							</div>
 							<div class="text-right">

@@ -82,7 +82,7 @@
                             <input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?= $to_date ?>" required>
                         </div>
                         <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-                        <button type="submit" formaction="<?= base_url('dashboard/Ccustomer/customer_ledger_print') ?>" class="btn btn-primary"><?php echo display('print') ?></button>
+                        <button type="submit" formaction="<?= base_url('dashboard/Csupplier/supplier_ledger_report_print') ?>" class="btn btn-primary"><?php echo display('print') ?></button>
                         <?php echo form_close(); ?>
                     </div>
                 </div>

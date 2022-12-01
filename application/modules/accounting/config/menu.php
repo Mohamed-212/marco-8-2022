@@ -65,11 +65,11 @@ $HmvcMenu["accounting"] = array(
         "method"     => "journal_voucher",
         "permission" => "read"
     ),
-    "voucher_approval" => array(
-        "controller" => "accounting",
-        "method"     => "voucher_approval",
-        "permission" => "read"
-    ),
+    // "voucher_approval" => array(
+    //     "controller" => "accounting",
+    //     "method"     => "voucher_approval",
+    //     "permission" => "read"
+    // ),
 //    "receipt_voucher" => array(
 //        "controller" => "accounting",
 //        "method"     => "receipt_voucher",
