@@ -204,7 +204,7 @@
 									?>
 										<?php foreach ($ledger as $v_ledger) { ?>
 											<tr>
-												<td><?php echo empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) ? '' : html_escape(date('d-m-Y', strtotime($v_ledger['cl_created_at']))); ?></td>
+											<td><?php echo date('d-m-Y', strtotime($v_ledger['cl_created_at'])); ?></td>
 												<td>
 													<?= empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) && empty($v_ledger['voucher']) ? display('previous_balance') : ''?>
 
