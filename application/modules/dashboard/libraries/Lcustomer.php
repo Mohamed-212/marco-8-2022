@@ -319,7 +319,7 @@ class Lcustomer {
 				}
 				
 
-				if(empty($ledger[$index]['receipt_no']))
+				if(!empty($ledger[$index]['receipt_no']))
 				{
 					$ledger[$index]['debit']=$ledger[$index]['amount'];
 					$ledger[$index]['balance']=$balance+$ledger[$index]['amount'];
