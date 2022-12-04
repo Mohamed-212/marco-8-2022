@@ -2294,8 +2294,12 @@ class Reports extends CI_Model
     }
 
     public function sales_report_all_details_sum_all(
-        $product_ids = [],
+        $product_id = null,
         $pricing_type = null,
+        $category_id = null,
+        $product_type = null,
+        $general_filter = null,
+        $material_filter = null,
         $sales_from = null,
         $sales_to = null,
         $purchase_from = null,
@@ -2310,9 +2314,13 @@ class Reports extends CI_Model
         $sell_to = null,
         $total_sell_from = null,
         $total_sell_to = null,
-        $from_date = null,
-        $to_date = null,
-        $per_page = null
+        $start_date = null,
+        $end_date = null,
+        $store_id = null,
+        $product_name = null,
+        $per_page = 20,
+        $page = 0,
+        $links = []
     ) {
 
         $selectAddon = 'pi.price';
@@ -2320,17 +2328,23 @@ class Reports extends CI_Model
             $selectAddon = 'pr.product_price';
         }
 
-        // $prods = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty, pi.supplier_price as supplier_price, $selectAddon as selected_price")
-        //     ->from('product_information pi')
-        //     ->join('purchase_stock_tbl p', 'p.product_id = pi.product_id', 'left')
-        //     ->join('invoice_stock_tbl i', 'i.product_id = pi.product_id', 'left')
-        //     ->where_in('pi.product_id', $product_ids)
-        //     ->group_by('pi.product_id')
-        //     ->get()->result();
+        if (!empty($general_filter) || !empty($material_filter)) {
+            $this->db->reset_query();
+            $filter_products = $this->db->select('a.product_id')
+                ->from('filter_product a, filter_product b');
 
-        // echo "<pre>";
-        // print_r($product_ids);
-        // exit;
+            if (!empty($general_filter)) {
+                $filter_products->where_in('a.filter_item_id', $general_filter);
+            }
+            if (!empty($material_filter)) {
+                $filter_products->where_in('b.filter_item_id', $material_filter);
+            }
+            $filter_products->where('a.product_id = b.product_id');
+            $filter_products = $filter_products->get()->result_array();
+            foreach ($filter_products as $prod) {
+                $product_ids[] = $prod['product_id'];
+            }
+        }
 
 
         $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, fi1.item_name as filter_1, fi2.item_name as filter_2, pi.supplier_price as supplier_price, $selectAddon as selected_price, SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
@@ -2346,13 +2360,13 @@ class Reports extends CI_Model
             $total->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = ' . $pricing_type, 'left');
         }
 
-        $total->where_in('pi.product_id', $product_ids);
+        // $total->where_in('pi.product_id', $product_ids);
 
         if ($purchase_from) {
-            $total->having('totalPurchaseQnty >=', $sales_from);
+            $total->having('totalPurchaseQnty >=', $purchase_from);
         }
         if ($purchase_to) {
-            $total->having('totalPurchaseQnty <=', $sales_from);
+            $total->having('totalPurchaseQnty <=', $purchase_to);
         }
 
         if ($sales_from) {
@@ -2391,19 +2405,33 @@ class Reports extends CI_Model
         }
 
         if ($total_sell_from) {
-            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) >=', $sell_from);
+            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) >=', $total_sell_from);
         }
         if ($total_sell_to) {
-            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) <=', $sell_to);
+            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) <=', $total_sell_to);
         }
 
-        if ($from_date && $to_date) {
-            $dateRangePurchase = "DATE(p.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-            $dateRangeSales = "DATE(i.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
+        if ($start_date && $end_date) {
+            $dateRangePurchase = "DATE(p.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+            $dateRangeSales = "DATE(i.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
             $total->where($dateRangePurchase, null, true)->or_where($dateRangeSales, null, true);
         }
 
-        $total = $total->group_by('pi.product_id')->get()->result_array();
+        if (!empty($category_id) && !empty($category_id[0])) {
+            $total->where_in('pi.category_id', $category_id);
+        }
+
+        if (!empty($product_name)) {
+            $total->where('LOWER(pi.product_name) LIKE', "%$product_name%");
+        }
+
+        if (($general_filter || $material_filter) && count($product_ids)) {
+            $total->where_in('pi.product_id', $product_ids);
+        }
+
+        $total = $total->limit($per_page, $page)->group_by('pi.product_id')->order_by('pi.product_name', 'asc')->get()->result_array();
+
+        // echo"<pre>";var_dump(count($total));exit;
 
         return $total;
         // echo "<pre>";
@@ -2449,5 +2477,148 @@ class Reports extends CI_Model
 
 
         // return [$totalPurchase, $totalSales, $balance];
+    }
+
+    public function sales_report_all_details_sum_all_count(
+        $product_id = null,
+        $pricing_type = null,
+        $category_id = null,
+        $product_type = null,
+        $general_filter = null,
+        $material_filter = null,
+        $sales_from = null,
+        $sales_to = null,
+        $purchase_from = null,
+        $purchase_to = null,
+        $balance_from = null,
+        $balance_to = null,
+        $supplier_from = null,
+        $supplier_to = null,
+        $total_supplier_from = null,
+        $total_supplier_to = null,
+        $sell_from = null,
+        $sell_to = null,
+        $total_sell_from = null,
+        $total_sell_to = null,
+        $start_date = null,
+        $end_date = null,
+        $store_id = null,
+        $product_name = null,
+        $per_page = 20,
+        $page = 0,
+        $links = []
+    ) {
+
+        $selectAddon = 'pi.price';
+        if ($pricing_type) {
+            $selectAddon = 'pr.product_price';
+        }
+
+        if (!empty($general_filter) || !empty($material_filter)) {
+            $this->db->reset_query();
+            $filter_products = $this->db->select('a.product_id')
+                ->from('filter_product a, filter_product b');
+
+            if (!empty($general_filter)) {
+                $filter_products->where_in('a.filter_item_id', $general_filter);
+            }
+            if (!empty($material_filter)) {
+                $filter_products->where_in('b.filter_item_id', $material_filter);
+            }
+            $filter_products->where('a.product_id = b.product_id');
+            $filter_products = $filter_products->get()->result_array();
+            foreach ($filter_products as $prod) {
+                $product_ids[] = $prod['product_id'];
+            }
+        }
+
+
+        $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, pi.supplier_price as supplier_price, $selectAddon as selected_price, SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+            ->from('product_information pi')
+            ->join('product_category c', 'c.category_id = pi.category_id', 'left')
+            // ->join('filter_product fp1', 'fp1.product_id = pi.product_id AND fp1.filter_type_id = 1', 'left')
+            // ->join('filter_items fi1', 'fi1.item_id = fp1.filter_item_id', 'left')
+            // ->join('filter_product fp2', 'fp2.product_id = pi.product_id AND fp2.filter_type_id = 2', 'left')
+            // ->join('filter_items fi2', 'fi2.item_id = fp2.filter_item_id', 'left')
+            ->join('purchase_stock_tbl p', 'p.product_id = pi.product_id', 'left')
+            ->join('invoice_stock_tbl i', 'i.product_id = pi.product_id', 'left');
+        if ($pricing_type) {
+            $total->join('pricing_types_product pr', 'pr.product_id = p.product_id AND pr.pri_type_id = ' . $pricing_type, 'left');
+        }
+
+        // $total->where_in('pi.product_id', $product_ids);
+
+        if ($purchase_from) {
+            $total->having('totalPurchaseQnty >=', $purchase_from);
+        }
+        if ($purchase_to) {
+            $total->having('totalPurchaseQnty <=', $purchase_to);
+        }
+
+        if ($sales_from) {
+            $total->having('totalSalesQnty >=', $sales_from);
+        }
+        if ($sales_to) {
+            $total->having('totalSalesQnty <=', $sales_to);
+        }
+
+        if ($balance_from) {
+            $total->having('(totalPurchaseQnty - totalSalesQnty) >=', $balance_from);
+        }
+        if ($balance_to) {
+            $total->having('(totalPurchaseQnty - totalSalesQnty) <=', $balance_to);
+        }
+
+        if ($supplier_from) {
+            $total->having('supplier_price >=', $supplier_from);
+        }
+        if ($supplier_to) {
+            $total->having('supplier_price <=', $supplier_to);
+        }
+
+        if ($total_supplier_from) {
+            $total->having('(supplier_price * (totalPurchaseQnty - totalSalesQnty)) >=', $total_supplier_from);
+        }
+        if ($total_supplier_to) {
+            $total->having('(supplier_price * (totalPurchaseQnty - totalSalesQnty)) <=', $total_supplier_to);
+        }
+
+        if ($sell_from) {
+            $total->having('selected_price >=', $sell_from);
+        }
+        if ($sell_to) {
+            $total->having('selected_price <=', $sell_to);
+        }
+
+        if ($total_sell_from) {
+            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) >=', $total_sell_from);
+        }
+        if ($total_sell_to) {
+            $total->having('(selected_price * (totalPurchaseQnty - totalSalesQnty)) <=', $total_sell_to);
+        }
+
+        if ($start_date && $end_date) {
+            $dateRangePurchase = "DATE(p.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+            $dateRangeSales = "DATE(i.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+            $total->where($dateRangePurchase, null, true)->or_where($dateRangeSales, null, true);
+        }
+
+        if (!empty($category_id) && !empty($category_id[0])) {
+            $total->where_in('pi.category_id', $category_id);
+        }
+
+        if (!empty($product_name)) {
+            $total->where('LOWER(pi.product_name) LIKE', "%$product_name%");
+        }
+
+        if (($general_filter || $material_filter) && count($product_ids)) {
+            $total->where_in('pi.product_id', $product_ids);
+        }
+
+        $total = $total->group_by('pi.product_id')->get()->result_array();
+
+        // echo"<pre>";var_dump(count($total));exit;
+
+        return $total;
     }
 }

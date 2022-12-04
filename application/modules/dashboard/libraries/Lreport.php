@@ -834,7 +834,8 @@ class Lreport
         $product_name = null,
         $per_page = 20,
         $page = 0,
-        $links = []
+        $links = [],
+        $footer = []
     ) {
         $CI = &get_instance();
         $CI->load->model('dashboard/Reports');
@@ -845,76 +846,76 @@ class Lreport
         $CI->load->model('dashboard/Categories');
         $CI->load->library('dashboard/occational');
 
-        if (empty($store_id)) {
-            $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
-            $store_id = $result->store_id;
-        }
+        // if (empty($store_id)) {
+        //     $result =  $CI->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+        //     $store_id = $result->store_id;
+        // }
 
-        $product_ids = [];
-        // if ($material_filter) {
+        // $product_ids = [];
+        // // if ($material_filter) {
+        // //     $CI->db->reset_query();
+        // //     $materialProducts = $CI->db->select('product_id')
+        // //         ->from('filter_product')
+        // //         ->where('filter_type_id', 2)
+        // //         ->where('filter_item_id', $material_filter)
+        // //         ->get()->result_array();
+        // //     foreach ($materialProducts as $prod) {
+        // //         $product_ids[] = $prod['product_id'];
+        // //     }
+        // // }
+
+        // if (!empty($general_filter) || !empty($material_filter)) {
         //     $CI->db->reset_query();
-        //     $materialProducts = $CI->db->select('product_id')
-        //         ->from('filter_product')
-        //         ->where('filter_type_id', 2)
-        //         ->where('filter_item_id', $material_filter)
-        //         ->get()->result_array();
-        //     foreach ($materialProducts as $prod) {
+        //     $filter_products = $CI->db->select('a.product_id')
+        //         ->from('filter_product a, filter_product b');
+
+        //     if (!empty($general_filter)) {
+        //         $filter_products->where_in('a.filter_item_id', $general_filter);
+        //     }
+        //     if (!empty($material_filter)) {
+        //         $filter_products->where_in('b.filter_item_id', $material_filter);
+        //     }
+        //     $filter_products->where('a.product_id = b.product_id');
+        //     $filter_products = $filter_products->get()->result_array();
+        //     foreach ($filter_products as $prod) {
         //         $product_ids[] = $prod['product_id'];
         //     }
         // }
 
-        if (!empty($general_filter) || !empty($material_filter)) {
-            $CI->db->reset_query();
-            $filter_products = $CI->db->select('a.product_id')
-                ->from('filter_product a, filter_product b');
+        // $CI->db->reset_query();
+        // $products = $CI->db->select('p.product_id')->from('product_information p');
 
-            if (!empty($general_filter)) {
-                $filter_products->where_in('a.filter_item_id', $general_filter);
-            }
-            if (!empty($material_filter)) {
-                $filter_products->where_in('b.filter_item_id', $material_filter);
-            }
-            $filter_products->where('a.product_id = b.product_id');
-            $filter_products = $filter_products->get()->result_array();
-            foreach ($filter_products as $prod) {
-                $product_ids[] = $prod['product_id'];
-            }
-        }
+        // // if (!$product_id) {
+        // // $product_id = '92886343';
+        // // if ($store_id) {
+        // //     $products->where('store_id', $store_id);
+        // // }
 
-        $CI->db->reset_query();
-        $products = $CI->db->select('p.product_id')->from('product_information p');
-
-        // if (!$product_id) {
-        // $product_id = '92886343';
-        // if ($store_id) {
-        //     $products->where('store_id', $store_id);
+        // if (!empty($category_id) && !empty($category_id[0])) {
+        //     $products->where_in('p.category_id', $category_id);
         // }
 
-        if (!empty($category_id) && !empty($category_id[0])) {
-            $products->where_in('p.category_id', $category_id);
-        }
-
-        if ($product_type) {
-            $products->where('p.assembly', $product_type);
-        }
-
-        if (($general_filter || $material_filter) && count($product_ids)) {
-            $products->where_in('p.product_id', $product_ids);
-        }
-        // } else {
-        if (!empty($product_name)) {
-            $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
-        }
-
-        // if (!$product_name && !$category_id && !$product_type && empty($product_ids)) {
-        //     $products->limit(400);
+        // if ($product_type) {
+        //     $products->where('p.assembly', $product_type);
         // }
 
+        // if (($general_filter || $material_filter) && count($product_ids)) {
+        //     $products->where_in('p.product_id', $product_ids);
+        // }
+        // // } else {
+        // if (!empty($product_name)) {
+        //     $products->where('LOWER(p.product_name) LIKE', "%$product_name%");
         // }
 
-        $products = $products->limit($per_page, $page)->order_by('product_name', 'asc')->get()->result_array();
+        // // if (!$product_name && !$category_id && !$product_type && empty($product_ids)) {
+        // //     $products->limit(400);
+        // // }
 
-        // echo "<pre>";var_dump($products);exit;
+        // // }
+
+        // $products = $products->limit($per_page, $page)->order_by('product_name', 'asc')->get()->result_array();
+
+        // echo "<pre>";var_dump(count($products));exit;
 
         $product_list = $CI->Products->product_list();
         $category_list = $CI->Categories->category_list();
@@ -974,42 +975,30 @@ class Lreport
         //     $stock_reports[] = $item;
         // }
 
-        $ids = [];
-        foreach ($products as $prod) {
-            $ids[] = $prod['product_id'];
-        }
+        // $ids = [];
+        // foreach ($products as $prod) {
+        //     $ids[] = $prod['product_id'];
+        // }
 
         // var_dump(count($ids));exit;
+        // echo "<pre>";var_dump($sales_from,
+        // $sales_to,
+        // $purchase_from,
+        // $purchase_to,
+        // $balance_from,
+        // $balance_to,
+        // $supplier_from,
+        // $supplier_to,
+        // $total_supplier_from,
+        // $total_supplier_to,
+        // $sell_from,
+        // $sell_to,
+        // $total_sell_from,
+        // $total_sell_to,
+        // $start_date,
+        // $end_date);exit;
 
         $stock_reports = $CI->Reports->sales_report_all_details_sum_all(
-            $ids,
-            $pricing_type,
-            $sales_from,
-            $sales_to,
-            $purchase_from,
-            $purchase_to,
-            $balance_from,
-            $balance_to,
-            $supplier_from,
-            $supplier_to,
-            $total_supplier_from,
-            $total_supplier_to,
-            $sell_from,
-            $sell_to,
-            $total_sell_from,
-            $total_sell_to,
-            $start_date,
-            $end_date
-        );
-
-        // var_dump($balance_from, $balance_to);exit;
-
-
-        // echo "<pre>";
-        // var_dump($stock_reports);
-        // exit;
-
-        $footer = $this->retrieve_sales_report_all_details_footer(
             $product_id,
             $pricing_type,
             $category_id,
@@ -1033,8 +1022,20 @@ class Lreport
             $start_date,
             $end_date,
             $store_id,
-            $product_name
+            $product_name,
+            $per_page,
+            $page,
+            $links
         );
+
+        // var_dump($balance_from, $balance_to);exit;
+
+
+        // echo "<pre>";
+        // var_dump($stock_reports);
+        // exit;
+
+        
 
         // var_dump($footer);
         // exit;
@@ -1059,6 +1060,94 @@ class Lreport
         // echo "<pre>";var_dump($reports);exit;
         $reportList = $CI->parser->parse('dashboard/report/sales_report_all_details', $data, true);
         return $reportList;
+    }
+
+    public function retrieve_sales_report_all_details_count_all(
+        $product_id = null,
+        $pricing_type = null,
+        $category_id = null,
+        $product_type = null,
+        $general_filter = null,
+        $material_filter = null,
+        $sales_from = null,
+        $sales_to = null,
+        $purchase_from = null,
+        $purchase_to = null,
+        $balance_from = null,
+        $balance_to = null,
+        $supplier_from = null,
+        $supplier_to = null,
+        $total_supplier_from = null,
+        $total_supplier_to = null,
+        $sell_from = null,
+        $sell_to = null,
+        $total_sell_from = null,
+        $total_sell_to = null,
+        $start_date = null,
+        $end_date = null,
+        $store_id = null,
+        $product_name = null,
+        $per_page = 20,
+        $page = 0,
+        $links = []
+    ) {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Suppliers');
+        $CI->load->model('dashboard/Products');
+        $CI->load->model('dashboard/Stores');
+        $CI->load->model('dashboard/Invoices');
+        $CI->load->model('dashboard/Categories');
+        $CI->load->library('dashboard/occational');
+
+        $stock_reports = $CI->Reports->sales_report_all_details_sum_all_count(
+            $product_id,
+            $pricing_type,
+            $category_id,
+            $product_type,
+            $general_filter,
+            $material_filter,
+            $sales_from,
+            $sales_to,
+            $purchase_from,
+            $purchase_to,
+            $balance_from,
+            $balance_to,
+            $supplier_from,
+            $supplier_to,
+            $total_supplier_from,
+            $total_supplier_to,
+            $sell_from,
+            $sell_to,
+            $total_sell_from,
+            $total_sell_to,
+            $start_date,
+            $end_date,
+            $store_id,
+            $product_name,
+            $per_page,
+            $page,
+            $links
+        );
+
+        $totalPurchase = 0;
+        $totalSales = 0;
+        $totalBalance = 0;
+        $totalSupplierPrice = 0;
+        $totalSellPrice = 0;
+        $count = 0;
+        foreach ($stock_reports as $fo) {
+            $totalPurchase += (int)$fo['totalPurchaseQnty'];
+            $totalSales += (int)$fo['totalSalesQnty'];
+            $totalBalance += (int)$fo['totalPurchaseQnty'] - (int)$fo['totalSalesQnty'];
+            $totalSupplierPrice += (float)$fo['supplier_price'];
+            $totalSellPrice += (float)$fo['selected_price'];
+            $count++;
+        }
+
+        return compact('totalPurchase', 'totalSales', 'totalBalance', 'totalSupplierPrice', 'totalSellPrice', 'count');
+
+        // return $stock_reports;
     }
 
     public function retrieve_sales_report_all_details_footer(

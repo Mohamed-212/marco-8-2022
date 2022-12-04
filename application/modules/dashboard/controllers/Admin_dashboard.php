@@ -487,14 +487,37 @@ class Admin_dashboard extends MX_Controller
         $protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
         $pageUrl = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-        $config["base_url"] = base_url('/dashboard/Admin_dashboard/sales_report_all_details/');
-        $config["total_rows"] = (int)$this->lreport->retrieve_sales_report_all_details_count(
+        $footer = $this->lreport->retrieve_sales_report_all_details_count_all(
+            $product_id,
+            $pricing_type,
             $category_id,
             $product_type,
             $general_filter,
             $material_filter,
+            $sales_from,
+            $sales_to,
+            $purchase_from,
+            $purchase_to,
+            $balance_from,
+            $balance_to,
+            $supplier_from,
+            $supplier_to,
+            $total_supplier_from,
+            $total_supplier_to,
+            $sell_from,
+            $sell_to,
+            $total_sell_from,
+            $total_sell_to,
+            $start_date,
+            $end_date,
+            null,
             $product_name
-        )->products_count;
+        );
+
+        // echo "<pre>";print_r($footer);exit;
+
+        $config["base_url"] = base_url('/dashboard/Admin_dashboard/sales_report_all_details/');
+        $config["total_rows"] = (int)$footer['count'];
         $config["per_page"] = 20;
         $config["uri_segment"] = 4;
         $config["num_links"] = 5;
@@ -514,6 +537,7 @@ class Admin_dashboard extends MX_Controller
         $config['last_tag_open'] = "<li>";
         $config['last_tagl_close'] = "</li>";
         $config['reuse_query_string'] = true;
+        // echo "<pre>";var_dump($config);exit;
         /* ends of bootstrap */
         $this->pagination->initialize($config);
         // $page = ($this->uri->segment(4)) ? $this->uri->segment(4) : 0;
@@ -550,7 +574,8 @@ class Admin_dashboard extends MX_Controller
             $product_name,
             $config["per_page"],
             $page,
-            $links
+            $links,
+            $footer
         );
         $this->template_lib->full_admin_html_view($content);
     }

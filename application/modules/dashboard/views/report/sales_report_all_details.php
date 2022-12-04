@@ -232,21 +232,22 @@
 								<div class="form-group row">
 									<label for="from_date" class="col-sm-4 col-form-label"><?php echo display('receive_quantity') ?>:</label>
 									<div class="col-sm-4">
-										<input type="text" name="sales_from" class="form-control" id="sales_from" value="<?php echo $this->input->get('sales_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
-									</div>
-									<div class="col-sm-4">
-										<input type="text" name="sales_to" class="form-control" id="sales_to" value="<?php echo $this->input->get('sales_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6">
-								<div class="form-group row">
-									<label for="from_date" class="col-sm-4 col-form-label"><?php echo display('transfer_quantity') ?>:</label>
-									<div class="col-sm-4">
 										<input type="text" name="purchase_from" class="form-control" id="purchase_from" value="<?php echo $this->input->get('purchase_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
 									</div>
 									<div class="col-sm-4">
 										<input type="text" name="purchase_to" class="form-control" id="purchase_to" value="<?php echo $this->input->get('purchase_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
+									</div>
+								</div>
+							</div>
+
+							<div class="col-sm-6">
+								<div class="form-group row">
+									<label for="from_date" class="col-sm-4 col-form-label"><?php echo display('transfer_quantity') ?>:</label>
+									<div class="col-sm-4">
+										<input type="text" name="sales_from" class="form-control" id="sales_from" value="<?php echo $this->input->get('sales_from', TRUE); ?>" placeholder="<?php echo display('from') ?>">
+									</div>
+									<div class="col-sm-4">
+										<input type="text" name="sales_to" class="form-control" id="sales_to" value="<?php echo $this->input->get('sales_to', TRUE); ?>" placeholder="<?php echo display('to') ?>">
 									</div>
 								</div>
 							</div>
