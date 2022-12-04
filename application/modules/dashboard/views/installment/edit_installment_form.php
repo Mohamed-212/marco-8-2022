@@ -293,7 +293,7 @@
 
                         <tr>
                             <td colspan="2" style="padding-left: 30px;padding-top: 50px;" id="total-still-td">
-                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?= (float)$customer_ledger[0][0]['total_credit'] - (float)$customer_ledger[1][0]['total_debit'] ?><span id="total-still" style="display: none;"></span>
+                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?= (float)$customer_ledger[1][0]['total_debit'] - (float)$customer_ledger[0][0]['total_credit'] ?><span id="total-still" style="display: none;"></span>
                             </td>
                         </tr>
                     </tbody>

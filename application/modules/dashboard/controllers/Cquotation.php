@@ -50,7 +50,7 @@ class Cquotation extends MX_Controller {
                     'payment_info' => $payment_info,
                     'employee' => $this->empdropdown(),
                     'all_pri_type' => $all_pri_type,
-					'total_balance'	=> round(-$summary[1][0]['total_debit']+$summary[0][0]['total_credit'], 2),
+					'total_balance'	=> round($summary[1][0]['total_debit']-$summary[0][0]['total_credit'], 2),
                 );
                 $data['module'] = "dashboard";
                 $data['page'] = "quotation/add_quotation_form";
