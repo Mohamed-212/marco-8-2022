@@ -1125,6 +1125,7 @@ class Purchases extends CI_Model
                 $ledger = array(
                     'transaction_id' => $this->auth->generator(15),
                     'purchase_id' => $purchase_id,
+                    'deposit_no'    =>  $this->auth->generator(10),
                     'invoice_no' => $this->input->post('invoice_no', TRUE),
                     'supplier_id' => $this->input->post('supplier_id', TRUE),
                     'amount' => $this->input->post('grand_total_price', TRUE),

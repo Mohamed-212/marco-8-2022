@@ -400,8 +400,8 @@ class Cpurchase_return extends MX_Controller {
                             'payment_type'  =>  1,
                             'date'          =>  date('Y-m-d'),
                             'status'        =>  1,
-                            'sl_created_at' => date('Y-m-d H:i:s')
-
+                            'sl_created_at' => date('Y-m-d H:i:s'),
+                            'voucher' => 'return'
                         );
                         $this->db->insert('supplier_ledger', $data);
                         //1st, debit supplier with total price with vat

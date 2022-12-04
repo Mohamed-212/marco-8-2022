@@ -99,8 +99,8 @@
                                         <i class="text-danger">*</i>
                                     </label>
                                     <div class="col-sm-8">
-                                        <?php $date = date('m-d-Y'); ?>
-                                        <input type="text" tabindex="3" class="form-control datepicker"
+                                        <?php $date = date('d-m-Y'); ?>
+                                        <input type="text" tabindex="3" class="form-control datepicker2"
                                                name="purchase_date" value="<?php echo html_escape($date); ?>" id="date"
                                                required />
                                     </div>
@@ -666,3 +666,38 @@
 </div>
 <!-- Add New Purchase End -->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_purchase_order_form.js'; ?>"></script>
+<script>
+    $(document).ready(function() {
+        $(".datepicker2").datepicker({
+			dateFormat: "dd-mm-yy"
+		});
+        // $(document).on('change', '#product_type', function() {
+        //     var val = $(this).val();
+
+        //     // console.log(val, accessories_category_id);
+        //     $('[name="product_rate[]"]').each(function(inx, el) {
+        //         var counter = inx + 1;
+        //         var catId = $('#category_id_' + counter).val();
+        //         // if (catId == accessories_category_id) {
+        //         var price = $('#price_item_' + counter).val();
+        //         // console.log(parseFloat(price));
+        //         if (parseFloat(price) != 0) {
+        //             // $('#price_item_saved_' + counter).val(price);
+        //         }
+        //         // }
+
+        //         if (val == '2') {
+        //             if (catId == accessories_category_id) {
+        //                 $('#price_item_' + counter).val(0);
+        //                 quantity_calculate(counter);
+        //             }
+        //         } else {
+        //             if (catId == accessories_category_id) {
+        //                 $('#price_item_' + counter).val($('#price_item_saved_' + counter).val());
+        //                 quantity_calculate(counter);
+        //             }
+        //         }
+        //     });
+        // });
+    });
+</script>

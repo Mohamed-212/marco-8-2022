@@ -254,7 +254,10 @@
                                                                         echo display('journal_voucher');
                                                                     }
                                                                     if ($ledger['voucher'] == 'CV') {
-                                                                        echo display('credit_voucher');
+                                                                        echo display('debit_voucher');
+                                                                    }
+                                                                    if ($ledger['voucher'] == 'return') {
+                                                                        echo display('purchase_return');
                                                                     }
                                                                 }
                                                             ?>

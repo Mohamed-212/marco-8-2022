@@ -389,6 +389,9 @@
                                                                             if ($ledger['voucher'] == 'CV') {
                                                                                 echo display('credit_voucher');
                                                                             }
+                                                                            if ($ledger['voucher'] == 'return') {
+                                                                                echo display('purchase_return');
+                                                                            }
                                                                         }
                                                                         ?>
                                                                     <?php else : ?>
