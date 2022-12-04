@@ -303,7 +303,7 @@ class Purchases extends CI_Model
                     'date' => date('d-m-Y', strtotime($this->input->post('purchase_date', TRUE))),
                     'description' => $this->input->post('purchase_details', FALSE),
                     'status' => 1,
-                    'sl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
+                    'sl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE) . date('H:i:s'))),
                     'deposit_no' =>  $this->auth->generator(10)
                 );
                 $this->db->insert('supplier_ledger', $ledger);
