@@ -201,6 +201,7 @@ class Lorder {
         $CI->load->model('dashboard/Orders');
 		$CI->load->model('dashboard/Stores');
 		$CI->load->model('dashboard/Shipping_methods');
+        $CI->load->model('dashboard/Customers');
 		$order_detail = $CI->Orders->retrieve_order_editdata($order_id);
 		$store_list 	  = $CI->Stores->store_list();
 		$terminal_list    = $CI->Orders->terminal_list();
@@ -208,6 +209,8 @@ class Lorder {
         $all_pri_type = $CI->Invoices->select_all_pri_type();
         $bank_list = $CI->Invoices->bank_list();
         $payment_info = $CI->Invoices->payment_info();
+        $customer = $CI->Customers->customer_list();
+        $summary = $CI->Customers->customer_transection_summary($order_detail[0]['customer_id'], null, null);
 
 		$i=0;
 		foreach($order_detail as $k=>$v){$i++;
@@ -246,6 +249,7 @@ class Lorder {
 			'all_pri_type'     =>	$all_pri_type,
 			'bank_list'        =>	$bank_list,
 			'payment_info'     =>	$payment_info,
+            'total_balance'    => round($summary[1][0]['total_debit'] - $summary[0][0]['total_credit'], 2),
 			);
 		$chapterList = $CI->parser->parse('dashboard/order/edit_order_form_updated',$data,true);
 		return $chapterList;

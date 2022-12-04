@@ -84,6 +84,7 @@ class Lquotation {
 		$CI->load->model('dashboard/Quotations');
 		$CI->load->model('dashboard/Stores');
 		$CI->load->model('dashboard/Invoices');
+		$CI->load->model('dashboard/Customers');
 		$quotation_detail = $CI->Quotations->retrieve_quotation_editdata($quotation_id);
 		$store_list 	  = $CI->Stores->store_list();
 		$terminal_list    = $CI->Quotations->terminal_list();
@@ -91,6 +92,8 @@ class Lquotation {
         $all_pri_type = $CI->Invoices->select_all_pri_type();
         $bank_list = $CI->Invoices->bank_list();
         $payment_info = $CI->Invoices->payment_info();
+		$customer = $CI->Customers->customer_list();
+        $summary = $CI->Customers->customer_transection_summary($quotation_detail[0]['customer_id'], null, null);
 
 		$i=0;
 		foreach($quotation_detail as $k=>$v){$i++;
@@ -139,6 +142,7 @@ class Lquotation {
 			'product_discount'=>	$quotation_detail[0]['product_discount'],
             'quotation_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
             'invoice_discount' 	=>	$quotation_detail[0]['quotation_discount_value'],
+			'total_balance'    => round($summary[1][0]['total_debit'] - $summary[0][0]['total_credit'], 2),
 		);
 		$chapterList = $CI->parser->parse('dashboard/quotation/edit_quotation_form_updated',$data,true);
 		return $chapterList;
