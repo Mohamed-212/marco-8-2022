@@ -548,9 +548,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right" colspan="2"><b><?php echo display('service_charge') ?>
+                                        <td style="display: none;"  class="text-right" colspan="2"><b><?php echo display('service_charge') ?>
                                                 :</b></td>
-                                        <td class="text-right" colspan="2">
+                                        <td style="display: none;"  class="text-right" colspan="2">
                                             <input type="text" id="service_charge" class="form-control text-right" name="service_charge" placeholder="0.00" onkeyup="calculateSum();" onchange="calculateSum();" />
                                         </td>
                                     </tr>

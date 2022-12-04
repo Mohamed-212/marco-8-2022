@@ -562,16 +562,16 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right" colspan="2"><b><?php echo display('service_charge') ?>
+                                        <td style="display: none;" class="text-right" colspan="2"><b><?php echo display('service_charge') ?>
                                                 :</b></td>
-                                        <td class="text-right" colspan="2">
+                                        <td style="display: none;" class="text-right" colspan="2">
                                             <input type="text" id="service_charge" class="form-control text-right" name="service_charge" placeholder="0.00" onkeyup="calculateSum();" onchange="calculateSum();" />
                                         </td>
                                     </tr>
                                     
                                     <tr>
                                     <?php if (!isset($order)) : ?>
-                                        <td class="text-right" colspan="2">
+                                        <td style="display: none;" class="text-right" colspan="2">
                                             <b><?php echo display('shipping_charge') ?>
                                                 :</b>
                                             <select name="shipping_method" id="shipping_method" class="form-control">
@@ -583,7 +583,7 @@
                                                 <?php endforeach; ?>
                                             </select>
                                         </td>
-                                        <td class="text-right" colspan="2">
+                                        <td style="display: none;" class="text-right" colspan="2">
                                             <input type="text" id="shipping_charge" class="form-control text-right" name="shipping_charge" onkeyup="calculateSum();" placeholder="0.00" />
                                         </td>
                                         <?php endif?>

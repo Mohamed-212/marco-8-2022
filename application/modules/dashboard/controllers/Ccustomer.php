@@ -278,7 +278,7 @@ class Ccustomer extends MX_Controller
 
         $summary = $this->Customers->customer_transection_summary($customer_id, null, null);
 
-        echo number_format(-$summary[1][0]['total_debit'] + $summary[0][0]['total_credit'], 2);
+        echo number_format($summary[1][0]['total_debit'] - $summary[0][0]['total_credit'], 2);
 
         return;
     }
