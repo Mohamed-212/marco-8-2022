@@ -5,14 +5,6 @@
 =====================================-->
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/print.js'; ?>"></script>
 
-<style>
-    @media print {
-        table, body{
-            height: 600px!important;
-        }
-    }
-</style>
-
 <!-- Barcode list start -->
 <div class="content-wrapper">
     <section class="content-header">
