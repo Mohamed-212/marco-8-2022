@@ -109,7 +109,7 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 13px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
