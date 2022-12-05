@@ -499,14 +499,17 @@ function calculateSum() {
 //Inovice paid amount
 function invoice_paidamount() {
     var customer_balance = parseFloat(
-        $('#customer_balance').val().replace(/\,/gi, '').replace(/\./gi, '')
+        $('#customer_balance').val().replace(/\,/gi, '')
     );
     // customer_balance = 500;
-    customer_balance = customer_balance >= 0 ? customer_balance : 0;
+    customer_balance = customer_balance < 0 ? Math.abs(customer_balance) : 0;
+    // console.log(customer_balance);
     var t = parseFloat($('#grandTotal').val() || '0.00'),
         a = parseFloat($('#paidAmount').val() || '0.00'),
         e = t - customer_balance - a;
     var test = e.toFixed(2);
+
+    // console.log(t, test);
 
     if (customer_balance >= t) {
         test = 0;
@@ -651,7 +654,7 @@ function add_month() {
 //Invoice full paid
 function full_paid() {
     var customer_balance = parseFloat(
-        $('#customer_balance').val().replace(/\,/gi, '').replace(/\./gi, '')
+        $('#customer_balance').val().replace(/\,/gi, '')
     );
     // customer_balance = 500;
     var elem = $('#is_quotation');
@@ -667,7 +670,7 @@ function full_paid() {
     //     $('#paidAmount').val(grandTotal - Math.abs(customer_balance));
     // }
 
-    $('#paidAmount').val(parseFloat($('#dueAmmount').val()));
+    $('#paidAmount').val(parseFloat($('#dueAmmount').val()) + parseFloat($('#paidAmount').val()));
 
     invoice_paidamount();
     $('.installment_setup').hide();
