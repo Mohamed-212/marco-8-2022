@@ -99,10 +99,17 @@
                                         // for ($i=0; $i < 60 ; $i++) {
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
+                                            <?php
+                                            $padding = '25px';
+                                            if($i == 0){
+                                                $padding = '14px';
+                                            }
+                                            ?>
+                                            ?>
                                             <tr>
                                             <td class="td_text" style="display: block;border:0">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 150px; text-align: center;height: 95px;margin:auto;padding-top: 20px;">
+                                                     style="width: 150px; text-align: center;height: 95px;margin:auto;padding-top: <?php echo $padding; ?> ;">
                                                     <div class="product-name barcode_cominfo" style="margin: 0px;">
                                                         <table style="width: 100%;text-align: center;">
                                                             <tbody>
