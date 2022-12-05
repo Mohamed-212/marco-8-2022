@@ -328,6 +328,7 @@ class Purchases extends CI_Model
                         $total_price_without_discount += ($rate[$i] * $quantity[$i]);
                         $category_id = $cat_id[$i];
 
+                        // todo
                         if ($category_id == 'XJIMM9X3ZAWUYXQ') {
                             //start for total sunglasses VAT
                             //ضرب نسبة الضريبة في إجمالي الصنف بعد المصاريف لمعرفة مقدار الزيادة في  كل صنف

@@ -389,7 +389,7 @@
                                                             <tr>
                                                                 <th class="text-right" colspan="7">Total number of items :</th>
                                                                 <td><?php echo html_escape($total_quantity); ?></td>
-                                                                <td colspan="5"></td>
+                                                                <!-- <td colspan="5"></td> -->
                                                             </tr>
                                                         </tfoot>
                                                     </table>

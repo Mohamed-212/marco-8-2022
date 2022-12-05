@@ -2347,7 +2347,7 @@ class Reports extends CI_Model
         }
 
 
-        $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, fi1.item_name as filter_1, fi2.item_name as filter_2, pi.supplier_price as supplier_price, $selectAddon as selected_price, SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+        $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, fi1.item_name as filter_1, fi2.item_name as filter_2, pi.supplier_price as supplier_price, $selectAddon as selected_price, IFNULL(SUM(p.quantity), 0) as totalPurchaseQnty, IFNULL(SUM(i.quantity), 0) as totalSalesQnty")
             ->from('product_information pi')
             ->join('product_category c', 'c.category_id = pi.category_id', 'left')
             ->join('filter_product fp1', 'fp1.product_id = pi.product_id AND fp1.filter_type_id = 1', 'left')
@@ -2533,13 +2533,13 @@ class Reports extends CI_Model
         }
 
 
-        $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, pi.supplier_price as supplier_price, $selectAddon as selected_price, SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+        $total = $this->db->select("pi.product_id, pi.product_name, pi.category_id, c.category_name, pi.supplier_price as supplier_price, $selectAddon as selected_price, IFNULL(SUM(p.quantity), 0) as totalPurchaseQnty, IFNULL(SUM(i.quantity), 0) as totalSalesQnty")
             ->from('product_information pi')
             ->join('product_category c', 'c.category_id = pi.category_id', 'left')
-            // ->join('filter_product fp1', 'fp1.product_id = pi.product_id AND fp1.filter_type_id = 1', 'left')
-            // ->join('filter_items fi1', 'fi1.item_id = fp1.filter_item_id', 'left')
-            // ->join('filter_product fp2', 'fp2.product_id = pi.product_id AND fp2.filter_type_id = 2', 'left')
-            // ->join('filter_items fi2', 'fi2.item_id = fp2.filter_item_id', 'left')
+            ->join('filter_product fp1', 'fp1.product_id = pi.product_id AND fp1.filter_type_id = 1', 'left')
+            ->join('filter_items fi1', 'fi1.item_id = fp1.filter_item_id', 'left')
+            ->join('filter_product fp2', 'fp2.product_id = pi.product_id AND fp2.filter_type_id = 2', 'left')
+            ->join('filter_items fi2', 'fi2.item_id = fp2.filter_item_id', 'left')
             ->join('purchase_stock_tbl p', 'p.product_id = pi.product_id', 'left')
             ->join('invoice_stock_tbl i', 'i.product_id = pi.product_id', 'left');
         if ($pricing_type) {

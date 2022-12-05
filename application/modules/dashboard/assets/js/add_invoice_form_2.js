@@ -451,6 +451,9 @@ function stock_by_product_variant_color(sl) {
     var variant_id = $("#variant_id_" + sl).val();
     var variant_color = $("#variant_color_id_" + sl).val();
     var assembly = $("#assembly" + sl).val();
+    var currentItemCatId = $('#category_id_' + sl).val();
+    var currentItemName = $('#product_name_' + sl).val();
+    var currentItemModel = $('#product_model_' + sl).val();
 
     if (store_id == 0) {
         alert(display("please_select_store"));
@@ -478,6 +481,36 @@ function stock_by_product_variant_color(sl) {
                         .val(res[2])
                         .change();
                 $("#batch_no_" + sl).html(res[4]);
+
+                if (currentItemCatId == accessories_category_id) {
+                    // this item is accessories
+                    // set price to zero if type is assemply
+                    if ($('#product_type').val() == '2') {
+                        $('#price_item_' + sl).val(0);
+                    }
+                    // get all items with same name sum quantity
+                    var totalQuantity = 0;
+                    $('[name="product_name"]').each(function() {
+                        var itemName = $(this).val();
+                        var counter = $(this).attr('id').replace('product_name_', '');
+                        var itemCategoryId = $('#category_id_' + counter).val();
+                        var itemProductModel = $('#product_model_' + counter).val();
+                        var itemQuantity = $('#total_qntt_' + counter).val();
+                        itemName = itemName.replace(itemProductModel, '');
+                        if (itemCategoryId != accessories_category_id) {
+                            if (itemName.indexOf(currentItemName.replace(currentItemModel, '')) > -1) {
+                                totalQuantity += parseInt(itemQuantity);
+                            }
+                            // console.log(sl, itemName.indexOf(obj.product_name.replace(obj.product_model, '')), itemName, counter, itemCategoryId);
+                        }
+                    }).promise().then(function() {
+                        $('#total_qntt_' + sl).val(totalQuantity).trigger('keyup');
+                        // console.log(totalQuantity);
+                    });
+                } else {
+                    $('#total_qntt_' + sl).val(1).trigger('keyup');
+                }
+
             } else {
                 $("#avl_qntt_" + sl).val("0");
                 $("#total_qntt_" + sl).val("0");
