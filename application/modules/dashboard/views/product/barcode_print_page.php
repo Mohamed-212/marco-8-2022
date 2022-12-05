@@ -102,13 +102,13 @@
                                             <tr>
                                             <td class="td_text" style="display: block;border:0">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 120px; text-align: center">
+                                                     style="width: 150px; text-align: center;height: 95px;margin: auto">
                                                     <div class="product-name barcode_cominfo">
-                                                        <table style="width: 100%;">
+                                                        <table style="width: 100%;text-align: start;">
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 15px;font-weight: 500;margin: 0px">
+                                                                    <p style="font-size: 15px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -116,7 +116,7 @@
                                                             <tr>
 
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 15px;font-weight: 500;margin: 0px">
+                                                                    <p style="font-size: 15px;font-weight: 600;margin: 0px">
                                                                         {model_only}
                                                                     </p>
 
@@ -124,7 +124,7 @@
                                                             </tr>
                                                             <tr>
 
-                                                                <td style="text-align: start;font-size: 15px;font-weight: 500;"><?= $size ?></td>
+                                                                <td style="font-size: 13px;font-weight: 500;"><?= $size ?></td>
 <!--                                                                --><?php //if ($is_sunglasses_category) : ?>
 <!--                                                                    <td style="text-align: end;">Polarized</td>-->
 <!--                                                                --><?php //endif ?>
