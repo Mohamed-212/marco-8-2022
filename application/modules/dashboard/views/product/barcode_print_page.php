@@ -105,7 +105,6 @@
                                                 $padding = '14px';
                                             }
                                             ?>
-                                            ?>
                                             <tr>
                                             <td class="td_text" style="display: block;border:0">
                                                 <div class="barcode-inner barcode_div"
