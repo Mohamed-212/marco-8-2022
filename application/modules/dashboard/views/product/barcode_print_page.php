@@ -100,16 +100,16 @@
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
                                             <tr>
-                                            <td class="td_text" style="display: block; padding-left: 75px;border:0">
+                                            <td class="td_text" style="display: block;border:0">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 150px;height: 110px;">
+                                                     style="width: 150px;height: 95px;">
                                                     <div class="product-name barcode_cominfo"
                                                          style="text-align: start; margin: 0px;">
                                                         <table style="width: 100%;">
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 15px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 15px;font-weight: 500;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -117,7 +117,7 @@
                                                             <tr>
 
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 15px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 15px;font-weight: 500;margin: 0px">
                                                                         {model_only}
                                                                     </p>
 
@@ -125,7 +125,7 @@
                                                             </tr>
                                                             <tr>
 
-                                                                <td style="text-align: start;font-size: 10px;font-weight: 600;"><?= $size ?></td>
+                                                                <td style="text-align: start;font-size: 15px;font-weight: 500;"><?= $size ?></td>
 <!--                                                                --><?php //if ($is_sunglasses_category) : ?>
 <!--                                                                    <td style="text-align: end;">Polarized</td>-->
 <!--                                                                --><?php //endif ?>
