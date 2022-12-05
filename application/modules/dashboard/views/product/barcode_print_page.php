@@ -140,7 +140,7 @@
                                                     ?>
                                                     <img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/' . $product_id . '/' . $year) ?>"
                                                          class="img-responsive center-block pbarimag"
-                                                         style="margin-left: 0;margin-right: 0;width: 90%;height: 40px" alt="">
+                                                         style="margin-left: 0;margin-right: 0;width: 90%;height: 50px" alt="">
                                                     <!-- <div class="product-name-details pname_details">{product_name}</div> -->
                                                     <!-- <div class="price price_text"><?php echo(($position == 0) ? "$currency {price}" : "{price} $currency") ?>
 														<small class="excl_vat"><?php echo display('size') ?>: <?= $size ?></small>
