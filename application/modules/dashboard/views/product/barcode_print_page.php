@@ -7,8 +7,8 @@
 
 <style>
     @media print {
-        html, body{
-            height: 600px;
+        table, body{
+            height: 600px!important;
         }
     }
 </style>
