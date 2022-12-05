@@ -102,14 +102,14 @@
                                             <tr>
                                             <td class="td_text" style="display: block; padding-left: 75px;border:0">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 150px;height: 95px;">
+                                                     style="width: 150px;height: 110px;">
                                                     <div class="product-name barcode_cominfo"
                                                          style="text-align: start; margin: 0px;">
                                                         <table style="width: 100%;">
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 15px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -117,7 +117,7 @@
                                                             <tr>
 
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 15px;font-weight: 600;margin: 0px">
                                                                         {model_only}
                                                                     </p>
 
@@ -140,7 +140,7 @@
                                                     ?>
                                                     <img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/' . $product_id . '/' . $year) ?>"
                                                          class="img-responsive center-block pbarimag"
-                                                         style="margin-left: 0;margin-right: 0;width: 90%;height: 35px" alt="">
+                                                         style="margin-left: 0;margin-right: 0;width: 90%;height: 40px" alt="">
                                                     <!-- <div class="product-name-details pname_details">{product_name}</div> -->
                                                     <!-- <div class="price price_text"><?php echo(($position == 0) ? "$currency {price}" : "{price} $currency") ?>
 														<small class="excl_vat"><?php echo display('size') ?>: <?= $size ?></small>
