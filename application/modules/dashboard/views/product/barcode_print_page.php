@@ -100,7 +100,7 @@
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
                                             <?php
-                                            $padding = '25.5px';
+                                            $padding = '25.52px';
                                             if($i == 0){
                                                 $padding = '14px';
                                             }
