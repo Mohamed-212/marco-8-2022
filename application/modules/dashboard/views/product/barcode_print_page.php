@@ -102,8 +102,8 @@
                                             <tr>
                                             <td class="td_text" style="display: block;border:0">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 150px; text-align: center;height: 95px;margin: 20px auto">
-                                                    <div class="product-name barcode_cominfo" style="margin: 0px;padding-top: 20px;">
+                                                     style="width: 150px; text-align: center;height: 95px;margin:auto;padding-top: 20px;">
+                                                    <div class="product-name barcode_cominfo" style="margin: 0px;">
                                                         <table style="width: 100%;text-align: center;">
                                                             <tbody>
                                                             <tr>
