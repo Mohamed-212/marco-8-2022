@@ -515,8 +515,10 @@ function stock_by_product_variant_color(sl) {
                 } else {
                     if (curr_qntt > 1 && ava >= curr_qntt) {
                         $("#total_qntt_" + sl).val(curr_qntt).trigger('keyup');
-                    } else {
-                        $("#total_qntt_" + sl).val(res[1]).trigger('keyup');
+                    } else if (ava > 1) {
+                        $("#total_qntt_" + sl).val(1).trigger('keyup');
+                    }  else {
+                        $("#total_qntt_" + sl).val(0).trigger('keyup');
                     }
                     // $('#total_qntt_' + sl).val(1).trigger('keyup');
                 }
