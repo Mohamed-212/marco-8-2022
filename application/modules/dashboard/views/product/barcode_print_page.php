@@ -99,17 +99,22 @@
                                         // for ($i=0; $i < 60 ; $i++) {
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
+                                            <?php
+                                            $padding = '11.52px';
+                                            if($i == 0){
+                                                $padding = '0px';
+                                            }
+                                            ?>
                                             <tr>
-                                            <td class="td_text" style="display: block; padding-left: 75px;border:0">
+                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 95px">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 150px;height: 95px;">
-                                                    <div class="product-name barcode_cominfo"
-                                                         style="text-align: start; margin: 0px;">
-                                                        <table style="width: 100%;">
+                                                     style="width: 150px; text-align: center;margin:auto;padding-top: <?php echo $padding; ?> ;">
+                                                    <div class="product-name barcode_cominfo" style="margin: 0px;">
+                                                        <table style="width: 100%;text-align: center;">
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 12px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 14px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -117,7 +122,7 @@
                                                             <tr>
 
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 14px;font-weight: 600;margin: 0px">
                                                                         {model_only}
                                                                     </p>
 
@@ -125,7 +130,7 @@
                                                             </tr>
                                                             <tr>
 
-                                                                <td style="text-align: start;font-size: 10px;font-weight: 600;"><?= $size ?></td>
+                                                                <td style="font-size: 13px;font-weight: 500;"><?= $size ?></td>
 <!--                                                                --><?php //if ($is_sunglasses_category) : ?>
 <!--                                                                    <td style="text-align: end;">Polarized</td>-->
 <!--                                                                --><?php //endif ?>
@@ -140,7 +145,7 @@
                                                     ?>
                                                     <img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/' . $product_id . '/' . $year) ?>"
                                                          class="img-responsive center-block pbarimag"
-                                                         style="margin-left: 0;margin-right: 0;width: 90%;height: 35px" alt="">
+                                                         style="margin-left: 0;margin-right: 0;width: 90%;height: 35px;padding-left: 15px" alt="">
                                                     <!-- <div class="product-name-details pname_details">{product_name}</div> -->
                                                     <!-- <div class="price price_text"><?php echo(($position == 0) ? "$currency {price}" : "{price} $currency") ?>
 														<small class="excl_vat"><?php echo display('size') ?>: <?= $size ?></small>
