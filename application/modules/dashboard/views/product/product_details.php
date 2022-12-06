@@ -100,7 +100,7 @@
 							<tr>
 								<th><?php echo display('open_quantity') ?> = <span class="color_red">{openQuantity}</span></th>
 								<th><?php echo display('total_purchase') ?> = <span class="color_red">{total_purchase}</span></th>
-								<th><?php echo display('total_sales') ?> = <span class="color_red"><?=$total_sales + $total_return?></span></th>
+								<th><?php echo display('total_sales') ?> = <span class="color_red"><?= $total_sales + $total_return ?></span></th>
 								<th><?php echo display('total_return') ?> = <span class="color_red">{total_return}</span></th>
 								<th><?php echo display('stock') ?> = <span class="color_red">{stock}</span></th>
 							</tr>
@@ -311,50 +311,63 @@
 
 		<!-- Stock Adjustment table -->
 		<div class="row">
-            <div class="col-sm-12">
-                <div class="panel panel-bd lobidrag">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <h4><?php echo display('stock_adjustment_details') ?> </h4>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table id="dataTableExample3" class="table table-bordered table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th><?php echo display('adjustment_id') ?></th>
-                                        <th><?php echo display('product') ?></th>
-                                        <th><?php echo display('variant') ?></th>
-                                        <!-- <th><?php echo display('color_variant') ?></th> -->
-                                        <th><?php echo display('previous_quantity') ?></th>
-                                        <th><?php echo display('adjustment_quantity') ?></th>
-                                        <th><?php echo display('adjustment_type') ?></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($adjustments)) {
-                                        foreach ($adjustments as $details) {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo html_escape($details['adjustment_id']); ?></td>
-                                        <td><?php echo html_escape($details['product_name']); ?></td>
-                                        <td><?php echo html_escape(@$details['variant_name']); ?></td>
-                                        <!-- <td><?php echo html_escape(@$details['color_variant']); ?></td> -->
-                                        <td><?php echo html_escape(@$details['previous_quantity']); ?></td>
-                                        <td><?php echo html_escape(@$details['adjustment_quantity']); ?></td>
-                                        <td><?php echo html_escape(ucfirst($details['adjustment_type'])); ?></td>
-                                    </tr>
-                                    <?php }
-                                    } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div class="col-sm-12">
+				<div class="panel panel-bd lobidrag">
+					<div class="panel-heading">
+						<div class="panel-title">
+							<h4><?php echo display('stock_adjustment_details') ?> </h4>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="table-responsive">
+							<table id="dataTableExample3" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th><?php echo display('adjustment_id') ?></th>
+										<th><?php echo display('product') ?></th>
+										<th><?php echo display('variant') ?></th>
+										<!-- <th><?php echo display('color_variant') ?></th> -->
+										<th><?php echo display('previous_quantity') ?></th>
+										<th><?php echo display('adjustment_quantity') ?></th>
+										<th><?php echo display('adjustment_type') ?></th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									if (!empty($adjustments)) {
+										$total_qty = 0;
+										$total_prev = 0;
+										foreach ($adjustments as $details) {
+											$total_qty += (int)$details['adjustment_quantity'];
+											$total_prev += (int)$details['previous_quantity'];
+									?>
+											<tr>
+												<td><?php echo html_escape($details['adjustment_id']); ?></td>
+												<td><?php echo html_escape($details['product_name']); ?></td>
+												<td><?php echo html_escape(@$details['variant_name']); ?></td>
+												<!-- <td><?php echo html_escape(@$details['color_variant']); ?></td> -->
+												<td><?php echo html_escape(@$details['previous_quantity']); ?></td>
+												<td><?php echo html_escape(@$details['adjustment_quantity']); ?></td>
+												<td><?php echo html_escape(ucfirst($details['adjustment_type'])); ?></td>
+											</tr>
+									<?php }
+									} ?>
+								</tbody>
+								<tfoot>
+									<tr>
+										<th colspan="3"><?= display('total') ?></th>
+										<th>
+											<?= $total_prev ?>
+										</th>
+										<th><?= $total_qty ?></th>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 	</section>
 </div>

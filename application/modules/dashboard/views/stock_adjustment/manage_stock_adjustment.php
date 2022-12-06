@@ -101,13 +101,13 @@
 
                                             <select class="form-control" name="adjustment_status" required="">
                                                 <option value=""></option>
-                                                <option value="1" <?php if ($adjustment['adjustment_status'] == '0') {
+                                                <option value="0" <?php if ($adjustment['adjustment_status'] == '0') {
 																				echo "selected";
 																			} ?>><?php echo display('pending') ?></option>
-                                                <option value="2" <?php if ($adjustment['adjustment_status'] == '1') {
+                                                <option value="1" <?php if ($adjustment['adjustment_status'] == '1') {
 																				echo "selected";
 																			} ?>><?php echo display('approved') ?></option>
-                                                <option value="3" <?php if ($adjustment['adjustment_status'] == '2') {
+                                                <option value="2" <?php if ($adjustment['adjustment_status'] == '2') {
 																				echo "selected";
 																			} ?>><?php echo display('cancel') ?></option>
                                             </select>
