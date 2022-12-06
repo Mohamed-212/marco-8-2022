@@ -135,23 +135,31 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php if ($purchaseData) { ?>
-										{purchaseData}
-										<tr>
-											<td>{final_date}</td>
-											<td>
-												<a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_inserted_data/{purchase_id}'; ?>">{invoice_no} <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
-												</a>
-											</td>
-											<td>
-												<a href="<?php echo base_url() . 'dashboard/Csupplier/supplier_details/{supplier_id}'; ?>">{supplier_name} <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
-											</td>
-											<td>{variant_name}</td>
-											<td>{quantity}</td>
-											<td><?php echo (($position == 0) ? "$currency {rate}" : "{rate} $currency") ?></td>
-											<td class="text-right"> <?php echo (($position == 0) ? "$currency {total_amount}" : "{total_amount} $currency") ?></td>
-										</tr>
-										{/purchaseData}
+									<?php if ($purchaseData) { 
+										$sunGlasses = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->get()->row();
+										?>
+
+										<?php foreach ($purchaseData as $pur) { 
+											$pur_rate = $pur['rate_after_exp'];
+											if ($pur['category_id'] == $sunGlasses->category_id) {
+												$pur_rate = $pur['rate_after_sunvat'];
+											}
+											?>
+											<tr>
+												<td><?=date('d-m-Y', strtotime($pur['created_at']))?></td>
+												<td>
+													<a href="<?php echo base_url() . 'dashboard/Cpurchase/purchase_inserted_data/' . $pur['purchase_id']; ?>"><?=$pur['invoice']?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
+													</a>
+												</td>
+												<td>
+													<a href="<?php echo base_url() . 'dashboard/Csupplier/supplier_details/' . $pur['supplier_id']; ?>"><?=$pur['supplier_name']?> <i class="fa fa-user pull-right" aria-hidden="true"></i></a>
+												</td>
+												<td><?=$pur['variant_name']?></td>
+												<td><?=$pur['quantity']?></td>
+												<td><?php echo (($position == 0) ? "$currency " . $pur_rate : $pur_rate ." $currency") ?></td>
+												<td class="text-right"> <?php echo (($position == 0) ? "$currency " . ($pur_rate * $pur['quantity']) : ($pur_rate * $pur['quantity']) . " $currency") ?></td>
+											</tr>
+										<?php } ?>
 									<?php } ?>
 								</tbody>
 								<tfoot>

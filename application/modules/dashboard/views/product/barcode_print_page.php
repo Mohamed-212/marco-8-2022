@@ -140,7 +140,7 @@
                                                     </div>
                                                     <!-- <span class="model-name pmodelname">{product_model}</span> -->
                                                     <?php
-                                                    $year = date_parse($year)['year'];
+                                                    $year = date('Y');
 
                                                     ?>
                                                     <img src="<?php echo base_url('dashboard/cbarcode/barcode_generator/' . $product_id . '/' . $year) ?>"

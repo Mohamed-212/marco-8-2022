@@ -179,7 +179,7 @@ class Purchases extends CI_Model
                 foreach ($p_id as $key => $value) {
                     if (!empty($p_id[$key]) && !empty($p_id[$key])) {
 
-                        if ($cat_id[$key] == 'XJIMM9X3ZAWUYXQ') {
+                        if ($cat_id[$key] == '3D8ELDWLSMLAAZL') {
                             $total_price = $t_price[$key];
                             $total_sunglasses_price = $total_sunglasses_price + $total_price;
                         }
@@ -329,7 +329,7 @@ class Purchases extends CI_Model
                         $category_id = $cat_id[$i];
 
                         // todo
-                        if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                        if ($category_id == '3D8ELDWLSMLAAZL') {
                             //start for total sunglasses VAT
                             //ضرب نسبة الضريبة في إجمالي الصنف بعد المصاريف لمعرفة مقدار الزيادة في  كل صنف
                             $total_price_sunvat = $ratio_sunglasses * $total_price;
@@ -1033,7 +1033,7 @@ class Purchases extends CI_Model
                 foreach ($p_id as $key => $value) {
                     if (!empty($p_id[$key]) && !empty($p_id[$key])) {
 
-                        if ($cat_id[$key] == 'XJIMM9X3ZAWUYXQ') {
+                        if ($cat_id[$key] == '3D8ELDWLSMLAAZL') {
                             $total_price = $t_price[$key];
                             $total_sunglasses_price = $total_sunglasses_price + $total_price;
                         }
@@ -1157,7 +1157,7 @@ class Purchases extends CI_Model
                         $total_price_without_discount += ($rate[$key] * $quantity[$key]);
                         $category_id = $cat_id[$key];
 
-                        if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                        if ($category_id == '3D8ELDWLSMLAAZL') {
                             //start for total sunglasses VAT
                             //ضرب نسبة الضريبة في إجمالي الصنف بعد المصاريف لمعرفة مقدار الزيادة في  كل صنف
                             $total_price_sunvat = $ratio_sunglasses * $total_price;

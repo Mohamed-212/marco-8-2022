@@ -291,7 +291,7 @@ class Cproduct extends MX_Controller
                 $result2 = $this->db->insert_batch('product_translation', $data2);
             }
             $result = $this->Products->product_entry($data);
-            if ($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ') {
+            if ($this->input->post('category_id', TRUE) == '3D8ELDWLSMLAAZL') {
                 $data = array(
                     't_p_s_id' => $this->auth->generator(15),
                     'product_id' => $product_id,
@@ -2292,7 +2292,7 @@ class Cproduct extends MX_Controller
                         $this->db->insert('purchase_stock_tbl', $stock);
                     }
                 }
-                if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                if ($category_id == '3D8ELDWLSMLAAZL') {
                     $data = array(
                         't_p_s_id' => $this->auth->generator(15),
                         'product_id' => $product_id,
