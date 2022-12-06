@@ -197,7 +197,7 @@
                                                         <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
                                                     </select>
                                                 </td>
-                                                <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' value='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>'></td>
+                                                <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>' value="<?=$inv->ava_quantity >= 1 ? 1 : 0?>"></td>
                                             </tr>
                                         <?php endforeach ?>
                                     <?php endif; ?>

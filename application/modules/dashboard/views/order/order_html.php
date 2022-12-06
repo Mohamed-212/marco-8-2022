@@ -705,13 +705,13 @@
                                                                             <?php echo (($position == 0) ? $currency . " " . $paid_amount : $paid_amount . " " . $currency) ?>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php if ($invoice_all_data[0]['due_amount'] != 0) { ?>
+                                                                    <!-- <?php if ($invoice_all_data[0]['due_amount'] != 0) { ?>
                                                                         <tr>
                                                                             <th><?php echo display('due') ?> :</th>
                                                                             <td><?php echo (($position == 0) ? $currency . " " . $due_amount : $due_amount . " " . $currency) ?>
                                                                             </td>
                                                                         </tr>
-                                                                    <?php } ?>
+                                                                    <?php } ?> -->
                                                                 </table>
                                                             </div>
 
