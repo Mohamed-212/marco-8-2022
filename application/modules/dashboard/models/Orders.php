@@ -3012,6 +3012,8 @@ class Orders extends CI_Model
     //Retrieve order Edit Data
     public function retrieve_order_editdata($order_id)
     {
+        $acc_category = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
+
         $this->db->select('
 			a.*,
 			b.customer_name,
@@ -3019,6 +3021,7 @@ class Orders extends CI_Model
 			c.product_id,
 			d.product_name,
 			d.product_model,
+            d.category_id,
 			a.status
 			');
         // $this->db->from('order a');
@@ -3029,10 +3032,13 @@ class Orders extends CI_Model
         $this->db->join('product_information d', 'd.product_id = c.product_id');
         // $this->db->where('a.order_id', $order_id);
         $this->db->where('a.order_id', $order_id);
+        // $this->db->order_by('d.product_name');
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            return $query->result_array();
+            $result = $query->result_array();
+            uksort($result, fn ($a) => $result[$a]['category_id'] == $acc_category->category_id ? 1 : -1);
+            return $result;
         }
         return false;
     }

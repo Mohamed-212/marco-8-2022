@@ -339,7 +339,7 @@
                                             }
 
                                             //Variant for per product
-                                            $this->db->select('a.variants, a.assembly, a.category_id, pt.product_price');
+                                            $this->db->select('a.variants, a.assembly, a.category_id, pt.product_price, a.*');
                                             $this->db->from('product_information a');
                                             $this->db->join('pricing_types_product pt', 'pt.product_id = a.product_id AND pt.pri_type_id = 1');
                                             $this->db->where(array('a.product_id' => $value['product_id'], 'a.status' => 1));
@@ -368,6 +368,7 @@
                                                     <input type="hidden" name="sizev[]" id="size<?php echo $i ?>" value="<?php echo $exploded[0] ?>">
                                                     <input type="hidden" class="baseUrl" value="<?php echo base_url(); ?>" />
                                                     <input type="hidden" hidden name="category_id" id="category_id_<?php echo $i ?>" value="<?=$product_information->category_id?>" />
+                                                    <input type="hidden" hidden name="product_model" id="product_model_<?php echo $i ?>" value="<?=$product_information->product_model?>" />
                                                     <div id="viewassembly<?php echo $i ?>" class="text-center <?php if ($product_information->assembly == 0) {
                                                                                                                     echo 'hidden';
                                                                                                                 } ?> ">
@@ -727,7 +728,7 @@
             <input type="hidden" id="cgst_status" value="<?php echo html_escape($tax['cgst_status']); ?>">
             <input type="hidden" id="sgst_status" value="<?php echo html_escape($tax['sgst_status']); ?>">
             <input type="hidden" id="igst_status" value="<?php echo html_escape($tax['igst_status']); ?>">
-            <script src="<?php echo MOD_URL . 'dashboard/assets/js/add_invoice_form_2.js'; ?>"></script>
+            <script src="<?php echo MOD_URL . 'dashboard/assets/js/edit_invoice_form_2.js'; ?>"></script>
         </div>
     </section>
 </div>

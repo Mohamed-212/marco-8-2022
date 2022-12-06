@@ -339,7 +339,7 @@
                                             }
 
                                             //Variant for per product
-                                            $this->db->select('a.variants, a.assembly');
+                                            $this->db->select('a.variants, a.assembly, a.*');
                                             $this->db->from('product_information a');
                                             $this->db->where(array('a.product_id' => $value['product_id'], 'a.status' => 1));
                                             $product_information = $this->db->get()->row();

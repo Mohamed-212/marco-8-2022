@@ -217,6 +217,8 @@ class Lorder {
 		   $order_detail[$k]['sl']=$i;
 		}
 
+        // echo "<pre>";var_dump($order_detail);exit;
+
         // $tax = 
 
 		$data=array(
