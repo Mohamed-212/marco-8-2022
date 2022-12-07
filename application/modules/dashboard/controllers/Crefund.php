@@ -149,6 +149,7 @@ class Crefund extends MX_Controller
         $filter = array(
             'invoice_no' =>  $this->input->post('invoice_no', TRUE),
             'invoice_id' =>  $this->input->post('invoice_id', TRUE),
+            // 'payment_id' =>  $this->input->post('payment_id', TRUE),
             'product_id' =>  $this->input->post('product_id', TRUE),
             'variant_id' =>  $this->input->post('variant_id', TRUE),
             'status' =>  $this->input->post('status', TRUE),
@@ -169,6 +170,7 @@ class Crefund extends MX_Controller
             $product_id = $this->input->post('invoice_products_id_' . $selectedInx, TRUE);
             $variant_id = $this->input->post('variant_id_' . $selectedInx, TRUE);
             $invoice_id = $this->input->post('invoice_id_' . $selectedInx, TRUE);
+            $payment_id = $this->input->post('payment_id_' . $selectedInx, TRUE);
             $available_quantity = $this->input->post('available_quantity_' . $selectedInx, TRUE);
             $status = $this->input->post('status_' . $selectedInx, TRUE);
             $quantity = $this->input->post('quantity_' . $selectedInx, TRUE);
@@ -479,15 +481,15 @@ class Crefund extends MX_Controller
             );
             $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
 
-            if ($filter['payment_id'] != "" && $this->input->post('payment_type', TRUE) == 1) {
-                $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
+            if (!empty($payment_id)) {
+                $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
                 $bank_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'SR-' . $return_invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => $payment_head->HeadCode,
-                    'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $filter['payment_id'] . ')',
+                    'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $payment_id . ')',
                     'Debit' => 0,
                     'Credit' => $bank_return,
                     'IsPosted' => 1,

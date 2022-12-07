@@ -677,8 +677,10 @@ function full_paid() {
     // }
     setTimeout(() => {
         var grandTotal = parseFloat($('#grandTotal').val() || '0');
-    $('#paidAmount').val(parseFloat($('#dueAmmount').val() || '0') + parseFloat($('#paidAmount').val() || '0'));
+    $('#paidAmount').val((parseFloat($('#dueAmmount').val() || '0') + parseFloat($('#paidAmount').val() || '0')).toFixed(2));
+    $('#dueAmmount').val('0');
     }, 200);
+    
 
     invoice_paidamount();
     $('.installment_setup').hide();
