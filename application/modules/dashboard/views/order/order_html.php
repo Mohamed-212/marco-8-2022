@@ -529,7 +529,7 @@
                                                                     <?php endfor; ?>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="5">
+                                                                    <td colspan="5" style="background: transparent !important;">
                                                                     <div class="width_70p ft_left">
                                                                 <?php if (!empty($cardpayments)) { ?>
                                                                     <div class="col-sm-7">
@@ -556,7 +556,110 @@
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <div class="width_30p ft_left">
+
+                                                            <style>
+                                                                                .left-border {
+                                                                                    border-right: 1px solid gold;
+                                                                                    border-left: 1px solid gold;
+                                                                                }
+                                                                                .tabled tr th {
+                                                                                    text-align: center;
+                                                                                    text-transform: capitalize;
+                                                                                    border-right: 1px solid gold;
+                                                                                    border-left: 1px solid gold;
+                                                                                }
+                                                                                .print-only {
+                                                                                    display: none;
+                                                                                }
+                                                                                .thead {
+                                                                                    /* font-size: 6px !important; */
+    padding: 0;
+    margin: 0;
+    letter-spacing: 0px;
+                                }
+                                                                                @media print {
+                                                                                    .tabled {
+                                                                                        background: transparent;
+                                                                                    }
+                                                                                    .tabled tr {
+                                                                                        background: transparent;
+                                                                                    }
+                                                                                    .tabled tr th {
+                                                                                        background: transparent;
+                                                                                    }
+                                                                                    .print-only {
+                                                                                        display: block;
+                                                                                    }
+                                                                                }
+                                                                            </style>
+                                                                            <div class="print-only" style="width: 100%;background: transparent;padding: 0;margin-bottom: -2rem;">
+                                                                                <table class="table colored tabled" style="width: 100%">
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <?=display('balance')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            250.1
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <?=display('quantity_inv')?>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <?=display('vat_inv')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            0
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <?=display('discount_inv')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            0
+                                                                                        </th>
+                                                                                        <th class="left-border" rowspan="2">
+                                                                                            <div style="display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 6rem;
+    /* padding: 100%; */
+    justify-content: center;
+    color: inherit !important;">
+                                                                                                5  
+                                                                                            </div>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                           
+                                                                                           <?=display('balance after vat')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            25
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            
+                                                                                            <?=display('balance after discount')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            250.1
+                                                                                        </th>
+                                                                                        <!-- <th style="visibility: hidden;">
+                                                                                            -
+                                                                                        </th> -->
+                                                                                        <th>
+                                                                                            
+                                                                                            <?=display('total balance after invoice')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            250.1
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+
+                                                            <div class="width_30p ft_left print-none">
 
                                                                 <table class="table colored">
                                                                 <?php if ((int)$i_grand_amount != (int)$total_amount) :?>

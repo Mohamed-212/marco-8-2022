@@ -158,6 +158,9 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                 .footerr {
                                     bottom: 35px;
                                 }
+                                .print-only {
+                                    /* display: block; */
+                                }
                             }
 
                             .thead tr,
@@ -184,6 +187,12 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                             .line-height {
                                 line-height: 1rem;
                             }
+                            .print-only {
+                                    /* display: none; */
+                                }
+                                .thead {
+                                    font-size: 12px;
+                                }
                         </style>
                         <div class="panel-body mt-0 pt-0" style="padding: 0">
                             <table>
@@ -381,11 +390,11 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                 $customer_page = $this->session->userdata('customer_page');
                                                                 // if (!isset($customer_page)) {
                                                                 ?>
-                                                                    <p>
-                                                                        <?php echo display('employee'); ?> : <?= $emp_name ?>
-                                                                    </p>
+                                                                <p>
+                                                                    <?php echo display('employee'); ?> : <?= $emp_name ?>
+                                                                </p>
                                                                 <?php
-                                                                    $this->session->unset_userdata('customer_page');
+                                                                $this->session->unset_userdata('customer_page');
                                                                 // } 
                                                                 ?>
 
@@ -463,13 +472,13 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                 ?>
                                                                             </td>
                                                                             <td class='hide-me' style="font-size: 12px;"><?php echo html_escape($invoice['variant_name']);
-                                                                                                if (!empty($invoice['variant_color'])) {
-                                                                                                    $cvarinfo = $this->db->select('variant_name')->from('variant')->where('variant_id', $invoice['variant_color'])->get()->row();
-                                                                                                    if (!empty($cvarinfo)) {
-                                                                                                        echo ', ' . $cvarinfo->variant_name;
-                                                                                                    }
-                                                                                                }
-                                                                                                ?>
+                                                                                                                            if (!empty($invoice['variant_color'])) {
+                                                                                                                                $cvarinfo = $this->db->select('variant_name')->from('variant')->where('variant_id', $invoice['variant_color'])->get()->row();
+                                                                                                                                if (!empty($cvarinfo)) {
+                                                                                                                                    echo ', ' . $cvarinfo->variant_name;
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            ?>
                                                                             </td>
                                                                             <!--                                                                            <td class='hide-me'>--><?php //echo html_escape($invoice['unit_short_name']); 
                                                                                                                                                                                     ?>
@@ -554,7 +563,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                         <?php endfor; ?>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td colspan="5">
+                                                                        <td colspan="5" style="background: transparent !important;">
                                                                             <div class="width_70p ft_left">
                                                                                 <?php if (!empty($cardpayments)) { ?>
                                                                                     <div class="col-sm-7">
@@ -581,7 +590,108 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                     </p>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="width_30p ft_left">
+                                                                            <style>
+                                                                                .left-border {
+                                                                                    border-right: 1px solid gold;
+                                                                                    border-left: 1px solid gold;
+                                                                                }
+                                                                                .tabled tr th {
+                                                                                    text-align: center;
+                                                                                    text-transform: capitalize;
+                                                                                    border-right: 1px solid gold;
+                                                                                    border-left: 1px solid gold;
+                                                                                }
+                                                                                .print-only {
+                                                                                    display: none;
+                                                                                }
+                                                                                .thead {
+                                                                                    /* font-size: 6px !important; */
+    padding: 0;
+    margin: 0;
+    letter-spacing: 0px;
+                                }
+                                                                                @media print {
+                                                                                    .tabled {
+                                                                                        background: transparent;
+                                                                                    }
+                                                                                    .tabled tr {
+                                                                                        background: transparent;
+                                                                                    }
+                                                                                    .tabled tr th {
+                                                                                        background: transparent;
+                                                                                    }
+                                                                                    .print-only {
+                                                                                        display: block;
+                                                                                    }
+                                                                                }
+                                                                            </style>
+                                                                            <div class="print-only" style="width: 100%;background: transparent;padding: 0;margin-bottom: -2rem;">
+                                                                                <table class="table colored tabled" style="width: 100%">
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <?=display('balance')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            250.1
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <?=display('quantity_inv')?>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                            <?=display('vat_inv')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            0
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <?=display('discount_inv')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            0
+                                                                                        </th>
+                                                                                        <th class="left-border" rowspan="2">
+                                                                                            <div style="display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 6rem;
+    /* padding: 100%; */
+    justify-content: center;
+    color: inherit !important;">
+                                                                                                5  
+                                                                                            </div>
+                                                                                        </th>
+                                                                                        <th>
+                                                                                           
+                                                                                           <?=display('balance after vat')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            25
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            
+                                                                                            <?=display('balance after discount')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            250.1
+                                                                                        </th>
+                                                                                        <!-- <th style="visibility: hidden;">
+                                                                                            -
+                                                                                        </th> -->
+                                                                                        <th>
+                                                                                            
+                                                                                            <?=display('total balance after invoice')?>
+                                                                                        </th>
+                                                                                        <th class="left-border">
+                                                                                            250.1
+                                                                                        </th>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+                                                                            <div class="width_30p ft_left print-none">
 
                                                                                 <table class="table colored">
                                                                                     <?php if ((int)$i_grand_amount != (int)$total_amount) : ?>
@@ -719,7 +829,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                     <tr class="borderd">
                                                                                         <th class="grand_total"> <?php echo display('total'); ?>:</th>
                                                                                         <td class="grand_total">
-                                                                                            
+
                                                                                             <?php echo (($position == 0) ? $currency . " " . $total_amount : $total_amount . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
@@ -816,13 +926,13 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
 <script>
     $(document).ready(function() {
         // $('.print-btn').click(function() {
-            var len = $('.shown').length;
-            $('.print-none .sl').each(function(inx, el) {
-                $(this).text('---');
-            });
-            $('.shown .sl').each(function(inx, el) {
-                $(this).text(inx+1);
-            });
+        var len = $('.shown').length;
+        $('.print-none .sl').each(function(inx, el) {
+            $(this).text('---');
+        });
+        $('.shown .sl').each(function(inx, el) {
+            $(this).text(inx + 1);
+        });
         // });
     });
 </script>
