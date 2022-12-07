@@ -125,7 +125,7 @@ function check_quotation() {
         // calculateSum();
         elem.val('0');
     }
-    calculateSum();
+    // calculateSum();
 }
 
 // function submit_form(e) {
@@ -392,9 +392,9 @@ function calculateSum() {
             $("#percentage_discount").attr('data-value', -1);
         }
 
-        if ($('#is_quotation').prop('checked')) {
-            cgst = 0;
-        }
+        // if ($('#is_quotation').prop('checked')) {
+        //     cgst = 0;
+        // }
 
     sum =
         +cgst +
