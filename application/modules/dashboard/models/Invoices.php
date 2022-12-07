@@ -466,6 +466,7 @@ class Invoices extends CI_Model {
                 $percentage_disc = $this->input->post('percentage_discount', TRUE);
                 $inv_disc_rate  = ((float)$inv_disc+(((float)$percentage_disc/100)*(float)$total_with_discount_inv))/(float)$total_price_vat;
                 $variants = $this->input->post('variant_id', TRUE);
+                // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
                 // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
                 $color = $this->input->post('colorv', TRUE);
@@ -477,7 +478,23 @@ class Invoices extends CI_Model {
                 //Invoice details for invoice
                 for ($i = 0, $n = count($quantity); $i < $n; $i++) {
                     $product_assembly = $assembly[$i];
-                    $prices = $this->db->select('a.price, b.product_price')->from('product_information a')->join('pricing_types_product b', 'b.product_id = a.product_id')->where('a.product_id', $p_id[$i])->get()->row();
+                    $prices = $this->db->select('a.price, b.*')->from('product_information a')->join('pricing_types_product b', 'b.product_id = a.product_id')->where('a.product_id', $p_id[$i])->get()->result_array();
+
+                    $without_price = $prices[0]['price'];
+                    $whole_price = 0;
+                    $customer_price = 0;
+                    foreach ($prices as $p) {
+                        // var_dump($p);exit;
+                        // $without_price = $p['price'];
+                        if ($p['pri_type_id'] == 1) {
+                            $whole_price = $p['product_price'];
+                        }
+
+                        if ($p['pri_type_id'] == 2) {
+                            $customer_price = $p['product_price'];
+                        }
+                    }
+
                     if ($product_assembly == 1) {
                         $product_quantity = $quantity[$i];
                         $product_rate = $rate[$i];
@@ -492,6 +509,12 @@ class Invoices extends CI_Model {
                         $batch = $batch_no[$i];
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
+
+                        $without_price_after_disc = round(($without_price - $discount_rate) - ($without_price  * $inv_disc_rate), 2);
+                        $whole_price_after_disc = round(($whole_price - $discount_rate) - ($whole_price * $inv_disc_rate), 2);
+                        $customer_price_after_disc = round(($customer_price - $discount_rate) - ($customer_price * $inv_disc_rate), 2);
+
+
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -508,8 +531,11 @@ class Invoices extends CI_Model {
                             'discount' => $discount_rate,
                             'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
                             'status' => 1,
-                            'whole_price' => $prices->product_price,
-                            'sale_price' => $prices->price
+                            'whole_price' => $whole_price,
+                            'sale_price' => $without_price,
+                            'without_price_after_disc' => $without_price_after_disc,
+                            'whole_price_after_disc' => $whole_price_after_disc,
+                            'customer_price_after_disc' => $customer_price_after_disc
                         );
 
                         if (!empty($quantity)) {
@@ -642,6 +668,13 @@ class Invoices extends CI_Model {
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
 
+                        $without_price_after_disc = round(($without_price - $discount_rate) - ($without_price  * $inv_disc_rate), 2);
+                        $whole_price_after_disc = round(($whole_price - $discount_rate) - ($whole_price * $inv_disc_rate), 2);
+                        $customer_price_after_disc = round(($customer_price - $discount_rate) - ($customer_price * $inv_disc_rate), 2);
+                        
+
+                    // echo "<pre>";var_dump($without_price_after_disc, $whole_price_after_disc, $customer_price_after_disc, $discount_rate, $inv_disc_rate, (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity), $total_price);exit;
+
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -658,8 +691,11 @@ class Invoices extends CI_Model {
                             'discount' => $discount_rate,
                             'invoice_discount' => (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity),
                             'status' => 1,
-                            'whole_price' => $prices->product_price,
-                            'sale_price' => $prices->price
+                            'whole_price' => $whole_price,
+                            'sale_price' => $without_price,
+                            'without_price_after_disc' => $without_price_after_disc,
+                            'whole_price_after_disc' => $whole_price_after_disc,
+                            'customer_price_after_disc' => $customer_price_after_disc
                         );
 
                         if (!empty($quantity)) {

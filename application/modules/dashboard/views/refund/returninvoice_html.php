@@ -327,13 +327,13 @@
                                                         <img class="show" src="<?= base_url() ?>/assets/img/header.png" style="width: 100%;height: auto;" />
                                                     </div>
                                                 </div>
-                                                <div style="padding: 0;">
+                                                <div style="padding: 0 25px;">
                                                     <div class="row">
                                                         <div class="col-xs-5">
                                                             <h3><?php echo display('invoice_to'); ?> : <?php echo html_escape($customer['customer_name']); ?></h3>
                                                             <div class="line-height" style=" margin-top: 15px;">
                                                                 <p>
-                                                                    <?php echo display('client_code'); ?>  : <?php echo html_escape($customer['customer_no']); ?>
+                                                                    <?php echo display('client_code'); ?>  : <?php echo html_escape($customer['customer_id']); ?>
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('client_phone'); ?>  : <?php echo html_escape($customer['customer_mobile']) ?>
@@ -359,7 +359,7 @@
                                                                     <?php echo display('sl'); ?> : <?php echo html_escape($sl); ?>
                                                                 </p>
                                                                 <p>
-                                                                    <?php echo display('date'); ?> : <?php echo html_escape(date('d - M - Y', strtotime($createdate))) ?>
+                                                                    <?php echo display('date'); ?> : <?php echo html_escape($createdate) ?>
                                                                 </p>
                                                                 <p>
                                                                    <?php echo display('employee'); ?> : <?= $receive_by ?>
@@ -376,7 +376,7 @@
                                                                     <th><?php echo display('product_name') ?></th>
                                                                      <th><?php echo display('quantity') ?></th>
                                                                     <th><?php echo display('price') ?></th>                                                                   
-                                                                    <th><?php echo display('customer_price') ?></th>
+                                                                    <th><?php echo display('sell_price') ?></th>
                                                                     <th><?php echo display('total_value') ?></th>
                                                                 </tr>
                                                             </thead>
@@ -389,13 +389,13 @@
                                                             <?php for($i=0;$i<count($invoice_return);$i++){ ?>
                                                                         <tr>
                                                                             <td><?php echo html_escape($i+1); ?></td>
-                                                                            <td style="width: 24rem;">
-                                                                                <strong style="font-size: 12px;"><?php echo html_escape($product[$i]['product_name']); ?> </strong><br>
+                                                                            <td>
+                                                                                <strong><?php echo html_escape($product[$i]['product_name']); ?> </strong><br>
                                                                             </td>
                                                                             <td><?php echo html_escape($invoice_return[$i]['return_quantity']);?></td>
-                                                                            <td><?php echo html_escape($invoice_return[$i]['rate']); ?></td>
+                                                                            <td><?php echo html_escape($product[$i]['price']); ?></td>
                                                                             <td><?php echo html_escape($customer_price[$i]['product_price']); ?></td>
-                                                                            <td><?php echo html_escape($invoice_return[$i]['rate']*$invoice_return[$i]['return_quantity']); ?></td>
+                                                                            <td><?php echo html_escape($product[$i]['price']*$invoice_return[$i]['return_quantity']); ?></td>
                                                                                                                              
                                                                         </tr>
                                                                     <?php

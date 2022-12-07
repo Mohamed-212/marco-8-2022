@@ -241,21 +241,21 @@ class Crefund extends MX_Controller
             $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
             if ($price_type == 1) {
                 // with Cases
-                if (empty($invoice_details[0]['whole_price'])) {
-                    $invoice_details[0]['whole_price'] = $with_cases_price->product_price;
+                if (empty($invoice_details[0]['whole_price_after_disc'])) {
+                    $invoice_details[0]['whole_price_after_disc'] = $with_cases_price->product_price;
                 }
-                $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price'] * $invoice_details[0]['quantity'];
-                $product_price = $invoice_details[0]['whole_price'];
+                $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price_after_disc'] * $invoice_details[0]['quantity'];
+                $product_price = $invoice_details[0]['whole_price_after_disc'];
             } else {
                 // without cases
-                if (empty($invoice_details[0]['whole_price'])) {
-                    $invoice_details[0]['sale_price'] = $without_cases_price->price;
+                if (empty($invoice_details[0]['without_price_after_disc'])) {
+                    $invoice_details[0]['without_price_after_disc'] = $without_cases_price->price;
                 }
-                $invoice_details[0]['total_price'] = $invoice_details[0]['sale_price'] * $invoice_details[0]['quantity'];
-                $product_price = $invoice_details[0]['sale_price'];
+                $invoice_details[0]['total_price'] = $invoice_details[0]['without_price_after_disc'] * $invoice_details[0]['quantity'];
+                $product_price = $invoice_details[0]['without_price_after_disc'];
             }
 
-            if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
+           /* if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
                 // assemply
                 if ($price_type == 1) {
                     // with Cases
@@ -299,12 +299,15 @@ class Crefund extends MX_Controller
                     $invoice_details[0]['total_price'] = ($invProduct->whole_price - $invProduct->sale_price) * $invoice_details[0]['quantity'];
                     $product_price = $invProduct->whole_price - $invProduct->sale_price;
                 }
-            }
+            }*/
 
-            $total_discount = $invoice_details[0]['discount'] * $quantity;
-            $total_discount += $invoice_details[0]['invoice_discount'] * $quantity;
-            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity)) - $total_discount;
-            $total_return_without_discount = $total_return + $total_discount;
+            // $total_discount = $invoice_details[0]['discount'] * $quantity;
+            // $total_discount += $invoice_details[0]['invoice_discount'] * $quantity;
+            // $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity)) - $total_discount;
+            // $total_return_without_discount = $total_return + $total_discount;
+            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity));
+            $total_return_without_discount = $total_return;
+            $total_discount = abs($total_return - ($price_type == 1 ? ($invoice_details[0]['whole_price'] * $quantity) : ($invoice_details[0]['sale_price'] * $quantity)));
 
             //total vat
             $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $product_id)->get()->row();
