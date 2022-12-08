@@ -484,6 +484,8 @@ class Invoices extends CI_Model {
                 $total_with_discount_inv=array_sum($total_amount)-(float)$this->input->post('total_discount', TRUE);
                 $inv_disc_rate = ($inv_disc+(((float)$percentage_disc/100) * $total_with_discount_inv))/(float)$total_with_discount_inv;
 
+                echo "<pre>";var_dump($inv_disc_rate);
+
                 $variants = $this->input->post('variant_id', TRUE);
                 // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
                 // $pricing = $this->input->post('pricing', TRUE);
@@ -529,10 +531,9 @@ class Invoices extends CI_Model {
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
 
-                        $without_price_after_disc = round((($without_price - $discount_rate) - ($without_price  * $inv_disc_rate) + $cgst[$i]), 2);
-                        $whole_price_after_disc = round((($whole_price - $discount_rate) - ($whole_price * $inv_disc_rate) + $cgst[$i]), 2);
-                        $customer_price_after_disc = round((($customer_price - $discount_rate) - ($customer_price * $inv_disc_rate) + $cgst[$i]), 2);
-
+                        $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) + $cgst[$i]);
+                        $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);
+                        $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);
 
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
@@ -687,9 +688,9 @@ class Invoices extends CI_Model {
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
 
-                        $without_price_after_disc = round((($without_price - $discount_rate) - ($without_price  * $inv_disc_rate) + $cgst[$i]), 2);
-                        $whole_price_after_disc = round((($whole_price - $discount_rate) - ($whole_price * $inv_disc_rate) + $cgst[$i]), 2);
-                        $customer_price_after_disc = round((($customer_price - $discount_rate) - ($customer_price * $inv_disc_rate) + $cgst[$i]), 2);
+                        $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) + $cgst[$i]);
+                        $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);
+                        $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);
                         
 
                     // echo "<pre>";var_dump($without_price_after_disc, $whole_price_after_disc, $customer_price_after_disc, $discount_rate, $inv_disc_rate, (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity), $total_price);exit;
