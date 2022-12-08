@@ -55,7 +55,7 @@
                             <label for="to_date"><?php echo display('to_date') ?><span class="text-danger">*</span>:</label>
                             <input type="text" class="form-control datepicker" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display: none;">
                             <label for="status"><?php echo display('status') ?><span class="text-danger">*</span>:</label>
                             <select class='form-control' id='status' name='status'>
                                 <option value=''><?= display('status') ?></option>

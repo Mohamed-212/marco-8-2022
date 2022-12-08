@@ -58,7 +58,7 @@ class Stores extends CI_Model
 			$this->db->where('product_id', $product_id);
 			$this->db->where('variant_id', $variant_id);
 			if (!empty($data['variant_color'])) {
-				$this->db->where('variant_color', $data['variant_color']);
+				// $this->db->where('variant_color', $data['variant_color']);
 			}
 			$query = $this->db->get()->row();
 			if ($quantity > $query->total_quantity) {
@@ -68,6 +68,8 @@ class Stores extends CI_Model
 		$result = $this->db->insert_batch('transfer_details', $transfer_details);
 		$result = $this->db->insert_batch('transfer', $datas);
 		$result = $this->db->insert_batch('transfer', $data1);
+
+		// echo "<pre>"; var_dump($result, $datas, $data1, $transfer_details);exit;
 		return true;
 	}
 	//Store to Wearhouse transfer

@@ -151,6 +151,10 @@
                                 </thead>
                                 <tbody id="addinvoiceItem">
 
+                                    <?php
+                                        $warrntyId = $this->db->select('store_id')->from('store_set')->where('store_name', 'Warranty Store')->limit(1)->get()->row();
+                                    ?>
+
                                     <?php if (!empty($invoices)) : ?>
                                         <?php foreach ($invoices as $inx => $inv) : ?>
                                             <tr>
@@ -191,7 +195,10 @@
                                                     <select class='form-control' id='status_<?= $inx + 1 ?>' required='required' name='status_<?= $inx + 1 ?>'>
                                                         <option value='0'><?= display('fit') ?></option>
                                                         <option value='1'><?= display('damaged') ?></option>
+                                                        <?php if ($inv->store_id != $warrntyId->store_id) { ?>
                                                         <option value='2'><?= display('no warranty') ?></option>
+                                                        <?php 
+                                                        }?>
                                                     </select>
                                                 </td>
                                                 <td>

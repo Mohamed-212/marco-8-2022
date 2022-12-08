@@ -2921,6 +2921,8 @@ class Purchases extends CI_Model
         }
         $sales = $this->db->get()->row();
 
+        // var_dump($purchase->totalPurchaseQnty , $sales->totalSalesQnty);exit;
+
         // $product_information = $this->db->select('open_quantity')->from('product_information')->where('product_id', $product_id)->get()->row();
 
         $stock = $purchase->totalPurchaseQnty - $sales->totalSalesQnty;
