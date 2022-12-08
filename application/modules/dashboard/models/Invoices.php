@@ -318,9 +318,10 @@ class Invoices extends CI_Model {
                 }
 
                 // create customer head start
+                $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
                 if (check_module_status('accounting') == 1) {
                     $this->load->model('accounting/account_model');
-                    $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+                    
                     if (!empty($check_customer)) {
                         $customer_data = $data = array(
                             'customer_id' => $customer_id,
@@ -334,9 +335,14 @@ class Invoices extends CI_Model {
                     }
                     $this->account_model->insert_customer_head($customer_data);
                 }
+
+                $customerName = $check_customer;
+                
+
                 // create customer head END
                 //Full or partial Payment record.
                 if ((float)$this->input->post('paid_amount', TRUE) > 0) {
+                    $headinfo = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $this->input->post('payment_id', TRUE))->get()->row();
                     //Insert to customer_ledger Table 
                     $data2 = array(
                         'transaction_id' => generator(15),
@@ -347,6 +353,8 @@ class Invoices extends CI_Model {
                         'payment_type' => 1,
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                        'voucher' => 'Rcv',
+                        'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -374,6 +382,8 @@ class Invoices extends CI_Model {
                         'amount' => $this->input->post('grand_total_price', TRUE),
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                        'voucher' => 'Sall',
+                        'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج"
                     );
                     $this->db->insert('customer_ledger', $data2);
                 // }
@@ -1215,10 +1225,11 @@ class Invoices extends CI_Model {
                 $this->Customers->previous_balance_add(0, $customer_id);
             }
 
+            $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
             // create customer head start
             if (check_module_status('accounting') == 1) {
                 $this->load->model('accounting/account_model');
-                $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+                
                 if (!empty($check_customer)) {
                     $customer_data = $data = array(
                         'customer_id' => $customer_id,
@@ -1232,21 +1243,26 @@ class Invoices extends CI_Model {
                 }
                 $this->account_model->insert_customer_head($customer_data);
             }
+
+            $customerName = $check_customer;
             // create customer head END
             //Full or partial Payment record.
             if ($this->input->post('paid_amount', TRUE) > 0) {
+                $headinfo = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $this->input->post('payment_id', TRUE))->get()->row();
                 //Insert to customer_ledger Table 
                 $data2 = array(
                     'transaction_id' => generator(15),
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
-                    'receipt_no' => $this->auth->generator(15),
+                    
                     'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('paid_amount', TRUE),
                     'payment_type' => 1,
                     'description' => 'ITP',
                     'status' => 1,
-                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),                    
+                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                    'voucher' => 'Rcv',
+                    'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"  
                 );
                 $this->db->insert('customer_ledger', $data2);
             }
@@ -1256,10 +1272,13 @@ class Invoices extends CI_Model {
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
                 'invoice_no' => $invoice_id,
+                'receipt_no' => $this->auth->generator(15),
                 'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                 'amount' => $this->input->post('grand_total_price', TRUE),
                 'status' => 1,
                 'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                'voucher' => 'Sall',
+                'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج"
             );
             $this->db->insert('customer_ledger', $data2);
 

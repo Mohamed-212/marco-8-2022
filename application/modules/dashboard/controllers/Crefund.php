@@ -379,6 +379,8 @@ class Crefund extends MX_Controller
                 $bank_return = $return;
             }
 
+            $customerName = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->limit(1)->get()->row();
+
             $customer_ledger_data = array(
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
@@ -387,7 +389,8 @@ class Crefund extends MX_Controller
                 'payment_type' => 1,
                 'description' => 'ITP',
                 'status' => 1,
-                'voucher' => 'return'
+                'voucher' => 'SalRe',
+                'details' => "تم عمل مرتجع بـ $quantity منتج"
             );
             $this->db->insert('customer_ledger', $customer_ledger_data);
 

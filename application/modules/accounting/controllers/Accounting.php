@@ -216,7 +216,9 @@ class Accounting extends MX_Controller
               'amount' => $this->input->post('amount', true),
               'payment_type' => 1,
               'description' => 'ITP',
-              'status' => 1
+              'status' => 1,
+              'details' => 'رصيد إبتدائى ماقبل',
+              'voucher' => 'Pb',
             );
             $this->db->insert('customer_ledger', $cl_data);
             // add acc trans
@@ -261,7 +263,9 @@ class Accounting extends MX_Controller
               'customer_id' => $headname->customer_id,
               'date' => $date,
               'amount' => $this->input->post('amount', true),
-              'status' => 1
+              'status' => 1,
+              'details' => 'رصيد إبتدائى ماقبل',
+              'voucher' => 'Pb',
             );
             $this->db->insert('customer_ledger', $cl_data);
             // add acc trans

@@ -171,6 +171,8 @@ class Customers extends CI_Model
 										'description' => 'ITP',
 										'status' => 1,
 										'cl_created_at' => date('Y-m-d H:i:s'),
+										'details' => 'رصيد إبتدائى ماقبل',
+										'voucher' => 'Pb',
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -218,6 +220,8 @@ class Customers extends CI_Model
 										'amount' => $previous_balance,
 										'status' => 1,
 										'cl_created_at' => date('Y-m-d H:i:s'),
+										'details' => 'رصيد إبتدائى ماقبل',
+										'voucher' => 'Pb',
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -306,7 +310,9 @@ class Customers extends CI_Model
 			'payment_type' 	=> "NA",
 			'cheque_no' 	=> "NA",
 			'date' 			=> date("Y-m-d"),
-			'status' 		=> 1
+			'status' 		=> 1,
+			'details' => 'رصيد إبتدائى ماقبل',
+			'voucher' => 'Pb',
 		);
 
 		$this->db->insert('customer_ledger', $data);

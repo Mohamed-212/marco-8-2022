@@ -80,7 +80,7 @@
 								<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?= $this->input->post('to_date', TRUE); ?>" required>
 							</div>
 							<button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-							<button type="submit" formaction="<?=base_url('dashboard/Ccustomer/customer_ledger_print')?>" class="btn btn-primary"><?php echo display('print') ?></button>
+							<button type="submit" formaction="<?= base_url('dashboard/Ccustomer/customer_ledger_print') ?>" class="btn btn-primary"><?php echo display('print') ?></button>
 							<?php echo form_close() ?>
 						</div>
 					</div>
@@ -188,13 +188,16 @@
 							<table id="dataTableExample2" class="table table-bordered table-striped table-hover">
 								<thead>
 									<tr>
-										<th><?php echo display('date') ?></th>
-										<th><?php echo display('transaction_type') ?></th>
-										<!-- <th><?php echo display('receipt_no') ?></th>
-										<th><?php echo display('description') ?></th> -->
+										<th><?php echo display('Document No') ?></th>
 										<th class="text-right mr_20"><?php echo display('debit') ?></th>
 										<th class="text-right mr_20"><?php echo display('credit') ?></th>
 										<th class="text-right mr_20"><?php echo display('balance') ?></th>
+										<th><?php echo display('date') ?></th>
+										<th><?php echo display('details') ?></th>
+										<!-- <th><?php echo display('receipt_no') ?></th>
+										<th><?php echo display('description') ?></th> -->
+
+
 									</tr>
 								</thead>
 								<tbody>
@@ -204,55 +207,66 @@
 									?>
 										<?php foreach ($ledger as $v_ledger) { ?>
 											<tr>
-											<td><?php echo date('d-m-Y', strtotime($v_ledger['cl_created_at'])); ?></td>
 												<td>
-													<?= empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) && empty($v_ledger['voucher']) ? display('previous_balance') : ''?>
+													<!-- doc no -->
+													<?php
+													if ($v_ledger['voucher'] == 'Pb') {
+														echo "Pb / " . $v_ledger['v_id'];
+													} elseif ($v_ledger['voucher'] == 'Rdv') {
+														echo "Rdv / " . $v_ledger['v_id'];
+													} elseif ($v_ledger['voucher'] == 'Rcv') {
+														echo "Rcv / " . $v_ledger['v_id'];
+													} elseif ($v_ledger['voucher'] == 'SalRe') {
+														echo "SalRe / " . $v_ledger['v_id'];
+													} elseif ($v_ledger['voucher'] == 'Sal') {
+														echo "Sall / " . $v_ledger['v_id'];
+													} else {
+														echo "Pb / " . $v_ledger['v_id'];
+													}
+													?>
+												</td>
+												<td class="text-right">
+													<?php
+													echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['debit'] : (float)$v_ledger['debit'] . ' ' . $currency) ?>
+												</td>
+												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['credit'] : (float)$v_ledger['credit'] . ' ' . $currency) ?></td>
+												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
+												<td><?php echo date('d-m-Y', strtotime($v_ledger['cl_created_at'])); ?></td>
+												<td>
+													<?= empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) && empty($v_ledger['voucher']) ? display('previous_balance') : '' ?>
 
 													<?php
-														if (!empty($v_ledger['voucher'])) {
-															if ($v_ledger['voucher'] == 'CV') {
-																echo display('credit_voucher');
-															}
-															if ($v_ledger['voucher'] == 'DV') {
-																echo display('debit_voucher');
-															}
-															if ($v_ledger['voucher'] == 'JV') {
-																echo display('journal_voucher');
-															}
-															if ($v_ledger['voucher'] == 'return') {
-																echo display('return');
-															}
+													if (!empty($v_ledger['voucher'])) {
+														if ($v_ledger['voucher'] == 'CV') {
+															echo display('credit_voucher');
 														}
+														if ($v_ledger['voucher'] == 'DV') {
+															echo display('debit_voucher');
+														}
+														if ($v_ledger['voucher'] == 'JV') {
+															echo display('journal_voucher');
+														}
+														if ($v_ledger['voucher'] == 'return') {
+															echo display('return');
+														}
+													}
 													?>
-													
+
 
 													<?php if (!empty($v_ledger['invoice_no'])) : ?>
 														<?php if ($this->permission->check_label('new_sale')->access()) {
 															if ($v_ledger['invoice_no'] != 'NA') { ?>
 																<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $v_ledger['invoice_no']; ?>">
-																<?php
+																	<?php
 																	$invoice = $this->db->select('invoice')->from('invoice')->where('invoice_id', $v_ledger['invoice_no'])->get()->row();
-																?>
+																	?>
 																	<?php echo  html_escape($invoice->invoice); ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
 																</a>
 														<?php }
 														} ?>
 													<?php endif ?>
 												</td>
-												<!-- <td>
-													<?php echo html_escape($v_ledger['receipt_no']); ?>
-												</td>
-												<td>
-													<?php html_escape($v_ledger['description']) ?>
-												</td> -->
-												<td class="text-right">
 
-													<?php
-													echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['debit'] : (float)$v_ledger['debit'] . ' ' . $currency) ?>
-
-												</td>
-												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['credit'] : (float)$v_ledger['credit'] . ' ' . $currency) ?></td>
-												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
 											</tr>
 
 									<?php
