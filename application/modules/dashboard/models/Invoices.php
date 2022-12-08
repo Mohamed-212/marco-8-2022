@@ -465,7 +465,7 @@ class Invoices extends CI_Model {
                 $total_price_vat=array_sum($total_amount)+(float)$this->input->post('total_cgst', TRUE);
                 $total_with_discount_inv=$total_price_vat-(float)$this->input->post('total_discount', TRUE);
                 $percentage_disc = $this->input->post('percentage_discount', TRUE);
-                $inv_disc_rate  = (((float)$percentage_disc/100)*(float)$total_with_discount_inv)/(float)$total_price_vat;
+                $inv_disc_rate  = ((((float)$percentage_disc/100)*(float)$total_with_discount_inv) - (float)$inv_disc)/(float)$total_price_vat;
                 $variants = $this->input->post('variant_id', TRUE);
                 // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
                 // $pricing = $this->input->post('pricing', TRUE);
