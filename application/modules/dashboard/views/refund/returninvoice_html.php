@@ -356,7 +356,7 @@
                                                         <div class="col-xs-5 mt_20" style="margin-top: 30px;">
                                                             <div class="line-height" style="">
                                                                 <p>
-                                                                    <?php echo display('sl'); ?> : <?php echo html_escape($sl); ?>
+                                                                    <?php echo display('sl'); ?> : <?php echo 'SalRe-' . html_escape($sl); ?>
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('date'); ?> : <?php echo html_escape($createdate) ?>

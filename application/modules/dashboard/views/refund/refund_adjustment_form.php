@@ -141,11 +141,11 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="form-group row">
+                                <div class="form-group row" style="visibility: hidden;">
                                     <label class="col-sm-4 col-form-label"><?php echo display('status') ?>:</label>
                                     <div class="col-sm-8">
-                                        <select class='form-control' id='status' required='required' name='status'>
-                                            <option value='1'><?= display('damaged') ?></option>
+                                        <select class='form-control' id='status' required='required' name='status' >
+                                            <option value='1' selected><?= display('damaged') ?></option>
                                             <option value='2'><?= display('no warranty') ?></option>
                                         </select>
                                     </div>

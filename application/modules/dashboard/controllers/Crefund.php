@@ -764,8 +764,28 @@ class Crefund extends MX_Controller
 
         $product_id = $this->input->post('product_id', true);
         $quantity = $this->input->post('quantity', true);
-        $status = $this->input->post('status', true);
+        $status = 1;
         $stock = $this->input->post('stock', true);
+
+        if ($stock == 2) {
+            $all_quan = $this->db->select('SUM(quantity) as quan')->from('product_return')->where('product_id', $product_id[0])->get()->row();
+
+            // var_dump((int)$all_quan->quan , (int)$quantity);exit;
+
+            if ((int)$all_quan->quan < (int)$quantity) {
+                $data = [
+                    'product_id' => $product_id,
+                    'quantity' => 0,
+                    'status' => $status,
+                ];
+        
+                $data['module'] = "dashboard";
+                $data['page'] = "refund/refund_adjustment_form";
+                $this->session->set_userdata(array('error_message' => display('entered quantity is bigger than available quantity')));
+                echo Modules::run('template/layout', $data);
+                return;
+            }
+        }
 
         if ($product_id && $quantity && $status) {
             $product = $this->db->select('*')->from('product_information')->where('product_id', $product_id[0])->get()->result_array();

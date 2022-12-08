@@ -184,7 +184,9 @@
                                                 <td><?php echo html_escape($invoice['sl']) ?></td>
                                                 <td>
 
-                                                        <?php echo html_escape($invoice['return_invoice_id']) ?>
+                                                        <a href="<?= base_url('dashboard/Crefund/return_invoice/'.$invoice['return_invoice_id']);?>" class="text-success " data-toggle="tooltip" data-placement="left" title="" data-original-title="Invoice">
+                                                    <?php echo 'SalRe-' . html_escape($invoice['id']) ?>
+                                                    </a>
                                                         <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
                                                     </a>
                                                 </td>
