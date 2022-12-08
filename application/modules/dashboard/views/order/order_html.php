@@ -431,7 +431,7 @@
 <!--                                                                                <img src="--><?php //echo base_url() . (!empty(html_escape($invoice['image_thumb'])) ? html_escape($invoice['image_thumb']) : 'assets/img/icons/default.jpg') ?><!--" width="50" height="50">-->
 <!--                                                                            </td>-->
                                                                             <td>
-                                                                                <strong><?php echo html_escape($invoice['product_name']); ?> </strong><br>
+                                                                                <strong style="font-size: 10px;"><?php echo html_escape($invoice['product_name']); ?> </strong><br>
                                                                                 <?php
                                                                                 $arabic_name = $this->db->select('trans_name')->from('product_translation')->where('language', 'Arabic')->where('product_id', $invoice['product_id'])->get()->row();
                                                                                 if (!empty($arabic_name->trans_name)) { ?>
@@ -441,7 +441,7 @@
 
                                                                                 ?>
                                                                             </td>
-                                                                            <td class='hide-me'><?php echo html_escape($invoice['variant_name']);
+                                                                            <td class='hide-me' style="font-size: 10px;"><?php echo html_escape($invoice['variant_name']);
                                                                                                 if (!empty($invoice['variant_color'])) {
                                                                                                     $cvarinfo = $this->db->select('variant_name')->from('variant')->where('variant_id', $invoice['variant_color'])->get()->row();
                                                                                                     if (!empty($cvarinfo)) {
@@ -594,13 +594,16 @@
                                                                                     .print-only {
                                                                                         display: block;
                                                                                     }
+                                                                                    .panel.panel-bd {
+                                                                                        border: 0;
+                                                                                    }
                                                                                 }
                                                                             </style>
                                                                             <div class="print-only" style="width: 100%;background: transparent;padding: 0;margin-bottom: -2rem;">
                                                                                 <table class="table colored tabled" style="width: 100%">
                                                                                     <tr>
                                                                                         <th>
-                                                                                            <?=display('balance')?>
+                                                                                            <?=display('total')?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                         <?php echo (($position == 0) ? $currency . " " . $i_grand_amount : $i_grand_amount . " " . $currency); ?>
@@ -609,10 +612,15 @@
                                                                                             ?>
                                                                                         </th>
                                                                                         <th>
-                                                                                            <?=display('quantity_inv')?>
+                                                                                            <?=display('total_quantity')?>
                                                                                         </th>
                                                                                         <th>
-                                                                                            <?=display('vat_inv')?>
+                                                                                        <?php if ($isTaxed == 1) {
+                                                                                            echo display('total_vat_value');
+                                                                                            } else {
+                                                                                                    echo '---';
+                                                                                                }
+                                                                                            ?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                         <?php
@@ -628,14 +636,17 @@
                                                                                                     <?php echo (($position == 0) ? $currency . " " . $tax_info->tax_amount : $tax_info->tax_amount . " " . $currency);
                                                                                                     $taxAmount = $tax_info->tax_amount; ?>
                                                                                             <?php } else {
-                                                                                                    echo 0;
+                                                                                                    echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
+                                                                                                    // echo '---';
                                                                                                 }
                                                                                             } else {
-                                                                                                echo 0;
+                                                                                                echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
+                                                                                                // echo '---';
                                                                                             } ?>
                                                                                         </th>
                                                                                     </tr>
                                                                                     <tr>
+                                                                                    <?php if ((int)$i_grand_amount != (int)$total_amount) : ?>
                                                                                         <th>
                                                                                             <?=display('discount_inv')?>
                                                                                         </th>
@@ -646,6 +657,14 @@
 
                                                                                             echo (($position == 0) ? $currency . " " . $t_discount_value : $t_discount_value . " " . $currency); ?>
                                                                                         </th>
+                                                                                        <?php else : ?>
+                                                                                            <th>
+                                                                                                --
+                                                                                            </th>
+                                                                                            <th>
+                                                                                                --
+                                                                                            </th>
+                                                                                        <?php endif ?>
                                                                                         <th class="left-border" rowspan="2">
                                                                                             <div style="display: flex;
     justify-items: center;
@@ -670,7 +689,7 @@
                                                                                         </th>
                                                                                         <th>
                                                                                            
-                                                                                           <?=display('balance after vat')?>
+                                                                                           <?=display('total after vat')?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                         <?php echo (($position == 0) ? $currency . " " . $total_amount : $total_amount . " " . $currency) ?>
@@ -679,11 +698,18 @@
                                                                                     <tr>
                                                                                         <th>
                                                                                             
-                                                                                            <?=display('balance after discount')?>
+                                                                                        <?php
+                                                                                            if ((int)$i_grand_amount != (int)$total_amount){
+                                                                                         echo display('total after discount');
+                                                                                             } else echo "---";?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                         <?php
-                                                                                            echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) : round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) . " " . $currency)
+                                                                                            if ((int)$i_grand_amount != (int)$total_amount){
+                                                                                                echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) : round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) . " " . $currency);
+                                                                                            } else {
+                                                                                                echo '--';
+                                                                                            }
                                                                                             ?>
                                                                                         </th>
                                                                                         <!-- <th style="visibility: hidden;">
@@ -691,10 +717,10 @@
                                                                                         </th> -->
                                                                                         <th>
                                                                                             
-                                                                                            <?=display('total balance after invoice')?>
+                                                                                            --
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                        <?php echo (($position == 0) ? $currency . " " . $customer_balance_after : $customer_balance_after . " " . $currency) ?>
+                                                                                        --
                                                                                         </th>
                                                                                     </tr>
                                                                                 </table>

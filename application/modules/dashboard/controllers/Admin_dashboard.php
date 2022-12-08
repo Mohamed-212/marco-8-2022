@@ -451,6 +451,10 @@ class Admin_dashboard extends MX_Controller
             $material_filter = null;
         }
 
+        if (!$pricing_type) {
+            $pricing_type = 0;
+        }
+
         // sales
         $sales_from = $this->input->get('sales_from', TRUE);
         $sales_to = $this->input->get('sales_to', TRUE);
