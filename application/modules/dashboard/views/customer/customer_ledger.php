@@ -202,7 +202,6 @@
 								</thead>
 								<tbody>
 									<?php
-
 									if ($ledger) {
 									?>
 										<?php foreach ($ledger as $v_ledger) { ?>
@@ -211,17 +210,17 @@
 													<!-- doc no -->
 													<?php
 													if ($v_ledger['voucher'] == 'Pb') {
-														echo "Pb / " . $v_ledger['v_id'];
+														echo "Pb / " . $v_ledger['c_id'];
 													} elseif ($v_ledger['voucher'] == 'Rdv') {
-														echo "Rdv / " . $v_ledger['v_id'];
+														echo "Rdv / " . $v_ledger['c_id'];
 													} elseif ($v_ledger['voucher'] == 'Rcv') {
-														echo "Rcv / " . $v_ledger['v_id'];
+														echo "Rcv / " . $v_ledger['c_id'];
 													} elseif ($v_ledger['voucher'] == 'SalRe') {
-														echo "SalRe / " . $v_ledger['v_id'];
+														echo "SalRe / " . $v_ledger['c_id'];
 													} elseif ($v_ledger['voucher'] == 'Sal') {
-														echo "Sall / " . $v_ledger['v_id'];
+														echo "Sall / " . $v_ledger['c_id'];
 													} else {
-														echo "Pb / " . $v_ledger['v_id'];
+														echo "Pb / " . $v_ledger['c_id'];
 													}
 													?>
 												</td>
@@ -233,42 +232,9 @@
 												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
 												<td><?php echo date('d-m-Y', strtotime($v_ledger['cl_created_at'])); ?></td>
 												<td>
-													<?= empty($v_ledger['invoice_no']) && empty($v_ledger['receipt_no']) && empty($v_ledger['voucher']) ? display('previous_balance') : '' ?>
-
-													<?php
-													if (!empty($v_ledger['voucher'])) {
-														if ($v_ledger['voucher'] == 'CV') {
-															echo display('credit_voucher');
-														}
-														if ($v_ledger['voucher'] == 'DV') {
-															echo display('debit_voucher');
-														}
-														if ($v_ledger['voucher'] == 'JV') {
-															echo display('journal_voucher');
-														}
-														if ($v_ledger['voucher'] == 'return') {
-															echo display('return');
-														}
-													}
-													?>
-
-
-													<?php if (!empty($v_ledger['invoice_no'])) : ?>
-														<?php if ($this->permission->check_label('new_sale')->access()) {
-															if ($v_ledger['invoice_no'] != 'NA') { ?>
-																<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $v_ledger['invoice_no']; ?>">
-																	<?php
-																	$invoice = $this->db->select('invoice')->from('invoice')->where('invoice_id', $v_ledger['invoice_no'])->get()->row();
-																	?>
-																	<?php echo  html_escape($invoice->invoice); ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
-																</a>
-														<?php }
-														} ?>
-													<?php endif ?>
+													<?php echo str_replace('PLHH', $v_ledger['c_id'], $v_ledger['details']);?>
 												</td>
-
 											</tr>
-
 									<?php
 										}
 									}
