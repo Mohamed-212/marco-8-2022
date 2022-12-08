@@ -143,6 +143,7 @@
                             <div class="col-sm-12">
                             <div class="form-group row">
                                     <label for="txtRemarks" class="col-sm-2 col-form-label"><?php echo display('remark') ?>
+                                    <i class="text-danger">*</i>
                                 </label>
                                     <div class="col-sm-8">
                                         <textarea name="txtRemarks" id="txtRemarks" class="form-control"  required></textarea>
@@ -157,7 +158,7 @@
                                     <tr>
                                         <th class="text-center"><?php echo display('item_information') ?><i class="text-danger">*</i></th>
                                         <th class="text-center" width="130"><?php echo display('variant') ?><i class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('batch_no') ?> <i class="text-danger">*</i></th>
+                                        <!-- <th class="text-center" width="130"><?php echo display('batch_no') ?> <i class="text-danger">*</i></th> -->
                                         <th class="text-center"><?php echo display('available_quantity') ?></th>
                                         <th class="text-center"><?php echo display('quantity') ?><i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('delete') ?></th>
@@ -172,7 +173,7 @@
                                         </td>
                                         <td class="text-center">
                                             <div class="variant_id_div">
-                                                <select name="variant_id[1]" id="variant_id_1" value="" class="form-control variant_id width_100p" required="">
+                                                <select name="variant_id[1]" id="variant_id_1" value="" class="form-control variant_id width_100p" required="" aria-readonly="true" readonly data-readonly="true" data-disabled="true" disabled>
                                                     <option value=""></option>
                                                 </select>
                                             </div>
@@ -182,7 +183,7 @@
                                                 </select>
                                             </div>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="display: none;">
                                             <div>
                                                 <select name="batch_no[1]" id="batch_no_1" class="form-control batch_no width_100p" data-tags="true" required>
                                                     <option value=""></option>
