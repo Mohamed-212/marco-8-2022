@@ -158,6 +158,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                 .footerr {
                                     bottom: 35px;
                                 }
+
                                 .print-only {
                                     /* display: block; */
                                 }
@@ -187,12 +188,14 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                             .line-height {
                                 line-height: 1rem;
                             }
+
                             .print-only {
-                                    /* display: none; */
-                                }
-                                .thead {
-                                    font-size: 12px;
-                                }
+                                /* display: none; */
+                            }
+
+                            .thead {
+                                font-size: 12px;
+                            }
                         </style>
                         <div class="panel-body mt-0 pt-0" style="padding: 0">
                             <table>
@@ -539,7 +542,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                         $i_discount_amount = $invoice['discount'] * ($invoice['quantity']);
                                                                         $i_grand_discount += $i_discount_amount;
                                                                         $i_total_discount_price_amount += $i_total_discount_price;
-                                                                        $i_grand_amount += $i_total_price;
+                                                                        $i_grand_amount += (float)$i_total_price;
                                                                         ?>
                                                                 <?php }
                                                                 } ?>
@@ -591,35 +594,46 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                 </div>
                                                                             </div>
                                                                             <style>
+                                                                                .table tr, .table th, .table td, .table tbody tr th {
+                                                                    padding: 2px !important;
+                                                                }
                                                                                 .left-border {
                                                                                     border-right: 1px solid gold;
                                                                                     border-left: 1px solid gold;
                                                                                 }
+
                                                                                 .tabled tr th {
                                                                                     text-align: center;
                                                                                     text-transform: capitalize;
                                                                                     border-right: 1px solid gold;
                                                                                     border-left: 1px solid gold;
+                                                                                    border-bottom: 1px solid gold;
                                                                                 }
+
                                                                                 .print-only {
                                                                                     display: none;
                                                                                 }
+
                                                                                 .thead {
                                                                                     /* font-size: 6px !important; */
-    padding: 0;
-    margin: 0;
-    letter-spacing: 0px;
-                                }
+                                                                                    padding: 0;
+                                                                                    margin: 0;
+                                                                                    letter-spacing: 0px;
+                                                                                }
+
                                                                                 @media print {
                                                                                     .tabled {
                                                                                         background: transparent;
                                                                                     }
+
                                                                                     .tabled tr {
                                                                                         background: transparent;
                                                                                     }
+
                                                                                     .tabled tr th {
                                                                                         background: transparent;
                                                                                     }
+
                                                                                     .print-only {
                                                                                         display: block;
                                                                                     }
@@ -629,64 +643,93 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                 <table class="table colored tabled" style="width: 100%">
                                                                                     <tr>
                                                                                         <th>
-                                                                                            <?=display('balance')?>
+                                                                                            <?= display('balance') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                            250.1
+                                                                                            <?php echo (($position == 0) ? $currency . " " . $i_grand_amount : $i_grand_amount . " " . $currency); ?>
+                                                                                            <?php
+                                                                                            $t_bal_after_discount = 0;
+                                                                                            ?>
                                                                                         </th>
                                                                                         <th>
-                                                                                            <?=display('quantity_inv')?>
+                                                                                            <?= display('quantity_inv') ?>
                                                                                         </th>
                                                                                         <th>
-                                                                                            <?=display('vat_inv')?>
+                                                                                            <?= display('vat_inv') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                            0
+                                                                                            <?php
+                                                                                            $this->db->select('a.*,b.tax_name');
+                                                                                            $this->db->from('tax_collection_summary a');
+                                                                                            $this->db->join('tax b', 'a.tax_id = b.tax_id');
+                                                                                            $this->db->where('a.invoice_id', $invoice_id);
+                                                                                            $this->db->where('a.tax_id', '52C2SKCKGQY6Q9J');
+                                                                                            $tax_info = $this->db->get()->row();
+                                                                                            if ($isTaxed == 1) {
+                                                                                                if ($tax_info) {
+                                                                                            ?>
+                                                                                                    <?php echo (($position == 0) ? $currency . " " . $tax_info->tax_amount : $tax_info->tax_amount . " " . $currency);
+                                                                                                    $taxAmount = $tax_info->tax_amount; ?>
+                                                                                            <?php } else {
+                                                                                                    echo 0;
+                                                                                                }
+                                                                                            } else {
+                                                                                                echo 0;
+                                                                                            } ?>
                                                                                         </th>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <th>
-                                                                                            <?=display('discount_inv')?>
+                                                                                            <?= display('discount_inv') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                            0
+                                                                                            <?php
+                                                                                            $t_discount_value = (float)$invoice_all_data[0]['total_discount'];
+                                                                                            $t_discount_value += $invoice_discount;
+
+                                                                                            echo (($position == 0) ? $currency . " " . $t_discount_value : $t_discount_value . " " . $currency); ?>
                                                                                         </th>
                                                                                         <th class="left-border" rowspan="2">
-                                                                                            <div style="display: flex;
-    justify-items: center;
-    align-items: center;
-    height: 6rem;
-    /* padding: 100%; */
-    justify-content: center;
-    color: inherit !important;">
-                                                                                                5  
+                                                                                            <div style="display: flex;justify-items: center;align-items: center;height: 3rem; /* padding: 100%; */justify-content: center;color: inherit !important;">
+                                                                                                <?php
+                                                                                                $totalQuantity = 0;
+                                                                                                foreach ($invoice_all_data as $inv) {
+                                                                                                    if ($inv['category_id'] == $acc_cate_id->category_id && $product_type == 2) {
+                                                                                                        continue;
+                                                                                                    }
+                                                                                                    $total_quantity += (int)$inv['quantity'];
+                                                                                                }
+                                                                                                echo $total_quantity;
+                                                                                                ?>
                                                                                             </div>
                                                                                         </th>
                                                                                         <th>
-                                                                                           
-                                                                                           <?=display('balance after vat')?>
+
+                                                                                            <?= display('balance after vat') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                            25
+                                                                                            <?php echo (($position == 0) ? $currency . " " . $total_amount : $total_amount . " " . $currency) ?>
                                                                                         </th>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <th>
-                                                                                            
-                                                                                            <?=display('balance after discount')?>
+
+                                                                                            <?= display('balance after discount') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                            250.1
+                                                                                            <?php
+                                                                                            echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) : round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) . " " . $currency)
+                                                                                            ?>
                                                                                         </th>
                                                                                         <!-- <th style="visibility: hidden;">
                                                                                             -
                                                                                         </th> -->
                                                                                         <th>
-                                                                                            
-                                                                                            <?=display('total balance after invoice')?>
+
+                                                                                            <?= display('total balance after invoice') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
-                                                                                            250.1
+                                                                                            <?php echo (($position == 0) ? $currency . " " . $customer_balance_after : $customer_balance_after . " " . $currency) ?>
                                                                                         </th>
                                                                                     </tr>
                                                                                 </table>
@@ -815,7 +858,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                         <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
                                                                                         <td class="grand_total">
                                                                                             <?php
-                                                                                            $totalQuantity = 0;
+                                                                                            $total_quantity = 0;
                                                                                             foreach ($invoice_all_data as $inv) {
                                                                                                 if ($inv['category_id'] == $acc_cate_id->category_id && $product_type == 2) {
                                                                                                     continue;
@@ -873,7 +916,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                             </table>
                                                         </div>
                                                     </div>
-                                                    <div class="row" style="padding: 50px  0px 0px;break-inside: avoid;">
+                                                    <div class="row" style="padding: 10px  0px 0px;break-inside: avoid;">
                                                         <div class="col-sm-12">
                                                             <table class="table">
                                                                 <thead>
