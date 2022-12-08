@@ -75,7 +75,7 @@
                 <div class="panel panel-bd lobidrag">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <h4><?php echo display('customer_balance_report') ?></h4>
+                            <h4><?php echo display('return_product_report') ?></h4>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -104,7 +104,7 @@
                                         <th class="text-center"><?= display('sl') ?></th>
                                         <th class="text-center"><?= display('product_name') ?></th>
                                         <th class="text-center"><?= display('variant_name') ?></th>
-                                        <th class="text-center"><?= display('status') ?></th>
+                                        <!-- <th class="text-center"><?= display('status') ?></th> -->
                                         <th class="text-center"><?= display('quantity') ?></th>
                                         <th class="text-center"><?= display('date') ?></th>
                                     </tr>
@@ -123,7 +123,7 @@
                                                 <td><?php echo ++$sl; ?></td>
                                                 <td><?php echo html_escape($return_report['product_name']); ?></td>
                                                 <td><?php echo html_escape($return_report['variant_name']); ?></td>
-                                                <td><?php echo ($return_report['status'] == 1) ? display('damaged') : display('no warranty') ?></td>
+                                                <!-- <td><?php echo ($return_report['status'] == 1) ? display('damaged') : display('no warranty') ?></td> -->
                                                 <td><?php echo html_escape($return_report['quantity']); ?></td>
                                                 <td><?php echo html_escape(date('d-m-Y', strtotime($return_report['created_at']))); ?></td>
                                             </tr>

@@ -618,7 +618,7 @@ class Products extends CI_Model
             $this->db->where('pr.created_at <=', $to_date);
         }
         if (!empty($status)) {
-            $this->db->where('pr.status =', $status);
+            // $this->db->where('pr.status =', $status);
         }
 
         $this->db->group_by('pr.product_id,pr.variant_id,pr.status');
