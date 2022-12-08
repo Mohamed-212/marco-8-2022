@@ -346,6 +346,8 @@ class Cinstallment extends MX_Controller
 
                                 // if status complete
                                 if ($status[$index] == 2) {
+                                    $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $account[$index])->get()->row();
+                                    
 
                                     //create new installment if payed amount is less than amount
                                     if ($payment_amount[$index] < $amount[$index]) {
@@ -372,6 +374,7 @@ class Cinstallment extends MX_Controller
                                     // echo "<pre>";
                                     //Insert customer ledger data where payment_amount > 0
                                     if ($payment_amount[$index] > 0) {
+                                        $checkNoTxt = ($check_no[$index]) ? " شيك $check_no[$index] " : '';
                                         //Insert to customer_ledger Table
                                         $data1 = array(
                                             'transaction_id' => $this->auth->generator(15),
@@ -384,6 +387,9 @@ class Cinstallment extends MX_Controller
                                             // 'description' => 'ITP',
                                             'status' => 1,
                                             'cl_created_at' => date('Y-m-d H:i:s'),
+                                            'voucher' => 'Rcv',
+          'details' => "سند قبض رقم PLHH - عميل $customer_name->customer_name - حواله على $headinfo->HeadName الشركة" . $checkNoTxt
+                                            
                                         );
                                         $this->db->insert('customer_ledger', $data1);
                                         // print_r($data1);
@@ -399,6 +405,9 @@ class Cinstallment extends MX_Controller
                                         'amount' => (float)$invoice[0]['total_amount'],
                                         'status' => 1,
                                         'cl_created_at' => date('Y-m-d H:i:s'),
+                                        'voucher' => 'Rdv',
+          'details' => "سند صرف رقم PLHH - عميل $customer_name->customer_name - حواله من $headinfo->HeadName الشركة"
+                                            
                                     );
                                     // print_r($data2);
                                     // exit;

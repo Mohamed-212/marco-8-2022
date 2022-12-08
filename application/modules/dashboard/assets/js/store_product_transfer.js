@@ -94,16 +94,16 @@ function addPurchaseOrderField(divName) {
       count +
       ']" id="SchoolHiddenId"/><input type="hidden" class="sl" value="' +
       count +
-      '"></td><td class="text-center"><div class="variant_id_div"><select name="variant_id[' +
+      '"></td><td class="text-center"><div class="variant_id_div"><select disabled name="variant_id[' +
       count +
       ']" id="variant_id_' +
       count +
-      '" value="" class="form-control variant_id width_100p" required=""><option value=""></option></select></div><div><select name="color_variant[' +
+      '" value="" class="form-control variant_id width_100p" required=""><option value=""></option></select></div><div style="display: none"><select name="color_variant[' +
       count +
       ']" id="color_variant_' +
       count +
       '" value="" class="form-control color_variant width_100p" ><option value=""></option></select></div></td>' +
-      '<td class="text-center"><div><select style="visibility: hidden;" name="batch_no[]" required id="batch_no_' +
+      '<td class="text-center" style="display: none;"><div><select style="visibility: hidden;" name="batch_no[]" required id="batch_no_' +
       count +
       '" class="form-control batch_no width_100p"><option value=""></option></select></div></td>' +
       '<td class="text-right">' +

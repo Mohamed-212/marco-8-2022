@@ -291,7 +291,7 @@ class Cproduct extends MX_Controller
                 $result2 = $this->db->insert_batch('product_translation', $data2);
             }
             $result = $this->Products->product_entry($data);
-            if ($this->input->post('category_id', TRUE) == 'XJIMM9X3ZAWUYXQ') {
+            if ($this->input->post('category_id', TRUE) == '3D8ELDWLSMLAAZL') {
                 $data = array(
                     't_p_s_id' => $this->auth->generator(15),
                     'product_id' => $product_id,
@@ -1928,6 +1928,16 @@ class Cproduct extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
+    public function product_excel_import_update()
+    {
+        // $this->permission->check_label('add_product')->read()->redirect();
+        $data = array(
+            'title' => display('import_product_excel_update')
+        );
+        $content = $this->parser->parse('dashboard/product/add_product_excel_update', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     public function importImg($src)
     {
 
@@ -2292,7 +2302,7 @@ class Cproduct extends MX_Controller
                         $this->db->insert('purchase_stock_tbl', $stock);
                     }
                 }
-                if ($category_id == 'XJIMM9X3ZAWUYXQ') {
+                if ($category_id == '3D8ELDWLSMLAAZL') {
                     $data = array(
                         't_p_s_id' => $this->auth->generator(15),
                         'product_id' => $product_id,
@@ -2873,6 +2883,79 @@ class Cproduct extends MX_Controller
             // $this->print_mem();
             $this->session->set_userdata(array('message' => display('successfully_added')));
             $this->Products->copy_products_to_website_products();
+            redirect('dashboard/Cproduct/manage_product');
+        }
+    }
+
+    public function product_excel_update()
+    {
+        ini_set('memory_limit', '5000000000M');
+        set_time_limit(5000000000);
+
+        $upload_file = $_FILES["upload_excel_file"]["name"];
+        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
+
+        if ($extension == 'csv') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        } elseif ($extension == 'xls') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        } else {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }
+        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
+        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
+        $datacount = count($sheetdata);
+        $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
+        $voucher_date      = date('Y-m-d H:i:s');
+        $store_id = "SDMQ4TIBSH6LAJ1";
+
+
+        if ($datacount > 500) {
+            $this->session->set_userdata(array('error_message' => display('excel_sheet_max_num')));
+            redirect(base_url() . '/dashboard/Cproduct/product_excel_import');
+            return;
+        }
+        if ($datacount > 1) {
+            // echo "<pre>";print_r($sheetdata);exit;
+            for ($i = 1; $i < $datacount; $i++) {
+                $cogs_price = 0;
+                $price_types_list = [];
+                $filter_list = [];
+                $productName = trim($sheetdata[$i][0]);
+                $withoutCasesPrice = (float)$sheetdata[$i][1];
+                $withCasesPrice = (float)$sheetdata[$i][2];
+                $customerPrice = (float)$sheetdata[$i][3];
+
+                
+
+                $product = $this->db->select('*')->from('product_information')->where('product_name', $productName)->get()->row();
+
+
+                if (!$product) continue;
+                                // echo "<pre>";var_dump($productName, $withoutCasesPrice, $withCasesPrice, $customerPrice, $product->product_id);
+
+
+                    $this->db->where('product_id', $product->product_id)->update('product_information', ['price' => $withoutCasesPrice]);
+
+
+                    $this->db->where('product_id', $product->product_id)->delete('pricing_types_product');
+                    $this->db->insert('pricing_types_product', [
+                        'product_id' => $product->product_id,
+                        'pri_type_id' => 1,
+                        'product_price' => $withCasesPrice
+                    ]);
+                    $this->db->insert('pricing_types_product', [
+                        'product_id' => $product->product_id,
+                        'pri_type_id' => 2,
+                        'product_price' => $customerPrice
+                    ]);
+
+            }
+
+            // $this->print_mem();
+            // exit;
+            $this->session->set_userdata(array('message' => display('successfully_added')));
+            // $this->Products->copy_products_to_website_products();
             redirect('dashboard/Cproduct/manage_product');
         }
     }

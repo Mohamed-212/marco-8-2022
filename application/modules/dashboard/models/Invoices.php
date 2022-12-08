@@ -318,9 +318,10 @@ class Invoices extends CI_Model {
                 }
 
                 // create customer head start
+                $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
                 if (check_module_status('accounting') == 1) {
                     $this->load->model('accounting/account_model');
-                    $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+                    
                     if (!empty($check_customer)) {
                         $customer_data = $data = array(
                             'customer_id' => $customer_id,
@@ -334,9 +335,14 @@ class Invoices extends CI_Model {
                     }
                     $this->account_model->insert_customer_head($customer_data);
                 }
+
+                $customerName = $check_customer;
+                
+
                 // create customer head END
                 //Full or partial Payment record.
                 if ((float)$this->input->post('paid_amount', TRUE) > 0) {
+                    $headinfo = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $this->input->post('payment_id', TRUE))->get()->row();
                     //Insert to customer_ledger Table 
                     $data2 = array(
                         'transaction_id' => generator(15),
@@ -347,6 +353,8 @@ class Invoices extends CI_Model {
                         'payment_type' => 1,
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                        'voucher' => 'Rcv',
+                        'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -374,6 +382,8 @@ class Invoices extends CI_Model {
                         'amount' => $this->input->post('grand_total_price', TRUE),
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                        'voucher' => 'Sall',
+                        'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج"
                     );
                     $this->db->insert('customer_ledger', $data2);
                 // }
@@ -435,6 +445,7 @@ class Invoices extends CI_Model {
                     'product_type' => $product_type,
                     'customer_balance' => $this->input->post('customer_balance', TRUE),
                     'customer_balance_after' => $customerBalanceAfterInvoice,
+                    'payment_id' => $this->input->post('payment_id', TRUE)
                 );
                 $this->db->insert('invoice', $data);
 
@@ -461,6 +472,7 @@ class Invoices extends CI_Model {
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
                 $inv_disc = (float)$this->input->post('invoice_discount', TRUE);
+                
                 $percentage_disc = (float)$this->input->post('percentage_discount', TRUE);
                 //$cgst = $this->input->post('cgst', TRUE);
 
@@ -473,6 +485,7 @@ class Invoices extends CI_Model {
                 $inv_disc_rate = ($inv_disc+(((float)$percentage_disc/100) * $total_with_discount_inv))/(float)$total_with_discount_inv;
 
                 $variants = $this->input->post('variant_id', TRUE);
+                // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
                 // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
                 $color = $this->input->post('colorv', TRUE);
@@ -484,7 +497,23 @@ class Invoices extends CI_Model {
                 //Invoice details for invoice
                 for ($i = 0, $n = count($quantity); $i < $n; $i++) {
                     $product_assembly = $assembly[$i];
-                    $prices = $this->db->select('a.price, b.product_price')->from('product_information a')->join('pricing_types_product b', 'b.product_id = a.product_id')->where('a.product_id', $p_id[$i])->get()->row();
+                    $prices = $this->db->select('a.price, b.*')->from('product_information a')->join('pricing_types_product b', 'b.product_id = a.product_id')->where('a.product_id', $p_id[$i])->get()->result_array();
+
+                    $without_price = $prices[0]['price'];
+                    $whole_price = 0;
+                    $customer_price = 0;
+                    foreach ($prices as $p) {
+                        // var_dump($p);exit;
+                        // $without_price = $p['price'];
+                        if ($p['pri_type_id'] == 1) {
+                            $whole_price = $p['product_price'];
+                        }
+
+                        if ($p['pri_type_id'] == 2) {
+                            $customer_price = $p['product_price'];
+                        }
+                    }
+
                     if ($product_assembly == 1) {
                         $product_quantity = $quantity[$i];
                         $product_rate = $rate[$i];
@@ -499,6 +528,12 @@ class Invoices extends CI_Model {
                         $batch = $batch_no[$i];
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
+
+                        $without_price_after_disc = round(($without_price - $discount_rate) - ($without_price  * $inv_disc_rate), 2);
+                        $whole_price_after_disc = round(($whole_price - $discount_rate) - ($whole_price * $inv_disc_rate), 2);
+                        $customer_price_after_disc = round(($customer_price - $discount_rate) - ($customer_price * $inv_disc_rate), 2);
+
+
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -515,8 +550,11 @@ class Invoices extends CI_Model {
                             'discount' => $discount_rate,
                             'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
                             'status' => 1,
-                            'whole_price' => $prices->product_price,
-                            'sale_price' => $prices->price
+                            'whole_price' => $whole_price,
+                            'sale_price' => $without_price,
+                            'without_price_after_disc' => $without_price_after_disc,
+                            'whole_price_after_disc' => $whole_price_after_disc,
+                            'customer_price_after_disc' => $customer_price_after_disc
                         );
 
                         if (!empty($quantity)) {
@@ -649,6 +687,13 @@ class Invoices extends CI_Model {
                         $supplier_rate = $this->supplier_rate($product_id); // سعر التكلفة للمنتج الواحد
                         $cogs_price += ($supplier_rate[0]['supplier_price'] * $product_quantity); // التكلفة للكمية كلها
 
+                        $without_price_after_disc = round(($without_price - $discount_rate) - ($without_price  * $inv_disc_rate), 2);
+                        $whole_price_after_disc = round(($whole_price - $discount_rate) - ($whole_price * $inv_disc_rate), 2);
+                        $customer_price_after_disc = round(($customer_price - $discount_rate) - ($customer_price * $inv_disc_rate), 2);
+                        
+
+                    // echo "<pre>";var_dump($without_price_after_disc, $whole_price_after_disc, $customer_price_after_disc, $discount_rate, $inv_disc_rate, (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity), $total_price);exit;
+
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -665,8 +710,11 @@ class Invoices extends CI_Model {
                             'discount' => $discount_rate,
                             'invoice_discount' => (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity),
                             'status' => 1,
-                            'whole_price' => $prices->product_price,
-                            'sale_price' => $prices->price
+                            'whole_price' => $whole_price,
+                            'sale_price' => $without_price,
+                            'without_price_after_disc' => $without_price_after_disc,
+                            'whole_price_after_disc' => $whole_price_after_disc,
+                            'customer_price_after_disc' => $customer_price_after_disc
                         );
 
                         if (!empty($quantity)) {
@@ -1186,10 +1234,11 @@ class Invoices extends CI_Model {
                 $this->Customers->previous_balance_add(0, $customer_id);
             }
 
+            $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
             // create customer head start
             if (check_module_status('accounting') == 1) {
                 $this->load->model('accounting/account_model');
-                $check_customer = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->get()->row();
+                
                 if (!empty($check_customer)) {
                     $customer_data = $data = array(
                         'customer_id' => $customer_id,
@@ -1203,21 +1252,26 @@ class Invoices extends CI_Model {
                 }
                 $this->account_model->insert_customer_head($customer_data);
             }
+
+            $customerName = $check_customer;
             // create customer head END
             //Full or partial Payment record.
             if ($this->input->post('paid_amount', TRUE) > 0) {
+                $headinfo = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $this->input->post('payment_id', TRUE))->get()->row();
                 //Insert to customer_ledger Table 
                 $data2 = array(
                     'transaction_id' => generator(15),
                     'customer_id' => $customer_id,
                     'invoice_no' => $invoice_id,
-                    'receipt_no' => $this->auth->generator(15),
+                    
                     'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('paid_amount', TRUE),
                     'payment_type' => 1,
                     'description' => 'ITP',
                     'status' => 1,
-                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),                    
+                    'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                    'voucher' => 'Rcv',
+                    'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"  
                 );
                 $this->db->insert('customer_ledger', $data2);
             }
@@ -1227,10 +1281,13 @@ class Invoices extends CI_Model {
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
                 'invoice_no' => $invoice_id,
+                'receipt_no' => $this->auth->generator(15),
                 'date' => DateTime::createFromFormat('d-m-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                 'amount' => $this->input->post('grand_total_price', TRUE),
                 'status' => 1,
                 'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
+                'voucher' => 'Sall',
+                'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج"
             );
             $this->db->insert('customer_ledger', $data2);
 

@@ -52,6 +52,7 @@ $(function() {
                 },
                 success: function(result) {
                     $('#customer_balance').val(result);
+                    $('[name="product_quantity[]"]').last().trigger('keyup');
                 },
             });
 

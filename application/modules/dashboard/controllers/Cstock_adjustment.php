@@ -103,9 +103,10 @@ class Cstock_adjustment extends MX_Controller
     public function update_status($adjustment_id)
     {
         $adjustment_status = $this->input->post('adjustment_status', TRUE);
+        
         $stock_adjustment_info = $this->db->select('*')->from('stock_adjustment_table')->where('adjustment_id', $adjustment_id)->get()->row();
         if ($stock_adjustment_info->adjustment_status == 0) {
-            if ($adjustment_status = 0) {
+            if ($adjustment_status == 0) {
                 $status_update = array(
                     'adjustment_status' => $adjustment_status
                 );
@@ -118,7 +119,7 @@ class Cstock_adjustment extends MX_Controller
                     $this->session->set_userdata(array('error_message' => display('something_went_wrong')));
                     redirect(base_url('dashboard/Cstock_adjustment/manage_stock_adjustment'));
                 }
-            } elseif ($adjustment_status = 1) {
+            } elseif ($adjustment_status == 1) {
                 $status_update = array(
                     'adjustment_status' => $adjustment_status
                 );
@@ -208,7 +209,7 @@ class Cstock_adjustment extends MX_Controller
                     $this->session->set_userdata(array('error_message' => display('something_went_wrong')));
                     redirect(base_url('dashboard/Cstock_adjustment/manage_stock_adjustment'));
                 }
-            } elseif ($adjustment_status = 2) {
+            } elseif ($adjustment_status == 2) {
                 $status_update = array(
                     'adjustment_status' => $adjustment_status
                 );

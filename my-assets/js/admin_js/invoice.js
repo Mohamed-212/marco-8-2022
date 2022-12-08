@@ -230,14 +230,15 @@ function quantity_calculate(item) {
 function check_quotation() {
     var elem = $('#is_quotation');
     if (elem.prop('checked') == true) {
-        calculateSumQuotation();
+        // calculateSumQuotation();
         elem.val('1');
-        $('#paidAmount').val('0');
-        $('#dueAmmount').val('0');
+        // $('#paidAmount').val('0');
+        // $('#dueAmmount').val('0');
     } else {
-        calculateSum();
+        // calculateSum();
         elem.val('0');
     }
+    // calculateSum();
 }
 
 function submit_form(e) {
@@ -246,18 +247,18 @@ function submit_form(e) {
     e.preventDefault();
     var valid = false;
 
-    var elem = $('#is_quotation');
-    if (elem.prop('checked') == true) {
-        $('.total_cgst').each(function () {
-            this.value = 0;
-        });
-        var cgst = $('#total_cgst').val();
-        if (cgst > 0) {
-            $('#grandTotal').val($('#grandTotal').val() - cgst);
-            $('#dueAmmount').val($('#dueAmmount').val() - cgst);
-        }
-        $('#total_cgst').val('0');
-    }
+    // var elem = $('#is_quotation');
+    // if (elem.prop('checked') == true) {
+    //     $('.total_cgst').each(function () {
+    //         this.value = 0;
+    //     });
+    //     var cgst = $('#total_cgst').val();
+    //     if (cgst > 0) {
+    //         $('#grandTotal').val($('#grandTotal').val() - cgst);
+    //         $('#dueAmmount').val($('#dueAmmount').val() - cgst);
+    //     }
+    //     $('#total_cgst').val('0');
+    // }
 
     // validate product quantity
     $('[name="available_quantity[]"]')
@@ -475,6 +476,10 @@ function calculateSum() {
         ? $('#shipping_charge').val()
         : 0;
 
+        // if ($('#is_quotation').prop('checked')) {
+        //     cgst = 0;
+        // }
+
     sum =
         +cgst +
         +sgst +
@@ -658,19 +663,24 @@ function full_paid() {
     );
     // customer_balance = 500;
     var elem = $('#is_quotation');
-    if (elem.prop('checked') == true) {
-        calculateSumQuotation();
-    } else {
-        calculateSum();
-    }
-    var grandTotal = parseFloat($('#grandTotal').val());
+    // if (elem.prop('checked') == true) {
+    //     calculateSumQuotation();
+    // } else {
+    //     calculateSum();
+    // }
+    calculateSum();
+    
     // if (customer_balance > grandTotal) {
     //     $('#paidAmount').val(0);
     // } else {
     //     $('#paidAmount').val(grandTotal - Math.abs(customer_balance));
     // }
-
-    $('#paidAmount').val(parseFloat($('#dueAmmount').val()) + parseFloat($('#paidAmount').val()));
+    setTimeout(() => {
+        var grandTotal = parseFloat($('#grandTotal').val() || '0');
+    $('#paidAmount').val((parseFloat($('#dueAmmount').val() || '0') + parseFloat($('#paidAmount').val() || '0')).toFixed(2));
+    $('#dueAmmount').val('0');
+    }, 200);
+    
 
     invoice_paidamount();
     $('.installment_setup').hide();

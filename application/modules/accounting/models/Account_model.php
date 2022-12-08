@@ -1224,6 +1224,7 @@ class Account_model extends CI_Model
 
       if (substr($dbtid, 0, 3) === '113') {
         $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $dbtid)->get()->row();
+        $customerName = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer->customer_id)->limit(1)->get()->row();
         $data2 = array(
           'transaction_id' => generator(15),
           'receipt_no' => $this->auth->generator(15),
@@ -1231,7 +1232,8 @@ class Account_model extends CI_Model
           'date' => date('Y-m-d', $createdate),
           'amount' => $Damnt,
           'status' => 1,
-          'voucher' => 'DV'
+          'voucher' => 'Rdv',
+          'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name - حواله من $headinfo->HeadName الشركة"
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1309,6 +1311,7 @@ class Account_model extends CI_Model
 
       if (substr($crtid, 0, 3) === '113') {
         $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
+        $customerName = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer->customer_id)->limit(1)->get()->row();
         $data2 = array(
           'transaction_id' => generator(15),
           'customer_id' => $customer->customer_id,
@@ -1317,7 +1320,8 @@ class Account_model extends CI_Model
           'payment_type' => 1,
           'description' => 'ITP',
           'status' => 1,
-          'voucher' => 'CV'
+          'voucher' => 'Rcv',
+          'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1509,8 +1513,11 @@ class Account_model extends CI_Model
       );
       $this->db->insert('acc_transaction', $contrainsert);
 
+      // $headinfo = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
+
       if (substr($crtid, 0, 3) === '113') {
         $customer = $this->db->select('*')->from('acc_coa')->where('HeadCode', $crtid)->get()->row();
+        $customerName = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer->customer_id)->limit(1)->get()->row();
         if ((float)$Cramnt > 0) {
           $data2 = array(
             'transaction_id' => generator(15),
@@ -1520,7 +1527,8 @@ class Account_model extends CI_Model
             'payment_type' => 1,
             'description' => 'ITP',
             'status' => 1,
-            'voucher' => 'JV'
+            'voucher' => 'Rcv',
+            'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name "
           );
           $this->db->insert('customer_ledger', $data2);
         }
@@ -1533,7 +1541,8 @@ class Account_model extends CI_Model
             'date' => date('Y-m-d', $createdate),
             'amount' => $debits,
             'status' => 1,
-            'voucher' => 'JV'
+            'voucher' => 'Rdv',
+            'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name "
           );
           $this->db->insert('customer_ledger', $data2);
         }

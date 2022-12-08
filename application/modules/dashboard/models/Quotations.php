@@ -2814,6 +2814,8 @@ class Quotations extends CI_Model
 	//Retrieve quotation Edit Data
 	public function retrieve_quotation_editdata($quotation_id)
 	{
+		$acc_category = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
+
 		$this->db->select('
 				a.*,
 				a.quotation_discount as quotation_discount_value,
@@ -2822,6 +2824,8 @@ class Quotations extends CI_Model
 				c.product_id,
 				d.product_name,
 				d.product_model,
+				d.category_id,
+				a.status
 			');
 
 		$this->db->from('quotation a');
@@ -2829,10 +2833,15 @@ class Quotations extends CI_Model
 		$this->db->join('quotation_details c', 'c.quotation_id = a.quotation_id');
 		$this->db->join('product_information d', 'd.product_id = c.product_id');
 		$this->db->where('a.quotation_id', $quotation_id);
+		// $this->db->order_by('d.product_name');
 		$query = $this->db->get();
 
 		if ($query->num_rows() > 0) {
-			return $query->result_array();
+			$result = $query->result_array();
+            uksort($result, fn ($a) => $result[$a]['category_id'] == $acc_category->category_id ? 1 : -1);
+
+			// echo "<pre>";var_dump($result);exit;
+            return $result;
 		}
 		return false;
 	}

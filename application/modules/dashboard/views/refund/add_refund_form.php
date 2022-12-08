@@ -151,6 +151,10 @@
                                 </thead>
                                 <tbody id="addinvoiceItem">
 
+                                    <?php
+                                        $warrntyId = $this->db->select('store_id')->from('store_set')->where('store_name', 'Warranty Store')->limit(1)->get()->row();
+                                    ?>
+
                                     <?php if (!empty($invoices)) : ?>
                                         <?php foreach ($invoices as $inx => $inv) : ?>
                                             <tr>
@@ -159,6 +163,7 @@
                                                 <input type="hidden" hidden name="product_id" value="<?= $product_id ?>" />
                                                 <input type="hidden" hidden name="invoice_no" value="<?= $inv->invoice ?>" />
                                                 <input type="hidden" hidden name="invoice_id" value="<?= $inv->invoice_id ?>" />
+                                                <input type="hidden" hidden name="payment_id" value="<?= $inv->payment_id ?>" />
                                                 <input type="hidden" hidden name="variant_id" value="<?= $inv->variant_id ?>" />
                                                 <td>
                                                     <input class="select_product" type="checkbox" name="selected_products_inx[]" value="<?= $inx +1 ?>" />
@@ -166,6 +171,7 @@
                                                 <td>
                                                     <a href="<?= base_url() ?>/dashboard/Cinvoice/invoice_inserted_data/<?= $inv->invoice_id ?>"><?= $inv->invoice ?></a>
                                                     <input class="" type="hidden" hidden name="invoice_id_<?= $inx + 1 ?>" value="<?= $inv->invoice_id ?>" />
+                                                    <input class="" type="hidden" hidden name="payment_id_<?= $inx + 1 ?>" value="<?= $inv->payment_id ?>" />
                                                 </td>
                                                 <td>
                                                     <a href="<?= base_url() ?>/dashboard/Cproduct/product_details/<?= $inv->product_id ?>"><?= $inv->product_name ?></a>
@@ -174,11 +180,12 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    $item_discount = round(((float)$inv->item_invoice_discount * (float)$inv->quantity) + ((float)$inv->discount * (float)$inv->quantity), 2);
+                                                    $item_discount = round(((float)$inv->item_invoice_discount * (float)$inv->ava_quantity) + ((float)$inv->discount * (float)$inv->ava_quantity), 2);
                                                     $total_price_after_discount = round((float)$inv->total_price - (float)$item_discount, 2);
 
                                                     // var_dump($item_discount, $total_price_after_discount, $inv->total_price);
-                                                    echo $total_price_after_discount;
+                                                    // echo $total_price_after_discount;
+                                                    echo $inv->rate == $inv->price ? $inv->without_price_after_disc : $inv->whole_price_after_disc;
                                                     ?>
                                                     <input type="hidden" hidden name="rate_<?= $inx + 1 ?>" value="<?= $inv->rate ?>" />
                                                 </td>
@@ -188,7 +195,10 @@
                                                     <select class='form-control' id='status_<?= $inx + 1 ?>' required='required' name='status_<?= $inx + 1 ?>'>
                                                         <option value='0'><?= display('fit') ?></option>
                                                         <option value='1'><?= display('damaged') ?></option>
+                                                        <?php if ($inv->store_id != $warrntyId->store_id) { ?>
                                                         <option value='2'><?= display('no warranty') ?></option>
+                                                        <?php 
+                                                        }?>
                                                     </select>
                                                 </td>
                                                 <td>
@@ -197,7 +207,7 @@
                                                         <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
                                                     </select>
                                                 </td>
-                                                <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' value='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>'></td>
+                                                <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>' value="<?=$inv->ava_quantity >= 1 ? 1 : 0?>"></td>
                                             </tr>
                                         <?php endforeach ?>
                                     <?php endif; ?>

@@ -180,6 +180,11 @@
                     <a
                         href="<?php echo base_url('dashboard/Cproduct/product_excel_import') ?>"><?php echo display('import_product_excel') ?></a>
                 </li>
+
+                <li class="<?php echo (($this->uri->segment(3) == 'product_excel_import_update' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Cproduct/product_excel_import_update') ?>"><?php echo display('import_product_excel_update') ?></a>
+                </li>
                 
                 <?php if ($this->permission->check_label('manage_product')->access()) { ?>
                 <li class="<?php echo (($this->uri->segment(3) == 'manage_product' ? 'active' : '')) ?>">

@@ -10,7 +10,7 @@ class Crefund extends MX_Controller
     {
         parent::__construct();
         $this->auth->check_user_auth();
-        $this->load->model(array('dashboard/Invoices'));
+        $this->load->model(array('dashboard/Invoices', 'dashboard/Stores'));
         $this->load->library('dashboard/lproduct');
         $this->load->library('dashboard/linvoice');
         $this->load->library('dashboard/occational');
@@ -149,6 +149,7 @@ class Crefund extends MX_Controller
         $filter = array(
             'invoice_no' =>  $this->input->post('invoice_no', TRUE),
             'invoice_id' =>  $this->input->post('invoice_id', TRUE),
+            // 'payment_id' =>  $this->input->post('payment_id', TRUE),
             'product_id' =>  $this->input->post('product_id', TRUE),
             'variant_id' =>  $this->input->post('variant_id', TRUE),
             'status' =>  $this->input->post('status', TRUE),
@@ -165,10 +166,15 @@ class Crefund extends MX_Controller
 
         $return_invoice_id = generator(15);
 
+        $warnnityProductIds = [];
+        $warnnityProductQty = [];
+        $warnnityProductVarient = [];
+
         foreach ($filter['selected_products_inx'] as $selectedInx) {
             $product_id = $this->input->post('invoice_products_id_' . $selectedInx, TRUE);
             $variant_id = $this->input->post('variant_id_' . $selectedInx, TRUE);
             $invoice_id = $this->input->post('invoice_id_' . $selectedInx, TRUE);
+            $payment_id = $this->input->post('payment_id_' . $selectedInx, TRUE);
             $available_quantity = $this->input->post('available_quantity_' . $selectedInx, TRUE);
             $status = $this->input->post('status_' . $selectedInx, TRUE);
             $quantity = $this->input->post('quantity_' . $selectedInx, TRUE);
@@ -189,19 +195,31 @@ class Crefund extends MX_Controller
             $query = $this->db->get();
             $product_list = $query->result();
 
-            if ($status == 0) //fit
+            if ($status == 0 || $status == 2)
             {
                 if (!empty($product_list)) {
                     foreach ($product_list as $product) {
                         $sql = "update invoice_stock_tbl set quantity=quantity-" . $quantity . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $product['product_id'] . "';";
                         $result = $this->db->query($sql);
+                        if ($status == 2) {
+                            $warnnityProductIds[] = $product['product_id'];
+                            $warnnityProductQty[] = $quantity;
+                            $warnnityProductVarient[] = $invoice_details[0]['variant_id'];
+                        }
                     }
                 } else {
                     // update stock
                     $sql = "update invoice_stock_tbl set quantity=quantity-" . $quantity . " where store_id='" . $invoice_details[0]['store_id'] . "' and variant_id='" . $invoice_details[0]['variant_id'] . "' and product_id='" . $invoice_details[0]['product_id'] . "';";
                     $result = $this->db->query($sql);
+                    if ($status == 2) {
+                        $warnnityProductIds[] = $product_id;
+                        $warnnityProductQty[] = $quantity;
+                        $warnnityProductVarient[] = $invoice_details[0]['variant_id'];
+                    }
                 }
                 // echo json_encode($sql);
+
+                
             } else {
                 if (!empty($product_list)) {
                     foreach ($product_list as $product) {
@@ -241,21 +259,21 @@ class Crefund extends MX_Controller
             $product_price = $invoice_details[0]['total_price'] / $invoice_details[0]['quantity'];
             if ($price_type == 1) {
                 // with Cases
-                if (empty($invoice_details[0]['whole_price'])) {
-                    $invoice_details[0]['whole_price'] = $with_cases_price->product_price;
+                if (empty($invoice_details[0]['whole_price_after_disc'])) {
+                    $invoice_details[0]['whole_price_after_disc'] = $with_cases_price->product_price;
                 }
-                $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price'] * $invoice_details[0]['quantity'];
-                $product_price = $invoice_details[0]['whole_price'];
+                $invoice_details[0]['total_price'] = $invoice_details[0]['whole_price_after_disc'] * $invoice_details[0]['quantity'];
+                $product_price = $invoice_details[0]['whole_price_after_disc'];
             } else {
                 // without cases
-                if (empty($invoice_details[0]['whole_price'])) {
-                    $invoice_details[0]['sale_price'] = $without_cases_price->price;
+                if (empty($invoice_details[0]['without_price_after_disc'])) {
+                    $invoice_details[0]['without_price_after_disc'] = $without_cases_price->price;
                 }
-                $invoice_details[0]['total_price'] = $invoice_details[0]['sale_price'] * $invoice_details[0]['quantity'];
-                $product_price = $invoice_details[0]['sale_price'];
+                $invoice_details[0]['total_price'] = $invoice_details[0]['without_price_after_disc'] * $invoice_details[0]['quantity'];
+                $product_price = $invoice_details[0]['without_price_after_disc'];
             }
 
-            if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
+            /* if ($without_cases_price->category_id === $accessoriesCategory->category_id && $invoice['product_type'] == 2) {
                 // assemply
                 if ($price_type == 1) {
                     // with Cases
@@ -299,12 +317,15 @@ class Crefund extends MX_Controller
                     $invoice_details[0]['total_price'] = ($invProduct->whole_price - $invProduct->sale_price) * $invoice_details[0]['quantity'];
                     $product_price = $invProduct->whole_price - $invProduct->sale_price;
                 }
-            }
+            }*/
 
-            $total_discount = $invoice_details[0]['discount'] * $quantity;
-            $total_discount += $invoice_details[0]['invoice_discount'] * $quantity;
-            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity)) - $total_discount;
-            $total_return_without_discount = $total_return + $total_discount;
+            // $total_discount = $invoice_details[0]['discount'] * $quantity;
+            // $total_discount += $invoice_details[0]['invoice_discount'] * $quantity;
+            // $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity)) - $total_discount;
+            // $total_return_without_discount = $total_return + $total_discount;
+            $total_return = ((($invoice_details[0]['total_price'] / $invoice_details[0]['quantity']) * $quantity));
+            $total_return_without_discount = $total_return;
+            $total_discount = abs($total_return - ($price_type == 1 ? ($invoice_details[0]['whole_price'] * $quantity) : ($invoice_details[0]['sale_price'] * $quantity)));
 
             //total vat
             $i_vat = $this->db->select('tax_percentage')->from('tax_product_service')->where('product_id', $product_id)->get()->row();
@@ -358,6 +379,8 @@ class Crefund extends MX_Controller
                 $bank_return = $return;
             }
 
+            $customerName = $this->db->select('customer_name')->from('customer_information')->where('customer_id', $customer_id)->limit(1)->get()->row();
+
             $customer_ledger_data = array(
                 'transaction_id' => generator(15),
                 'customer_id' => $customer_id,
@@ -366,7 +389,8 @@ class Crefund extends MX_Controller
                 'payment_type' => 1,
                 'description' => 'ITP',
                 'status' => 1,
-                'voucher' => 'return'
+                'voucher' => 'SalRe',
+                'details' => "تم عمل مرتجع بـ $quantity منتج"
             );
             $this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -476,15 +500,15 @@ class Crefund extends MX_Controller
             );
             $this->db->insert('acc_transaction', $cogs_main_warehouse_depit);
 
-            if ($filter['payment_id'] != "" && $this->input->post('payment_type', TRUE) == 1) {
-                $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $filter['payment_id'])->get()->row();
+            if (!empty($payment_id)) {
+                $payment_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('HeadCode', $payment_id)->get()->row();
                 $bank_credit = array(
                     'fy_id' => $find_active_fiscal_year->id,
                     'VNo' => 'SR-' . $return_invoice_id,
                     'Vtype' => 'Sales',
                     'VDate' => $createdate,
                     'COAID' => $payment_head->HeadCode,
-                    'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $filter['payment_id'] . ')',
+                    'Narration' => 'Sales "return_amount" credited by cash/bank id: ' . $payment_head->HeadName . '(' . $payment_id . ')',
                     'Debit' => 0,
                     'Credit' => $bank_return,
                     'IsPosted' => 1,
@@ -513,6 +537,10 @@ class Crefund extends MX_Controller
                 ->where('invoice_id', $invoice_id)
                 ->update('invoice');
         }
+
+        // echo "<pre>";var_dump($warnnityProductIds, $warnnityProductVarient, $warnnityProductQty);
+
+        $this->insert_store_product_self($warnnityProductIds, $warnnityProductVarient, $warnnityProductQty);
 
         return redirect(base_url('dashboard/Crefund/return_invoice/' . $return_invoice_id));
     }
@@ -755,5 +783,186 @@ class Crefund extends MX_Controller
         $data['module'] = "dashboard";
         $data['page'] = "refund/refund_adjustment_form";
         echo Modules::run('template/layout', $data);
+    }
+
+    public function insert_store_product_self($product_ids, $variant_id, $quantity)
+    {
+        $transfer_id1  = $this->auth->generator(15);
+        $transfer_id2  = $this->auth->generator(15);
+        $stores = $this->db->select('store_id')->from('store_set')->where('store_name', 'Mahmoud Store')->or_where('store_name', 'Warranty Store')->order_by('store_name')->get()->result_array();
+        
+        $store_id     = $stores[0]['store_id'];
+        // $product_ids  = $this->input->post('product_id', TRUE);
+        // $variant_id   = $this->input->post('variant_id', TRUE);
+        $variant_color = [];
+        // $quantity     = $this->input->post('product_quantity', TRUE);
+        $batch_no     = null;
+        $transfer_by  = $this->session->userdata('user_id');
+        $t_store_id   = $stores[1]['store_id'];
+        $transfer_no = 1;
+        // var_dump($store_id, $t_store_id);
+        $latest = $this->db->select('transfer_no')->from('transfer_details')->order_by('id', 'desc')->limit(1)->get()->row();
+        if (!empty($latest->transfer_no)) {
+            $latest = str_replace('Trans-', '', $latest->transfer_no);
+            $transfer_no = (int)$latest + 1;
+        } else {
+            $transfer_no = 1000;
+        }
+        $txtTNo = $transfer_no;
+        $txtRemarks   = 'transfer from Mahmoud Store to Warranty Store';
+        $date_time    = date("Y-m-d H:i:s");
+        $status       = 1;
+
+        $data  = [];
+        $data1 = [];
+        $transfer_details = [];
+        $pst_out = [];
+        $pst_in = [];
+
+        foreach ($product_ids as $key => $product) {
+            $data[] = array(
+                'transfer_id'  => $transfer_id1,
+                'store_id'     => $store_id,
+                'product_id'   => $product,
+                'variant_id'   => $variant_id[$key],
+                'variant_color' => null,
+                'quantity'     => "-" . $quantity[$key],
+                'transfer_by'  => $transfer_by,
+                't_store_id'   => $t_store_id,
+                'date_time'    => $date_time,
+                'status'       => $status,
+            );
+
+            $data1[] = array(
+                'transfer_id'  => $transfer_id2,
+                'store_id'     => $t_store_id,
+                'product_id'   => $product,
+                'variant_id'   => $variant_id[$key],
+                'variant_color' => null,
+                'quantity'     => $quantity[$key],
+                'transfer_by'  => $transfer_by,
+                't_store_id'   => $store_id,
+                'date_time'    => $date_time,
+            );
+
+            $transfer_details[] = array(
+                'transfer_id'  => $transfer_id2,
+                't_store_id'   => $t_store_id,
+                'store_id'     => $store_id,
+                'warehouse_id' => '',
+                'product_id'   => $product,
+                'variant_id'   => $variant_id[$key],
+                'variant_color' => null,
+                'batch_no'     => $batch_no[$key],
+                'quantity'     => $quantity[$key],
+                'transfer_by'  => $transfer_by,
+                'transfer_no'  => $txtTNo,
+                'notes'      => $txtRemarks,
+            );
+
+            // stock1
+            $check_stock1 = $this->check_cstore_stock($store_id, $product, $variant_id[$key]);
+            $this->db->reset_query();
+            if (!empty($check_stock1)) {
+
+                // var_dump($check_stock1);
+                //update
+                $stock = array(
+                    'quantity' => $check_stock1->quantity - $quantity[$key]
+                );
+                if (!empty($store_id)) {
+                    $this->db->where('store_id', $store_id);
+                }
+                if (!empty($product)) {
+                    $this->db->where('product_id', $product);
+                }
+                if (!empty($variant_id[$key])) {
+                    $this->db->where('variant_id', $variant_id[$key]);
+                }
+                // if (!empty($variant_color[$key])) {
+                //     $this->db->where('variant_color', $variant_color[$key]);
+                // }
+                $this->db->update('purchase_stock_tbl', $stock);
+                //update
+            } else {
+                // insert
+                $stock = array(
+                    'store_id'     => $store_id,
+                    'product_id'   => $product,
+                    'variant_id'   => $variant_id[$key],
+                    'variant_color' => null,
+                    'quantity'     => $quantity[$key],
+                    'warehouse_id' => '',
+                );
+                $this->db->insert('purchase_stock_tbl', $stock);
+                // insert
+            }
+            // stock1
+
+            // stock2
+            $check_stock2 = $this->check_cstore_stock($t_store_id, $product, $variant_id[$key]);
+            $this->db->reset_query();
+            if (!empty($check_stock2)) {
+                // var_dump($check_stock2);
+                //update
+                $stock = array(
+                    'quantity' => $check_stock2->quantity + $quantity[$key]
+                );
+                if (!empty($t_store_id)) {
+                    $this->db->where('store_id', $t_store_id);
+                }
+                if (!empty($product)) {
+                    $this->db->where('product_id', $product);
+                }
+                if (!empty($variant_id[$key])) {
+                    $this->db->where('variant_id', $variant_id[$key]);
+                }
+                // if (!empty($variant_color[$key])) {
+                //     $this->db->where('variant_color', $variant_color[$key]);
+                // }
+                $this->db->update('purchase_stock_tbl', $stock);
+                //update
+            } else {
+                // insert
+                $stock = array(
+                    'store_id'     => $t_store_id,
+                    'product_id'   => $product,
+                    'variant_id'   => $variant_id[$key],
+                    'variant_color' => null,
+                    'quantity'     => $quantity[$key],
+                    'warehouse_id' => '',
+                );
+                $this->db->insert('purchase_stock_tbl', $stock);
+                // insert
+            }
+            // stock2
+
+        }
+
+        $this->Stores->store_transfer($data, $data1, $transfer_details);
+    }
+
+    public function check_cstore_stock($store_id = null, $product_id = null, $variant = null, $variant_color = null)
+    {
+        // var_dump('check store');
+        // var_dump($store_id, $product_id, $variant);
+        // var_dump('end check store');
+
+        $this->db->select('stock_id,quantity');
+        $this->db->from('purchase_stock_tbl');
+        if (!empty($store_id)) {
+            $this->db->where('store_id', $store_id);
+        }
+        if (!empty($product_id)) {
+            $this->db->where('product_id', $product_id);
+        }
+        if (!empty($variant)) {
+            $this->db->where('variant_id', $variant);
+        }
+        if (!empty($variant_color)) {
+            $this->db->where('variant_color', $variant_color);
+        }
+        $query = $this->db->get();
+        return $query->row();
     }
 }
