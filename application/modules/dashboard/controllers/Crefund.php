@@ -392,7 +392,7 @@ class Crefund extends MX_Controller
                 'voucher' => 'SalRe',
                 'details' => "تم عمل مرتجع بـ $quantity منتج"
             );
-            $this->db->insert('customer_ledger', $customer_ledger_data);
+            $this->db->insert('customer_ledger', $customer_ledger_data); 
 
             //1st debit (Sales return for Showroom sales) with total price before discount
             $customer_credit = array(
