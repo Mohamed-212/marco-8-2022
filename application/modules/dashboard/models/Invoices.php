@@ -461,10 +461,17 @@ class Invoices extends CI_Model {
                 $total_amount = $this->input->post('total_price', TRUE);
                 $discount = $this->input->post('discount', TRUE);
                 $inv_disc = (float)$this->input->post('invoice_discount', TRUE);
-                $total_price_vat=array_sum($total_amount)+(float)$this->input->post('total_cgst', TRUE);
-                $total_with_discount_inv=$total_price_vat-$inv_disc-(float)$this->input->post('total_discount', TRUE);
-                $percentage_disc = $this->input->post('percentage_discount', TRUE);
-                $inv_disc_rate  = ((float)$inv_disc+(((float)$percentage_disc/100)*(float)$total_with_discount_inv))/(float)$total_price_vat;
+                $percentage_disc = (float)$this->input->post('percentage_discount', TRUE);
+                //$cgst = $this->input->post('cgst', TRUE);
+
+
+//                $total_price_vat=array_sum($total_amount)+(float)$this->input->post('total_cgst', TRUE);
+//                $total_with_discount_inv=$total_price_vat-$inv_disc-(float)$this->input->post('total_discount', TRUE);
+//                $inv_disc_rate  = ($inv_disc+(((float)$percentage_disc/100)*(float)$total_with_discount_inv))/(float)$total_price_vat;
+
+                $total_with_discount_inv=array_sum($total_amount)-(float)$this->input->post('total_discount', TRUE);
+                $inv_disc_rate = ($inv_disc+(((float)$percentage_disc/100) * $total_with_discount_inv))/(float)$total_with_discount_inv;
+
                 $variants = $this->input->post('variant_id', TRUE);
                 // $pricing = $this->input->post('pricing', TRUE);
                 $color_variants = $this->input->post('color_variant', TRUE);
@@ -754,7 +761,8 @@ class Invoices extends CI_Model {
                 $inv_price_without_disc = array_sum($this->input->post('total_price', TRUE));
                 $percentage_discount=(((float)$percentage_disc/100)*(float)$total_with_discount_inv);
                 $total_discount = (int)$this->input->post('total_discount', TRUE)+(int)$this->input->post('invoice_discount', TRUE)+(int)$percentage_discount;
-                $total_price_before_discount = ($total_with_vat - $tota_vat) + $total_discount;
+//                $total_price_before_discount = ($total_with_vat - $tota_vat) + $total_discount;
+                $total_price_before_discount = $total_with_vat - $total_discount;
                 $store_id = $this->input->post('store_id', TRUE);
                 $store_head = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
 
