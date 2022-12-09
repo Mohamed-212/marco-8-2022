@@ -2218,6 +2218,23 @@ class Reports extends CI_Model
             }
         }
 
+        $total = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+            ->from('purchase_stock_tbl p')
+            ->join('invoice_stock_tbl i', 'i.product_id = p.product_id', 'left')
+            ->where('p.product_id', $product_id)
+            ->group_by('p.product_id', 'i.product_id')
+            ->get()
+            ->row();
+
+        // var_dump($total);exit;
+        // $totalPurchase = $total->totalPurchaseQnty;
+        // $totalSales = $total->totalSalesQnty;
+
+
+        // $balance = $totalPurchase - $totalSales;
+
+        // var_dump($totalPurchase, $totalSales, $product_id, $total);exit;
+
         return [$product, $openQuantity, 0, 0, 0, 0, $totalPurchase, $totalSales];
     }
 
