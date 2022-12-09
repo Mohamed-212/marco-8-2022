@@ -780,6 +780,8 @@ class Reports extends CI_Model
             $result[] = $this->get_invoice_details($inv['invoice_id']);
         }
 
+        // uksort($result, fn ($a, $b) => )
+
         return $result;
     }
 

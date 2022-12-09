@@ -20,7 +20,7 @@
 			</ol>
 		</div>
 	</section>
-
+f 
 	<section class="content">
 
 		<!-- Alert Message -->
@@ -153,13 +153,22 @@
 													<td align="center">
 														<?= $sales_report['invoice_all_data'][0]['customer_name'] ?>
 													</td>
+													<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
 												</tr>
 												<?php foreach ($sales_report['invoice_all_data'] as $invoice) : $next++; ?>
 													<tr>
-														<td></td>
-														<td></td>
-														<td></td>
-														<td></td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
 														<td>
 															<?= $invoice['product_name'] ?>
 														</td>
@@ -190,19 +199,34 @@
 															?>
 
 														</td>
-														<td colspan="3"><?php if (!empty($invoice['total_price'])) {
+														<td><?php if (!empty($invoice['total_price'])) {
 																			echo (($position == 0) ?
 																				$currency . " " .
 																				($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
 																				: ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
 																				. " " . $currency);
-																		} ?></td>
+																		} else {echo 0;} ?></td>
+																		<td>
+																			--
+																		</td>
+
+																		<td>
+																			--
+																		</td>
 													</tr>
 												<?php endforeach ?>
 
 												<?php if ($next == count($sales_report['invoice_all_data'])) : ?>
 													<tr>
-														<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+
+														<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 														<td align="center"><b><?php echo html_escape($sales_report['total_amount']); ?></td>
 														<td align="center"><b><?php echo html_escape($sales_report['paid_amount']); ?></td>
 														<td align="center"><b><?php echo html_escape($sales_report['due_amount']); ?></td>
@@ -280,10 +304,10 @@
 													</tr>
 												<?php endif ?>
 												<tr>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+													<td>--</td>
+													<td>--</td>
+													<td>--</td>
+													<td>--</td>
 													<td>
 														<?= $sales_report['product_name'] ?>
 													</td>
