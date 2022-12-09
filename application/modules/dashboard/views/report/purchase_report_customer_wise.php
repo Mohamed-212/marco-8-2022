@@ -112,7 +112,7 @@
 								</div>
 							<?php endif; ?>
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover dataTablePagination">
+								<table id="djkjk" class="table table-bordered table-striped table-hover dataTablePagination dataTablePaginationNoSorting">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('invoice') ?></th>
@@ -169,8 +169,9 @@
 												</tr>
 												<?php if ($purchase_reports['suppliers'][$invoice['supplier_id']] == $next) : $next = 0; ?>
 													<tr>
-														<td colspan="7" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-														<td align="center" colspan="2"><b><?php echo html_escape($total_sale_supplier); ?></td>
+														<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+														<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
+														<td align="center"><b><?php echo html_escape($total_sale_supplier); ?></td>
 													</tr>
 												<?php $total_sale_supplier = 0;
 												endif ?>
@@ -182,8 +183,10 @@
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="7" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-											<td align="center" colspan="2"><b><?php echo html_escape($total_sale); ?></td>
+										<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+
+											<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
+											<td align="center"><b><?php echo html_escape($total_sale); ?></td>
 										</tr>
 									</tfoot>
 								</table>
@@ -195,7 +198,7 @@
 								</div>
 							</div>
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover">
+								<table id="qas" class="table table-bordered table-striped table-hover dataTablePagination dataTablePaginationNoSorting">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('invoice') ?></th>
@@ -254,8 +257,10 @@
 												</tr>
 												<?php if ($return_reports['customers'][$invoice['customer_id']] == $next) : $next = 0; ?>
 													<tr>
-														<td colspan="7" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-														<td align="center" colspan="2"><b><?php echo html_escape($total_return_purchases_customer); ?></td>
+																												<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+
+														<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
+														<td align="center" col><b><?php echo html_escape($total_return_purchases_customer); ?></td>
 													</tr>
 												<?php $total_sale_supplier = 0;
 												endif ?>
@@ -267,8 +272,10 @@
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="7" align="right"><b><?php echo display('grand_total') ?>:</b></td>
-											<td align="center" colspan="2"><b><?php echo html_escape($total_return_purchases); ?></td>
+																									<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+
+											<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
+											<td align="center" col><b><?php echo html_escape($total_return_purchases); ?></td>
 										</tr>
 									</tfoot>
 								</table>
@@ -296,6 +303,7 @@
 <!-- Stock List Supplier Wise End -->
 <script>
 	$(document).ready(function() {
+		$.fn.dataTable.ext.errMode = 'none';
 		$(".datepicker2").datepicker({
 			dateFormat: "dd-mm-yy"
 		});
