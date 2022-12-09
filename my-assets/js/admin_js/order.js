@@ -125,7 +125,7 @@ function check_quotation() {
         // calculateSum();
         elem.val('0');
     }
-    // calculateSum();
+    calculateSum();
 }
 
 // function submit_form(e) {
@@ -302,6 +302,10 @@ function calculateSumQuotation() {
             inv_dis = $("#invoice_discount").val(),
             ser_chg = $("#service_charge").val();
     shipping_charge = (($("#shipping_charge").val()) ? $("#shipping_charge").val() : 0);
+
+    if ($('#is_quotation').prop('checked')) {
+        cgst = 0;
+    }
 
     sum =
         +cgst +
