@@ -1056,9 +1056,16 @@ class Reports extends CI_Model
         $result = [];
         // $customers = [];
         foreach ($query as $q) {
-            $q['balance'] = $this->Customers->customer_transection_summary($q['customer_id']);
+            $summary = $this->Customers->customer_transection_summary($q['customer_id']);
+
+            $q['balance'] = $summary[1][0]['total_debit']-$summary[0][0]['total_credit'];
+
+            // echo "<pre>";var_dump($q, $summary);exit;
+
             $result[] = $q;
         }
+
+        // echo "<pre>";print_r($result);exit;
 
         return $result;
     }
