@@ -2887,13 +2887,20 @@ class Purchases extends CI_Model
             $this->db->where('store_id', $store_id);
         }
 
+        if ($date_from && $date_to) {
+            $dateRange = "DATE(created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($date_from)) . "') AND DATE('" . date('Y-m-d', strtotime($date_to)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
+        }
+
         if ($date_from) {
-            $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+            // $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
         }
 
         if ($date_to) {
-            $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+            // $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
         }
+
+
         
         $purchase = $this->db->get()->row();
 
@@ -2912,13 +2919,19 @@ class Purchases extends CI_Model
             $this->db->where('store_id', $store_id);
         }
 
-        if ($date_from) {
-            $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+        // if ($date_from) {
+        //     $this->db->where('DATE(created_at) >= DATE(' . date('Y-m-d', strtotime($date_from)) . ')', null, false);
+        // }
+
+        // if ($date_to) {
+        //     $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
+        // }
+
+        if ($date_from && $date_to) {
+            $dateRange = "DATE(created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($date_from)) . "') AND DATE('" . date('Y-m-d', strtotime($date_to)) . "')";
+            $this->db->where($dateRange, NULL, FALSE);
         }
 
-        if ($date_to) {
-            $this->db->where('DATE(created_at) <= DATE(' . date('Y-m-d', strtotime($date_to)) . ')', null, false);
-        }
         $sales = $this->db->get()->row();
 
         // var_dump($purchase->totalPurchaseQnty , $sales->totalSalesQnty);exit;

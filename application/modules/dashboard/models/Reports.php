@@ -1927,7 +1927,7 @@ class Reports extends CI_Model
             $this->db->select('a.*')
                 ->from('purchase_stock_tbl b')
                 ->where('b.store_id', $store_id)
-                ->join('product_information a', 'a.product_id = b.product_id');
+                ->join('product_information a', 'a.product_id = b.product_id', 'left');
         }
 
         if ($product_id) {
@@ -1947,8 +1947,11 @@ class Reports extends CI_Model
 
         $store_list = $this->Stores->store_list();
 
+
+
         $p_list = [];
         // echo "<pre>";
+        // var_dump($products);
 
         foreach ($products as $product) {
             $size_id = explode(',', $product['variants']);
@@ -1957,6 +1960,8 @@ class Reports extends CI_Model
             } else {
                 $size_id = $product['variants'];
             }
+
+            $size_id = $product['variants'];
 
             foreach ($store_list as $st) {
                 if ($product['assembly'] == 1) {
@@ -1967,7 +1972,7 @@ class Reports extends CI_Model
             }
             // return stores
             $product['stores']['s1'] = $this->get_return_products_count($product['product_id'], $size_id, '1', $from_date, $to_date); // damaged
-            $product['stores']['s2'] = $this->get_return_products_count($product['product_id'], $size_id, '2', $from_date, $to_date); // warrinty
+            // $product['stores']['s2'] = $this->get_return_products_count($product['product_id'], $size_id, '2', $from_date, $to_date); // warrinty
 
             $p_list[] = $product;
         }

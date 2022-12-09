@@ -123,6 +123,9 @@
 								thead tr {
 									text-align: center;
 								}
+								li.paginate_button {
+									padding: 0 !important;
+								}
 							</style>
 							<table class="table table-bordered table-striped table-hover stripe dataTablePagination" id="example">
 
