@@ -99,22 +99,16 @@
                                         // for ($i=0; $i < 60 ; $i++) {
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
-                                            <?php
-                                            $padding = '11.52px';
-                                            if($i == 0){
-                                                $padding = '0px';
-                                            }
-                                            ?>
                                             <tr>
-                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 95px">
+                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 90px">
                                                 <div class="barcode-inner barcode_div"
-                                                     style="width: 150px; text-align: center;margin:auto;padding-top: <?php echo $padding; ?> ;">
+                                                     style="width: 150px; text-align: center;margin:auto;">
                                                     <div class="product-name barcode_cominfo" style="margin: 0px;">
                                                         <table style="width: 100%;text-align: center;">
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 14px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 12px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -122,7 +116,7 @@
                                                             <tr>
 
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 14px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 12px;font-weight: 600;margin: 0px">
                                                                         {model_only}
                                                                     </p>
 
@@ -130,7 +124,7 @@
                                                             </tr>
                                                             <tr>
 
-                                                                <td style="font-size: 13px;font-weight: 500;"><?= $size ?></td>
+                                                                <td style="font-size: 10px;font-weight: 500;"><?= $size ?></td>
 <!--                                                                --><?php //if ($is_sunglasses_category) : ?>
 <!--                                                                    <td style="text-align: end;">Polarized</td>-->
 <!--                                                                --><?php //endif ?>
