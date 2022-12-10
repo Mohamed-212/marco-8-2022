@@ -100,7 +100,7 @@
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
                                             <tr>
-                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 90px;padding: 0px">
+                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 95px;padding: 0px">
                                                 <div class="barcode-inner barcode_div"
                                                      style="width: 150px; text-align: center;margin:auto;">
                                                     <div class="product-name barcode_cominfo" style="margin: 0px;">
@@ -108,7 +108,7 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 12px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -116,7 +116,7 @@
                                                             <tr>
 
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 12px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
                                                                         {model_only}
                                                                     </p>
 
