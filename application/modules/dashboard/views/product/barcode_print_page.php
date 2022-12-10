@@ -100,7 +100,7 @@
                                         // for ($i=0; $i < $open_quantity ; $i++) {
                                         for ($i = 0; $i < $stock; $i++) {?>
                                             <tr>
-                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 90px">
+                                            <td valign="middle" class="td_text" style="display: block;border:0;height: 90px;padding: 0px">
                                                 <div class="barcode-inner barcode_div"
                                                      style="width: 150px; text-align: center;margin:auto;">
                                                     <div class="product-name barcode_cominfo" style="margin: 0px;">
