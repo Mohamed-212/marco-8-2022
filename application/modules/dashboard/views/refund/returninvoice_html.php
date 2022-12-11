@@ -376,7 +376,7 @@
                                                                     <th><?php echo display('product_name') ?></th>
                                                                      <th><?php echo display('quantity') ?></th>
                                                                     <th><?php echo display('price') ?></th>                                                                   
-                                                                    <th><?php echo display('sell_price') ?></th>
+                                                                    <th><?php echo display('customer_price') ?></th>
                                                                     <th><?php echo display('total_value') ?></th>
                                                                 </tr>
                                                             </thead>
