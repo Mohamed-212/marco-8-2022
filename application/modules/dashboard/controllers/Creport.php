@@ -263,9 +263,9 @@ class Creport extends MX_Controller
         $to_date = $this->input->get('to_date', TRUE);
         $store_id = $this->input->get('store_id', TRUE);
         if (empty($store_id)) {
-            $from_date = date('Y-m-01');
-            $to_date = date('Y-m-d');
-            $result = $this->db->select('store_id')->from('store_set')->where('default_status=', 1)->get()->row();
+            // $from_date = date('Y-m-01');
+            // $to_date = date('Y-m-d');
+            $result = $this->db->select('store_id')->from('store_set')->where('default_status', 1)->get()->row();
             $store_id = $result->store_id;
         }
         

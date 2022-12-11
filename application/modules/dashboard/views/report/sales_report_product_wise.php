@@ -1,5 +1,4 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-
 <!-- Product js php -->
 <script src="<?php echo base_url() ?>my-assets/js/admin_js/json/product.js.php"></script>
 <script src="<?php echo MOD_URL . 'dashboard/assets/js/print.js'; ?>"></script>
@@ -20,7 +19,7 @@
 			</ol>
 		</div>
 	</section>
-
+f 
 	<section class="content">
 
 		<!-- Alert Message -->
@@ -113,7 +112,7 @@
 								</div>
 							<?php endif; ?>
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover dataTablePagination">
+								<table id="sadasd" class="table table-bordered table-striped table-hover dataTablePagination dataTablePaginationNoSorting">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('sl') ?></th>
@@ -137,13 +136,13 @@
 										$total_paid = 0;
 										$total_due  = 0;
 										if (@$sales_reports) {
-											$sl = 1;
+											$sl = 0;
 											foreach ($sales_reports as $sales_report) :
 												$next = 0;
 										?>
 
 												<tr>
-													<td align="center"><?php echo $sl++; ?></td>
+													<td align="center"><?php echo ++$sl; ?></td>
 													<td align="center">
 														<a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $sales_report['invoice_id']; ?>">
 															<?php echo html_escape($sales_report['invoice_no']) ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
@@ -153,13 +152,22 @@
 													<td align="center">
 														<?= $sales_report['invoice_all_data'][0]['customer_name'] ?>
 													</td>
+													<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
 												</tr>
 												<?php foreach ($sales_report['invoice_all_data'] as $invoice) : $next++; ?>
 													<tr>
-														<td></td>
-														<td></td>
-														<td></td>
-														<td></td>
+														<td><?php echo $sl; ?>*</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
 														<td>
 															<?= $invoice['product_name'] ?>
 														</td>
@@ -190,22 +198,44 @@
 															?>
 
 														</td>
-														<td colspan="3"><?php if (!empty($invoice['total_price'])) {
+														<td><?php if (!empty($invoice['total_price'])) {
 																			echo (($position == 0) ?
 																				$currency . " " .
 																				($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
 																				: ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
 																				. " " . $currency);
-																		} ?></td>
+																		} else {echo 0;} ?></td>
+																		<td>
+																			--
+																		</td>
+
+																		<td>
+																			--
+																		</td>
 													</tr>
 												<?php endforeach ?>
 
 												<?php if ($next == count($sales_report['invoice_all_data'])) : ?>
 													<tr>
-														<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+
+														<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 														<td align="center"><b><?php echo html_escape($sales_report['total_amount']); ?></td>
-														<td align="center"><b><?php echo html_escape($sales_report['paid_amount']); ?></td>
-														<td align="center"><b><?php echo html_escape($sales_report['due_amount']); ?></td>
+														<?php
+															$total_sale += (float) $sales_report['total_amount'];
+															$total_paid += (float)$sales_report['paid_amount'];
+															$total_due += (float)$sales_report['due_amount'];
+														?>
+														<td align="center"><b><?php echo html_escape((float)$sales_report['paid_amount']); ?></td>
+														<td align="center"><b><?php echo html_escape((float)$sales_report['due_amount']); ?></td>
 													</tr>
 												<?php endif ?>
 										<?php
@@ -215,7 +245,16 @@
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+										<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+											<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 											<td align="center"><b><?php echo html_escape($total_sale); ?></td>
 											<td align="center"><b><?php echo html_escape($total_paid); ?></td>
 											<td align="center"><b><?php echo html_escape($total_due); ?></td>
@@ -230,7 +269,7 @@
 								</div>
 							</div>
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover dataTablePagination">
+								<table id="www" class="table table-bordered table-striped table-hover dataTablePagination dataTablePaginationNoSorting">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('sl') ?></th>
@@ -258,7 +297,7 @@
 										$total_due  = 0;
 										$totalPrice = 0;
 										if (@$return_reports) {
-											$sl = 1;
+											$sl = 0;
 											$invoice = '';
 											foreach ($return_reports as $sales_report) :
 												$next = 0;
@@ -267,7 +306,7 @@
 										?>
 												<?php if ($invoice != $sales_report['invoice']) : $invoice = $sales_report['invoice']; ?>
 													<tr>
-														<td align="center"><?php echo $sl++; ?></td>
+														<td align="center"><?php echo ++$sl; ?></td>
 														<td align="center">
 															<a href="<?php echo base_url() . 'dashboard/Crefund/return_invoice/' . $sales_report['return_invoice_id']; ?>">
 																<?php echo html_escape($sales_report['invoice']) ?> <i class="fa fa-tasks pull-right" aria-hidden="true"></i>
@@ -277,13 +316,14 @@
 														<td>
 															<?=$sales_report['customer_name']?>
 														</td>
+														<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
 													</tr>
 												<?php endif ?>
 												<tr>
-													<td></td>
-													<td></td>
-													<td></td>
-													<td></td>
+													<td><?=$sl?>*</td>
+													<td>--</td>
+													<td>--</td>
+													<td>--</td>
 													<td>
 														<?= $sales_report['product_name'] ?>
 													</td>
@@ -316,7 +356,7 @@
 														?>
 
 													</td>
-													<td colspan="3"><?php /*if (!empty($sales_report['total_return'])) {
+													<td><?php /*if (!empty($sales_report['total_return'])) {
 																echo (($position == 0) ?
 																	$currency . " " .
 																	($sales_report['total_return'] - (($sales_report['total_discount'] * $sales_report['quantity']) - ($item_tax->tax_percentage * ($sales_report['total_return'] - ($sales_report['total_discount'] * $sales_report['quantity'])) / 100)))
@@ -325,12 +365,15 @@
 															} */ ?>
 														<?= $totalPrice ?>
 													</td>
+													<td>--</td>
+													<td>--</td>
 												</tr>
 											<?php endforeach ?>
 
 											<?php if ($next == count($sales_report)) : ?>
 												<tr>
-													<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+												<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+													<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 													<td align="center"><b><?php echo html_escape($sales_report['total_amount']); ?></td>
 													<td align="center"><b><?php echo html_escape($sales_report['paid_amount']); ?></td>
 													<td align="center"><b><?php echo html_escape($sales_report['due_amount']); ?></td>
@@ -342,7 +385,8 @@
 									</tbody>
 									<tfoot>
 										<tr>
-											<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+										<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+											<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 											<td align="center"><b><?php echo html_escape($total_return_sales); ?></td>
 											<td align="center"><b><?php echo html_escape($total_paid); ?></td>
 											<td align="center"><b><?php echo html_escape($total_due); ?></td>
@@ -374,6 +418,7 @@
 <!-- Stock List Supplier Wise End -->
 <script>
 	$(document).ready(function() {
+		$.fn.dataTable.ext.errMode = 'none';
 		$(".datepicker2").datepicker({
 			dateFormat: "dd-mm-yy"
 		});

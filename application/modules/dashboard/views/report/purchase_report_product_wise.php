@@ -113,7 +113,7 @@
 								</div>
 							<?php endif; ?>
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover dataTablePagination">
+								<table id="sadsad" class="table table-bordered table-striped table-hover dataTablePagination dataTablePaginationNoSorting">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('sl') ?></th>
@@ -148,13 +148,14 @@
 													</td>
 													<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($report['date_time']))) ?></td>
 													<td align="center"><?php echo html_escape($report['supplier_name']) ?></td>
+													<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
 												</tr>
 												<?php foreach ($report['all_details'] as $invoice) : $next++; ?>
 													<tr>
-														<td></td>
-														<td></td>
-														<td></td>
-														<td></td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
 														<td>
 															<?= $invoice['product_name'] ?>
 														</td>
@@ -174,13 +175,14 @@
 														<td class='hide-me'>
 															<?= $invoice['vat'] ?>
 														</td>
-														<td colspan="3"><?= $invoice['total_amount'] ?></td>
+														<td><?= $invoice['total_amount'] ?></td>
 													</tr>
 												<?php endforeach ?>
 
 												<?php if ($next == count($report['all_details'])) : ?>
 													<tr>
-														<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+													<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+														<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 														<td align="center"><b><?php echo html_escape($report['grand_total_amount']); ?></td>
 													</tr>
 												<?php endif ?>
@@ -204,7 +206,7 @@
 								</div>
 							</div>
 							<div class="table-responsive mt_10">
-								<table id="" class="table table-bordered table-striped table-hover">
+								<table id="fdgdg" class="table table-bordered table-striped table-hover dataTablePagination dataTablePaginationNoSorting">
 									<thead>
 										<tr>
 											<th class="text-center"><?php echo display('sl') ?></th>
@@ -239,14 +241,15 @@
 													</td>
 													<td align="center"><?php echo html_escape(date('d-m-Y', strtotime($report['date_time']))) ?></td>
 													<td align="center"><?php echo html_escape($report['supplier_name']) ?></td>
+													<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
 												</tr>
 												<?php foreach ($report['all_details'] as $invoice) : $next++;
 													$total_return_amount += $invoice['total_return_amount']; ?>
 													<tr>
-														<td></td>
-														<td></td>
-														<td></td>
-														<td></td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
+														<td>--</td>
 														<td>
 															<?= $invoice['product_name'] ?>
 														</td>
@@ -266,13 +269,14 @@
 														<td class='hide-me'>
 															<?= $invoice['vat'] ?>
 														</td>
-														<td colspan="3"><?= $invoice['total_return_amount'] ?></td>
+														<td><?= $invoice['total_return_amount'] ?></td>
 													</tr>
 												<?php endforeach ?>
 
 												<?php if ($next == count($report['all_details'])) : ?>
 													<tr>
-														<td colspan="9" align="right"><b><?php echo display('grand_total') ?>:</b></td>
+													<td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td><td>--</td>
+														<td align="right"><b><?php echo display('grand_total') ?>:</b></td>
 														<td align="center"><b><?php echo html_escape($total_return_amount); ?></td>
 													</tr>
 												<?php endif ?>
@@ -314,6 +318,7 @@
 <!-- Stock List Supplier Wise End -->
 <script>
 	$(document).ready(function() {
+		$.fn.dataTable.ext.errMode = 'none';
 		$(".datepicker2").datepicker({
 			dateFormat: "dd-mm-yy"
 		});
