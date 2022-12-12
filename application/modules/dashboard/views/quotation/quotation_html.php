@@ -724,7 +724,7 @@
                                                                                         <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
                                                                                         <td class="grand_total">
                                                                                             <?php
-                                                                                            $totalQuantity = 0;
+                                                                                            $total_quantity = 0;
                                                                                             foreach ($invoice_all_data as $inv) {
                                                                                                 if ($inv['category_id'] == $acc_cate_id->category_id && $product_type == 2) {
                                                                                                     continue;
