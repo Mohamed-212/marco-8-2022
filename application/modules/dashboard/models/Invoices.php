@@ -410,7 +410,7 @@ class Invoices extends CI_Model {
 
                 // get current customer balance after invoice creating
                 $customerSummaryAfterInvoice = $this->Customers->customer_transection_summary($customer_id);
-                $customerBalanceAfterInvoice = number_format($customerSummaryAfterInvoice[1][0]['total_debit']-$customerSummaryAfterInvoice[0][0]['total_credit'], 2, '.', ',');
+                $customerBalanceAfterInvoice = $customerSummaryAfterInvoice[1][0]['total_debit']-$customerSummaryAfterInvoice[0][0]['total_credit'];
 
                 //Data inserting into invoice table
                 (($this->input->post('total_cgst', true) && $this->input->post('is_quotation', true) == 0) ? $total_cgsti = $this->input->post('total_cgst', true) : $total_cgsti = 0);
@@ -448,7 +448,7 @@ class Invoices extends CI_Model {
                     'quotation_id' => $quotation_id,
                     'product_type' => $product_type,
                     'customer_balance' => $this->input->post('customer_balance', TRUE),
-                    'customer_balance_after' => $customerBalanceAfterInvoice,
+                    'customer_balance_after' => round($customerBalanceAfterInvoice, 2),
                     'payment_id' => $this->input->post('payment_id', TRUE)
                 );
                 $this->db->insert('invoice', $data);

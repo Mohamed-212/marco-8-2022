@@ -138,7 +138,14 @@
 								</tr>
 								<tr>
 									<td><?php echo display('balance_ammount'); ?> </td>
-									<td class="text-right mr_20"> <?php echo (($position == 0) ? $currency . " " . $total_balance : $total_balance . " " . $currency) ?></td>
+									<td class="text-right mr_20"> 
+									<?php
+																								echo (float)$total_balance_pure > 0 ? display('debit') : '';
+
+                                                                                                echo (float)$total_balance_pure < 0 ? display('has_credit') : '';
+                                                                                            ?>
+										<?php echo (($position == 0) ? $currency . " " . $total_balance : $total_balance . " " . $currency) ?>
+									</td>
 								</tr>
 							</table>
 						</div>

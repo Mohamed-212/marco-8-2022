@@ -908,7 +908,12 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                             :
                                                                                         </th>
                                                                                         <td class="bt_bb_0">
-                                                                                            <?php echo (($position == 0) ? $currency . " " . $customer_balance : $customer_balance . " " . $currency) ?>
+                                                                                            <?php
+                                                                                                echo (float)$customer_balance > 0 ? display('debit') : '';
+
+                                                                                                echo (float)$customer_balance < 0 ? display('has_credit') : '';
+                                                                                            ?>
+                                                                                            <?php echo (($position == 0) ? $currency . " " . abs($customer_balance) : abs($customer_balance) . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
@@ -916,7 +921,14 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                             :
                                                                                         </th>
                                                                                         <td class="bt_bb_0">
-                                                                                            <?php echo (($position == 0) ? $currency . " " . $customer_balance_after : $customer_balance_after . " " . $currency) ?>
+                                                                                        <?php
+                                                                                        $customer_balance_after_pure = str_replace(',', '', $customer_balance_after);
+                                                                                        
+                                                                                        echo (float)$customer_balance_after_pure > 0 ? display('debit') : '';
+
+                                                                                        echo (float)$customer_balance_after_pure < 0 ? display('has_credit') : '';
+                                                                                            ?>
+                                                                                            <?php echo (($position == 0) ? $currency . " " . abs((float)$customer_balance_after_pure) : abs((float)$customer_balance_after_pure) . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
