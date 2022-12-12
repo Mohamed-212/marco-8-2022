@@ -213,7 +213,7 @@
                                     <?php
                                         if (!empty($stok_report[1])) {
                                             foreach ($stok_report[1] as $stock) {
-                                                $total_in += $stock['qty'];
+                                                // $total_in += $stock['qty'];
                                                 if (isset($stock['plus'])) {
                                                     $total_in += $stock['qty'];
                                                 }

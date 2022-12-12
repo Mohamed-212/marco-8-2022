@@ -2138,10 +2138,13 @@ class Reports extends CI_Model
 
         // TODO change this
         if (empty($first_purchase->quantity)) {
-            $first_purchase->quantity = $product->open_quantity;
+            // $first_purchase->quantity = $product->open_quantity;
+            $openQuantity = (int)$product->open_quantity;
+        } else {
+            $openQuantity = (int)$first_purchase->quantity;
         }
 
-        $openQuantity = (int)$first_purchase->quantity;
+        
 
         // $openQuantity = 5;
         // var_dump($openQuantity);exit;
