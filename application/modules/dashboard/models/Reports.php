@@ -2187,18 +2187,26 @@ class Reports extends CI_Model
         // $all_details[0]['balance'] += $openQuantity;
         $i = 0;
         $balance = 0;
+        // var_dump($from_date, $to_date);exit;
+        
         foreach ($get_details as $d) {
             $d['balance'] = 0;
 
-            $today = date('Y-m-d');
-$contractDateBegin = date('Y-m-d', strtotime($from_date));
-$contractDateEnd = date('Y-m-d', strtotime($to_date));
-    
-if (($today >= $contractDateBegin) && ($today <= $contractDateEnd)){
-    // echo "is between";
-}else{
-    continue;
-}
+            // $today = date('Y-m-d');
+            $today = new DateTime(date('Y-m-d', strtotime($d['date_to_format']))); // Today
+            $contractDateBegin = new DateTime(date('Y-m-d', strtotime($from_date)));
+            $contractDateEnd  = new DateTime(date('Y-m-d', strtotime($to_date)));
+            // $contractDateEnd->da(1);
+            // $contractDateEnd->modify('+1 day');
+            // var_dump($contractDateBegin->format('d-m-Y'), $contractDateEnd->format('d-m-Y'), $contractDateBegin->getTimestamp());
+            // var_dump( $today->getTimestamp() <= $contractDateEnd->getTimestamp());
+            if (
+                $today->getTimestamp() >= $contractDateBegin->getTimestamp() && 
+                $today->getTimestamp() <= $contractDateEnd->getTimestamp()){
+                // echo "is between";
+              }else{
+                continue;
+              }
 
             
 
