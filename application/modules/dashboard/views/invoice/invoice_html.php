@@ -665,7 +665,11 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                             <?= display('total_quantity') ?>
                                                                                         </th>
                                                                                         <th>
-                                                                                            <?= display('total_vat_value') ?>
+                                                                                            <?php if ($isTaxed == 1) {
+                                                                                                echo display('total_vat_value');
+                                                                                            } else {
+                                                                                                echo '--';
+                                                                                            }?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                             <?php
@@ -684,7 +688,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                                     echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
                                                                                                 }
                                                                                             } else {
-                                                                                                echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
+                                                                                                echo '--';
                                                                                             } ?>
                                                                                         </th>
                                                                                     </tr>

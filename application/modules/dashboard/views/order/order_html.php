@@ -648,8 +648,8 @@
                                                                                                     // echo '---';
                                                                                                 }
                                                                                             } else {
-                                                                                                echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
-                                                                                                // echo '---';
+                                                                                                // echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
+                                                                                                echo '---';
                                                                                             } ?>
                                                                                         </th>
                                                                                     </tr>
