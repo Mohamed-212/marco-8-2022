@@ -2201,6 +2201,9 @@ class Reports extends CI_Model
         // }
         // $invoice_return = $this->db->get()->result_array();
 
+        $sales = [];
+        
+
 
         $totalPurchase = 0;
         $purchaseData = $this->Products->product_purchase_info($product_id);

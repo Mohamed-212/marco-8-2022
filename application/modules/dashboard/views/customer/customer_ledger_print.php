@@ -213,6 +213,8 @@
 	} */
 	.table tr, .table th, .table td, .table tbody tr th, .table thead tr th {
 		padding: 2px !important;
+		vertical-align: center;
+		text-align: center;
 	}
 </style>
 <div class="content-wrapper">
