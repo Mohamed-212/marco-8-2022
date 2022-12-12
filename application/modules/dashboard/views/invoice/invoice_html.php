@@ -652,6 +652,13 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                             <?php echo (($position == 0) ? $currency . " " . $i_grand_amount : $i_grand_amount . " " . $currency); ?>
                                                                                             <?php
                                                                                             $t_bal_after_discount = 0;
+                                                                                            $t_discount_val_real = 0;
+                                                                                            $t_between_discount = $i_grand_amount - (float)$invoice_all_data[0]['total_discount'];
+                                                                                            // var_dump($t_between_discount);
+                                                                                            $t_between_discount -= ($t_between_discount * (float)($invoice_all_data[0]['percentage_discount'] / 100));
+                                                                                            $t_between_discount -= (float)$invoice_discount;
+                                                                                            $t_discount_val_real = $i_grand_amount - $t_between_discount;
+                                                                                            // var_dump($t_between_discount, $t_discount_val_real);
                                                                                             ?>
                                                                                         </th>
                                                                                         <th>
@@ -682,16 +689,17 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                         </th>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <?php if ((int)$i_grand_amount != (int)$total_amount) : ?>
+                                                                                        <?php if ($t_discount_val_real > 0) : ?>
                                                                                         <th>
                                                                                             <?= display('discount_inv') ?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                             <?php
+                                                                                            if ($t_discount_val_real > 0)  {
                                                                                             $t_discount_value = (float)$invoice_all_data[0]['total_discount'];
                                                                                             $t_discount_value += $invoice_discount;
 
-                                                                                            echo (($position == 0) ? $currency . " " . $t_discount_value : $t_discount_value . " " . $currency); ?>
+                                                                                            echo (($position == 0) ? $currency . " " . $t_discount_val_real : $t_discount_val_real . " " . $currency);} else {echo '--';} ?>
                                                                                         </th>
                                                                                         <?php else : ?>
                                                                                             <th>
@@ -726,14 +734,14 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                     <tr>
                                                                                         <th>
                                                                                         <?php
-                                                                                            if ((int)$i_grand_amount != (int)$total_amount){
+                                                                                            if ($t_discount_val_real > 0){
                                                                                          echo display('total after discount');
                                                                                              } else echo "---";?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                             <?php
-                                                                                            if ((int)$i_grand_amount != (int)$total_amount){
-                                                                                                echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) : round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) . " " . $currency);
+                                                                                            if ($t_discount_val_real > 0){
+                                                                                                echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$t_discount_val_real, 2) : round($i_grand_amount - (float)$t_discount_val_real, 2) . " " . $currency);
                                                                                             } else {
                                                                                                 echo '--';
                                                                                             }

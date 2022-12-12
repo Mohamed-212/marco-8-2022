@@ -179,14 +179,17 @@
                                                     <input class="" type="hidden" hidden name="variant_id_<?= $inx + 1 ?>" value="<?= $inv->variant_id ?>" />
                                                 </td>
                                                 <td>
+                                                    <span id="rate_<?= $inx + 1 ?>">
                                                     <?php
                                                     $item_discount = round(((float)$inv->item_invoice_discount * (float)$inv->ava_quantity) + ((float)$inv->discount * (float)$inv->ava_quantity), 2);
                                                     $total_price_after_discount = round((float)$inv->total_price - (float)$item_discount, 2);
 
                                                     // var_dump($item_discount, $total_price_after_discount, $inv->total_price);
                                                     // echo $total_price_after_discount;
-                                                    echo $inv->rate == $inv->price ? $inv->without_price_after_disc : $inv->whole_price_after_disc;
+                                                    echo round($inv->rate == $inv->price ? $inv->without_price_after_disc : $inv->whole_price_after_disc, 2);
                                                     ?>
+                                                    </span>
+                                                    
                                                     <input type="hidden" hidden name="rate_<?= $inx + 1 ?>" value="<?= $inv->rate ?>" />
                                                 </td>
                                                 <td><input type='text' id='available_quantity_<?= $inx + 1 ?>' name='available_quantity_<?= $inx + 1 ?>' class='form-control text-right available_quantity_<?= $inx + 1 ?>' id='avl_qntt_<?= $inx + 1 ?>' placeholder='0' readonly='' value="<?= $inv->ava_quantity ?>" /></td>
@@ -202,7 +205,7 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <select class='form-control' id='price_type_<?= $inx + 1 ?>' required='required' name='price_type_<?= $inx + 1 ?>'>
+                                                    <select class='form-control pri-type' id='price_type_<?= $inx + 1 ?>' required='required' name='price_type_<?= $inx + 1 ?>' data-without-price="<?=$inv->without_price_after_disc?>" data-whole-price="<?=$inv->whole_price_after_disc?>" data-inx="<?= $inx + 1 ?>">
                                                         <option value='0' <?= $inv->rate != $inv->price ?: 'selected' ?>><?= display('sell_price') ?></option>
                                                         <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
                                                     </select>
@@ -297,6 +300,18 @@
                     $(el).prop('checked', false);
                 }
             });
+        });
+
+        $('.pri-type').change(function() {
+            if ($(this).val() == 0) {
+                $('#rate_' + $(this).attr('data-inx')).text(
+                    Number($(this).attr('data-without-price')).toFixed(2)
+                );
+            } else {
+                $('#rate_' + $(this).attr('data-inx')).text(
+                    Number($(this).attr('data-whole-price')).toFixed(2)
+                );
+            }
         });
     });
 </script>

@@ -396,9 +396,9 @@ function calculateSum() {
             $("#percentage_discount").attr('data-value', -1);
         }
 
-        // if ($('#is_quotation').prop('checked')) {
-        //     cgst = 0;
-        // }
+        if ($('#is_quotation').prop('checked')) {
+            cgst = 0;
+        }
 
     sum =
         +cgst +

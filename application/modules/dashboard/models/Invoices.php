@@ -372,6 +372,10 @@ class Invoices extends CI_Model {
                 //     );
                 //     $this->db->insert('customer_ledger', $data2);
                 // } else {
+                    $t_qty = 0;
+                    foreach ($quantity as $q) {
+                        $t_qty += $q;
+                    }
                     $data2 = array(
                         'transaction_id' => generator(15),
                         'customer_id' => $customer_id,
@@ -383,7 +387,7 @@ class Invoices extends CI_Model {
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                         'voucher' => 'Sall',
-                        'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج"
+                        'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $t_qty منتج"
                     );
                     $this->db->insert('customer_ledger', $data2);
                 // }

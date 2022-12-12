@@ -231,7 +231,7 @@
 												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['credit'] : (float)$v_ledger['credit'] . ' ' . $currency) ?></td>
 												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
 												<td><?php echo date('d-m-Y', strtotime($v_ledger['cl_created_at'])); ?></td>
-												<td>
+												<td dir="rtl" align="center">
 													<?php echo str_replace('PLHH', $v_ledger['c_id'], $v_ledger['details']);?>
 												</td>
 											</tr>

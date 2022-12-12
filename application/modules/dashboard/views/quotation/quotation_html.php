@@ -477,6 +477,13 @@
                                                                                         <?php echo (($position == 0) ? $currency . " " . $i_grand_amount : $i_grand_amount . " " . $currency); ?>
                                                                                             <?php
                                                                                             $t_bal_after_discount = 0;
+                                                                                            $t_discount_val_real = 0;
+                                                                                            $t_between_discount = $i_grand_amount - (float)$invoice_all_data[0]['total_discount'];
+                                                                                            // var_dump($t_between_discount);
+                                                                                            $t_between_discount -= ($t_between_discount * (float)($invoice_all_data[0]['percentage_discount'] / 100));
+                                                                                            $t_between_discount -= (float)$invoice_discount;
+                                                                                            $t_discount_val_real = $i_grand_amount - $t_between_discount;
+                                                                                            // var_dump($t_between_discount, $t_discount_val_real);
                                                                                             ?>
                                                                                         </th>
                                                                                         <th>
@@ -514,16 +521,17 @@
                                                                                         </th>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                    <?php if ((int)$i_grand_amount != (int)$total_amount) : ?>
+                                                                                    <?php if ($t_discount_val_real > 0) : ?>
                                                                                         <th>
                                                                                             <?=display('discount_inv')?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                         <?php
+                                                                                        if ($t_discount_val_real > 0)  {
                                                                                             $t_discount_value = (float)$invoice_all_data[0]['total_discount'];
                                                                                             $t_discount_value += $invoice_discount;
 
-                                                                                            echo (($position == 0) ? $currency . " " . $t_discount_value : $t_discount_value . " " . $currency); ?>
+                                                                                            echo (($position == 0) ? $currency . " " . $t_discount_val_real : $t_discount_val_real . " " . $currency);} else {echo '--';} ?>
                                                                                         </th>
                                                                                         <?php else : ?>
                                                                                             <th>
@@ -565,13 +573,17 @@
                                                                                         <th>
                                                                                             
                                                                                             <?php
-                                                                                            if ((int)$i_grand_amount != (int)$total_amount){
+                                                                                            if ($t_discount_val_real > 0){
                                                                                                 echo display('total after discount');
                                                                                                     } else echo "---";?>
                                                                                         </th>
                                                                                         <th class="left-border">
                                                                                         <?php
-                                                                                            echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) : round($i_grand_amount - (float)$invoice_all_data[0]['total_discount'], 2) . " " . $currency)
+                                                                                        if ($t_discount_val_real > 0){
+                                                                                            echo (($position == 0) ? $currency . " " . round($i_grand_amount - (float)$t_discount_val_real, 2) : round($i_grand_amount - (float)$t_discount_val_real, 2) . " " . $currency);
+                                                                                        } else {
+                                                                                            echo '---';
+                                                                                        }
                                                                                             ?>
                                                                                         </th>
                                                                                         <!-- <th style="visibility: hidden;">
@@ -712,7 +724,7 @@
                                                                                         <th class="grand_total"> <?php echo display('total_quantity'); ?>:</th>
                                                                                         <td class="grand_total">
                                                                                             <?php
-                                                                                            $totalQuantity = 0;
+                                                                                            $total_quantity = 0;
                                                                                             foreach ($invoice_all_data as $inv) {
                                                                                                 if ($inv['category_id'] == $acc_cate_id->category_id && $product_type == 2) {
                                                                                                     continue;
