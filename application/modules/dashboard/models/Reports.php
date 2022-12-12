@@ -2189,6 +2189,9 @@ class Reports extends CI_Model
         $balance = 0;
         foreach ($get_details as $d) {
             $d['balance'] = 0;
+
+            
+
             if ($i == 0) {
                 $balance += $openQuantity; 
                 $d['balance'] = $balance;
@@ -2202,6 +2205,7 @@ class Reports extends CI_Model
                 $balance += (int)$d['qty'];
                 $d['balance'] = $balance;
             }
+            
             $all_details[] = $d;
             $i++;
         }
