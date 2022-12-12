@@ -135,7 +135,7 @@
                                                 </button>
                                                 <?php } ?>
 
-                                                <a href="<?php echo base_url('dashboard/Cquotation/quotation_details_pdf/' . $quotation['quotation_id']); ?>"
+                                                <a style="display: none;" href="<?php echo base_url('dashboard/Cquotation/quotation_details_pdf/' . $quotation['quotation_id']); ?>"
                                                     class="btn btn-primary btn-sm" data-toggle="tooltip"
                                                     data-placement="left" title="<?php echo display('download') ?>">
                                                     <i class="fa fa-download" aria-hidden="true"></i>
