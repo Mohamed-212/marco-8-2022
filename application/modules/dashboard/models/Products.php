@@ -556,7 +556,7 @@ class Products extends CI_Model
             return $query->result_array();
         }
         return false;
-    }
+    } 
 
     public function return_invoice_data_sum($product_ids, $from_date = null, $to_date = null)
     {
