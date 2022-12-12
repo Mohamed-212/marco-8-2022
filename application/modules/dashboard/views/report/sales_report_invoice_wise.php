@@ -155,16 +155,16 @@
 														<?= $invoice['customer_name'] ?>
 													</td>
 													<td>
-														<?= $invoice['total_amount'] + $invoice['total_discount'] ?>
+														<?= round($invoice['total_amount'] + $invoice['total_discount'] + $invoice['invoice_discount'], 2) ?>
 													</td>
 													<td>
-														<?= $invoice['total_discount'] ?>
+														<?= round($invoice['total_discount'] + $invoice['invoice_discount'], 2) ?>
 													</td>
 													<td>
 														<?= $invoice['total_vat'] ?>
 													</td>
 													<td>
-														<?= $invoice['total_amount'] ?>
+														<?= round($invoice['total_amount'], 2) ?>
 													</td>
 													<td>
 														<?= $invoice['first_name'] . ' ' . $invoice['last_name'] ?>
@@ -232,16 +232,16 @@
 														<?= $invoice['customer_name'] ?>
 													</td>
 													<td>
-														<?= $invoice['total_total_return'] + $invoice['total_total_discount'] ?>
+														<?= round($invoice['total_total_return'] + $invoice['total_total_discount'], 2) ?>
 													</td>
 													<td>
-														<?= $invoice['total_total_discount'] ?>
+														<?= round($invoice['total_total_discount'], 2) ?>
 													</td>
 													<td>
-														<?= $invoice['total_total_return'] - $invoice['total_rate'] ?>
+														<?= round($invoice['total_total_return'] - $invoice['total_rate'], 2) ?>
 													</td>
 													<td>
-														<?= $invoice['total_total_return'] ?>
+														<?= round($invoice['total_total_return'], 2) ?>
 													</td>
 													<td>
 														<?= $invoice['first_name'] . ' ' . $invoice['last_name'] ?>

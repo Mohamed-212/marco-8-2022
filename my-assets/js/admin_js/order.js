@@ -303,6 +303,10 @@ function calculateSumQuotation() {
             ser_chg = $("#service_charge").val();
     shipping_charge = (($("#shipping_charge").val()) ? $("#shipping_charge").val() : 0);
 
+    if ($('#is_quotation').prop('checked')) {
+        cgst = 0;
+    }
+
     sum =
         +cgst +
         +sgst +

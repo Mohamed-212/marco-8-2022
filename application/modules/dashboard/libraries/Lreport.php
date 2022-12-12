@@ -1798,10 +1798,10 @@ class Lreport
             'store_id' => 's1',
             'store_name' => display('damaged')
         ];
-        $store_list[] = [
-            'store_id' => 's2',
-            'store_name' => display('no warranty')
-        ];
+        // $store_list[] = [
+        //     'store_id' => 's2',
+        //     'store_name' => display('no warranty')
+        // ];
         $products_balance = $CI->Reports->products_balance($from_date, $to_date, $store_id, $product_id);
 
 

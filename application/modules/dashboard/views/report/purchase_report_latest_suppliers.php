@@ -132,7 +132,10 @@
 											foreach ($sales_reports as $invoice) :
 												$sl++;
 												$next = 0;
-												$total_sale += $invoice['balance'][0][0]['total_credit'] - $invoice['balance'][1][0]['total_debit'];
+												$total_sale += 
+												$invoice['balance'][1][0]['total_debit']
+												-
+												$invoice['balance'][0][0]['total_credit'];
 										?>
 
 												<tr>
@@ -151,7 +154,11 @@
 													</td>
 													<td>
 														<?php
-														echo $invoice['balance'][0][0]['total_credit'] - $invoice['balance'][1][0]['total_debit'];
+														echo
+														
+														$invoice['balance'][1][0]['total_debit']
+														- 
+														$invoice['balance'][0][0]['total_credit'];
 														?>
 													</td>
 												</tr>

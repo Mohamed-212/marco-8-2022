@@ -780,6 +780,8 @@ class Reports extends CI_Model
             $result[] = $this->get_invoice_details($inv['invoice_id']);
         }
 
+        // uksort($result, fn ($a, $b) => )
+
         return $result;
     }
 
@@ -1056,9 +1058,16 @@ class Reports extends CI_Model
         $result = [];
         // $customers = [];
         foreach ($query as $q) {
-            $q['balance'] = $this->Customers->customer_transection_summary($q['customer_id']);
+            $summary = $this->Customers->customer_transection_summary($q['customer_id']);
+
+            $q['balance'] = $summary[1][0]['total_debit']-$summary[0][0]['total_credit'];
+
+            // echo "<pre>";var_dump($q, $summary);exit;
+
             $result[] = $q;
         }
+
+        // echo "<pre>";print_r($result);exit;
 
         return $result;
     }
@@ -1920,7 +1929,7 @@ class Reports extends CI_Model
             $this->db->select('a.*')
                 ->from('purchase_stock_tbl b')
                 ->where('b.store_id', $store_id)
-                ->join('product_information a', 'a.product_id = b.product_id');
+                ->join('product_information a', 'a.product_id = b.product_id', 'left');
         }
 
         if ($product_id) {
@@ -1940,8 +1949,11 @@ class Reports extends CI_Model
 
         $store_list = $this->Stores->store_list();
 
+
+
         $p_list = [];
         // echo "<pre>";
+        // var_dump($products);
 
         foreach ($products as $product) {
             $size_id = explode(',', $product['variants']);
@@ -1950,6 +1962,8 @@ class Reports extends CI_Model
             } else {
                 $size_id = $product['variants'];
             }
+
+            $size_id = $product['variants'];
 
             foreach ($store_list as $st) {
                 if ($product['assembly'] == 1) {
@@ -1960,7 +1974,7 @@ class Reports extends CI_Model
             }
             // return stores
             $product['stores']['s1'] = $this->get_return_products_count($product['product_id'], $size_id, '1', $from_date, $to_date); // damaged
-            $product['stores']['s2'] = $this->get_return_products_count($product['product_id'], $size_id, '2', $from_date, $to_date); // warrinty
+            // $product['stores']['s2'] = $this->get_return_products_count($product['product_id'], $size_id, '2', $from_date, $to_date); // warrinty
 
             $p_list[] = $product;
         }
@@ -2203,6 +2217,23 @@ class Reports extends CI_Model
                 $totalSales = ($totalSales + $salesData[$k]['t_qty']);
             }
         }
+
+        $total = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+            ->from('purchase_stock_tbl p')
+            ->join('invoice_stock_tbl i', 'i.product_id = p.product_id', 'left')
+            ->where('p.product_id', $product_id)
+            ->group_by('p.product_id', 'i.product_id')
+            ->get()
+            ->row();
+
+        // var_dump($total);exit;
+        // $totalPurchase = $total->totalPurchaseQnty;
+        // $totalSales = $total->totalSalesQnty;
+
+
+        // $balance = $totalPurchase - $totalSales;
+
+        // var_dump($totalPurchase, $totalSales, $product_id, $total);exit;
 
         return [$product, $openQuantity, 0, 0, 0, 0, $totalPurchase, $totalSales];
     }
