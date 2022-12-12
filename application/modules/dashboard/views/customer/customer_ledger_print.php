@@ -296,13 +296,14 @@
 										<table id="" class="table table-bordered table-striped table-hover">
 											<thead>
 												<tr>
-													<th><?php echo display('date') ?></th>
-													<th><?php echo display('transaction_type') ?></th>
-													<!-- <th class="hide-me"><?php echo display('receipt_no') ?></th>
-													<th class="hide-me"><?php echo display('description') ?></th> -->
-													<th class="text-right mr_20"><?php echo display('debit') ?></th>
-													<th class="text-right mr_20"><?php echo display('credit') ?></th>
-													<th class="text-right mr_20"><?php echo display('balance') ?></th>
+												<th><?php echo display('Document No') ?></th>
+										<th class="text-right mr_20"><?php echo display('debit') ?></th>
+										<th class="text-right mr_20"><?php echo display('credit') ?></th>
+										<th class="text-right mr_20"><?php echo display('balance') ?></th>
+										<th><?php echo display('date') ?></th>
+										<th><?php echo display('details') ?></th>
+										<!-- <th><?php echo display('receipt_no') ?></th>
+										<th><?php echo display('description') ?></th> -->
 												</tr>
 											</thead>
 											<tbody>
