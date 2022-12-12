@@ -386,7 +386,7 @@
 										// $total_balance = 0;
 										// $total_supplier_price = 0;
 										// $total_sell_price = 0;
-										$sl = 0;
+										$sl = $page ?? 0;
 										foreach ($stock_reports as $repo) :
 											$sales_quantity = (int)$repo['totalSalesQnty'];
 											$purchase_quantity = (int)$repo['totalPurchaseQnty'];
@@ -445,7 +445,9 @@
 											</tr>
 										<?php endforeach ?>
 										<tr class="footer">
-											<th><?= $sl ?></th>
+											<th>
+												<?=(int)$footer['count']?>
+											</th>
 											<th align="center"><b><?= display('grand_total') ?></b></th>
 											<th>--</th>
 											<th>--</th>

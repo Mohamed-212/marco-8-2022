@@ -1059,7 +1059,8 @@ class Lreport
             'all_pri_type' => $all_pri_type,
             'links' => $links,
             'product_name' => $product_name,
-            'footer' => $footer
+            'footer' => $footer,
+            'page' => $page,
         );
         // echo "<pre>";var_dump($reports);exit;
         $reportList = $CI->parser->parse('dashboard/report/sales_report_all_details', $data, true);
