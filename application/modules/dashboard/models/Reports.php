@@ -2190,6 +2190,16 @@ class Reports extends CI_Model
         foreach ($get_details as $d) {
             $d['balance'] = 0;
 
+            $today = date('Y-m-d');
+$contractDateBegin = date('Y-m-d', strtotime($from_date));
+$contractDateEnd = date('Y-m-d', strtotime($to_date));
+    
+if (($today >= $contractDateBegin) && ($today <= $contractDateEnd)){
+    // echo "is between";
+}else{
+    continue;
+}
+
             
 
             if ($i == 0) {
