@@ -23,8 +23,13 @@
 		.logo,
 		.panel-footer,
 		.main-header,
-		.main-sidebar {
+		.main-sidebar,
+		.btn.btn-info.print-btn {
 			display: none;
+		}
+		tr, tr td {
+			page-break-inside: auto;
+			break-inside: auto;
 		}
 
 		.cominfo_div {
@@ -81,10 +86,10 @@
 			position: fixed;
 			bottom: 0;
 		}
-
 		.empty-footer {
-			height: 100px
+			height: 110px !important;
 		}
+		
 
 		.footerr {
 			position: fixed;
@@ -92,9 +97,10 @@
 		}
 
 		.footerr {
-			bottom: 35px;
+			bottom: 50px;
 		}
 	}
+	
 
 	.thead tr,
 	.borderd {
@@ -198,6 +204,16 @@
 			border-radius: 6px;
 		}
 	}
+	
+	/* .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+		padding: 0;
+		font-size: 14px;
+		vertical-align: middle;
+		text-align: center;
+	} */
+	.table tr, .table th, .table td, .table tbody tr th, .table thead tr th {
+		padding: 2px !important;
+	}
 </style>
 <div class="content-wrapper">
 	<section class="content-header">
@@ -248,7 +264,7 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-12">
-				<div class="panel panel-bd lobidrag">
+				<div class="panel panel-bd lobidrag" style="border: none">
 					<div class="panel-heading">
 						<div class="panel-title">
 							<h4><?php echo display('customer_ledger') ?></h4>
@@ -271,35 +287,50 @@
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2" style="padding-left: 30px;padding-top: 50px;">
+									<td align="center" colspan="2" style="padding-top: ;border: none">
 										<div class="">
-											<?php echo display('customer_name') ?>:&nbsp;&nbsp; <h4 style="display: inline;"><?php echo html_escape($customer_name); ?></h4>
+											<?php echo display('customer_ledger') ?>:&nbsp;&nbsp; <h4 style="display: inline;"><?php echo html_escape($customer_name); ?></h4>
 										</div>
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2" style="padding-left: 30px;">
-										<div class="">
-											<?php echo display('from_date') ?>:&nbsp;&nbsp; <?= $this->input->post('from_date', TRUE); ?>
+									<td align="center" colspan="2" style="border: none">
+										<div class="" style="display: inline-block;">
+											<?php echo display('from') ?>:&nbsp; <?= $this->input->post('from_date', TRUE); ?>
+										</div>
+										&nbsp;
+										<div class="" style="display: inline-block;">
+											<?php echo display('to') ?>:&nbsp; <?= $this->input->post('to_date', TRUE); ?>
 										</div>
 									</td>
 								</tr>
 								<tr>
-									<td colspan="2" style="padding-left: 30px;">
-										<div class="">
-											<?php echo display('to_date') ?>:&nbsp;&nbsp; <?= $this->input->post('to_date', TRUE); ?>
-										</div>
-									</td>
+									<!-- <td colspan="2" style="padding-left: 30px;border: none">
+										
+									</td> -->
 								</tr>
 								<tr>
+									<td>
+										<style>
+											@media screen {
+												.print-only {
+													display: none;
+												}
+											}
+											@media print {
+												.print-only {
+													display: none;
+												}
+											}
+										</style>
 									<div class="table-responsive">
 										<table id="" class="table table-bordered table-striped table-hover">
 											<thead>
 												<tr>
 												<th><?php echo display('Document No') ?></th>
-										<th class="text-right mr_20"><?php echo display('debit') ?></th>
-										<th class="text-right mr_20"><?php echo display('credit') ?></th>
-										<th class="text-right mr_20"><?php echo display('balance') ?></th>
+										<th class="text-right"><?php echo display('debit') ?></th>
+										<th class="text-right"><?php echo display('credit') ?></th>
+										<th class="text-right"><?php echo display('balance') ?></th>
 										<th><?php echo display('date') ?></th>
 										<th><?php echo display('details') ?></th>
 										<!-- <th><?php echo display('receipt_no') ?></th>
@@ -333,10 +364,17 @@
 												</td>
 												<td class="text-right">
 													<?php
-													echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['debit'] : (float)$v_ledger['debit'] . ' ' . $currency) ?>
+													echo (($position == 0) ? '' . ' ' . (float)$v_ledger['debit'] : (float)$v_ledger['debit'] . ' ' . '') ?>
 												</td>
-												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . (float)$v_ledger['credit'] : (float)$v_ledger['credit'] . ' ' . $currency) ?></td>
-												<td class="text-right"> <?php echo (($position == 0) ? $currency . ' ' . $v_ledger['balance'] : $v_ledger['balance'] . ' ' . $currency) ?></td>
+												<td class="text-right"> <?php echo (($position == 0) ? '' . ' ' . (float)$v_ledger['credit'] : (float)$v_ledger['credit'] . ' ' . '') ?></td>
+												<td class="text-right">
+												<?php
+                                                                                                echo (float)$v_ledger['balance'] > 0 ? display('debit') : '';
+
+                                                                                                echo (float)$v_ledger['balance'] < 0 ? display('has_credit') : '';
+                                                                                            ?>
+													<?php echo (($position == 0) ? '' . ' ' . abs($v_ledger['balance']) : abs($v_ledger['balance']) . ' ' . '') ?>
+												</td>
 												<td><?php echo date('d-m-Y', strtotime($v_ledger['cl_created_at'])); ?></td>
 												<td dir="rtl" align="center">
 													<?php echo str_replace('PLHH', $v_ledger['c_id'], $v_ledger['details']);?>
@@ -347,14 +385,60 @@
 													}
 												}
 												?>
+
+<tr class="print-only">
+												<td>
+													
+												</td>
+												<td class="text-right">
+													
+												</td>
+											
+												</td>
+												<td></td>
+												<td dir="rtl" align="center">
+													
+												</td>
+											</tr>
+											<tr class="print-only">
+												<td>
+													
+												</td>
+												<td class="text-right">
+													
+												</td>
+											
+												</td>
+												<td></td>
+												<td dir="rtl" align="center">
+													
+												</td>
+											</tr>
+
+											<tr class="print-only">
+												<td>
+													
+												</td>
+												<td class="text-right">
+													
+												</td>
+											
+												</td>
+												<td></td>
+												<td dir="rtl" align="center">
+													
+												</td>
+											</tr>
+
 											</tbody>
 										</table>
 									</div>
+									</td>
 								</tr>
 							</tbody>
 							<tfoot>
 								<tr>
-									<th>
+									<th colspan="2">
 										<div class="empty-footer"></div>
 									</th>
 								</tr>
