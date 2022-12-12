@@ -2137,97 +2137,104 @@ class Reports extends CI_Model
         $first_purchase = $this->db->select('quantity')->from('purchase_stock_tbl')->where('product_id', $product_id)->where('store_id', $default_store_id)->where('quantity', $product->open_quantity)->limit(1)->order_by('created_at', 'asc')->get()->row();
 
         // TODO change this
-        // if (empty($first_purchase->quantity)) {
-        //     $first_purchase->quantity = $product->open_quantity;
-        // }
+        if (empty($first_purchase->quantity)) {
+            $first_purchase->quantity = $product->open_quantity;
+        }
 
         $openQuantity = (int)$first_purchase->quantity;
 
+        // $openQuantity = 5;
+        // var_dump($openQuantity);exit;
+
         $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
 
-        /**
-         * transfer || exports || in quantity
-         */
-        //  invoices
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('a.created_at as date_time, a.invoice_id, a.invoice, b.quantity, b.rate')
-        //     ->from('invoice a')
-        //     ->join('invoice_details b', 'b.product_id = "' . $product_id . '" AND b.invoice_id = a.invoice_id')
-        //     ->where('a.store_id', $store_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
+        $get_details = [];
 
-        // $invoices = $this->db->order_by('created_at', 'asc')
-        //     ->get()
-        //     ->result_array();
-        // // purchase return
-        // // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('a.created_at as date_time, a.purchase_return_id, b.quantity, b.rate')
-        //     ->from('product_purchase_return a')
-        //     ->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = "' . $product_id . '"')
-        //     ->where('a.store_id', $store_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-        // $purchase_return = $this->db->order_by('created_at', 'asc')
-        //     ->get()
-        //     ->result_array();
+        $invs = $this->db->select('a.*, a.invoice_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as minus, c.customer_name')->from('invoice a')->join('invoice_details b', 'b.invoice_id = a.invoice_id AND b.product_id = ' . $product_id)->join('customer_information c', 'c.customer_id = a.customer_id', 'left')->get()->result_array();
 
-        /**
-         * purchase || imports || out quantity
-         */
-        // purchases
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('a.purchase_id, a.invoice, a.created_at as date_time, b.quantity, b.rate')
-        //     ->from('product_purchase a')
-        //     ->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = "' . $product_id . '"')
-        //     ->where('a.store_id', $store_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-        // $purchases = $this->db->order_by('created_at', 'asc')
-        //     ->get()
-        //     ->result_array();
+        $adjus = $this->db->select('a.*, a.adjustment_id as id_me, b.*, b.adjustment_quantity as qty, a.created_at as date_to_format, a.created_at as minus')->from('stock_adjustment_table a')->join('stock_adjustment_details b', 'b.adjustment_id = a.adjustment_id AND a.adjustment_status = 1 AND b.adjustment_type = "decrease" AND b.product_id = ' . $product_id)->get()->result_array();
 
-        // // invoice return
-        // $dateRange = "DATE(a.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($from_date)) . "') AND DATE('" . date('Y-m-d', strtotime($to_date)) . "')";
-        // $this->db->select('a.id, a.return_invoice_id, a.return_quantity, a.rate, a.created_at as date_time')
-        //     ->from('invoice_return a')
-        //     ->join('invoice b', 'b.invoice_id = a.invoice_id AND b.store_id = "' . $store_id . '"', 'left')
-        //     ->where('a.product_id', $product_id);
-        // if ($dateRange) {
-        //     $this->db->where($dateRange, NULL, FALSE);
-        // }
-        // $invoice_return = $this->db->get()->result_array();
+        $pur_ret = $this->db->select('a.*, a.purchase_return_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as minus, c.supplier_name')->from('product_purchase_return a')->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = ' . $product_id)->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left')->get()->result_array();
 
-        $sales = [];
+        // $pur_ret = $this->db->select('a.*, b.*')->from('product_purchase_return a')->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = ' . $product_id)->get()->result_array();
+
+        $trans_from = $this->db->select('a.*, a.id as id_me, b.*, b.quantity as qty, b.created_at as date_to_format, b.created_at as minus')->from('transfer a')->join('transfer_details b', 'b.transfer_id = a.transfer_id AND b.store_id = "'. $store_id  .'" AND b.product_id = ' . $product_id)->get()->result_array();
+
         
 
+        /**
+         * 
+         */
 
-        $totalPurchase = 0;
-        $purchaseData = $this->Products->product_purchase_info($product_id);
-        if (!empty($purchaseData)) {
-            foreach ($purchaseData as $k => $v) {
-                $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+        $purs = $this->db->select('a.*, a.purchase_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as plus, c.supplier_name')->from('product_purchase a')->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = ' . $product_id)->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left')->get()->result_array();
+
+        $adjus = $this->db->select('a.*, a.adjustment_id as id_me, b.*, b.adjustment_quantity as qty, a.created_at as date_to_format, a.created_at as plus')->from('stock_adjustment_table a')->join('stock_adjustment_details b', 'b.adjustment_id = a.adjustment_id AND a.adjustment_status = 1 AND b.adjustment_type = "increase" AND b.product_id = ' . $product_id)->get()->result_array();
+
+        $inv_ret = $this->db->select('b.*, b.id as id_me, b.return_quantity as qty, b.created_at as date_to_format, b.created_at as plus, c.customer_name')->from('invoice_return b')->join('customer_information c', 'c.customer_id = b.customer_id', 'left')->where('b.product_id', $product_id)->get()->result_array();
+
+        $trans_to = $this->db->select('a.*, a.purchase_id as id_me, b.*, b.quantity as qty, b.created_at as date_to_format, b.created_at as plus')->from('transfer a')->join('transfer_details b', 'b.transfer_id = a.transfer_id AND b.t_store_id = "'. $store_id  .'" AND b.product_id = ' . $product_id)->get()->result_array();
+
+        $get_details = array_merge($get_details, $invs, $adjus, $pur_ret, $trans_from, $purs, $adjus, $inv_ret, $trans_to);
+
+        usort($get_details, function ($a, $b) {
+            return strtotime($a['date_to_format']) - strtotime($b['date_to_format']);
+        });
+
+        $all_details = [];
+        // $all_details[0]['balance'] += $openQuantity;
+        $i = 0;
+        $balance = 0;
+        foreach ($get_details as $d) {
+            $d['balance'] = 0;
+            if ($i == 0) {
+                $balance += $openQuantity; 
+                $d['balance'] = $balance;
             }
-        }
-        $totalPurchase += $product->open_quantity;
-        $salesData = $this->Products->invoice_data($product_id);
-        $totalSales = 0;
-        if (!empty($salesData)) {
-            foreach ($salesData as $k => $v) {
-                $totalSales = ($totalSales + $salesData[$k]['t_qty']);
+            if (isset($d['minus'])) {
+                $balance -= (int)$d['qty'];
+                $d['balance'] = $balance;
             }
+
+            if (isset($d['plus'])) {
+                $balance += (int)$d['qty'];
+                $d['balance'] = $balance;
+            }
+            $all_details[] = $d;
+            $i++;
         }
 
-        $total = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
-            ->from('purchase_stock_tbl p')
-            ->join('invoice_stock_tbl i', 'i.product_id = p.product_id', 'left')
-            ->where('p.product_id', $product_id)
-            ->group_by('p.product_id', 'i.product_id')
-            ->get()
-            ->row();
+        // $sales[0]['balance'] = $openQuantity;
+        // foreach ($sales as $sale) {
+        //     // $sale['balance'] = 0;
+        //     $sale['balance'] -= $sale['qty']; 
+        // }
+        
+
+        // echo "<pre>";var_dump($sales);exit;
+
+        // $totalPurchase = 0;
+        // $purchaseData = $this->Products->product_purchase_info($product_id);
+        // if (!empty($purchaseData)) {
+        //     foreach ($purchaseData as $k => $v) {
+        //         $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+        //     }
+        // }
+        // $totalPurchase += $product->open_quantity;
+        // $salesData = $this->Products->invoice_data($product_id);
+        // $totalSales = 0;
+        // if (!empty($salesData)) {
+        //     foreach ($salesData as $k => $v) {
+        //         $totalSales = ($totalSales + $salesData[$k]['t_qty']);
+        //     }
+        // }
+
+        // $total = $this->db->select("SUM(p.quantity) as totalPurchaseQnty, SUM(i.quantity) as totalSalesQnty")
+        //     ->from('purchase_stock_tbl p')
+        //     ->join('invoice_stock_tbl i', 'i.product_id = p.product_id', 'left')
+        //     ->where('p.product_id', $product_id)
+        //     ->group_by('p.product_id', 'i.product_id')
+        //     ->get()
+        //     ->row();
 
         // var_dump($total);exit;
         // $totalPurchase = $total->totalPurchaseQnty;
@@ -2238,7 +2245,7 @@ class Reports extends CI_Model
 
         // var_dump($totalPurchase, $totalSales, $product_id, $total);exit;
 
-        return [$product, $openQuantity, 0, 0, 0, 0, $totalPurchase, $totalSales];
+        return [$openQuantity, $all_details, $product];
     }
 
     public function sales_report_all_details(

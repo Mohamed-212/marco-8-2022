@@ -518,6 +518,10 @@ class Lreport
 
         $stok_report = $product_id ? $CI->Reports->stock_report_by_product_card($from_date, $to_date, $store_id, $product_id) : [];
 
+        // foreach ($stok_report as $repo) {
+        //     $repo
+        // }
+
         $product_list = $CI->Products->product_list();
         $store_list = $CI->Stores->store_list();
 

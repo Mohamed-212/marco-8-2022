@@ -157,7 +157,7 @@
                     <div class="panel-body">
                         <div id="printableArea" class="ml_2">
                             <div class="table-responsive mt_10">
-                                <table id="" class="table table-bordered table-striped table-hover dataTablePagination">
+                            <table id="" class="table table-bordered table-striped table-hover dataTablePagination ">
                                     <thead>
                                         <tr>
                                             <th class="text-center"><?php echo display('date') ?></th>
@@ -166,7 +166,168 @@
                                             </th>
                                             <th class="text-center"><?php echo display('receive_quantity') ?></th>
                                             <th class="text-center"><?php echo display('transfer_quantity') ?></th>
-                                            <th class="text-center"><?php echo display('sell_price') ?></th>
+                                            <th class="text-center"><?php echo display('supplier_price') ?></th>
+                                            <th class="text-center"><?php echo display('total_value') ?></th>
+                                            <th class="text-center"><?php echo display('balance') ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                    <?php
+                                        // $all_in_quantity = $stok_report[1];
+                                        // $all_in_sales = $stok_report[0]->price;
+                                        $all_in_quantity = $stok_report[0];
+                                        $total_in = $stok_report[0];
+                                        $total_out = 0;
+                                        $total_multi =  $stok_report[2]->supplier_price * $stok_report[0];
+                                        $all_in_sales = 0;
+                                        ?>
+                                            <td align="center"><?php echo date('d-m-Y', strtotime($stok_report[2]->created_at)); ?></td>
+                                            <td align="center">
+                                                <?= display('previous_quantity') ?>
+                                            </td>
+                                            <td align="center">
+                                                <a href="<?php echo base_url() . 'dashboard/Cproduct/product_details/' . $stok_report[2]->product_id; ?>">
+                                                    <?php echo $stok_report[2]->product_name; ?>
+                                                    <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+
+                                            <td class="text-center">
+                                            <?= $stok_report[0] ?>
+                                            </td>
+                                            <td class="text-center">
+                                                0
+                                            </td>
+                                            <td align="center">
+                                                <?= $stok_report[2]->supplier_price ?>
+                                            </td>
+                                            <td align="center">
+                                                <?= round($stok_report[2]->supplier_price * $stok_report[0], 2) ?>
+                                            </td>
+                                            <td align="center">
+                                            <?= $stok_report[0] ?>
+                                            </td>
+                                    </tr>
+
+                                    <?php
+                                        if (!empty($stok_report[1])) {
+                                            foreach ($stok_report[1] as $stock) {
+                                                $total_in += $stock['qty'];
+                                                if (isset($stock['plus'])) {
+                                                    $total_in += $stock['qty'];
+                                                }
+                                                if (isset($stock['minus'])) {
+                                                    $total_out += $stock['qty'];
+                                                }
+
+                                                $total_multi += $stok_report[2]->supplier_price * $stock['qty'];
+
+                                                // $all
+                                                $all_in_sales += $stock['rate'];
+                                        ?>
+                                                <tr>
+                                                    <td align="center"><?php echo date('d-m-Y', strtotime($stock['date_to_format'])); ?></td>
+                                                    <td align="center">
+                                                        <?php
+                                                        if (isset($stock['return_invoice_id'])) {
+                                                            echo str_replace('CHH', $stock['customer_name'], str_replace('NHH', $stock['invoice_id'], display('invoice_id_with_cus_ret')));
+                                                        } elseif (isset($stock['invoice_id'])) {
+                                                                echo str_replace('CHH', $stock['customer_name'], str_replace('NHH', $stock['invoice_id'], display('invoice_id_with_cus')));
+                                                            } elseif (isset($stock['purchase_id'])) {
+                                                                // echo display('purchase_id_with_cus');
+                                                                echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus')));
+                                                            } elseif (isset($stock['adjustment_id']) && $stock['adjustment_type'] == 'decrease') {
+                                                                echo str_replace('NHH', $stock['adjustment_id'], display('adjustment_id_with_cus'));
+                                                            } elseif (isset($stock['adjustment_id']) && $stock['adjustment_type'] == 'increase') {
+                                                                echo str_replace('NHH', $stock['adjustment_id'], display('adjustment_id_with_cus_increase'));
+                                                            } elseif (isset($stock['purchase_return_id'])) {
+                                                                echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus_ret')));
+                                                            } elseif (isset($stock['transfer_id'])) {
+                                                                echo str_replace('NHH', $stock['id'], display('transfer_id_with_cus'));
+                                                            }
+                                                        ?>
+                                                    </td>
+                                                    <td align="center">
+                                                            <?php echo $stock['id_me']; ?>
+                                                            <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i>
+                                                    </td>
+
+                                                    <td align="center">
+                                                        <?php
+                                                            if (isset($stock['plus'])) {
+                                                                echo $stock['qty'];
+                                                            } else {
+                                                                echo 0;
+                                                            }
+                                                        ?>
+                                                    </td>
+
+                                                    <td align="center">
+                                                    <?php
+                                                            if (isset($stock['minus'])) {
+                                                                echo $stock['qty'];
+                                                            } else {
+                                                                echo 0;
+                                                            }
+                                                        ?>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <?= $stok_report[2]->supplier_price ?>
+                                                    </td>
+                                                    <td align="center">
+                                                        <?= round($stok_report[2]->supplier_price * $stock['qty'], 2) ?>
+                                                    </td>
+                                                    <td align="center">
+                                                            <?=$stock['balance']?>
+                                                    </td>
+                                                </tr>
+                                        <?php }
+                                        } ?>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td>
+                                            --
+                                        </td>
+                                        <td>
+                                            --
+                                        </td>
+                                            <td style="text-align: center">
+                                                <?= display('grand_total') ?>
+                                            </td>
+                                            <td align="center">
+                                                <?= $total_in ?>
+                                            </td>
+                                            <td align="center">
+                                               <?=$total_out?>
+                                            </td>
+                                            <td align="center">
+                                            --
+                                            </td>
+                                            <td align="center">
+                                                <b>
+                                                
+                                                <?=round($total_multi, 2)?>
+                                                </b>
+                                            </td>
+                                            <td>
+                                                --
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                            </table>
+                                <table id="" class="table table-bordered table-striped table-hover  " style="display: none">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"><?php echo display('date') ?></th>
+                                            <th class="text-center"><?php echo display('description') ?></th>
+                                            <th class="text-center"><?php echo display('invoice') ?>
+                                            </th>
+                                            <th class="text-center"><?php echo display('receive_quantity') ?></th>
+                                            <th class="text-center"><?php echo display('transfer_quantity') ?></th>
+                                            <th class="text-center"><?php echo display('supplier_price') ?></th>
                                             <th class="text-center"><?php echo display('total_value') ?></th>
                                             <th class="text-center"><?php echo display('balance') ?></th>
                                         </tr>
@@ -176,79 +337,19 @@
                                         <?php
                                         // $all_in_quantity = $stok_report[1];
                                         // $all_in_sales = $stok_report[0]->price;
-                                        $all_in_quantity = 0;
+                                        $all_in_quantity = $stok_report[0];
+                                        $total_in = $stok_report[0];
+                                        $total_out = 0;
+                                        $total_multi =  $stok_report[2]->supplier_price * $stok_report[0];
                                         $all_in_sales = 0;
                                         ?>
-                                        <tr>
-                                            <td align="center"><?php echo date('d-m-Y', strtotime($stok_report[0]->created_at)); ?></td>
-                                            <td align="center">
-                                                <?= display('previous_quantity') ?>
-                                            </td>
-                                            <td align="center">
-                                                <a href="<?php echo base_url() . 'dashboard/Cproduct/product_details/' . $stok_report[0]->product_id; ?>">
-                                                    <?php echo $stok_report[0]->product_name; ?>
-                                                    <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i>
-                                                </a>
-                                            </td>
-
-                                            <td class="text-center">
-                                            <?= $stok_report[1] ?>
-                                            </td>
-                                            <td class="text-center">
-                                                
-                                            </td>
-                                            <td align="center">
-                                                <?= $stok_report[0]->price ?>
-                                            </td>
-                                            <td align="center">
-                                                <?= $stok_report[0]->price * $stok_report[1] ?>
-                                            </td>
-                                            <!-- <td align="center">
-
-                                            </td> -->
+                                       
                                         </tr>
+                                        
                                         <?php
-                                        if (!empty($stok_report[2])) {
-                                            foreach ($stok_report[2] as $stock) {
-                                                $all_in_quantity += $stock['quantity'];
-                                                $all_in_sales += $stock['rate'];
-                                        ?>
-                                                <tr>
-                                                    <td align="center"><?php echo date('d-m-Y', strtotime($stock['date_time'])); ?></td>
-                                                    <td align="center">
-                                                        <?= display('sales') ?>
-                                                    </td>
-                                                    <td align="center">
-                                                        <a href="<?php echo base_url() . 'dashboard/Cinvoice/invoice_inserted_data/' . $stock['invoice_id']; ?>">
-                                                            <?php echo $stock['invoice']; ?>
-                                                            <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i>
-                                                        </a>
-                                                    </td>
-
-                                                    <td align="center">
-                                                        
-                                                    </td>
-
-                                                    <td align="center">
-                                                    <?= $stock['quantity'] ?>
-                                                    </td>
-
-                                                    <td class="text-center">
-                                                        <?= $stock['rate'] ?>
-                                                    </td>
-                                                    <td align="center">
-                                                        <?= $stock['rate'] * $stock['quantity'] ?>
-                                                    </td>
-                                                    <!-- <td>
-
-                                                    </td> -->
-                                                </tr>
-                                        <?php }
-                                        } ?>
-                                        <?php
-                                        if (!empty($stok_report[3])) {
+                                        if (!empty($stok_report[3]) && 0) {
                                             foreach ($stok_report[3] as $stock) {
-                                                $all_in_quantity += $stock['quantity'];
+                                                $all_in_quantity += $stock['qty'];
                                                 $all_in_sales += $stock['rate'];
                                         ?>
                                                 <tr>
@@ -284,7 +385,7 @@
                                         <?php }
                                         } ?>
                                         <!-- total in -->
-                                        <tr>
+                                        <!-- <tr>
                                             <th colspan="3" style="text-align: center">
                                                 <?= display('grand_total') ?>
                                             </th>
@@ -301,13 +402,13 @@
                                             <td align="center">
                                                 <?= $all_in_quantity * $all_in_sales ?>
                                             </td>
-                                        </tr>
+                                        </tr> -->
 
                                         <!-- purchase -->
                                         <?php
                                         $all_out_quantity = 0;
                                         $all_out_sales = 0;
-                                        if (!empty($stok_report[4])) {
+                                        if (!empty($stok_report[4]) && 0) {
                                             foreach ($stok_report[4] as $stock) {
                                                 $all_out_quantity += $stock['quantity'];
                                                 $all_out_sales += $stock['rate'];
@@ -347,7 +448,7 @@
 
                                         <!-- invoice return -->
                                         <?php
-                                        if (!empty($stok_report[5])) {
+                                        if (!empty($stok_report[5]) && 0) {
                                             foreach ($stok_report[5] as $stock) {
                                                 $all_out_quantity += $stock['return_quantity'];
                                                 $all_out_sales += $stock['rate'];
@@ -387,7 +488,7 @@
 
                                         <!-- total out -->
                                         <tr>
-                                            <th colspan="3" style="text-align: center">
+                                            <!-- <th colspan="3" style="text-align: center">
                                                 <?= display('grand_total') ?>
                                             </th>
                                             <td align="center">
@@ -401,31 +502,10 @@
                                             </td>
                                             <td align="center">
                                                 <?= $all_out_quantity * $all_out_sales ?>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     </tbody>
-                                    <tfoot>
-                                    <tr>
-                                            <th colspan="3" style="text-align: center">
-                                                <?= display('grand_total') ?>
-                                            </th>
-                                            <td align="center" colspan="2">
-                                                <!-- <?= ($all_in_quantity + $stok_report[1]) - $all_out_quantity ?> -->
-                                            </td>
-                                            <td align="center">
-                                                <!-- <?= ($all_in_sales) - $all_out_sales ?> -->
-                                            </td>
-                                            <td align="center">
-                                            <?= ($all_in_sales) - $all_out_sales ?>
-                                            </td>
-                                            <td align="center">
-                                                <b>
-                                                
-                                                <?= ($all_in_quantity + $stok_report[1]) - $all_out_quantity ?>
-                                                </b>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
+                                    
                                 </table>
                             </div>
                         </div>
