@@ -913,11 +913,12 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                         </th>
                                                                                         <td class="bt_bb_0">
                                                                                             <?php
+                                                                                            $customer_balance_pure = str_replace(',', '', $customer_balance);
                                                                                                 echo (float)$customer_balance > 0 ? display('debit') : '';
 
                                                                                                 echo (float)$customer_balance < 0 ? display('has_credit') : '';
                                                                                             ?>
-                                                                                            <?php echo (($position == 0) ? $currency . " " . abs($customer_balance) : abs($customer_balance) . " " . $currency) ?>
+                                                                                            <?php echo (($position == 0) ? $currency . " " . abs($customer_balance_pure) : abs($customer_balance_pure) . " " . $currency) ?>
                                                                                         </td>
                                                                                     </tr>
                                                                                     <tr>
