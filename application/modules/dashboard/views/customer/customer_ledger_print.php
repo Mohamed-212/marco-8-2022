@@ -97,7 +97,9 @@
 		}
 
 		.footerr {
-			bottom: 50px;
+			bottom: 55px;
+			right: 0;
+			width: 99%;
 		}
 	}
 	
@@ -273,7 +275,7 @@
 						</div>
 					</div>
 					<div class="panel-body">
-						<table class="table " style="border: 0;" border="0">
+						<table class="table " style="border: 0;margin: 0;" border="0" >
 							<thead>
 								<tr>
 									<th></th>
@@ -440,7 +442,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<th colspan="2">
+									<th colspan="2" style="border: none;">
 										<div class="empty-footer"></div>
 									</th>
 								</tr>
