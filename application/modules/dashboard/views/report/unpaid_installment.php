@@ -36,8 +36,10 @@
 			<div class="col-sm-12">
 				<div class="panel panel-bd lobidrag">
 					<div class="panel-body">
-					<?php echo form_open("dashboard/Creport/unpaid_installment", array('class' => 'form-inline')); ?>
-					<div class="form-group">
+					<?php echo form_open("dashboard/Creport/unpaid_installment", array('class' => 'form-')); ?>
+					<div class="row">
+						<div class="col-sm-8">
+						<div class="form-group" style="margin: 1rem 1.5rem;">
                             <label for="customer_id"><?php echo display('customer') ?><span
                                     class="text-danger">*</span>:</label>
                             <select class="form-control" name="customer_id" id="customer_id">
@@ -47,16 +49,27 @@
                                 {/customers_list}
                             </select>
                         </div>
-						<div class="form-group" style="margin: 0 20px;">
+						</div>
+					</div>
+					<div class="col-sm-6">
+					<div class="form-group" style="margin: 0 0;">
 							<label for="from_date" class=""><?php echo display('from_date') ?><span class="text-danger">*</span>:</label>
 							<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('from_date'); ?>" name="from_date" value="<?=date('d-m-Y', strtotime('first day of this month', strtotime(date('d-m-Y'))))?>" required>
 						</div>
-						<div class="form-group" style="margin: 0 20px;">
+					</div>
+
+					<div class="col-sm-6">
+					
+					<div class="form-group" style="margin: 0 0;">
 							<label for="to_date" class=""><?php echo display('to_date') ?><span class="text-danger">*</span>:</label>
 							<input type="text" class="form-control datepicker2" autocomplete="off" placeholder="<?php echo display('to_date'); ?>" name="to_date" value="<?=date('d-m-Y', strtotime('last day of this month', strtotime(date('d-m-Y'))))?>" required>
 						</div>
+					</div>
+						
+						<div class="col-sm-6" style="margin-top: 1.5rem;">
 						<div class="form-group">
 							<button type="submit" class="btn btn-success"><?php echo display('submit') ?></button>
+						</div>
 						</div>
 					</div>
 					<div class="panel-heading">
