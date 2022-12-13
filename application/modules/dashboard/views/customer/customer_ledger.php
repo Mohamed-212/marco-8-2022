@@ -224,7 +224,7 @@
 														echo "Rcv / " . $v_ledger['c_id'];
 													} elseif ($v_ledger['voucher'] == 'SalRe') {
 														echo "SalRe / " . $v_ledger['c_id'];
-													} elseif ($v_ledger['voucher'] == 'Sal') {
+													} elseif ($v_ledger['voucher'] == 'Sall') {
 														echo "Sall / " . $v_ledger['c_id'];
 													} else {
 														echo "Pb / " . $v_ledger['c_id'];
