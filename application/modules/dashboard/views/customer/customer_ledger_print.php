@@ -454,7 +454,7 @@
 					</div>
 				</div>
 			</div>
-			<a class="btn btn-info print-btn" href="javascript:void(0)" onclick="window.print()"><span class="fa fa-print"></span>
+			<a class="btn btn-info print-btn" href="javascript:void(0)" onclick="window.print()"><span class="fa fa-print"></span></a>
 		</div>
 
 	</section>
