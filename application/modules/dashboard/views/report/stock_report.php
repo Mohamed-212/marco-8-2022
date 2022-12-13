@@ -88,8 +88,8 @@
 
 
                         <button type="submit" class="btn btn-primary"><?php echo display('search') ?></button>
-                        <a class="btn btn-warning" href="#"
-                            onclick="printDiv('printableArea')"><?php echo display('print') ?></a>
+                        <!-- <a class="btn btn-warning" href="#"
+                            onclick="printDiv('printableArea')"><?php echo display('print') ?></a> -->
                         <?php echo form_close() ?>
                     </div>
                 </div>

@@ -34,25 +34,28 @@
             <div class="col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <?php echo form_open('dashboard/Admin_dashboard/retrieve_dateWise_SalesReports', array('class' => 'form-inline')) ?>
+                        <?php echo form_open('dashboard/Admin_dashboard/retrieve_dateWise_SalesReports', array('class' => 'form-class="form-horizontal')) ?>
                         <?php
                         date_default_timezone_set(DEF_TIMEZONE);
                         $today = date('d-m-Y');
                         ?>
-                        <!-- <div class="col-sm-6"> -->
+                        <div class="row">
+                        <div class="col-sm-6">
                                 <div class="form-group">
                                     <label class="" for="from_date"><?php echo display('start_date') ?></label>
                                     <input type="text" name="from_date" class="form-control datepicker2" id="from_date" placeholder="<?php echo display('start_date') ?>" autocomplete="off">
-                                <!-- </div> -->
-                                <!-- <div class="col-sm-6"> -->
+                                </div>
+                            </div>
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="" for="to_date"><?php echo display('end_date') ?></label>
                                         <input type="text" name="to_date" class="form-control datepicker2" id="to_date" placeholder="<?php echo display('end_date') ?>" value="<?php echo $today ?>" autocomplete="off">
                                     </div>
                                 </div>
-                            <!-- </div> -->
+                        </div>
+                            <!--  -->
                         <div class="row mt-2" style="margin-top: 7px;margin-bottom: 7px;">
-                            <div class="col-sm-6">
+                            <div class="col-sm-12">
                                 <div class="form-group">
                                     <label class="" for="employee_name"><?php echo display('employee_name') ?></label>
                                     <input type="text" name="employee_name" class="form-control employeeSelection" id="city" placeholder="<?php echo display('employee_name') ?>" onclick="employeeList();" value="" autocomplete="off">
@@ -60,7 +63,10 @@
                                 </div>
                                 <input hidden type="hidden" class="employee_hidden_value" name="employee_id" />
                             </div>
-                            <div class="col-sm-6">
+                            
+                        </div>
+                        <div class="row">
+                        <div class="col-sm-12">
                                 <div class="form-group">
                                     <label class="" for="city"><?php echo display('city') ?></label>
                                     <input type="text" name="city_name_input" class="form-control citySelection" id="city" placeholder="<?php echo display('city_name') ?>" onclick="cityList();" value="" autocomplete="off">
@@ -68,10 +74,10 @@
                                 <input hidden type="hidden" class="city_hidden_value" name="city_name" />
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-4">
                             <div class="col-sm-6">
                                 <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-                                <a class="btn btn-warning" href="#" onclick="printDiv('purchase_div')"><?php echo display('print') ?></a>
+                                <!-- <a class="btn btn-warning" href="#" onclick="printDiv('purchase_div')"><?php echo display('print') ?></a> -->
                                 <?php echo form_close() ?>
                             </div>
                         </div>

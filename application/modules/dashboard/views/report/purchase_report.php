@@ -47,7 +47,7 @@
 		                    </div>  
 
 		                    <button type="submit" class="btn btn-success"><?php echo display('search') ?></button>
-		                    <a  class="btn btn-warning" href="#" onclick="printDiv('purchase_div')"><?php echo display('print') ?></a>
+		                    <!-- <a  class="btn btn-warning" href="#" onclick="printDiv('purchase_div')"><?php echo display('print') ?></a> -->
 		               <?php echo form_close()?>
 		            </div>
 		        </div>

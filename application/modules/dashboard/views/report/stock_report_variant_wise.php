@@ -148,8 +148,8 @@
                             <label for="supplier_name" class="col-sm-3 col-form-label"></label>
                             <div class="col-sm-6">
                                 <button type="submit" class="btn btn-primary"><?php echo display('search') ?></button>
-                                <a class="btn btn-warning" href="#"
-                                    onclick="printDiv('printableArea')"><?php echo display('print') ?></a>
+                                <!-- <a class="btn btn-warning" href="#"
+                                    onclick="printDiv('printableArea')"><?php echo display('print') ?></a> -->
                             </div>
                         </div>
                         <?php echo form_close() ?>
