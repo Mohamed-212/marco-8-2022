@@ -170,6 +170,21 @@ class Crefund extends MX_Controller
         $warnnityProductQty = [];
         $warnnityProductVarient = [];
 
+        $clDataAll = [];
+        $clOneRowQty = 0;
+        $clOneRow = [
+            'transaction_id' => generator(15),
+            'customer_id' => $customer_id,
+            'date' => date('Y-m-d'),
+            'amount' => 0,
+            'payment_type' => 1,
+            'description' => 'ITP',
+            'status' => 1,
+            'voucher' => 'SalRe',
+            // 'details' => "تم عمل مرتجع بـ $quantity منتج",
+            'Vno' => $return_invoice_id
+        ];
+
         foreach ($filter['selected_products_inx'] as $selectedInx) {
             $product_id = $this->input->post('invoice_products_id_' . $selectedInx, TRUE);
             $variant_id = $this->input->post('variant_id_' . $selectedInx, TRUE);
@@ -393,7 +408,8 @@ class Crefund extends MX_Controller
                 'details' => "تم عمل مرتجع بـ $quantity منتج",
                 'Vno' => $return_invoice_id
             );
-            $this->db->insert('customer_ledger', $customer_ledger_data); 
+            $clDataAll[] = $customer_ledger_data;
+            // $this->db->insert('customer_ledger', $customer_ledger_data); 
 
             //1st debit (Sales return for Showroom sales) with total price before discount
             $customer_credit = array(
@@ -538,6 +554,14 @@ class Crefund extends MX_Controller
                 ->where('invoice_id', $invoice_id)
                 ->update('invoice');
         }
+
+        foreach ($clDataAll as $clData) {
+            $clOneRow['amount'] = (float)$clOneRow['amount'] + (float)$clData['amount'];
+            $clOneRowQty += (int)$quantity;
+        }
+        $clOneRow['details'] = "تم عمل مرتجع بـ $clOneRowQty منتج";
+        $this->db->insert('customer_ledger', $clOneRow);
+
 
         // echo "<pre>";var_dump($warnnityProductIds, $warnnityProductVarient, $warnnityProductQty);
 
