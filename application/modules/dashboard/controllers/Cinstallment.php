@@ -389,7 +389,8 @@ class Cinstallment extends MX_Controller
                                             'cl_created_at' => date('Y-m-d H:i:s'),
                                             'voucher' => 'Rcv',
           'details' => "سند قبض رقم PLHH - عميل $customer_name->customer_name - حواله على $headinfo->HeadName الشركة" . $checkNoTxt,
-          'Vno' => $index
+          'Vno' => $index,
+          'acc' => 'Inv-' . $invoice_id,
                                             
                                         );
                                         $this->db->insert('customer_ledger', $data1);

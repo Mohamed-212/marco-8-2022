@@ -173,6 +173,7 @@ class Customers extends CI_Model
 										'cl_created_at' => date('Y-m-d H:i:s'),
 										'details' => 'رصيد إبتدائى ماقبل',
 										'voucher' => 'Pb',
+										'acc' => 'OP-' . $headcode
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 
@@ -222,6 +223,7 @@ class Customers extends CI_Model
 										'cl_created_at' => date('Y-m-d H:i:s'),
 										'details' => 'رصيد إبتدائى ماقبل',
 										'voucher' => 'Pb',
+										'acc' => 'OP-' . $headcode
 									);
 									$this->db->insert('customer_ledger', $customer_ledger_data);
 

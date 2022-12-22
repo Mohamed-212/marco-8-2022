@@ -219,6 +219,7 @@ class Accounting extends MX_Controller
               'status' => 1,
               'details' => 'رصيد إبتدائى ماقبل',
               'voucher' => 'Pb',
+              'acc' => 'OP-' . $headcode
             );
             $this->db->insert('customer_ledger', $cl_data);
             // add acc trans
@@ -266,6 +267,7 @@ class Accounting extends MX_Controller
               'status' => 1,
               'details' => 'رصيد إبتدائى ماقبل',
               'voucher' => 'Pb',
+              'acc' => 'OP-'. $headcode
             );
             $this->db->insert('customer_ledger', $cl_data);
             // add acc trans

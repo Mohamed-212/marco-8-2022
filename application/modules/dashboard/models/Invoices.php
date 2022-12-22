@@ -357,7 +357,8 @@ class Invoices extends CI_Model {
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                         'voucher' => 'Rcv',
                         'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة",
-                        'Vno' => $invoiceNewNo
+                        'Vno' => $invoiceNewNo,
+                        'acc' => 'Inv-' . $invoice_id
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -375,6 +376,7 @@ class Invoices extends CI_Model {
                 //     );
                 //     $this->db->insert('customer_ledger', $data2);
                 // } else {
+                    // 'Inv-' . $invoice_id
                     $t_qty = 0;
                     foreach ($quantity as $q) {
                         $t_qty += $q;
@@ -391,7 +393,8 @@ class Invoices extends CI_Model {
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                         'voucher' => 'Sall',
                         'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $t_qty منتج",
-                        'Vno' => $invoiceNewNo
+                        'Vno' => $invoiceNewNo,
+                        'acc' => 'Inv-'. $invoice_id
                     );
                     $this->db->insert('customer_ledger', $data2);
                 // }
@@ -1314,7 +1317,8 @@ class Invoices extends CI_Model {
                     'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                     'voucher' => 'Rcv',
                     'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة",
-                    'Vno' => $invoiceNewNo  
+                    'Vno' => $invoiceNewNo,
+                    'acc' => 'Inv-' . $invoice_id
                 );
                 $this->db->insert('customer_ledger', $data2);
             }
@@ -1331,7 +1335,8 @@ class Invoices extends CI_Model {
                 'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                 'voucher' => 'Sall',
                 'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج",
-                'Vno' => $invoiceNewNo  
+                'Vno' => $invoiceNewNo,
+                'acc' => 'Inv-' . $invoice_id
             );
             $this->db->insert('customer_ledger', $data2);
 
@@ -1798,7 +1803,8 @@ class Invoices extends CI_Model {
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
-                        'status' => 1
+                        'status' => 1,
+                        'acc' => 'Inv-' . $invoice_id
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -1810,7 +1816,8 @@ class Invoices extends CI_Model {
                     'invoice_no' => $invoice_id,
                     'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('grand_total_price', TRUE),
-                    'status' => 1
+                    'status' => 1,
+                    'acc' => 'Inv-' . $invoice_id
                 );
                 $this->db->insert('customer_ledger', $data2);
 
@@ -2401,7 +2408,8 @@ class Invoices extends CI_Model {
                     'amount' => $this->input->post('paid_amount', TRUE),
                     'payment_type' => 1,
                     'description' => 'ITP',
-                    'status' => 1
+                    'status' => 1,
+                    'acc' => 'Inv-' . $invoice_id
                 );
                 $this->db->insert('customer_ledger', $data2);
             }
@@ -2413,7 +2421,8 @@ class Invoices extends CI_Model {
                 'invoice_no' => $invoice_id,
                 'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                 'amount' => $this->input->post('grand_total_price', TRUE),
-                'status' => 1
+                'status' => 1,
+                'acc' => 'Inv-' . $invoice_id
             );
             $this->db->insert('customer_ledger', $data2);
 
@@ -2850,7 +2859,8 @@ class Invoices extends CI_Model {
                             'amount' => $this->input->post('paid_amount', TRUE),
                             'payment_type' => 1,
                             'description' => 'ITP',
-                            'status' => 1
+                            'status' => 1,
+                            'acc' => 'Inv-' . $invoice_id
                         );
                         $this->db->insert('customer_ledger', $data1);
                     }
@@ -2862,7 +2872,8 @@ class Invoices extends CI_Model {
                         'invoice_no' => $invoice_id,
                         'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                         'amount' => $this->input->post('grand_total_price', TRUE),
-                        'status' => 1
+                        'status' => 1,
+                        'acc' => 'Inv-' . $invoice_id
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -3528,7 +3539,8 @@ class Invoices extends CI_Model {
                         'amount' => $this->input->post('paid_amount', TRUE),
                         'payment_type' => 1,
                         'description' => 'ITP',
-                        'status' => 1
+                        'status' => 1,
+                        'acc' => 'Inv-' . $invoice_id
                     );
                     $this->db->insert('customer_ledger', $data1);
                 }
@@ -3540,7 +3552,8 @@ class Invoices extends CI_Model {
                     'invoice_no' => $invoice_id,
                     'date' => DateTime::createFromFormat('m-d-Y', $this->input->post('invoice_date', TRUE))->format('Y-m-d'),
                     'amount' => $this->input->post('grand_total_price', TRUE),
-                    'status' => 1
+                    'status' => 1,
+                    'acc' => 'Inv-' . $invoice_id
                 );
                 $this->db->insert('customer_ledger', $data2);
             }

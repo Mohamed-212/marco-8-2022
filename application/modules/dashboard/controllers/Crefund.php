@@ -182,7 +182,8 @@ class Crefund extends MX_Controller
             'status' => 1,
             'voucher' => 'SalRe',
             // 'details' => "تم عمل مرتجع بـ $quantity منتج",
-            'Vno' => $return_invoice_id
+            'Vno' => $return_invoice_id,
+            'acc' => 'SR-' . $return_invoice_id
         ];
 
         foreach ($filter['selected_products_inx'] as $selectedInx) {

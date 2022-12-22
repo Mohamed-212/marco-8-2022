@@ -1234,7 +1234,8 @@ class Account_model extends CI_Model
           'status' => 1,
           'voucher' => 'Rdv',
           'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name - حواله من $headinfo->HeadName الشركة",
-          'Vno' => $voucher_no
+          'Vno' => $voucher_no,
+          'acc' => $voucher_no
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1323,7 +1324,8 @@ class Account_model extends CI_Model
           'status' => 1,
           'voucher' => 'Rcv',
           'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة",
-          'Vno' => $voucher_no
+          'Vno' => $voucher_no,
+          'acc' => $voucher_no
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1531,7 +1533,8 @@ class Account_model extends CI_Model
             'status' => 1,
             'voucher' => 'Rcv',
             'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name ",
-            'Vno' => $voucher_no
+            'Vno' => $voucher_no,
+            'acc' => $voucher_no
           );
           $this->db->insert('customer_ledger', $data2);
         }
@@ -1546,7 +1549,8 @@ class Account_model extends CI_Model
             'status' => 1,
             'voucher' => 'Rdv',
             'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name ",
-            'Vno' => $voucher_no
+            'Vno' => $voucher_no,
+            'acc' => $voucher_no
           );
           $this->db->insert('customer_ledger', $data2);
         }
