@@ -481,9 +481,9 @@ function calculateSum() {
         }
 
     sum =
-        +cgst +
-        +sgst +
-        +igst +
+        // +cgst +
+        // +sgst +
+        // +igst +
         +e +
         -f +
         //-inv_dis +
@@ -494,6 +494,8 @@ function calculateSum() {
     sum = sum + -percentage_dis;
 
     sum -= inv_dis;
+
+    sum += cgst;
 
     $('#grandTotal').val(sum.toFixed(2));
     $('.total_bill').text(sum.toFixed(2));
