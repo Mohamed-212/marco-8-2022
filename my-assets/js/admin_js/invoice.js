@@ -495,7 +495,7 @@ function calculateSum() {
 
     sum -= inv_dis;
 
-    sum += cgst;
+    sum += parseFloat(cgst || 0);
 
     $('#grandTotal').val(sum.toFixed(2));
     $('.total_bill').text(sum.toFixed(2));
