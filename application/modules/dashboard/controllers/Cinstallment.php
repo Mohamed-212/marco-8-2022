@@ -369,8 +369,8 @@ class Cinstallment extends MX_Controller
 
                                     //update customer ledger
                                     //Delete old customer ledger data
-                                    $this->db->where('invoice_no', $invoice_id);
-                                    $result = $this->db->delete('customer_ledger');
+                                    // $this->db->where('invoice_no', $invoice_id);
+                                    // $result = $this->db->delete('customer_ledger');
                                     // echo "<pre>";
                                     //Insert customer ledger data where payment_amount > 0
                                     if ($payment_amount[$index] > 0) {
@@ -382,7 +382,7 @@ class Cinstallment extends MX_Controller
                                             'invoice_no' => $invoice_id,
                                             // 'receipt_no' => $this->auth->generator(15),
                                             'date' => date('Y-m-d'),
-                                            'amount' => $invoice[0]['paid_amount'] + $payment_amount[$index],
+                                            'amount' => $payment_amount[$index],
                                             'payment_type' => 1,
                                             // 'description' => 'ITP',
                                             'status' => 1,
@@ -396,24 +396,24 @@ class Cinstallment extends MX_Controller
                                         // print_r($data1);
                                     }
                                     //Update to customer ledger Table
-                                    $data2 = array(
-                                        'transaction_id' => $this->auth->generator(15),
-                                        'customer_id' => $customer_id,
-                                        'invoice_no' => $invoice_id,
-                                        'receipt_no' => $this->auth->generator(15),
-                                        'description' => 'ITP',
-                                        'date' => date('Y-m-d'),
-                                        'amount' => (float)$invoice[0]['total_amount'],
-                                        'status' => 1,
-                                        'cl_created_at' => date('Y-m-d H:i:s'),
-                                        'voucher' => 'Rdv',
-          'details' => "سند صرف رقم PLHH - عميل $customer_name->customer_name - حواله من $headinfo->HeadName الشركة",
-          'Vno' => $index
+        //                             $data2 = array(
+        //                                 'transaction_id' => $this->auth->generator(15),
+        //                                 'customer_id' => $customer_id,
+        //                                 'invoice_no' => $invoice_id,
+        //                                 'receipt_no' => $this->auth->generator(15),
+        //                                 'description' => 'ITP',
+        //                                 'date' => date('Y-m-d'),
+        //                                 'amount' => (float)$invoice[0]['total_amount'],
+        //                                 'status' => 1,
+        //                                 'cl_created_at' => date('Y-m-d H:i:s'),
+        //                                 'voucher' => 'Rdv',
+        //   'details' => "سند صرف رقم PLHH - عميل $customer_name->customer_name - حواله من $headinfo->HeadName الشركة",
+        //   'Vno' => $index
                                             
-                                    );
+        //                             );
                                     // print_r($data2);
                                     // exit;
-                                    $this->db->insert('customer_ledger', $data2);
+                                    // $this->db->insert('customer_ledger', $data2);
 
                                     //update invoice paid amount
                                     $this->db->where('invoice_id', $invoice_id);

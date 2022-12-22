@@ -494,6 +494,7 @@ class Products extends CI_Model
                 b.invoice_discount as item_invoice_discount,
                 sum(b.quantity) as t_qty,
                 sum(b.total_price) - (b.discount * sum(b.quantity)) as total_price,
+                b.total_price as t_total_price,
                 c.customer_name,
                 d.variant_name
 			');

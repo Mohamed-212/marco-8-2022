@@ -549,6 +549,13 @@ class Invoices extends CI_Model {
                             $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);    
                         }
 
+                        $i_disc = $without_price - $without_price_after_disc;
+                        if ($this->input->post('pri_type', true) == 1) {
+                            $i_disc = $whole_price - $whole_price_after_disc;
+                        } elseif ($this->input->post('pri_type', true) == 2) {
+                            $i_disc = $customer_price - $customer_price_after_disc;
+                        }
+
 
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
@@ -564,7 +571,7 @@ class Invoices extends CI_Model {
                             'supplier_rate' => $supplier_rate[0]['supplier_price'],
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
-                            'invoice_discount' => $inv_disc_rate*($total_price/$product_quantity),
+                            'invoice_discount' => $i_disc,
                             'status' => 1,
                             'whole_price' => $whole_price,
                             'sale_price' => $without_price,
@@ -720,6 +727,13 @@ class Invoices extends CI_Model {
 
                     // echo "<pre>";var_dump($without_price_after_disc, $whole_price_after_disc, $customer_price_after_disc, $discount_rate, $inv_disc_rate, (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity), $total_price);exit;
 
+                        $i_disc = $without_price - $without_price_after_disc;
+                        if ($this->input->post('pri_type', true) == 1) {
+                            $i_disc = $whole_price - $whole_price_after_disc;
+                        } elseif ($this->input->post('pri_type', true) == 2) {
+                            $i_disc = $customer_price - $customer_price_after_disc;
+                        }
+
                         $invoice_details = array(
                             'invoice_details_id' => generator(15),
                             'invoice_id' => $invoice_id,
@@ -734,7 +748,7 @@ class Invoices extends CI_Model {
                             'supplier_rate' => $supplier_rate[0]['supplier_price'],
                             'total_price' => $total_price,
                             'discount' => $discount_rate,
-                            'invoice_discount' => (float)$inv_disc_rate*((float)$total_price/(float)$product_quantity),
+                            'invoice_discount' => $i_disc,
                             'status' => 1,
                             'whole_price' => $whole_price,
                             'sale_price' => $without_price,
