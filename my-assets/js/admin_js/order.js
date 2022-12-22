@@ -79,7 +79,7 @@ function quantity_calculate(item) {
     // console.log(discount);
     var total_discount = parseFloat($("#total_discount_" + item).val());
     var cgst = parseFloat($("#cgst_" + item).val() || 0);
-    console.log(cgst);
+    // console.log(cgst);
     var sgst = $("#sgst_" + item).val();
     var igst = $("#igst_" + item).val();
 
@@ -354,7 +354,7 @@ function calculateSum() {
         
         // isNaN($(this).val()) || 0 == $(this).val().length || (cgst += parseFloat($(this).val()))
         isNaN(this.value) || 0 == this.value.length || (cgst += parseFloat(this.value))
-        console.log(this.value);
+        // console.log(this.value);
     }),
            
             $("#total_cgst").val(cgst.toFixed(2)),
@@ -419,6 +419,31 @@ function calculateSum() {
     $(".total_bill").text(sum.toFixed(2));
 
     invoice_paidamount();
+
+    var tqty = 0;
+    $('input[name="product_quantity[]"]').each(function () {
+        var c = $(this).attr('id').replace('total_qntt_', '');
+        var cID = $('#category_id_' + c).val();
+        var pt = $('#product_type').val();
+        // console.log(pt);
+        
+
+        if (pt == '2') {
+            if (cID != accessories_category_id) {
+                tqty += parseInt($(this).val());
+                // console.log(cID);
+            }
+        } else {
+            // if (cID != accessories_category_id) {
+                tqty += parseInt($(this).val());
+            // }
+        }
+        // console.log(c);
+
+        
+    }).promise().done(function () {
+        $('#total_quantity').val(tqty);
+    });
 }
 
 //Inovice paid amount
@@ -658,7 +683,14 @@ function get_pri_type_rate() {
             success: function (result) {
                 var res = JSON.parse(result);
 
-                $("#price_item_" + sl).val(res[1]);
+                if ($('#product_type').val() == 2 && $('#category_id_' + sl).val() == accessories_category_id) {
+                    $('#price_item_' + sl).val(0);
+                } else {
+                    $('#price_item_' + sl).val(res[1]);
+                }
+
+                
+
                 $("#price_item_saved_" + sl).val(res[1]);
                 quantity_calculate(sl);
 
@@ -690,7 +722,15 @@ function get_pri_type_rate1(sl) {
         success: function (result) {
             var res = JSON.parse(result);
             
-            $("#price_item_" + sl).val(res[1]);
+            if ($('#product_type').val() == 2 && $('#category_id_' + sl).val() == accessories_category_id) {
+                $('#price_item_' + sl).val(0);
+            } else {
+                $('#price_item_' + sl).val(res[1]);
+            }
+
+            console.clear();
+                console.log(res);
+            
             $("#price_item_saved_" + sl).val(res[1]);
             
             quantity_calculate(sl);

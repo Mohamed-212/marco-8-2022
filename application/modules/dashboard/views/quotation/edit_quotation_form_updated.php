@@ -410,8 +410,24 @@
                                                     <input type="number" name="product_quantity[]" onkeyup="quantity_calculate(<?php echo $i ?>);" onchange="quantity_limit(<?php echo $i ?>);" value="<?php echo html_escape($value['quantity']) ?>" id="total_qntt_<?php echo $i ?>" class="form-control text-right" min="0" required="" />
                                                 </td>
                                                 <td>
+                                                    <?php
+                                                        $pr = $product_information->price;
+                                                        if ($value['product_type'] == 2) {
+                                                            if ($value['pricing_type'] == 1) {
+                                                                $pri = $this->db->select('product_price')->from('pricing_types_product')->where(array('product_id' => $value['product_id'], 'pri_type_id' => 1))->get()->row();
+                                                                if ($pri) {
+                                                                    $pr = $pri->product_price;
+                                                                }
+                                                            } elseif ($value['pricing_type'] == 2) {
+                                                                $pri = $this->db->select('product_price')->from('pricing_types_product')->where(array('product_id' => $value['product_id'], 'pri_type_id' => 2))->get()->row();
+                                                                if ($pri) {
+                                                                    $pr = $pri->product_price;
+                                                                }
+                                                            }
+                                                        }
+                                                    ?>
                                                     <input type="number" name="product_rate[]" onkeyup="quantity_calculate(<?php echo $i ?>);" onchange="quantity_calculate(<?php echo $i ?>);" value="<?php echo html_escape($value['rate']) ?>" id="price_item_<?php echo $i ?>" class="price_item<?php echo $i ?> form-control text-right" required="" min="0" readonly="readonly" />
-                                                    <input type="hidden" hidden id="price_item_saved_<?php echo $i ?>" value="<?php echo html_escape($product_information->product_price) ?>" data-val="<?php echo html_escape($product_information->product_price) ?>" />
+                                                    <input type="hidden" hidden id="price_item_saved_<?php echo $i ?>" value="<?php echo html_escape($pr) ?>" data-val="<?php echo html_escape($pr) ?>" data-valasdasd="<?php echo html_escape($pr) ?>" />
                                                 </td>
                                                 <td>
                                                     <input type="number" name="discount[]" onkeyup="quantity_calculate(<?php echo $i ?>);" onchange="quantity_calculate(<?php echo $i ?>);" id="discount_<?php echo $i ?>" class="form-control text-right" placeholder="0.00" <?php if ($value['discount'] > 0) : ?>data-value="<?php echo html_escape($value['discount']) ?>" <?php endif ?> value="<?php echo html_escape($value['discount']) ?>" min="0" />
@@ -575,6 +591,15 @@
                                             <input type="text" id="service_charge" class="form-control text-right" name="service_charge" value="<?php echo html_escape($service_charge) ?>" onkeyup="quantity_calculate();" onchange="quantity_calculate();" />
                                         </td>
                                     </tr>
+
+                                    <tr>
+                                        <td colspan="6" class="text-right"><b><?php echo display('total_quantity') ?> :</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="number" step="1" min="0" id="total_quantity" class="form-control text-right" name="total_quantity" placeholder="0" readonly="readonly" />
+                                        </td>
+                                    </tr>
+
                                     <tr>
                                         <td colspan="4"></td>
                                         <td colspan="2" class="text-right"><b><?php echo display('grand_total') ?>:</b>

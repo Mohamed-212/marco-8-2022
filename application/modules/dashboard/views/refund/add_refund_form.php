@@ -155,8 +155,8 @@
                                         $warrntyId = $this->db->select('store_id')->from('store_set')->where('store_name', 'Warranty Store')->limit(1)->get()->row();
                                     ?>
 
-                                    <?php if (!empty($invoices)) : ?>
-                                        <?php foreach ($invoices as $inx => $inv) : ?>
+                                    <?php if (!empty($invoices)) : $tqty = 0;?>
+                                        <?php foreach ($invoices as $inx => $inv) : $tqty += $inv->ava_quantity >= 1 ? 1 : 0;?>
                                             <tr>
 
                                                 <input type="hidden" hidden name="customer_id" value="<?= $customer_id ?>" />
@@ -210,12 +210,19 @@
                                                         <option value='1' <?= $inv->rate == $inv->price ?: 'selected' ?>><?= display('with_cases_price') ?></option>
                                                     </select>
                                                 </td>
-                                                <td><input type='number' class='form-control' id='quantity_<?= $inx + 1 ?>' required='required' min='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>' value="<?=$inv->ava_quantity >= 1 ? 1 : 0?>"></td>
+                                                <td><input type='number' class='form-control qty44' id='quantity_<?= $inx + 1 ?>' required='required' min='0' max='<?= $inv->ava_quantity ?>' name='quantity_<?= $inx + 1 ?>' value="<?=$inv->ava_quantity >= 1 ? 1 : 0?>"></td>
                                             </tr>
                                         <?php endforeach ?>
                                     <?php endif; ?>
                                 </tbody>
                                 <tfoot>
+                                <tr>
+                                        <td colspan="7" class="text-right"><b><?php echo display('total_quantity') ?> :</b>
+                                        </td>
+                                        <td class="text-right">
+                                            <input type="number" step="1" min="0" id="total_quantity" class="form-control text-right" name="total_quantity" placeholder="0" readonly="readonly" value="<?=$tqty?>" />
+                                        </td>
+                                    </tr>
                                 </tfoot>
                             </table>
                             <div style="text-align: center;">
@@ -312,6 +319,15 @@
                     Number($(this).attr('data-whole-price')).toFixed(2)
                 );
             }
+        });
+
+        $('.qty44').change(function() {
+            var tqty = 0;
+            $('.qty44').each(function(inx, el) {
+                tqty += Number($(this).val());
+            }).promise().done(function() {
+                $('#total_quantity').val(tqty);
+            });
         });
     });
 </script>

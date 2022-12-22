@@ -4573,7 +4573,7 @@ class Invoices extends CI_Model {
             $acc_cate_id = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
 
             if ($pro->category_id == $acc_cate_id->category_id) {
-                return "0";
+                // return "0";
             }
         }
 

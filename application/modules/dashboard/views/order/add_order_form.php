@@ -588,6 +588,14 @@
                                         </td>
                                         <?php endif?>
                                     </tr>
+
+                                    <tr>
+                                        <td colspan="6" class="text-right"><b><?php echo display('total_quantity') ?> :</b>
+                                        </td>
+                                        <td class="text-right" colspan="2">
+                                            <input type="number" step="1" min="0" id="total_quantity" class="form-control text-right" name="total_quantity" placeholder="0" readonly="readonly" />
+                                        </td>
+                                    </tr>
                                     
                                     <tr>
                                         <td colspan="6" class="text-right"><b><?php echo display('grand_total') ?> :</b>
