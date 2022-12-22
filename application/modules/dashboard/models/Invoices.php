@@ -337,7 +337,9 @@ class Invoices extends CI_Model {
                 }
 
                 $customerName = $check_customer;
-                
+
+
+                $invoiceNewNo = 'Inv-' . $this->number_generator();
 
                 // create customer head END
                 //Full or partial Payment record.
@@ -354,7 +356,8 @@ class Invoices extends CI_Model {
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                         'voucher' => 'Rcv',
-                        'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"
+                        'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة",
+                        'Vno' => $invoiceNewNo
                     );
                     $this->db->insert('customer_ledger', $data2);
                 }
@@ -387,7 +390,8 @@ class Invoices extends CI_Model {
                         'status' => 1,
                         'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                         'voucher' => 'Sall',
-                        'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $t_qty منتج"
+                        'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $t_qty منتج",
+                        'Vno' => $invoiceNewNo
                     );
                     $this->db->insert('customer_ledger', $data2);
                 // }
@@ -424,7 +428,7 @@ class Invoices extends CI_Model {
                     'customer_id' => $customer_id,
                     'date' => $this->input->post('invoice_date', TRUE),
                     'total_amount' => $this->input->post('grand_total_price', TRUE),
-                    'invoice' => 'Inv-' . $this->number_generator(),
+                    'invoice' => $invoiceNewNo,
                     'total_discount' => $this->input->post('total_discount', TRUE),
                     'total_vat' => $tota_vati,
                     'is_quotation' => ($this->input->post('is_quotation', True)) ? $this->input->post('is_quotation', True) : 0,
@@ -488,7 +492,7 @@ class Invoices extends CI_Model {
                 $total_with_discount_inv=array_sum($total_amount)-(float)$this->input->post('total_discount', TRUE);
                 $inv_disc_rate = ($inv_disc+(((float)$percentage_disc/100) * $total_with_discount_inv))/(float)$total_with_discount_inv;
 
-                echo "<pre>";var_dump($inv_disc_rate);
+                // echo "<pre>";var_dump($inv_disc_rate);
 
                 $variants = $this->input->post('variant_id', TRUE);
                 // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
@@ -1216,6 +1220,8 @@ class Invoices extends CI_Model {
             $product_id = $this->input->post('product_id', TRUE);
             $product_type = $this->input->post('product_type', TRUE);
 
+            $invoiceNewNo = 'Inv-' . $this->number_generator();
+
             //Stock availability check
             $result = array();
             foreach ($available_quantity as $k => $v) {
@@ -1293,7 +1299,8 @@ class Invoices extends CI_Model {
                     'status' => 1,
                     'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                     'voucher' => 'Rcv',
-                    'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"  
+                    'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة",
+                    'Vno' => $invoiceNewNo  
                 );
                 $this->db->insert('customer_ledger', $data2);
             }
@@ -1309,7 +1316,8 @@ class Invoices extends CI_Model {
                 'status' => 1,
                 'cl_created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('invoice_date', TRUE))),
                 'voucher' => 'Sall',
-                'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج"
+                'details' => "فاتورة مبيعات رقم PLHH - عميل $customerName->customer_name - عدد $quantity منتج",
+                'Vno' => $invoiceNewNo  
             );
             $this->db->insert('customer_ledger', $data2);
 
@@ -1319,7 +1327,7 @@ class Invoices extends CI_Model {
                 'customer_id' => $customer_id,
                 'date' => $this->input->post('invoice_date', TRUE),
                 'total_amount' => $this->input->post('grand_total_price', TRUE),
-                'invoice' => 'Inv-' . $this->number_generator(),
+                'invoice' => $invoiceNewNo,
                 'total_discount' => $this->input->post('total_discount', TRUE),
                 'invoice_discount' => $this->input->post('invoice_discount', TRUE),
                 'percentage_discount' => $this->input->post('percentage_discount', TRUE),

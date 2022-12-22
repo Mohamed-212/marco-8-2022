@@ -390,7 +390,8 @@ class Crefund extends MX_Controller
                 'description' => 'ITP',
                 'status' => 1,
                 'voucher' => 'SalRe',
-                'details' => "تم عمل مرتجع بـ $quantity منتج"
+                'details' => "تم عمل مرتجع بـ $quantity منتج",
+                'Vno' => $return_invoice_id
             );
             $this->db->insert('customer_ledger', $customer_ledger_data); 
 

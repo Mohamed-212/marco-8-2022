@@ -323,7 +323,10 @@
                                         <tr>
                                             <td colspan="2" style="padding-left: 30px;padding-top: 15px;border: 0;">
                                                 <div class="">
-                                                    <?php echo display('voucher_no') ?>:&nbsp;&nbsp; <?php echo html_escape($voucher_no); ?>
+                                                    <?php
+                                                        $cl = $this->db->select('voucher, c_id')->from('customer_ledger')->where('Vno', $voucher_no)->get()->row();
+                                                    ?>
+                                                    <?php echo display('voucher_no') ?>:&nbsp;&nbsp; <?php echo $cl->voucher . ' / ' . $cl->c_id; ?>
                                                 </div>
                                             </td>
 

@@ -1229,11 +1229,12 @@ class Account_model extends CI_Model
           'transaction_id' => generator(15),
           'receipt_no' => $this->auth->generator(15),
           'customer_id' => $customer->customer_id,
-          'date' => date('Y-m-d', $createdate),
+          'date' => date('Y-m-d', strtotime($createdate)),
           'amount' => $Damnt,
           'status' => 1,
           'voucher' => 'Rdv',
-          'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name - حواله من $headinfo->HeadName الشركة"
+          'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name - حواله من $headinfo->HeadName الشركة",
+          'Vno' => $voucher_no
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1321,7 +1322,8 @@ class Account_model extends CI_Model
           'description' => 'ITP',
           'status' => 1,
           'voucher' => 'Rcv',
-          'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة"
+          'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name - حواله على $headinfo->HeadName الشركة",
+          'Vno' => $voucher_no
         );
         $this->db->insert('customer_ledger', $data2);
       }
@@ -1528,7 +1530,8 @@ class Account_model extends CI_Model
             'description' => 'ITP',
             'status' => 1,
             'voucher' => 'Rcv',
-            'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name "
+            'details' => "سند قبض رقم PLHH - عميل $customerName->customer_name ",
+            'Vno' => $voucher_no
           );
           $this->db->insert('customer_ledger', $data2);
         }
@@ -1542,7 +1545,8 @@ class Account_model extends CI_Model
             'amount' => $debits,
             'status' => 1,
             'voucher' => 'Rdv',
-            'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name "
+            'details' => "سند صرف رقم PLHH - عميل $customerName->customer_name ",
+            'Vno' => $voucher_no
           );
           $this->db->insert('customer_ledger', $data2);
         }

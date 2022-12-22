@@ -247,7 +247,17 @@
                         <tr>
                             <td colspan="2" style="padding-left: 30px;">
                                 <div class="">
-                                    <?php echo display('invoice_no') ?>:&nbsp;&nbsp; <?php echo html_escape($invoice['invoice']); ?>
+                                    <?php echo display('voucher_no') ?>:&nbsp;&nbsp; Rcv / <span id="c_id55">1</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding-left: 30px;">
+                                <div class="">
+                                    <?php echo display('invoice_no') ?>:&nbsp;&nbsp; <?php echo html_escape($invoice['invoice']); ?>&nbsp;(<?php
+                                        $cl = $this->db->select('voucher, c_id')->from('customer_ledger')->where('Vno', $invoice_no)->where('voucher', 'Sall')->get()->row(); 
+                                    ?>
+                                    <?php echo html_escape(isset($is_order) ? $order_no : 'Sall / '. $cl->c_id); ?> )
                                 </div>
                             </td>
                         </tr>
@@ -293,7 +303,7 @@
 
                         <tr>
                             <td colspan="2" style="padding-left: 30px;padding-top: 50px;" id="total-still-td">
-                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?= (float)$customer_ledger[1][0]['total_debit'] - (float)$customer_ledger[0][0]['total_credit'] ?><span id="total-still" style="display: none;"></span>
+                                <?= display('balance_ammount') ?>:&nbsp;&nbsp; <?= round((float)$customer_ledger[1][0]['total_debit'] - (float)$customer_ledger[0][0]['total_credit'], 2) ?><span id="total-still" style="display: none;"></span>
                             </td>
                         </tr>
                     </tbody>
@@ -430,6 +440,14 @@
 
 
                                     if ($installment_details) {
+                                        $inx = 0;
+                                        $clAll = $this->db->select('*')->from('customer_ledger')->where([
+                                            'customer_id' => $invoice['customer_id'],
+                                            'invoice_no' => $invoice['invoice_id'],
+                                            'voucher' => 'Rcv'
+                                        ])->order_by('c_id', 'asc')->get()->result_array();
+                                        // echo '<pre>';var_dump($clAll, $installment_details);echo '</pre>';
+
                                         foreach ($installment_details as $value) {
                                             $readonly = '';
                                             if ($value['status']) {
@@ -486,8 +504,17 @@
                                                 </td>
                                                 <td class="text-center">
 
-                                                    <?php if ($value['status'] == 2) : ?>
-                                                        <button type="button" class="btn btn-info prin-row" data-due-amount="<?= $value['amount'] ?>" data-due-date="<?= $value['due_date'] ?>" data-paid-amount="<?= $value['payment_amount'] ?>" data-payment-date="<?= $value['payment_date'] ?>" data-payment-type="<?= $payment_type[$value['payment_type']] ?>" data-payment-method="<?php
+                                                    <?php if ($value['status'] == 2) : 
+                                                        
+                                                        $cl = $clAll[0];
+                                                        foreach ($clAll as $finx => $c) {
+                                                            if ($finx == $inx) {
+                                                                $cl = $c;
+                                                                break;
+                                                            }
+                                                        }
+                                                    ?>
+                                                        <button type="button" class="btn btn-info prin-row" data-cid55="<?=$cl['c_id']?>" data-due-amount="<?= $value['amount'] ?>" data-due-date="<?= $value['due_date'] ?>" data-paid-amount="<?= $value['payment_amount'] ?>" data-payment-date="<?= $value['payment_date'] ?>" data-payment-type="<?= $payment_type[$value['payment_type']] ?>" data-payment-method="<?php
                                                                                                                                                                                                                                                                                                                                                                                             if ($payment_info) {
                                                                                                                                                                                                                                                                                                                                                                                                 foreach ($payment_info as $payment_method) {
                                                                                                                                                                                                                                                                                                                                                                                                     if ($payment_method->HeadCode == $value['account']) {
@@ -501,6 +528,7 @@
                                                 </td>
                                             </tr>
                                     <?php
+                                    $inx++;
                                         }
                                     } ?>
                                 </tbody>
@@ -543,6 +571,8 @@
             }
             $('#check-no').text($(this).attr('data-check-no'));
             $('#expiry-date').text($(this).attr('data-expiry-date'));
+
+            $('#c_id55').text($(this).attr('data-cid55'));
 
             // calculate still pirce
             var allPrice = 0;

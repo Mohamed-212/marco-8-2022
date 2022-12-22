@@ -388,7 +388,8 @@ class Cinstallment extends MX_Controller
                                             'status' => 1,
                                             'cl_created_at' => date('Y-m-d H:i:s'),
                                             'voucher' => 'Rcv',
-          'details' => "سند قبض رقم PLHH - عميل $customer_name->customer_name - حواله على $headinfo->HeadName الشركة" . $checkNoTxt
+          'details' => "سند قبض رقم PLHH - عميل $customer_name->customer_name - حواله على $headinfo->HeadName الشركة" . $checkNoTxt,
+          'Vno' => $index
                                             
                                         );
                                         $this->db->insert('customer_ledger', $data1);
@@ -406,7 +407,8 @@ class Cinstallment extends MX_Controller
                                         'status' => 1,
                                         'cl_created_at' => date('Y-m-d H:i:s'),
                                         'voucher' => 'Rdv',
-          'details' => "سند صرف رقم PLHH - عميل $customer_name->customer_name - حواله من $headinfo->HeadName الشركة"
+          'details' => "سند صرف رقم PLHH - عميل $customer_name->customer_name - حواله من $headinfo->HeadName الشركة",
+          'Vno' => $index
                                             
                                     );
                                     // print_r($data2);

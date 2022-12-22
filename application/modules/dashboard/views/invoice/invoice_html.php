@@ -383,6 +383,10 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                             <div class="line-height" style="">
                                                                 <p>
                                                                     <?php echo display(isset($is_order) ? 'order_no' : 'invoice_no'); ?> : <?php echo html_escape(isset($is_order) ? $order_no : $invoice_no); ?>
+                                                                    &nbsp; (<?php
+                                                                        $cl = $this->db->select('voucher, c_id')->from('customer_ledger')->where('Vno', $invoice_no)->where('voucher', 'Sall')->get()->row();
+                                                                    ?>
+                                                                    <?php echo html_escape(isset($is_order) ? $order_no : 'Sall / '. $cl->c_id); ?> )
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('date'); ?> : <span dir="ltr" style="text-transform: uppercase;">

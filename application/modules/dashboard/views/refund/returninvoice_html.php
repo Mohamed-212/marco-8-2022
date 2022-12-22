@@ -356,7 +356,10 @@
                                                         <div class="col-xs-5 mt_20" style="margin-top: 30px;">
                                                             <div class="line-height" style="">
                                                                 <p>
-                                                                    <?php echo display('sl'); ?> : <?php echo 'SalRe-' . html_escape($sl); ?>
+                                                                    <?php echo display('sl'); ?> : <?php echo 'SalRe-' . html_escape($sl); ?>&nbsp;(<?php
+                                                        $cl = $this->db->select('voucher, c_id')->from('customer_ledger')->where('Vno', $invoice_return[0]['return_invoice_id'])->get()->row();
+                                                    ?>
+                                                            <?php echo $cl->voucher . ' / ' . $cl->c_id; ?> )
                                                                 </p>
                                                                 <p>
                                                                     <?php echo display('date'); ?> : <?php echo html_escape($createdate) ?>
