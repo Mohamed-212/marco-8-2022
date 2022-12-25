@@ -67,7 +67,7 @@
                                     }
                                     ?>
                                 </div>
-                                <div class="product-price font-weight-bolder font-italic">
+                                <div class="product-price font-weight-bolder font-italic" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                     <?php if ($isLogIn) : ?>
                                         <?php
 

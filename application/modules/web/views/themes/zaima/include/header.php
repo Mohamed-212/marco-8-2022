@@ -213,7 +213,7 @@ if (!empty($currency_new_id)) {
                                     href="<?php echo base_url('product/' . remove_space($comparison->product_name) . '/' . $comparison->product_id) ?>">
                                     <?php echo html_escape($comparison->product_name); ?>
                                 </a>
-                                <span class="dropdown-product-details fs-14 text-muted">
+                                <span class="dropdown-product-details fs-14 text-muted" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                     <?php
                                             // $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->price, 2, '.', ',') : number_format($comparison->price, 2, '.', ',') . ' ' . $currency1);
                                             $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->whole_price, 2, '.', ',') : number_format($comparison->whole_price, 2, '.', ',') . ' ' . $currency1);

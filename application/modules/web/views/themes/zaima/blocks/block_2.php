@@ -141,7 +141,7 @@
                                                         </div>
 
                                                         <?php if ($old_price) { ?>
-                                                            <div class="product-price ml-2">
+                                                            <div class="product-price ml-2" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                                                 <del class="price"><span class="d-none">Previous price</span>
                                                                     <?php
                                                                     echo (($position1 == 0) ? $currency1 . number_format($old_price, 2, '.', ',') : number_format($old_price, 2, '.', ',') . $currency1); ?>

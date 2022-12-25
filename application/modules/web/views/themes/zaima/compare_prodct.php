@@ -131,7 +131,7 @@ if (check_module_status('affiliate_products') == 1) {
                     <?php endforeach;
                     } ?>
                 </tr>
-                <tr>
+                <tr <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                     <th class="text-uppercase align-middle"><?php echo display('price'); ?></th>
                     <?php
                     if ($this->session->userdata('comparison_ids')) {

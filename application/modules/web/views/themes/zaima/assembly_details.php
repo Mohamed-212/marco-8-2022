@@ -446,7 +446,7 @@ $theme = $CI->Themes->get_theme();
                             }
                         ?>
                         </div>
-                        <div class="product-price font-weight-bolder font-italic">
+                        <div class="product-price font-weight-bolder font-italic" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                             <?php
                             if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                 $price_val = $product->onsale_price * $target_con_rate;

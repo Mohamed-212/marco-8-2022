@@ -218,7 +218,7 @@ $theme = $CI->Themes->get_theme();
             <div class="col-md-6">
                 <div class="product-summary-top">
                     <div class="product-summary-content pl-md-4">
-                        <div class="product-price-summary">
+                        <div class="product-price-summary" <?=(!$isLogIn) ? 'style="display: none;"' : ''?>>
                             <?php if ($onsale) { ?>
 
                                 <ins class="fs-29 d-inline-block">
@@ -250,7 +250,7 @@ $theme = $CI->Themes->get_theme();
                                 <?php } ?>
 
                             <?php } else { ?>
-                                <ins class="fs-29 d-inline-block">
+                                <ins class="fs-29 d-inline-block" >
                                     <span class="amount var_amount">
 
                                         <?php
@@ -690,7 +690,7 @@ $theme = $CI->Themes->get_theme();
                                         }
                                         ?>
                                     </div>
-                                    <div class="product-price font-weight-bolder font-italic">
+                                    <div class="product-price font-weight-bolder font-italic" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                         <?php
 
                                         if ($product->onsale == 1 && !empty($product->onsale_price)) {

@@ -46,7 +46,7 @@
                                         }
                                     ?>
                             </div>
-                            <p class="entry-meta">
+                            <p class="entry-meta" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                 <?php
                                 if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                     $price_val = $product->onsale_price * $target_con_rate;
@@ -119,7 +119,7 @@
                                         }
                                     ?>
                             </div>
-                            <p class="entry-meta">
+                            <p class="entry-meta" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                 <?php
                                 if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                     $price_val = $product->onsale_price * $target_con_rate;
@@ -181,7 +181,7 @@
                                     }
                                 ?>
                             </div>
-                            <p class="entry-meta">
+                            <p class="entry-meta" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                 <?php
                                 if ($product->onsale == 1 && !empty($product->onsale_price)) {
                                     $price_val = $product->onsale_price * $target_con_rate;
