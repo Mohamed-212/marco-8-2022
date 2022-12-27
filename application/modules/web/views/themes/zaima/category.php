@@ -21,6 +21,7 @@
                                 $i = 1;
                                 foreach ($sub_category as $cat) {
                                     if ($i == 11) break;
+                                    if ($cat->category_id == 'DPCIHH462YEXA24' || $cat->category_id == '7OYMIICEX171GYC') continue;
                                     $no_of_pro = $this->Categories->select_total_sub_cat_no_of_pro($cat['category_id']);
                             ?>
 

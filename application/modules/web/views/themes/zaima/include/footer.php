@@ -48,6 +48,8 @@
                     <div class="contact_info">
                         <ul class="list-unstyled text-sm">
                             <li><?php echo display('mobile') ?>: <a href="tel:<?php echo html_escape($company_info[0]['mobile']); ?>"><?php echo html_escape($company_info[0]['mobile']); ?></a></li>
+                            <li><?php echo display('mob2') ?>: <a href="tel:<?php echo html_escape($company_info[0]['mob2']); ?>"><?php echo html_escape($company_info[0]['mob2']); ?></a></li>
+                            <li><?php echo display('mob3') ?>: <a href="https://wa.me/00201121119475"><?php echo html_escape($company_info[0]['mob3']); ?></a></li>
                             <li><?php echo display('email') ?>: <a href="mailto:<?php echo html_escape($company_info[0]['email']); ?>"><?php echo html_escape($company_info[0]['email']); ?></a></li>
                             <li><?php echo display('website') ?>: <a
                                 href="#"><?php echo html_escape($company_info[0]['website']); ?></a></li>

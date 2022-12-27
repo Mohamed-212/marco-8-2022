@@ -397,6 +397,10 @@ class Products_model extends CI_Model {
         if ($size) {
             $this->db->like('a.variants', $size,'both');
         }
+
+        $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
+        $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
+
         $query = $this->db->get();
         $brand_pro =  $query->result_array();
 

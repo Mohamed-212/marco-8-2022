@@ -124,6 +124,12 @@ class Lproduct
             $varientsArray[] = $product;
         }
 
+        // sort($varientsArray);
+
+        usort($varientsArray, fn($a, $b) => $a['color'] <=> $b['color']);
+
+
+
         // echo "<pre>";
         // print_r($varientsArray);
         // exit;

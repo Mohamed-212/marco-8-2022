@@ -24,6 +24,7 @@ class Product extends MX_Controller
         $search_item = $this->input->get('term', TRUE);
         $products = $this->db->select('product_id as id, product_name as value')
         ->from('product_information')
+        ->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC')
         ->like('product_name',$search_item, 'both')
         ->where('status', 1)
              ->limit(10)
