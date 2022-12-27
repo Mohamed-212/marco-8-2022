@@ -330,7 +330,8 @@ class Category extends MX_Controller
             $product_name = "space";
         }
         $filter = array(
-            'brand' => $this->input->get('brand',TRUE)
+            'brand' => $this->input->get('brand',TRUE),
+            'cat' => $this->input->get('cat',TRUE)
         );
         $content = $this->lcategory->category_product_search($product_name, $filter);
         

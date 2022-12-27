@@ -81,6 +81,8 @@ class Homes extends CI_Model
             $result = $this->db->select('*')
                 ->from('product_information')
                 ->where_in('product_id', $unique_product_ids)
+                ->where('category_id !=', 'DPCIHH462YEXA24')
+                ->where('category_id !=', '7OYMIICEX171GYC')
                 ->get()
                 ->result();
             return $result;
@@ -98,6 +100,8 @@ class Homes extends CI_Model
         $this->db->join('brand c', 'a.brand_id=c.brand_id', 'left');
         $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         $this->db->where('best_sale', '1');
+        $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
+        $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
         $this->db->order_by('id', 'desc');
         $this->db->limit('6');
         $query = $this->db->get();
@@ -333,6 +337,8 @@ class Homes extends CI_Model
                 ->join('brand as b', 'b.brand_id=pi.brand_id')
                 ->join('pricing_types_product pr', 'pr.product_id = pi.product_id AND pr.pri_type_id = 1', 'left')
                 ->where_in('pi.product_id', $product_ids)
+                ->where('pi.category_id !=', 'DPCIHH462YEXA24')
+                ->where('pi.category_id !=', '7OYMIICEX171GYC')
                 ->limit(15)
                 ->get()
                 ->result();

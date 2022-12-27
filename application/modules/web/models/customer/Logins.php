@@ -24,6 +24,7 @@ class Logins extends CI_Model {
 	{
 		$this->db->select('*');
 		$this->db->from('product_category');
+		// $this->db->where('category_name !=', 'ACCESSORIES')->or_where('category_name !=', 'CLIP ON');
 		$this->db->order_by('category_name','asc');
 		$query = $this->db->get();
 		if ($query->num_rows() > 0) {

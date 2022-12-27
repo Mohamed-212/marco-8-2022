@@ -72,6 +72,7 @@
              $this->db->join('product_category b', 'a.category_id=b.category_id');
              $this->db->join('brand c', 'a.brand_id=c.brand_id', 'left');
              $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+             $this->db->where('a.category_id !=', 'DPCIHH462YEXA24')->where('a.category_id !=', '7OYMIICEX171GYC');
              $this->db->order_by('id', 'desc');
              $this->db->limit(15);
              $latest_products = $this->db->get()->result();

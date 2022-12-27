@@ -4,7 +4,20 @@
 
 <div class="container py-4">
     <div class="row">
-        <div class="<?php echo (!empty($after_search) ? 'col-md-3' : 'col-md-3') ?> d-none d-lg-block leftSidebar mb-3 pr-xl-4">
+        <div id="ls55" class="<?php echo (!empty($after_search) ? 'col-md-3' : 'col-md-3') ?> d-none d-lg-block leftSidebar mb-3 pr-xl-4">
+
+            <div class="card d-lg-none">
+                <div class="card-header row">
+                    <h5 class="card-title col-sm-6">
+                        <i class="fas fa-filter"></i>
+                        <?php echo display('filter');?>
+                    </h5>
+                    <div class="col-sm-6 text-right">
+                        <a class="btn btn-warning color4 color46 text-white cl44" href="#"><i class="fas fa-times"></i> <?php echo display('close') ?></a>
+                    </div>
+                </div>
+            </div>
+
             <?php
             $sub_category = $this->Homes->get_sub_category($category_id);
             if (!empty($sub_category)) { ?>
@@ -21,6 +34,7 @@
                                 $i = 1;
                                 foreach ($sub_category as $cat) {
                                     if ($i == 11) break;
+                                    if ($cat->category_id == 'DPCIHH462YEXA24' || $cat->category_id == '7OYMIICEX171GYC') continue;
                                     $no_of_pro = $this->Categories->select_total_sub_cat_no_of_pro($cat['category_id']);
                             ?>
 
@@ -40,7 +54,7 @@
                     </div>
                 </div>
             <?php } ?>
-            <div class="card mb-4">
+            <div class="card mb-4" <?php echo empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h2 class="mb-0 fs-17"><?php echo display('price') ?></h2>
                     <i data-feather="sliders" class="card-header_icon"></i>
@@ -133,7 +147,9 @@
                 $k = 1;
                 $prev_filter_item = $this->input->get('filter_item', TRUE);
                 $filter_price = $this->input->get('price', TRUE);
-                foreach ($filter_types as  $filter_type) { ?>
+                foreach ($filter_types as  $filter_type) { 
+                        // if ($filter_type)
+                    ?>
                     <div class="card mb-4">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h2 class="mb-0 fs-17"><?php echo html_escape($filter_type['fil_type_name']) ?></h2>
@@ -146,6 +162,10 @@
 
                             $j = 1;
                             foreach ($filter_items as  $filter_item) {
+
+                                if ($filter_item->item_name == 'Default') {
+                                    continue;
+                                }
 
                                 $checked = '';
                                 $st_ar = explode('--', $prev_filter_item);
@@ -207,6 +227,8 @@
                             <?php echo display('items') ?></span>
                     <?php } ?>
                 </div>
+
+                <a class="btn btn-warning color4 color46 text-white fil44" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
 
                 <a class="btn btn-warning color4 color46 text-white" href="<?php echo base_url() ?>"><i class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
             </div>
@@ -304,3 +326,24 @@
 <input type="hidden" name="from_price" id="from_price" value="<?php echo html_escape($from_price) ?>">
 <input type="hidden" name="to_price" id="to_price" value="<?php echo html_escape($to_price) ?>">
 <input type="hidden" name="default_currency_icon" id="default_currency_icon" value="<?php echo (!empty($default_currency_icon) ? html_escape($default_currency_icon) : $currency1) ?>">
+
+<style>
+    .full55 {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('.fil44').click(function (e) {
+            e.preventDefault();
+            $('#ls55').removeClass('d-none').addClass('full55').addClass('col-sm-12').addClass('col-md-12');
+        });
+
+        $('.cl44').click(function (e) {
+            e.preventDefault();
+            $('#ls55').addClass('d-none');
+        });
+    });
+</script>

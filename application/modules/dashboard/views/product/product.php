@@ -173,9 +173,9 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center"><?php echo display('sl') ?></th>
-                                        <th class="text-center"><?php echo display('product_id') ?></th>
                                         <th class="text-center"><?php echo display('product_name') ?></th>
                                         <th class="text-center"><?php echo display('category') ?></th>
+                                        <th class="text-center"><?php echo display('stock') ?></th>
                                         <th class="text-center"><?php echo display('with_cases_price') ?></th>
                                         <th class="text-center"><?php echo display('sell_price') ?></th>
                                         <th class="text-center"><?php echo display('customer_price') ?></th>
@@ -196,19 +196,15 @@
                                             <tr>
                                                 <td class="text-center"><?php echo $v_product_list['sl'] ?></td>
                                                 <td class="text-center">
-                                                    <?php echo html_escape($v_product_list['product_id']) ?>
-                                                    <?php if ($v_product_list['assembly'] == 1) { ?>
-                                                        <br>
-                                                        <a style="color: blue" href="" data-toggle="modal" data-target="#viewprom" onclick="viewpro(<?php echo html_escape($v_product_list['product_id']) ?>)">view products </a>
-                                                    <?php } ?>
-                                                </td>
-                                                <td class="text-center">
                                                     <a href="<?php echo base_url() . 'dashboard/Cproduct/product_details/' . urlencode($v_product_list['product_id']); ?>">
                                                         <?php echo html_escape($v_product_list['product_name']) ?>
                                                         <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i></a>
                                                 </td>
                                                 <td class="text-center">
                                                     <?php echo html_escape($v_product_list['category_name']) ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php echo html_escape($v_product_list['stock']) ?>
                                                 </td>
                                                 <td class="text-center">
                                                 <?php echo html_escape($pri_types[0]['product_price']) ?>

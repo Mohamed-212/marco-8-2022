@@ -59,6 +59,8 @@ class Company_setup extends MX_Controller
             'email'       =>$this->input->post('email',TRUE),
             'address'     =>$this->input->post('address',TRUE),
             'mobile'      =>$this->input->post('mobile',TRUE),
+            'mob2'      =>$this->input->post('mob2',TRUE),
+            'mob3'      =>$this->input->post('mob3',TRUE),
             'website'     =>$this->input->post('website',TRUE),
             'vat_no'      =>$this->input->post('vat_no',TRUE),
             'status'      =>1

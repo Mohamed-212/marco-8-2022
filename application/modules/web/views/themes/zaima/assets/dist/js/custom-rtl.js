@@ -164,12 +164,13 @@
         },
         productGallery: function () {
             var zoomOptions = {zoomWindowWidth: 450, zoomWindowHeight: 458};
-            $(".main-img-slider").slick({slidesToShow: 1, slidesToScroll: 1, infinite: false, arrows: true, speed: 300,rtl:true, lazyLoad: "ondemand", asNavFor: ".thumb-nav"});
+            $(".main-img-slider").slick({initialSlide: parseInt($(".main-img-slider").attr('data-inx') || '0'),slidesToShow: 1, slidesToScroll: 1, infinite: false, arrows: true, speed: 300,rtl:true, lazyLoad: "ondemand", asNavFor: ".thumb-nav"});
             $(".thumb-nav").slick({
                 slidesToShow: 5,
                 slidesToScroll: 1,
                 infinite: false,
                 vertical: true,
+                initialSlide: parseInt($(".thumb-nav").attr('data-inx') || '0'),
                 centerPadding: "0px",
                 asNavFor: ".main-img-slider",
                 dots: false,

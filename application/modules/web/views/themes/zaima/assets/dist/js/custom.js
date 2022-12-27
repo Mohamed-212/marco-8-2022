@@ -201,16 +201,19 @@
         slidesToShow: 1,
         slidesToScroll: 1,
         infinite: false,
+        initialSlide: parseInt($(".main-img-slider").attr('data-inx') || '0'),
         arrows: true,
         speed: 300,
         lazyLoad: "ondemand",
         asNavFor: ".thumb-nav",
       });
+      // console.log(parseInt($(".thumb-nav").attr('data-inx') || '0'));
       $(".thumb-nav").slick({
         slidesToShow: 5,
         slidesToScroll: 1,
         infinite: false,
         vertical: true,
+        initialSlide: parseInt($(".thumb-nav").attr('data-inx') || '0'),
         centerPadding: "0px",
         asNavFor: ".main-img-slider",
         dots: false,

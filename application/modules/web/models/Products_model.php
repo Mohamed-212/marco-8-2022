@@ -352,7 +352,7 @@ class Products_model extends CI_Model {
         return false;
     }
     //Retrieve brand product
-    public function retrieve_brand_product($brand_id=null,$price_range=null,$size=null,$sort=null,$rate=null)
+    public function retrieve_brand_product($brand_id=null,$price_range=null,$size=null,$sort=null,$rate=null,$cat=null)
     {
         $Soft_settings = $this->retrieve_setting_editdata();
         $language = $Soft_settings[0]['language'];
@@ -397,6 +397,15 @@ class Products_model extends CI_Model {
         if ($size) {
             $this->db->like('a.variants', $size,'both');
         }
+
+        if(!empty($cat)){
+            $all_brand = (explode("--", $cat));
+            $this->db->where_in('a.category_id', $all_brand);
+        }
+
+        $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
+        $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
+
         $query = $this->db->get();
         $brand_pro =  $query->result_array();
 

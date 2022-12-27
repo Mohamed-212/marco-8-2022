@@ -44,6 +44,20 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="bank_name" class="col-sm-3 col-form-label"><?php echo display('mob2') ?> <i class="text-danger">*</i></label>
+                            <div class="col-sm-6">
+                                <input type="text" tabindex="3" class="form-control" name="mob2" name="mob2" value="{mob2}"  placeholder="<?php echo display('mob2') ?>" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="bank_name" class="col-sm-3 col-form-label"><?php echo display('mob3') ?> <i class="text-danger">*</i></label>
+                            <div class="col-sm-6">
+                                <input type="text" tabindex="3" class="form-control" name="mob3" name="mob3" value="{mob3}"  placeholder="<?php echo display('mob3') ?>" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="bank_name" class="col-sm-3 col-form-label"><?php echo display('address') ?> <i class="text-danger">*</i></label>
                             <div class="col-sm-6">
                                 <textarea class="form-control input-description" tabindex="1" id="adress" name="address" placeholder="<?php echo display('address') ?>" required>{address}</textarea>

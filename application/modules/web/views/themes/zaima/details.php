@@ -88,8 +88,16 @@ $theme = $CI->Themes->get_theme();
                         <div class="row">
                             <div class="col-3 col-sm-2">
                                 <!-- Begin product thumb nav -->
-                                <ul class="thumb-nav">
-                                    <li id="product-<?= $product_id ?>"><img data-src="<?php echo  base_url() . (!empty($image_thumb) ? $image_thumb : 'my-assets/image/no-image.jpg') ?>" alt="<?php echo display('image') ?>"></li>
+                                <?php
+                                    $inx = 0;
+                                    foreach ($varients as $k => $var) {
+                                        $var = (object)$var;
+                                        if ($var->product_id == $product_id) {
+                                            $inx = $k;
+                                        }
+                                    }
+                                ?>
+                                <ul class="thumb-nav" data-inx="<?php echo $inx; ?>">
                                     <?php
                                     // if (!empty($product_gallery_img)) {
                                     // foreach ($product_gallery_img as $gallery) {
@@ -102,7 +110,7 @@ $theme = $CI->Themes->get_theme();
                                     // }
                                     ?>
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
-                                        <li id="product-<?= $var->product_id ?>"><img data-src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'my-assets/image/no-image.jpg') ?>" alt="<?php echo display('image') ?>"></li>
+                                        <li id="product-<?= $var->product_id ?>"><img src="<?php echo  base_url() . (!empty($var->image_thumb) ? $var->image_thumb : 'my-assets/image/no-image.jpg') ?>" alt="<?php echo display('image') ?>"></li>
                                     <?php endforeach ?>
                                 </ul>
                                 <!-- End product thumb nav -->
@@ -110,7 +118,16 @@ $theme = $CI->Themes->get_theme();
 
                             <div class="col-9 col-sm-10" style="width: 100%;min-height: 250px;">
                                 <!-- Begin Product Images Slider -->
-                                <div class="main-img-slider">
+                                <?php
+                                    $inx = 0;
+                                    foreach ($varients as $k => $var) {
+                                        $var = (object)$var;
+                                        if ($var->product_id == $product_id) {
+                                            $inx = $k;
+                                        }
+                                    }
+                                ?>
+                                <div class="main-img-slider" data-inx="<?php echo $inx; ?>">
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
                                         <figure id="product-<?= $var->product_id ?>">
                                             <a href="<?php echo  base_url() . (!empty($var->image_large_details) ? $var->image_large_details : 'my-assets/image/no-image.jpg') ?>" data-size="1400x1400">
@@ -141,11 +158,11 @@ $theme = $CI->Themes->get_theme();
                                     ?>
 
                                     <?php foreach ($varients as $var) : $var = (object)$var; ?>
-                                        <figure id="product-<?= $var->product_id ?>">
+                                        <!-- <figure id="product-<?= $var->product_id ?>">
                                             <a href="<?php echo base_url() . $var->image_large_details; ?>" data-size="1400x1400">
                                                 <img class="img-fluid" data-src="<?php echo base_url() . $var->image_large_details; ?>" data-lazy="<?php echo base_url() . $var->image_large_details; ?>" data-zoom-image="<?php echo base_url() . $var->image_large_details; ?>" alt="<?php echo display('image') ?>" />
                                             </a>
-                                        </figure>
+                                        </figure> -->
                                     <?php endforeach ?>
                                 </div>
                                 <!-- End Product Images Slider -->
@@ -728,6 +745,33 @@ $theme = $CI->Themes->get_theme();
 
         // alert('wwwww');
         $('input[data-product=color-<?= $product_id ?>]').attr("checked", 'checked').trigger('click');
+
+        // product_id
         // $('input[name="select_size1"]').attr("checked", 'checked');
+        // $(".thumb-nav").slick('slickGoTo', 2);
+
+        $('.thumb-nav li').click(function() {
+            var p = $(this).attr('id').substr(8);
+
+            console.log(p);
+
+
+            $('#id' + p).click();
+        });
+
+
+        $('.main-img-slider').on('afterChange', function(event, slick, currentSlide, nextSlide){
+            // console.log(event.currentTarget);
+
+            var a = $(event.currentTarget).find('.slick-slide.slick-current.slick-active');
+
+            var p = $(a).attr('id').substr(8);
+
+            console.log(p);
+
+
+            $('#id' + p).click();
+
+});
     });
 </script>

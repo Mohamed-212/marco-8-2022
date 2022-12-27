@@ -149,10 +149,10 @@ if (!empty($currency_new_id)) {
                         <span class="input-group-text"><i data-feather="search"></i></span>
                     </div>
                     <input class="form-control search-input prepended-form-control appended-form-control"
-                        name="product_name" id="search_product_item" type="text" placeholder="Search for products" />
+                        name="product_name" id="search_product_item" type="text" placeholder="Search for products" style="padding-right: 40px;" />
                     <div class="input-group-append-overlay">
-                        <button type="submit" class="btn btn-warning search_btn color4 color46 text-white"><span class="lnr
-                        lnr-magnifier"></span><?php echo display('search'); ?>
+                        <button type="submit" class="btn btn-warning search_btn color4 color46 text-white" style="border-radius: 6px;"><span class="lnr
+                        lnr-magnifier" ></span><?php echo display('search'); ?>
                         </button>
                     </div>
                 </div>
@@ -366,6 +366,11 @@ if (!empty($currency_new_id)) {
                     </div>
                     <input class="form-control prepended-form-control" name="product_name" id="mobile_product_name"
                         type="text" placeholder="Search for products" />
+                        <div class="input-group-append-overlay">
+                        <button type="submit" class="btn btn-warning search_btn color4 color46 text-white" style="border-radius: 6px;"><span class="lnr
+                        lnr-magnifier"></span><?php echo display('search');?>
+                        </button>
+                    </div>
                     <?php echo form_close() ?>
                 </div>
                 <!-- Departments menu-->
@@ -379,6 +384,7 @@ if (!empty($currency_new_id)) {
                                 $i = 1;
                                 $language = $Soft_settings[0]['language'];
                                 foreach ($category_list as $parent_category) {
+                                    if ($parent_category->category_id == 'DPCIHH462YEXA24' || $parent_category->category_id == '7OYMIICEX171GYC') continue;
                                     if ($_SESSION["language"] != $language) {
                                         $sub_parent_cat = $this->db->select('*,IF(c.trans_name IS NULL OR c.trans_name = "",a.category_name,c.trans_name) as category_name')
                                             ->from('product_category a')
@@ -414,7 +420,10 @@ if (!empty($currency_new_id)) {
                                     <div class="d-flex flex-wrap flex-md-nowrap position-relative px-lg-2">
                                         <?php
                                                     $ci = 0;
-                                                    foreach ($sub_parent_cat as $parent_cat) { ?>
+                                                    foreach ($sub_parent_cat as $parent_cat) { 
+                                                        
+                                                        if ($parent_category->category_id == 'DPCIHH462YEXA24' || $parent_category->category_id == '7OYMIICEX171GYC') continue;
+                                                        ?>
                                         <?php if ($ci % 2 == 0) { ?>
                                         <div class="mega-dropdown-column py-4 px-lg-3">
                                             <?php } ?>
@@ -482,6 +491,7 @@ if (!empty($currency_new_id)) {
                     <?php
                     if (!empty($category_list)) {
                         foreach ($category_list as $v_category_list) {
+                            if ($v_category_list->category_id == 'DPCIHH462YEXA24' || $v_category_list->category_id == '7OYMIICEX171GYC') continue;
                             if ($v_category_list->top_menu == 1) { ?>
                     <li
                         class="nav-item <?php echo (($this->uri->segment(4) == $v_category_list->category_id) ? 'active' : '') ?>">

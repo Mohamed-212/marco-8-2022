@@ -35,6 +35,8 @@ class Lcompany {
 			'email' 	  =>$company_detail[0]['email'],
 			'address' 	  =>$company_detail[0]['address'],
 			'mobile' 	  =>$company_detail[0]['mobile'],
+			'mob2' 	  =>$company_detail[0]['mob2'],
+			'mob3' 	  =>$company_detail[0]['mob3'],
 			'website' 	  =>$company_detail[0]['website'],
 			'vat_no' 	  =>$company_detail[0]['vat_no'],
 			'status' 	  =>$company_detail[0]['status']
