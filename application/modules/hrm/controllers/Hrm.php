@@ -121,6 +121,27 @@ class Hrm extends MX_Controller
         );
         $old_image = $this->input->post('old_image');
 
+        $is_website = $this->input->post('is_website', true);
+
+        if ($is_website) {
+            $c = $this->db->select('count(*) as cnt')->from('employee_history')->where('is_website', '1')->get()->row();
+
+            if ($c->cnt > 0) {
+                if (!empty($id)) {
+                    $this->session->set_flashdata('exception', display('yone_emp'));
+                    redirect("hrm/hrm/bdtask_employee_form/" . $id);
+                }
+            } else {
+                $is_website = 1;
+            }
+        } else {
+            $is_website = 0;
+        }
+
+        if (empty($id)) {
+            $is_website = 0;
+        }
+
         $data['employee'] = (object)$postData = [
             'id' => $this->input->post('id', true),
             'first_name' => $this->input->post('first_name', true),
@@ -138,6 +159,7 @@ class Hrm extends MX_Controller
             'city' => $this->input->post('city', true),
             'zip' => $this->input->post('zip', true),
             'cities' => implode(',', $this->input->post('cities', true)),
+            'is_website' => $is_website
         ];
         #-------------------------------#
         if ($this->form_validation->run()) {
