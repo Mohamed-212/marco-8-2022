@@ -1,15 +1,15 @@
 <?php include_once(dirname(__FILE__) . '/functions/functions.php'); ?>
 <div class="container py-5">
     <div class="row">
-        <div id="ls55" class="col-md-3 d-none d-lg-block leftSidebar mb-3 pr-xl-4">
+        <div id="ls55" class="col-md-3 d-none d-lg-block leftSidebar mb-3 pr-xl-4 col-lg-3">
 
         <div class="card d-lg-none">
                 <div class="card-header row">
-                    <h5 class="card-title col-sm-6">
+                    <h5 class="card-title col-sm-6" style="width: 50%;">
                         <i class="fas fa-filter"></i>
                         <?php echo display('filter');?>
                     </h5>
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-6 text-right"  style="width: 50%;">
                         <a class="btn btn-warning color4 color46 text-white cl44" href="#"><i class="fas fa-times"></i> <?php echo display('close') ?></a>
                     </div>
                 </div>
@@ -153,7 +153,7 @@ $cats = $this->db->select('*')->from('product_category')->get()->result_array();
                     <span class="text-black-50">- <?php echo count($brand_product); ?>
                         <?php echo display('items') ?></span>
                 </div>
-                <a class="btn btn-warning color4 color46 text-white fil44" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
+                <a class="btn btn-warning color4 color46 text-white fil44 d-lg-none" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
 
                 <a class="btn btn-warning color3 color36 white_color" href="<?php echo base_url() ?>"><i class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
             </div>

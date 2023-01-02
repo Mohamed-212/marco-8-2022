@@ -309,6 +309,8 @@ class Products extends CI_Model
         $this->db->where('product_id', $product_id);
         $this->db->update('product_information', $data);
 
+        var_dump($product_id);
+
         // website
         $this->db->reset_query();
         $this->db->where('product_id', $product_id);

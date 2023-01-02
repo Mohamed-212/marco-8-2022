@@ -296,10 +296,10 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
       } else {
         
         $('#stock-text').removeClass('text-success').addClass('text-danger').text(outStockMess);
-        Swal({
-          type: "warning",
-          title: display("variant_not_available"),
-        });
+        // Swal({
+        //   type: "warning",
+        //   title: display("variant_not_available"),
+        // });
         $('#product_max_quantity').val(0);
         $('.product-summary-top').LoadingOverlay("hide", true);
         busy = false;
@@ -1610,6 +1610,17 @@ $(function () {
     source: base_url + "web/product/get_search_item",
     minLength: 2,
     appendTo: ".main-search",
+    select: function (event, ui) {
+      event.preventDefault();
+      window.location.href =
+        base_url + "product/" + ui.item.prodname + "/" + ui.item.id;
+    },
+  });
+
+  $("#search_product_item2").autocomplete({
+    source: base_url + "web/product/get_search_item",
+    minLength: 2,
+    appendTo: ".main-search2",
     select: function (event, ui) {
       event.preventDefault();
       window.location.href =

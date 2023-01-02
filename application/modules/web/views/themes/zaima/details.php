@@ -360,13 +360,13 @@ $theme = $CI->Themes->get_theme();
 
 
                         <div class="product-size mb-3">
-                            <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('product_size') ?>:</h5>
+                            <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('productsize') ?>:</h5>
                             <?php
                                 foreach ($vresult as $vitem) {
                                     if ($vitem->variant_type == 'size') {
                             ?>
 
-                                    <input class="d-none product_variants" type="radio" name="select_size1" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="return null;select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
+                                    <input class="d-none product_variants" type="radio" name="select_size1" dir="ltr" id="<?php echo html_escape($vitem->variant_id) ?>" value="<?php echo html_escape($vitem->variant_id) ?>" onclick="return null;select_variant(<?php echo html_escape($product_id) ?>,'<?php echo  html_escape($vitem->variant_id) ?>')" <?php echo (($vitem->variant_id == $default_variant) ? 'checked="checked"' : '') ?> checked="checked">
                                     <label class="mr-1" for="<?php echo html_escape($vitem->variant_id) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded" style="color: #fff !important;
     border: 1px solid var(--primary-color) !important;
     background-color: var(--primary-color) !important;"><?php echo html_escape($vitem->variant_name) ?></span></label>

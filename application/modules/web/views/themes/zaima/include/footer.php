@@ -155,9 +155,29 @@ if (!empty($mob_footer_block)) {
                             <label><?php echo $fi->item_name; ?></label>
 
                             <ul>
-                                <li>
-                                    <a href="#">Istanbul</a>
+                            <?php
+                        $all_cats = $this->db->select('category_id')->from('filter_product')->where('filter_type_id', 1)->where('filter_item_id', $fi->item_id)->get()->result();
+                        $cats = [];
+                        foreach ($all_cats as $cc) {
+                            // TODO fix
+                            if (!isset($cats[$cc->category_id])) {
+                                $cats[$cc->category_id] = $cc->category_id;
+                            }
+                        }
+
+                        // var_dump($cats);
+
+                        foreach ($cats as $k => $v) {
+                            $c = $this->db->select('*')->from('product_category')->where('category_id', $k)->get()->row();
+                            if ($c->category_name == 'ACCESSORIES' || $c->category_name == 'CLIP ON - BOX') continue;
+                        ?>
+                        <li>
+                                    <a href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>"><?php echo $c->category_name; ?></a>
                                 </li>
+                        <?php
+                        }
+                    ?>
+                                
                             </ul>
                         </div>
                     </li>

@@ -56,8 +56,8 @@ $company_info = $CI->Companies->company_list();
                                         foreach ($our_location_info as $our_location) {
                                             ?>
                                             <div class="office_address">
-                                                <h5><?php echo html_escape($our_location['headline']) ?></h5>
-                                                <?php echo html_escape($our_location['details']) ?>
+                                                <h5><?php echo ($our_location['headline']) ?></h5>
+                                                <?php echo ($our_location['details']) ?>
                                             </div>
                                             <?php
                                         }

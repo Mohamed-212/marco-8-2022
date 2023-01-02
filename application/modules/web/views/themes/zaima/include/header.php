@@ -677,16 +677,25 @@ if (!empty($currency_new_id)) {
                 <a class="dropdown-item dropdown-toggle" href="#" id="multilevelDropdownMenu1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $fi->item_name; ?></a>
                 <ul class="dropdown-menu" aria-labelledby="multilevelDropdownMenu1">
                     <?php
-                        $cats = $this->db->select('category_id')->from('filter_product')->where('filter_type_id', 1)->where('filter_item_id', $fi->item_id)->get()->result();
-
-                        foreach ($cats as $c) {
+                        $all_cats = $this->db->select('category_id')->from('filter_product')->where('filter_type_id', 1)->where('filter_item_id', $fi->item_id)->get()->result();
+                        $cats = [];
+                        foreach ($all_cats as $cc) {
                             // TODO fix
+                            if (!isset($cats[$cc->category_id])) {
+                                $cats[$cc->category_id] = $cc->category_id;
+                            }
                         }
 
+                        // var_dump($cats);
+
+                        foreach ($cats as $k => $v) {
+                            $c = $this->db->select('*')->from('product_category')->where('category_id', $k)->get()->row();
+                            if ($c->category_name == 'ACCESSORIES' || $c->category_name == 'CLIP ON - BOX') continue;
+                        ?>
+                                    <li><a class="dropdown-item" href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>"><?php echo $c->category_name; ?></a></li>
+                        <?php
+                        }
                     ?>
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
                 </ul>
             </li>
                     <?php
@@ -712,6 +721,22 @@ if (!empty($currency_new_id)) {
         </div>
     </div>
 </div>
+
+                <div class="main-search2 input-group-overlay d-lg-none my-3">
+                    <?php echo form_open('category_product_search', array('method' => 'GET')) ?>
+                    <div class="input-group-prepend-overlay">
+                        <span class="input-group-text"><i data-feather="search"></i></span>
+                    </div>
+                    <input class="form-control prepended-form-control" name="product_name" id="search_product_item2"
+                        type="text" placeholder="Search for products" />
+                        <div class="input-group-append-overlay">
+                        <button type="submit" class="btn btn-warning search_btn color4 color46 text-white" style="border-radius: 6px;"><span class="lnr
+                        lnr-magnifier"></span><?php echo display('search');?>
+                        </button>
+                    </div>
+                    <?php echo form_close() ?>
+                   
+                </div>
 
 <div class="modal register-modal" id="trackingModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

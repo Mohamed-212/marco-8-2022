@@ -5,14 +5,14 @@
 <div class="container py-4">
     <div class="row">
         <div id="ls55" 
-            class="<?php echo (!empty($after_search) ? 'col-md-3' : 'col-md-3') ?> d-none d-lg-block leftSidebar mb-3 pr-xl-4">
+            class="<?php echo (!empty($after_search) ? 'col-md-3' : 'col-md-3') ?> d-none d-lg-block leftSidebar mb-3 pr-xl-4 col-lg-3">
             <div class="card d-lg-none">
                 <div class="card-header row">
-                    <h5 class="card-title col-sm-6">
+                    <h5 class="card-title col-sm-6" style="width: 50%;">
                         <i class="fas fa-filter"></i>
                         <?php echo display('filter');?>
                     </h5>
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-6 text-right" style="width: 50%;">
                         <a class="btn btn-warning color4 color46 text-white cl44" href="#"><i class="fas fa-times"></i> <?php echo display('close') ?></a>
                     </div>
                 </div>
@@ -163,7 +163,7 @@ $cats = $this->db->select('*')->from('product_category')->get()->result_array();
                     <span class="text-black-50">- <?php echo html_escape($total); ?>
                         <?php echo display('items') ?></span>
                     <?php } ?>
-                </div><a class="btn btn-warning color4 color46 text-white fil44" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
+                </div><a class="btn btn-warning color4 color46 text-white fil44 d-lg-none" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
 
                 <a class="btn btn-warning color4 color46 text-white" href="<?php echo base_url() ?>"><i
                         class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
