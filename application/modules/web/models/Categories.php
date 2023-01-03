@@ -768,14 +768,11 @@ class Categories extends CI_Model
             $this->db->where_in('a.brand_id', $all_brand);
         }
 
-<<<<<<< HEAD
-=======
         if(!empty($filter['cat'])){
             $all_brand = (explode("--", $filter['cat']));
             $this->db->where_in('a.category_id', $all_brand);
         }
 
->>>>>>> ahmed
         $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
         $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
 
@@ -800,11 +797,7 @@ class Categories extends CI_Model
         $this->db->select('b.brand_id, b.brand_name');
         $this->db->from('product_information a');
         $this->db->join('brand b', 'a.brand_id=b.brand_id','left');
-<<<<<<< HEAD
-        $this->db->like('a.product_name', $product_name, 'both');
-=======
        $this->db->where("(product_name like '%$product_name%' or variants in (" . implode(',', $vArr) . "))", null, false);
->>>>>>> ahmed
         $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
         $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
         $this->db->group_by('a.brand_id');
@@ -833,11 +826,8 @@ class Categories extends CI_Model
         }
         // if ($v_category_list->category_id == 'DPCIHH462YEXA24' || $v_category_list->category_id == '7OYMIICEX171GYC') continue;
         $this->db->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC');
-<<<<<<< HEAD
-        $this->db->like('product_name', $product_name, 'both');
-=======
         $this->db->where("(product_name like '%$product_name%' or variants in (" . implode(',', $vArr) . "))", null, false);
->>>>>>> ahmed
+
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result();

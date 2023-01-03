@@ -398,14 +398,11 @@ class Products_model extends CI_Model {
             $this->db->like('a.variants', $size,'both');
         }
 
-<<<<<<< HEAD
-=======
         if(!empty($cat)){
             $all_brand = (explode("--", $cat));
             $this->db->where_in('a.category_id', $all_brand);
         }
 
->>>>>>> ahmed
         $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
         $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
 

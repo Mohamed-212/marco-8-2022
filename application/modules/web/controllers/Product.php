@@ -36,11 +36,7 @@ class Product extends MX_Controller
         $products = $this->db->select('product_id as id, product_name as value')
         ->from('product_information')
         ->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC')
-<<<<<<< HEAD
-        ->like('product_name',$search_item, 'both')
-=======
         ->where("(product_name like '%$search_item%' or variants in (" . implode(',', $vArr) . "))", null, false)
->>>>>>> ahmed
         ->where('status', 1)
              ->limit(10)
         ->get()->result();
