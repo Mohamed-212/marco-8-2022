@@ -147,9 +147,9 @@ class Ccustomer extends MX_Controller
             'status'                => 1
         );
 
-        if (empty($data['password'])) {
-            unset($data['password']);
-        }
+        // if (empty($data['password'])) {
+        //     unset($data['password']);
+        // }
 
         $this->Customers->update_customer($data, $customer_id);
 

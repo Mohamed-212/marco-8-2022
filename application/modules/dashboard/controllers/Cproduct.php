@@ -88,12 +88,12 @@ class Cproduct extends MX_Controller
         $this->permission->check_label('add_product')->create()->redirect();
 
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('product_name', display('product_name'), 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('product_name', display('product_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('category_id', display('category'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('onsale', display('onsale'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('price', display('sell_price'), 'trim|required|xss_clean');
         //  $this->form_validation->set_rules('supplier_price', display('supplier_price'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('model', display('model'), 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('model', display('model'), 'trim|required|xss_clean');
         // $this->form_validation->set_rules('supplier_id', display('supplier'), 'trim|required|xss_clean');
         // $this->form_validation->set_rules('variant[]', display('variant'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
@@ -222,18 +222,28 @@ class Cproduct extends MX_Controller
             // Product variant prices
             $variant_prices = $this->input->post('variant_prices', TRUE);
 
-            $model_and_color = explode('-', $this->input->post('model', TRUE));
-            $product_model_only = trim($model_and_color[0]);
-            $product_color = trim($model_and_color[1]);
+            $model_and_color = explode('-', ' - ');
+            $product_model_only = trim($this->input->post('product_model_only', TRUE));
+            $product_model_only = str_replace('-', ' ', $product_model_only);
+            $product_color = trim($this->input->post('pcolor', TRUE));
+            $product_color = str_replace('-','.', $product_color);
 
             if ($category_name == 'ACCESSORIES') {
                 $product_model_only = null;
                 $product_color = null;
             }
 
+            $br = $this->db->select('*')->from('brand')->where('brand_id', $brand_id)->get()->row();
+
+            $assembly_products = $this->input->post('assembly_product_id[]', TRUE);
+            $x = '';
+            if (is_array($assembly_products) && count($assembly_products) > 0) {
+                $x = ' - full';
+            }
+
             $data = array(
                 'product_id' => $product_id,
-                'product_name' => $this->input->post('product_name', TRUE),
+                'product_name' => $br->brand_name . ' - ' . $product_model_only . ' - ' . $product_color . $x,
                 'supplier_id' => $this->input->post('supplier_id', TRUE),
                 'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
@@ -241,7 +251,7 @@ class Cproduct extends MX_Controller
                 'price' => $this->input->post('price', TRUE),
                 'supplier_price' => $this->input->post('supplier_price', TRUE),
                 'unit' => $this->input->post('unit', TRUE),
-                'product_model' => $this->input->post('model', TRUE),
+                'product_model' => $product_model_only . ' - ' . $product_color,
                 'product_details' => $this->input->post('details', TRUE),
                 'brand_id' => $brand_id,
                 'variants' => implode(",", (array) $full_variant),
@@ -543,12 +553,11 @@ class Cproduct extends MX_Controller
         $this->permission->check_label('manage_product')->update()->redirect();
 
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('product_name', display('product_name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('category_id', display('category'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('onsale', display('onsale'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('price', display('sell_price'), 'trim|required|xss_clean');
         //  $this->form_validation->set_rules('supplier_price', display('supplier_price'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('model', display('model'), 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('model', display('model'), 'trim|required|xss_clean');
         //  $this->form_validation->set_rules('supplier_id', display('supplier'), 'trim|required|xss_clean');
         //  $this->form_validation->set_rules('variant[]', display('variant'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
@@ -600,7 +609,7 @@ class Cproduct extends MX_Controller
 
             $old_img_lrg = $this->input->post('old_img_lrg', TRUE);
             $old_thumb_image = $this->input->post('old_thumb_image', TRUE);
-            $product_id = $this->input->post('product_id', TRUE);
+            // $product_id = $this->input->post('product_id', TRUE);
             $onsale = $this->input->post('onsale', TRUE);
             if ($onsale) {
                 $onsale_price = $this->input->post('onsale_price', TRUE);
@@ -682,7 +691,6 @@ class Cproduct extends MX_Controller
                 $brand_id = $new_brand_id;
             }
 
-
             $variant_colors = $this->input->post('variant_colors', TRUE);
 
             if (!empty($variant_colors)) {
@@ -690,6 +698,7 @@ class Cproduct extends MX_Controller
             } else {
                 $full_variant = $variant;
             }
+
 
 
             // filter section start
@@ -755,8 +764,10 @@ class Cproduct extends MX_Controller
             $provar_prices = $this->Products->get_product_variant_prices($product_id);
 
             $model_and_color = explode('-', $this->input->post('model', TRUE));
-            $product_model_only = trim($model_and_color[0]);
-            $product_color = trim($model_and_color[1]);
+            $product_model_only = trim($this->input->post('product_model_only', TRUE));
+            $product_model_only = str_replace('-', ' ', $product_model_only);
+            $product_color = trim($this->input->post('pcolor', TRUE));
+            $product_color = str_replace('-','.', $product_color);
 
             $product_category_id = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->limit(1)->get()->row();
             if ($product_category_id->category_id == $category_id) {
@@ -764,8 +775,16 @@ class Cproduct extends MX_Controller
                 $product_color = null;
             }
 
+            $br = $this->db->select('*')->from('brand')->where('brand_id', $brand_id)->get()->row();
+
+            $assembly_products = $this->input->post('assembly_product_id[]', TRUE);
+            $x = '';
+            if (is_array($assembly_products) && count($assembly_products) > 0) {
+                $x = ' - full';
+            }
+
             $data = array(
-                'product_name' => $this->input->post('product_name', TRUE),
+                'product_name' => $br->brand_name . ' - ' . $product_model_only . ' - ' . $product_color . $x,
                 'supplier_id' => empty($this->input->post('supplier_id', TRUE)) ? null : $this->input->post('supplier_id', TRUE),
                 'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
@@ -773,7 +792,7 @@ class Cproduct extends MX_Controller
                 'price' => $this->input->post('price', TRUE),
                 'supplier_price' => $this->input->post('supplier_price', TRUE),
                 'unit' => $this->input->post('unit', TRUE),
-                'product_model' => $this->input->post('model', TRUE),
+                'product_model' => $product_model_only . ' - ' . $product_color,
                 'product_details' => $this->input->post('details', TRUE),
                 'brand_id' => $brand_id,
                 'variants' => implode(",", (array) $full_variant),
@@ -796,6 +815,9 @@ class Cproduct extends MX_Controller
                 'product_color' => $product_color,
             );
             $result = $this->Products->update_product($data, $product_id);
+
+            // echo "<pre>";var_dump($data, $result);exit;
+
             //// start update tax for sunglasses by shady azzam
             // get sun glasses category latest id
             $sun_glasses = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->get()->row();

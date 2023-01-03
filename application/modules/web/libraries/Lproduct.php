@@ -200,7 +200,7 @@ class Lproduct
 
 
     //Brand product
-    public function brand_product($brand_id=null,$price_range=null,$size=null,$sort=null,$rate=null)
+    public function brand_product($brand_id=null,$price_range=null,$size=null,$sort=null,$rate=null,$cat=null)
     {
         $CI =& get_instance();
         $CI->load->model('web/Products_model');
@@ -215,7 +215,7 @@ class Lproduct
         $theme = $CI->Themes->get_theme();
         $CI->load->library('session');
 
-        $brand_product 	  = $CI->Products_model->retrieve_brand_product($brand_id,$price_range,$size,$sort,$rate);
+        $brand_product 	  = $CI->Products_model->retrieve_brand_product($brand_id,$price_range,$size,$sort,$rate,$cat);
 
         $brand_info 	  = $CI->Products_model->select_brand_info($brand_id);
         $categoryList 	  = $CI->Homes->parent_category_list();
@@ -232,6 +232,7 @@ class Lproduct
         $company_info  	  = $CI->Companies->company_list();
         $selected_default_currency_info = $CI->Homes->selected_default_currency_info();
         $variant_list  	  = $CI->Variants->variant_list();
+
 
         $max_value   	 = $CI->Products_model->get_max_value_of_pro($brand_id);
         $min_value   	 = $CI->Products_model->get_min_value_of_pro($brand_id);

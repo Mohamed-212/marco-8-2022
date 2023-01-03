@@ -1,11 +1,88 @@
 <?php include_once(dirname(__FILE__) . '/functions/functions.php'); ?>
 <div class="container py-5">
     <div class="row">
-        <div class="col-md-3 d-none d-lg-block leftSidebar mb-3 pr-xl-4">
+        <div id="ls55" class="col-md-3 d-none d-lg-block leftSidebar mb-3 pr-xl-4 col-lg-3">
+
+        <div class="card d-lg-none">
+                <div class="card-header row">
+                    <h5 class="card-title col-sm-6" style="width: 50%;">
+                        <i class="fas fa-filter"></i>
+                        <?php echo display('filter');?>
+                    </h5>
+                    <div class="col-sm-6 text-right"  style="width: 50%;">
+                        <a class="btn btn-warning color4 color46 text-white cl44" href="#"><i class="fas fa-times"></i> <?php echo display('close') ?></a>
+                    </div>
+                </div>
+            </div>
+
+        <?php
+
+$cats = $this->db->select('*')->from('product_category')->get()->result_array();
+?>
+<div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h2 class="mb-0 fs-17"><?php echo display('category') ?></h2>
+                    <i data-feather="sliders" class="card-header_icon"></i>
+                </div>
+                <div class="card-body">
+                    <?php
+                        $i = 1;
+                        $current_url = current_url();
+                        $getlist = $this->input->get();
+
+                        $brand_url_ids = $this->input->get('cat', TRUE);
+
+                        foreach ($cats as $brand_in) {
+                            if ($brand_in['category_id'] == 'DPCIHH462YEXA24' || $brand_in['category_id'] == '7OYMIICEX171GYC' || $brand_in['category_name'] == 'Default') {
+                                continue;
+                            }
+                            if ($brand_in['category_id']) {
+
+                                $target_id = $brand_in['category_id'];
+
+                                if (!empty($brand_url_ids)) {
+                                    $all_brand_ids = (explode("--", $brand_url_ids));
+                                    if (in_array($target_id, $all_brand_ids)) {
+                                        $pos = array_search($target_id, $all_brand_ids);
+                                        unset($all_brand_ids[$pos]);
+                                    } else {
+                                        $all_brand_ids[] = $brand_in['category_id'];
+                                    }
+                                    $getlist['cat'] = implode('--', $all_brand_ids);
+                                } else {
+                                    $getlist['cat'] = $brand_in['category_id'];
+                                }
+                                $qstring = http_build_query($getlist);
+
+                        ?>
+                    <div class="custom-control custom-checkbox mb-2">
+
+                        <input id="brandc<?php echo $i ?>" type="checkbox" class="brand_class custom-control-input"
+                            name="cat" value="<?php echo $current_url . (!empty($qstring) ? '?' . $qstring : ''); ?>"
+                            <?php
+                                                                                                                                                                                                                            if (strpos($brand_url_ids, $target_id) !== false) {
+                                                                                                                                                                                                                                echo 'checked';
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                            ?>>
+
+
+                        <label class="custom-control-label" for="brandc<?php echo $i ?>">
+                            <?php echo html_escape($brand_in['category_name']) ?><span
+                                class="count text-muted fs-12 ml-1"></span>
+                        </label>
+                    </div>
+                    <?php
+                                $i++;
+                            }
+                        }
+                        ?>
+                </div>
+            </div>
+
             <?php
             if ($max_value) {
             ?>
-                <div class="card mb-4">
+                <div class="card mb-4" <?php echo empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <h2 class="mb-0 fs-17"><?php echo display('price') ?></h2>
                         <i data-feather="sliders" class="card-header_icon"></i>
@@ -33,6 +110,13 @@
                         if ($variant_list) {
                             $i = 1;
                             foreach ($variant_list as $variant) {
+
+                                $p = $this->db->select('*')->from('product_information')->where('variants', $variant['id'])->limit(1)->get()->row();
+
+                                if ($p->category_id == '7OYMIICEX171GYC' || $p->category_id == 'DPCIHH462YEXA24') {continue;}
+
+                                if ($variant['variant_name'] == 'Default') continue;
+
                         ?>
                                 <input type="radio" class="size1" name="size" id="<?php echo $i ?>" value="<?php
                                                                                                             $currentURL = current_url();
@@ -69,6 +153,7 @@
                     <span class="text-black-50">- <?php echo count($brand_product); ?>
                         <?php echo display('items') ?></span>
                 </div>
+                <a class="btn btn-warning color4 color46 text-white fil44 d-lg-none" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
 
                 <a class="btn btn-warning color3 color36 white_color" href="<?php echo base_url() ?>"><i class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
             </div>
@@ -199,3 +284,23 @@
 <input type="hidden" name="to_price" id="to_price" value="<?php echo html_escape($to_price) ?>">
 <input type="hidden" name="default_currency_icon" id="default_currency_icon" value="<?php echo (!empty($default_currency_icon) ? html_escape($default_currency_icon) : $currency1) ?>">
 <input type="hidden" name="query_string" id="query_string" value="<?php echo $this->input->server('QUERY_STRING'); ?>">
+<style>
+    .full55 {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('.fil44').click(function (e) {
+            e.preventDefault();
+            $('#ls55').removeClass('d-none').addClass('full55').addClass('col-sm-12').addClass('col-md-12');
+        });
+
+        $('.cl44').click(function (e) {
+            e.preventDefault();
+            $('#ls55').addClass('d-none');
+        });
+    });
+</script>

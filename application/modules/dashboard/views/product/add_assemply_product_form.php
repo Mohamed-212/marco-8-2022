@@ -238,20 +238,18 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="product_name" class="col-sm-3 col-form-label"><?php echo display('product_name') ?>
-                                                    <span class="color-red">*</span></label>
+                                        
+                                        <div class="col-sm-12">
+                                        <div class="form-group row">
+                                                <label for="brand" class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
                                                 <div class="col-sm-9">
-                                                    <input class="form-control" name="product_name" autofocus type="text" id="product_name" required="" placeholder="<?php echo display('product_name') ?>">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="model" class="col-sm-3 col-form-label"><?php echo display('item_code') ?> <span class="color-red">*</span></label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="model" placeholder="<?php echo display('item_code') ?>" value="<?php echo set_value('model') ?>" required id="model" />
+                                                    <select class="form-control select2 width_100p" data-tags="true" id="brand" name="brand">
+                                                        <option value=""><?php echo display('select_one') ?></option>
+                                                        <?php foreach ($brand_list as $brand) { ?>
+                                                            <option value="<?php echo html_escape($brand['brand_id']); ?>">
+                                                                <?php echo html_escape($brand['brand_name']); ?></option>
+                                                        <?php } ?>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row hidden">
@@ -262,6 +260,34 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="product_model"
+                                                       class="col-sm-3 col-form-label"><?php echo display('item_code') ?>
+                                                    <span class="color-red">*</span></label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="product_model_only" autofocus
+                                                           type="text" id="product_model" required=""
+                                                           placeholder="<?php echo display('product_model') ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group row">
+                                                <label for="color"
+                                                       class="col-sm-3 col-form-label"><?php echo display('color') ?>
+                                                    <span class="color-red">*</span></label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" name="pcolor" autofocus
+                                                           type="text" id="pcolor" required=""
+                                                           placeholder="<?php echo display('color') ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                       
+
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group row">
@@ -363,20 +389,7 @@
                                     <div class="row">
 
 
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="brand" class="col-sm-3 col-form-label"><?php echo display('brand') ?></label>
-                                                <div class="col-sm-9">
-                                                    <select class="form-control select2 width_100p" data-tags="true" id="brand" name="brand">
-                                                        <option value=""><?php echo display('select_one') ?></option>
-                                                        <?php foreach ($brand_list as $brand) { ?>
-                                                            <option value="<?php echo html_escape($brand['brand_id']); ?>">
-                                                                <?php echo html_escape($brand['brand_name']); ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="col-sm-6">
                                             <div class="form-group row">
                                                 <!-- <label for="variant_colors" class="col-sm-3 col-form-label"><?php echo display('color') ?></label>
@@ -875,7 +888,9 @@ if ($all_filter_items) {
                         //console.log('wewe');
                         //console.log(obj);
                         $('#product_name').val(obj.product_name);
-                        $('#model').val(obj.product_model);                      
+                        $('#model').val(obj.product_model);  
+                        $('#product_model').val(obj.product_model_only);
+                        $('#pcolor').val(obj.product_color);   
                         $('#variant').val(obj.variants.replace(',', ''));
                         $('#supplier').val(obj.supplier_id);
                         $('#category_id').val(obj.category_id);

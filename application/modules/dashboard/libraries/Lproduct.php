@@ -89,8 +89,53 @@ class Lproduct {
     public function product_list($filter, $links, $per_page, $page) {
         $CI = & get_instance();
         $CI->load->model('dashboard/Products');
+        $CI->load->library('dashboard/occational');
         $CI->load->model('dashboard/Soft_settings');
-        $products_list = $CI->Products->product_list($filter, $per_page, $page);
+        $products_list_all = $CI->Products->product_list($filter, $per_page, $page);
+        $products_list = [];
+        foreach ($products_list_all as $p) {
+            $purchaseData = $CI->Products->product_purchase_info($p['product_id']);
+            $totalPurchase = 0;
+            $totalPrcsAmnt = 0;
+
+            if (!empty($purchaseData)) {
+                foreach ($purchaseData as $k => $v) {
+                    $purchaseData[$k]['final_date'] = $CI->occational->dateConvert($purchaseData[$k]['purchase_date']);
+                    $totalPrcsAmnt = ($totalPrcsAmnt + $purchaseData[$k]['total_amount']);
+                    $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+                }
+            }
+
+            $salesData = $CI->Products->invoice_data($p['product_id']);
+
+            $totalSales = 0;
+            $totaSalesAmt = 0;
+
+            if (!empty($salesData)) {
+                foreach ($salesData as $k => $v) {
+                    $salesData[$k]['final_date'] = $CI->occational->dateConvert($salesData[$k]['date']);
+                    $totalSales = ($totalSales + $salesData[$k]['quantity']);
+                    $totaSalesAmt = ($totaSalesAmt + $salesData[$k]['total_price']);
+                }
+            }
+
+            // $stock = ($totalPurchase + $openQuantity) - $totalSales;
+            // $stock = ($totalPurchase - $totalSales);
+            // var_dump($totalPurchase . '--' . $totalSales);
+            $size_id = $p['variants'];
+
+            // echo "<pre>";var_dump($p);exit;
+
+            if ($p['assembly'] == 1) {
+                $stockData = $CI->Products->check_variant_wise_stock2($p['product_id'], null, $size_id);
+            } else {
+                $stockData = $CI->Products->check_variant_wise_stock($p['product_id'], null, $size_id);
+            }
+            $p['stock'] = $stockData[0] - $stockData[1];
+            $products_list[] = $p;
+
+        }
+        // echo "<pre>";var_dump($products_list);exit;
         $all_supplier_list = $CI->Products->all_supplier_list();
         $all_category_list = $CI->Products->all_category_list();
         $all_unit_list = $CI->Products->all_unit_list();

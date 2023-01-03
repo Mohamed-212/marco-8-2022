@@ -64,7 +64,8 @@ class Products extends CI_Model
             product_information.onsale_price,
             product_information.image_thumb,
 			product_category.category_name,
-			unit.unit_short_name');
+			unit.unit_short_name,
+            product_information.variants');
         $this->db->from('product_information');
         $this->db->join('supplier_information', 'product_information.supplier_id = supplier_information.supplier_id', 'left');
         $this->db->join('product_category', 'product_category.category_id = product_information.category_id', 'left');
@@ -307,6 +308,8 @@ class Products extends CI_Model
 
         $this->db->where('product_id', $product_id);
         $this->db->update('product_information', $data);
+
+        var_dump($product_id);
 
         // website
         $this->db->reset_query();

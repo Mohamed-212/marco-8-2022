@@ -22,10 +22,25 @@ class Product extends MX_Controller
     public function get_search_item()
     {
         $search_item = $this->input->get('term', TRUE);
+
+        $v = $this->db->select('*')->from('variant')->like('variant_name', $search_item, 'both')->get()->result();
+        $vArr = ['"22"'];
+        if ($v && is_array($v) && count($v) > 0) {
+            foreach ($v as $value) {
+                $vArr[] = '"' . $value->variant_id . '"';
+            }
+        }
+
+        // echo json_encode($vArr);exit;
+
         $products = $this->db->select('product_id as id, product_name as value')
         ->from('product_information')
         ->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC')
+<<<<<<< HEAD
         ->like('product_name',$search_item, 'both')
+=======
+        ->where("(product_name like '%$search_item%' or variants in (" . implode(',', $vArr) . "))", null, false)
+>>>>>>> ahmed
         ->where('status', 1)
              ->limit(10)
         ->get()->result();
@@ -114,7 +129,8 @@ class Product extends MX_Controller
         $size        = $this->input->get('size',TRUE);
         $sort        = $this->input->get('sort',TRUE);
         $rate        = $this->input->get('rate',TRUE);
-        $content = $this->lproduct->brand_product($brand_id,$price_range,$size,$sort,$rate);
+        $cat        = $this->input->get('cat',TRUE);
+        $content = $this->lproduct->brand_product($brand_id,$price_range,$size,$sort,$rate, $cat);
         $this->template_lib->full_website_html_view($content);
     }
 

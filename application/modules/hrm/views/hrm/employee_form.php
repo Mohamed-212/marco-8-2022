@@ -159,6 +159,13 @@
                             </div>
                         </div>
 
+                        <div class="form-group row" style="display: <?php echo $employee->id ? '' : 'none';?>;<?=$employee->is_website?>">
+                            <div class="col-sm-7 custom-select">
+                                <input name="is_website" class="form-control" type="checkbox" placeholder="<?php echo display('is_website') ?>" id="is_website" style="width: 10%;display: inline-block;" <?php echo $employee->is_website == 1 ? 'checked' : '' ?>>
+                                <label for="is_website" class="col-form-di" style="vertical-align: text-top;margin-top: -10px;"><?php echo display('set_website_emp') ?></label>
+                            </div>
+                        </div>
+
                         <!-- <div class="contact-info-conatiner">
                             <div class="row form-group">
                                 <div class="col-sm-12">

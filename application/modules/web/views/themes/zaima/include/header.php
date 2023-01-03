@@ -25,6 +25,111 @@ if (!empty($currency_new_id)) {
 }
 
 ?>
+<link type="text/css" rel="stylesheet" href="<?php echo base_url();?>/my-assets/zeynep.min.css" />
+<!-- <link type="text/css" rel="stylesheet" href="https://raw.githack.com/hsynlms/zeynepjs/master/examples/css/base.css" /> -->
+<style>
+/* zeynepjs menu styles */
+.zeynep {
+  background-color: #ffffff;
+  color: #404143;
+  width: 295px;
+}
+
+.zeynep ul {
+  list-style-type: none;
+  padding: 0;
+  padding-left: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+.zeynep ul > li {
+  display: block;
+}
+
+.zeynep ul > li > a {
+  color: inherit;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 18px 20px;
+  text-decoration: none;
+  transition: all 150ms;
+}
+.zeynep ul > li > a:hover {
+  background-color: #efefef;
+  border-radius: 3px;
+}
+
+.zeynep ul > li:not(:last-child) > a {
+  border-bottom: 1px solid #efefef;
+}
+
+.zeynep ul > li.has-submenu > a {
+  background-image: url("../my-assets/image/submenu-arrow.svg");
+  background-position: right 20px center;
+  background-repeat: no-repeat;
+  background-size: 8px 14px;
+}
+
+.zeynep ul > li.has-submenu > a:hover {
+  background-image: url("../my-assets/image/submenu-arrow-active.svg");
+}
+
+/* zeynepjs submenu styles */
+.zeynep .submenu {
+  background-color: #ffffff;
+  left: 295px;
+}
+
+.zeynep .submenu-header {
+  background-image: url("../my-assets/image/menu-back.svg");
+  background-position: left 20px center;
+  background-repeat: no-repeat;
+  background-size: 8px 14px;
+  border-bottom: solid 1px #efefef;
+  cursor: pointer;
+  position: relative;
+}
+
+.zeynep .submenu-header > a {
+  color: inherit;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 18px 20px;
+  padding-left: 40px;
+  text-decoration: none;
+}
+
+.zeynep .submenu-header > a:before {
+  background-image: url("../my-assets/image/submenu-arrow.svg");
+  background-position: right 20px center;
+  background-repeat: no-repeat;
+  background-size: 8px 14px;
+  content: "";
+  height: 100%;
+  left: 26px;
+  position: absolute;
+  top: 0;
+  transform: rotate(-180deg);
+  width: 20px;
+}
+
+.zeynep .submenu > label {
+  color: #e77691;
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 19px;
+  opacity: .5;
+  padding-left: 40px;
+  width: 100%;
+}
+
+</style>
+
+<link type="text/css" rel="stylesheet" href="https://raw.githack.com/hsynlms/zeynepjs/master/examples/css/left.css" />
+<script src="<?php echo base_url();?>/my-assets/zeynep.min.js"></script>
 <!--Topbar-->
 <div class="topbar topbar-bg color5">
     <div class="container">
@@ -123,6 +228,21 @@ if (!empty($currency_new_id)) {
                     }
                     ?>
                 </ul>
+
+                <a class="topbar-link dropdown-toggle" href="javascript:void(0)" id="" data-toggle="dropdown2" aria-expanded="false">
+                    <?php
+                    if (strpos(base_url(), 'Morocco') > -1) {
+                        $language_id2 = 'Morocco';
+                    } else {
+                        $language_id2 = 'Egypt';
+                    }
+                    ?>
+
+                    <?php echo ucfirst($language_id2); ?> </a>
+                <ul id="dropdown2" class="dropdown-menu dropdown-menu-right">
+                <li><a class="dropdown-item pb-1" href="https://itrplanet.com/Marco/"><?php echo display('Egypt');?></a></li>
+                <li><a class="dropdown-item pb-1" href="https://itrplanet.com/Morocco/Marco"><?php echo display('Morocco');?></a></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -149,7 +269,7 @@ if (!empty($currency_new_id)) {
                         <span class="input-group-text"><i data-feather="search"></i></span>
                     </div>
                     <input class="form-control search-input prepended-form-control appended-form-control"
-                        name="product_name" id="search_product_item" type="text" placeholder="Search for products" />
+                        name="product_name" id="search_product_item" type="text" placeholder="Search for products" style="padding-right: 40px;" />
                     <div class="input-group-append-overlay">
                         <button type="submit" class="btn btn-warning search_btn color4 color46 text-white" style="border-radius: 6px;"><span class="lnr
                         lnr-magnifier" ></span><?php echo display('search'); ?>
@@ -162,7 +282,32 @@ if (!empty($currency_new_id)) {
 
             <!-- Toolbar-->
             <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
+                <script>
+                    $(document).ready(function() {
+                        var zeynep = $('.zeynep').zeynep({
+        opened: function () {
+        console.log('the side menu is opened')
+        }
+    })
+
+    // dynamically bind 'closing' event
+    zeynep.on('closing', function () {
+        console.log('this event is dynamically binded')
+    })
+
+    // handle zeynepjs overlay click
+    $('.zeynep-overlay').on('click', function () {
+        zeynep.close()
+    })
+
+    // open zeynepjs side menu
+    $('.btn-open').on('click', function () {
+        zeynep.open()
+    })
+
+                    });
+                </script>
+                <button class="navbar-toggler btn-open" type="button">
                     <i data-feather="menu"></i>
                 </button>
                 <a class="navbar-tool navbar-stuck-toggler" href="#">
@@ -483,6 +628,18 @@ if (!empty($currency_new_id)) {
                     </li>
                 </ul>
                 <!-- Primary menu-->
+                <script>
+                    $(document).ready(function() {
+                        let dropdowns = document.querySelectorAll('.dropdown-toggle')
+                        dropdowns.forEach((dd)=>{
+                            dd.addEventListener('click', function (e) {
+                                var el = this.nextElementSibling
+                                el.style.display = el.style.display==='block'?'none':'block'
+                            });
+                        });
+                    });
+                </script>
+                
                 <ul class="navbar-nav">
                     <li class="nav-item <?php echo (($this->uri->segment(1) == '') ? 'active' : '') ?>">
                         <a class="nav-link" href="<?php echo base_url(); ?>"><?php echo display('home') ?> <span
@@ -494,7 +651,7 @@ if (!empty($currency_new_id)) {
                             if ($v_category_list->category_id == 'DPCIHH462YEXA24' || $v_category_list->category_id == '7OYMIICEX171GYC') continue;
                             if ($v_category_list->top_menu == 1) { ?>
                     <li
-                        class="nav-item <?php echo (($this->uri->segment(4) == $v_category_list->category_id) ? 'active' : '') ?>">
+                        class="nav-item <?php echo (($this->uri->segment(4) == $v_category_list->category_id) ? 'active' : '') ?>" style="display: none;" >
                         <a class="nav-link"
                             href="<?php echo base_url('/category/p/' . remove_space($v_category_list->category_name) . '/' . $v_category_list->category_id) ?>"><?php echo
                                                                                                                                                                                         html_escape($v_category_list->category_name);
@@ -503,11 +660,83 @@ if (!empty($currency_new_id)) {
                     <?php }
                         }
                     } ?>
+                    <li class="nav-item">
+                    <div class="nav-link">
+    <!-- <h1 class="mb-4">Multilevel Dropdown</h1> -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false" style="color: #000;"> <?=display('prods')?> </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <!-- <li><a class="dropdown-item" href="#"></a></li> -->
+            <?php
+                $fis = $this->db->query('select * from filter_items')->result();
+                foreach ($fis as $fi) {
+                    if ($fi->type_id != 1 || $fi->item_id == 1 || $fi->item_id == 35) continue;
+
+                    ?>
+<li class="dropdown dropend">
+                <a class="dropdown-item dropdown-toggle" href="#" id="multilevelDropdownMenu1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $fi->item_name; ?></a>
+                <ul class="dropdown-menu" aria-labelledby="multilevelDropdownMenu1">
+                    <?php
+                        $all_cats = $this->db->select('category_id')->from('filter_product')->where('filter_type_id', 1)->where('filter_item_id', $fi->item_id)->get()->result();
+                        $cats = [];
+                        foreach ($all_cats as $cc) {
+                            // TODO fix
+                            if (!isset($cats[$cc->category_id])) {
+                                $cats[$cc->category_id] = $cc->category_id;
+                            }
+                        }
+
+                        // var_dump($cats);
+
+                        foreach ($cats as $k => $v) {
+                            $c = $this->db->select('*')->from('product_category')->where('category_id', $k)->get()->row();
+                            if ($c->category_name == 'ACCESSORIES' || $c->category_name == 'CLIP ON - BOX') continue;
+                        ?>
+                                    <li><a class="dropdown-item" href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>"><?php echo $c->category_name; ?></a></li>
+                        <?php
+                        }
+                    ?>
+                </ul>
+            </li>
+                    <?php
+                }
+
+?>
+            
+            <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+        </ul>
+    </div>
+</div>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="<?php echo base_url(); ?>/contact_us"><?php echo display('cont') ?> <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="<?php echo base_url(); ?>/about_us"><?php echo display('abus') ?> <span
+                                class="sr-only">(current)</span></a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+                <div class="main-search2 input-group-overlay d-lg-none my-3">
+                    <?php echo form_open('category_product_search', array('method' => 'GET')) ?>
+                    <div class="input-group-prepend-overlay">
+                        <span class="input-group-text"><i data-feather="search"></i></span>
+                    </div>
+                    <input class="form-control prepended-form-control" name="product_name" id="search_product_item2"
+                        type="text" placeholder="Search for products" />
+                        <div class="input-group-append-overlay">
+                        <button type="submit" class="btn btn-warning search_btn color4 color46 text-white" style="border-radius: 6px;"><span class="lnr
+                        lnr-magnifier"></span><?php echo display('search');?>
+                        </button>
+                    </div>
+                    <?php echo form_close() ?>
+                   
+                </div>
 
 <div class="modal register-modal" id="trackingModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
