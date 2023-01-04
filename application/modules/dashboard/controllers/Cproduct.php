@@ -2461,9 +2461,9 @@ class Cproduct extends MX_Controller
                 $price_types_list = [];
                 $filter_list = [];
                 $brand_id = trim($sheetdata[$i][0]);
-                $product_model = trim($sheetdata[$i][1]) . ' - ' . trim($sheetdata[$i][2]);
-                $product_model_only = trim($sheetdata[$i][1]);
-                $product_color = trim($sheetdata[$i][2]);
+                $product_model = str_replace('-', ' ', trim($sheetdata[$i][1])) . ' - ' . str_replace('-', '.', trim($sheetdata[$i][2]));
+                $product_model_only = str_replace('-', ' ', trim($sheetdata[$i][1]));
+                $product_color = str_replace('-', '.', trim($sheetdata[$i][2]));
                 $category_id = trim($sheetdata[$i][3]);
                 $filter_1 = trim($sheetdata[$i][4]); // gender or any other name
                 $filter_2 = trim($sheetdata[$i][5]);  // material or any other name

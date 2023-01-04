@@ -247,6 +247,23 @@ function submit_form(e) {
     e.preventDefault();
     var valid = false;
 
+    if (parseFloat($('#dueAmmount').val()) > 0 && $('#is_installment').val() == '0') {
+        alert(installErr);
+        return;
+    }
+
+    if (parseFloat($('#paidAmount').val()) > 0 && !($('#payment_id').val())) {
+        alert(payment_bank_not_selected);
+        return;
+    }
+
+    if (parseFloat($('#dueAmmount').val()) < 0) {
+        alert(paidErr);
+        return;
+    }
+
+
+
     // var elem = $('#is_quotation');
     // if (elem.prop('checked') == true) {
     //     $('.total_cgst').each(function () {
@@ -312,8 +329,15 @@ function submit_form(e) {
                                 }
                             });
                         return;
+                    } else {
+                        // if (parseFloat($('#dueAmmount').val()) > 0 &&
+                        //     parseFloat($('#paidAmount').val()) < parseFloat($('#dueAmmount').val())) {
+                        //     alert(installErr);
+                        //     valid = false;
+                        //     return;
+                        // }
                     }
-
+                    
                     if (parseFloat($('#paidAmount').val()) > 0) {
                         if ($('#payment_id').val() != '') {
                             $('form#validate, form#normalinvoice').submit();

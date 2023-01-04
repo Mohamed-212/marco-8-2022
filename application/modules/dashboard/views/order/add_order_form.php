@@ -5,6 +5,8 @@
     var payment_bank_not_selected = "<?=display('payment_bank_not_selected')?>";
     var add_order_only = true;
     var accessories_category_id = 'a';
+    var installErr = "<?= display('choose_installment_if_invoice_not_full_paid')?>";
+    var paidErr = "<?= display('paid_error')?>";
     <?php
         $access = $this->db->select('category_id')->from('product_category')->where('category_name', 'ACCESSORIES')->get()->row();
         echo "accessories_category_id = '" . $access->category_id . "';";

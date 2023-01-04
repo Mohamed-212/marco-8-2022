@@ -919,18 +919,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="content2"
-                                                       class="col-sm-3 col-form-label"><?php echo display('description') ?></label>
-                                                <div class="col-md-9">
-                                                    <textarea name="description" class="form-control summernote"
-                                                              placeholder="<?php echo display('description') ?>" id="content2"
-                                                              required
-                                                              row="3"><?php echo htmlspecialchars_decode($description); ?></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -1022,20 +1011,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group row">
-                                                            <label for="description"
-                                                                   class="col-sm-4 col-form-label"><?php echo display('description') ?></label>
-                                                            <div class="col-md-8">
-                                                                <textarea name="trans_description[0]"
-                                                                          class="form-control summernote"
-                                                                          placeholder="<?php echo display('description') ?>"
-                                                                          id="description" row="1">
-                                                                              <?php echo html_escape($product_language->trans_description); ?>
-                                                                </textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    
                                                     <div class="col-sm-6">
                                                         <div class="form-group row">
                                                             <label for="specification"

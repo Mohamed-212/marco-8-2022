@@ -654,9 +654,32 @@ $theme = $CI->Themes->get_theme();
             </div>
         </div>
         <div class="tab-pane fade" id="description" role="tabpanel" aria-labelledby="description-tab">
-            <?php if (!empty($description)) {
-                echo htmlspecialchars_decode($description);
-            } ?>
+                <?php 
+                    $this->fb = $this->db;
+                    $b = $this->db->select('*')->from('brand')->where('brand_id', $brand_id)->get()->row();
+                    $c = $this->fb->select('*')->from('product_category')->where('category_id', $category_id)->get()->row();
+
+                    $f1 = '';
+                    $f2 = '';
+                    $fs = $this->fb->select('*')->from('filter_product')->where('product_id', $product_id)->get()->result();
+                    if (!empty($fs)) {
+                        foreach ($fs as $k => $v) {
+                            if ($v->filter_type_id == 1) {
+                                $f1 = $this->fb->select('*')->from('filter_items')->where('item_id', $v->filter_item_id)->where('type_id', $v->filter_type_id)->get()->row();
+                                if (!empty($f1)) {
+                                    $f1 = $f1->item_name;
+                                }
+                            } else {
+                                $f2 = $this->fb->select('*')->from('filter_items')->where('item_id', $v->filter_item_id)->where('type_id', $v->filter_type_id)->get()->row();
+                                if (!empty($f2)) {
+                                    $f2 = $f2->item_name;
+                                }
+                            }
+                        }
+                    }
+
+                    echo str_replace('GGH', $f2, str_replace('BBH', $b->brand_name, str_replace('CCH', $c->category_name, str_replace('MMH', $f1, display('pd_desc')))));
+                ?>
         </div>
     </div>
 </div>

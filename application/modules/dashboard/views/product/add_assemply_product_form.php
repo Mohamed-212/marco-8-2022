@@ -719,14 +719,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group row">
-                                                <label for="description" class="col-sm-3 col-form-label"><?php echo display('description') ?></label>
-                                                <div class="col-md-9">
-                                                    <textarea name="description" class="form-control summernote" placeholder="<?php echo display('description') ?>" id="description" required row="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
@@ -789,14 +782,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group row">
-                                                    <label for="description" class="col-sm-4 col-form-label"><?php echo display('description') ?></label>
-                                                    <div class="col-md-8">
-                                                        <textarea name="trans_description[0]" class="form-control summernote" placeholder="<?php echo display('description') ?>" id="description" row="1"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-sm-6">
                                                 <div class="form-group row">
                                                     <label for="specification" class="col-sm-4 col-form-label"><?php echo display('specification') ?></label>
