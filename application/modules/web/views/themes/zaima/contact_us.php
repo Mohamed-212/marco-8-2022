@@ -1,5 +1,5 @@
 <?php
-$CI =& get_instance();
+$CI = &get_instance();
 
 $CI->load->model('dashboard/Themes');
 $CI->load->model('dashboard/Companies');
@@ -12,26 +12,26 @@ $company_info = $CI->Companies->company_list();
         <?php
         $message = $this->session->userdata('message');
         if (isset($message)) {
-            ?>
+        ?>
             <div class="alert alert-success alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <?php echo $message ?>
             </div>
-            <?php
+        <?php
             $this->session->unset_userdata('message');
         }
         $error_message = $this->session->userdata('error_message');
         if (isset($error_message)) {
-            ?>
+        ?>
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <?php echo $error_message ?>
             </div>
-            <?php
+        <?php
             $this->session->unset_userdata('error_message');
         }
         ?>
@@ -52,17 +52,84 @@ $company_info = $CI->Companies->company_list();
                                 <h3 class="info-title fs-18 mb-3 font-weight-600 position-relative"><?php echo display('our_location') ?></h3>
                                 <address class="mb-4">
                                     <?php
-                                    if ($our_location_info) {
-                                        foreach ($our_location_info as $our_location) {
-                                            ?>
-                                            <div class="office_address">
-                                                <h5><?php echo ($our_location['headline']) ?></h5>
-                                                <?php echo ($our_location['details']) ?>
-                                            </div>
-                                            <?php
-                                        }
+
+                                    $default_lang  = 'english';
+                                    $user_lang = $this->session->userdata('language');
+                                    //set language  
+                                    if (!empty($user_lang)) {
+                                        $language = $user_lang;
+                                    } else {
+                                        $language = $default_lang;
                                     }
-                                    ?>
+
+                                    $locations = [
+                                        ['c' => 'Egypt', 'a' => '49 Noubar St, Bab Al Louq, Abdeen.'],
+                                        ['c' => 'Morocco', 'a' => 'TISSUS HAY OULFA, Casablanca, Morocco'],
+                                        ['c' => 'London', 'a' => '2 Kingfisher Dr, Richmond TW10 7UD, UK'],
+                                        ['c' => 'KSA', 'a' => '8420 Prince Mutaib bin Abdulaziz Rd, Al Aziziyah District, Jeddah 23342 3157, Saudi Arabia'],
+                                        ['c' => 'Montenegro', 'a' => '30 Dalmatinska St, Podgorica 81000, Montenegro'],
+                                        ['c' => 'Italy', 'a' => '32100 Belluno, Province of Belluno, Italy']
+                                    ];
+
+                                    $locations_ar = [
+                                        ['c' => 'مصر', 'a' => '49 ش نوبار باب اللوق عابدين.'],
+                                        ['c' => 'المغرب', 'a' => 'تيسوس هاي أولفا ، الدار البيضاء ، المغرب'],
+                                        ['c' => 'لندن', 'a' => '2 الدكتور Kingfisher ، ريتشموند TW10 7UD ، المملكة المتحدة'],
+                                        ['c' => 'السعودية', 'a' => '8420 طريق الأمير متعب بن عبد العزيز ، حي العزيزية ، جدة 23342 3157 ، المملكة العربية السعودية'],
+                                        ['c' => 'مونتينيغرو', 'a' => '30 شارع دالماتينسكا ، بودغوريتشا 81000 ، مونتينيغر.'],
+                                        ['c' => 'إيطاليا', 'a' => '32100 بيلونو ، مقاطعة بيلونو ، إيطاليا']
+                                    ];
+
+                                    $locations_fr = [
+                                        ['c' => 'Egypte', 'a' => '49 rue Noubar, Bab Al Louq, Abdine.'],
+                                        ['c' => 'Maroc', 'a' => 'TISSUS HAY OULFA, Casablanca, Maroc'],
+                                        ['c' => 'Londres', 'a' => '2 Kingfisher Dr, Richmond TW10 7UD, Royaume-Uni'],
+                                        ['c' => 'Arabie Saoudite', 'a' => '8420 Prince Mutaib bin Abdulaziz Rd, Al Aziziyah District, Djeddah 23342 3157, Arabie Saoudite'],
+                                        ['c' => 'Monténégro', 'a' => '30 rue Dalmatinska, Podgorica 81000, Monténégro'],
+                                        ['c' => 'Italie', 'a' => '32100 Bellune, Province de Bellune, Italie']
+                                    ];
+
+                                    if ($language == 'english') {
+                                        foreach ($locations as $l) { ?>
+
+                                            <div class="office_address">
+                                                <h5>
+                                                    <p><span xss="removed"><span xss="removed"><?php echo ($l['c']); ?>:</span></span><br></p>
+                                                </h5>
+                                                <p><span xss="removed"><?php echo ($l['a']); ?></span><br></p>
+                                            </div>
+
+                                    <?php }
+                                    } ?>
+
+                                    <?php
+                                    if ($language == 'arabic') {
+                                        foreach ($locations_ar as $l) { ?>
+
+                                            <div class="office_address">
+                                                <h5>
+                                                    <p><span xss="removed"><span xss="removed"><?php echo ($l['c']); ?>:</span></span><br></p>
+                                                </h5>
+                                                <p><span xss="removed"><?php echo ($l['a']); ?></span><br></p>
+                                            </div>
+
+                                    <?php }
+                                    } ?>
+
+                                    <?php
+                                    if ($language == 'french') {
+                                        foreach ($locations_fr as $l) { ?>
+
+                                            <div class="office_address">
+                                                <h5>
+                                                    <p><span xss="removed"><span xss="removed"><?php echo ($l['c']); ?>:</span></span><br></p>
+                                                </h5>
+                                                <p><span xss="removed"><?php echo ($l['a']); ?></span><br></p>
+                                            </div>
+
+                                    <?php }
+                                    } ?>
+
                                 </address>
                             </div>
                         </div>
@@ -100,9 +167,7 @@ $company_info = $CI->Companies->company_list();
 
 <!-- /.End of map content -->
 <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo html_escape($map_info[0]['map_api_key']) ?>"></script>
-<input type="hidden" id="map_latitude" value="<?php echo html_escape($map_info[0]['map_latitude'])?>">
-<input type="hidden" id="map_langitude" value="<?php echo html_escape($map_info[0]['map_langitude'])?>">
-<input type="hidden" id="company_name" value="<?php echo html_escape($company_info[0]['company_name'])?>">
-<script src="<?php echo THEME_URL.$theme.'/assets/ajaxs/contact_us.js'; ?>"></script>
-
-
+<input type="hidden" id="map_latitude" value="<?php echo html_escape($map_info[0]['map_latitude']) ?>">
+<input type="hidden" id="map_langitude" value="<?php echo html_escape($map_info[0]['map_langitude']) ?>">
+<input type="hidden" id="company_name" value="<?php echo html_escape($company_info[0]['company_name']) ?>">
+<script src="<?php echo THEME_URL . $theme . '/assets/ajaxs/contact_us.js'; ?>"></script>
