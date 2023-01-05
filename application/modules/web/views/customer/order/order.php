@@ -80,7 +80,7 @@
 									<tr>
 										<td><?php echo html_escape($order['sl'])?></td>
 										<td><?php echo html_escape($order['order'])?></td>
-										<td><?php echo html_escape($order['final_date'])?></td>
+										<td><?php echo date('d-m-Y', strtotime($order['created_at']))?></td>
 										<td class="text-right"><?php echo (($position==0)?$currency.' '.html_escape($order['total_amount']):html_escape($order['total_amount']).' '.$currency) ?></td><td class="text-right"><?php echo (($position==0)?$currency.' '.html_escape($order['service_charge']):html_escape($order['service_charge']).' '.$currency) ?></td>
 										<td class="text-right"><?php echo (($position==0)?$currency.' '.html_escape($order['paid_amount']):html_escape($order['paid_amount']).' '.$currency) ?></td>
 										<td class="text-right"><?php echo (($position==0)?$currency.' '.html_escape($order['due_amount']):html_escape($order['due_amount']).' '.$currency) ?></td>

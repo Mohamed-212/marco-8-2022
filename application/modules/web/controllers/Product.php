@@ -74,6 +74,14 @@ class Product extends MX_Controller
         }
 
         $stock = $this->Products_model->check_variant_wise_stock($variant_id, $product_id, $variant_color);
+
+        $currency_new_id = $this->session->userdata('currency_new_id');
+        $cur = $this->db->select('*')->from('currency_info')->where('currency_id', $currency_new_id)->get()->row();
+        if ($cur) {
+            $r = (float) $cur->convertion_rate;
+        } else {
+            $r = 1;
+        }
         
         if ($stock > 0) {
             $result[0] = "yes";

@@ -132,8 +132,6 @@ class Customers extends CI_Model
 					$this->load->model('accounting/account_model');
 					$this->account_model->insert_customer_head($data);
 
-
-
 					$previous_balance = $data['previous_balance'];
 					if (!empty($previous_balance)) {
 						$find_active_fiscal_year = $this->db->select('id')->from('acc_fiscal_year')->where('status', 1)->get()->row();

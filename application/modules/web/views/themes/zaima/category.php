@@ -230,7 +230,7 @@
 
                 <a class="btn btn-warning color4 color46 text-white fil44 d-lg-none" href="#"><i class="fas fa-filter"></i> <?php echo display('filter') ?></a>
 
-                <a class="btn btn-warning color4 color46 text-white" href="<?php echo base_url() ?>"><i class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
+                <a class="btn btn-warning color4 color46 text-white" style="display: none;" href="<?php echo base_url() ?>"><i class="far fa-hand-point-left"></i> <?php echo display('back_to_home') ?></a>
             </div>
             <div class="row">
                 <?php

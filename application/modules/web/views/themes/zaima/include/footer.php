@@ -46,7 +46,6 @@ if (!empty($mob_footer_block)) {
 
                     <div class="contact_info">
                         <ul class="list-unstyled text-sm">
-                            <li><?php echo display('mobile') ?>: <a href="tel:<?php echo html_escape($company_info[0]['mobile']); ?>"><?php echo html_escape($company_info[0]['mobile']); ?></a></li>
                             <li><?php echo display('mob2') ?>: <a href="tel:<?php echo html_escape($company_info[0]['mob2']); ?>"><?php echo html_escape($company_info[0]['mob2']); ?></a></li>
                             <li><?php echo display('mob3') ?>: <a href="https://wa.me/00201121119475"><?php echo html_escape($company_info[0]['mob3']); ?></a></li>
                             <li><?php echo display('email') ?>: <a href="mailto:<?php echo html_escape($company_info[0]['email']); ?>"><?php echo html_escape($company_info[0]['email']); ?></a></li>
@@ -62,7 +61,7 @@ if (!empty($mob_footer_block)) {
             if ($footer_block) {
                 foreach ($footer_block as $footer) { ?>
 
-                    <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 py-3 py-md-5 <?php echo ($blockitems[$q] == '1' ? 'd-md-block' : 'd-none d-md-block') ?>">
+                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 py-3 py-md-5 <?php echo ($blockitems[$q] == '1' ? 'd-md-block' : 'd-none d-md-block') ?>">
                         <div class="footer-box">
                             <?php echo htmlspecialchars_decode($footer->details); ?>
                         </div>
@@ -73,16 +72,7 @@ if (!empty($mob_footer_block)) {
             }
             ?>
 
-            <?php if (1 == $Web_settings[0]['app_link_status']) { ?>
-                <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 py-3 py-md-5 <?php echo ($blockitems[3] == '1' ? 'd-md-block' : 'd-none d-md-block') ?>">
-                    <h3 class="link-title fs-17 mb-3 font-weight-600 position-relative footer-app-link"><?php echo display('download_the_app') ?></h3>
-                    <p><?php echo display('get_access_to_all_exclusive_offers') ?></p>
-
-                    <a class="market-button google-button d-inline-block mr-2 mb-2 border rounded bg-gray" href="<?php if ($Web_settings[0]['apps_url']) {
-                                                                                                                        echo htmlspecialchars_decode($Web_settings[0]['apps_url']);
-                                                                                                                    }  ?>"><span class="mb-subtitle">Download on the</span><span class="mb-title">Google Play</span></a>
-                </div>
-            <?php } ?>
+            
         </div>
     </div>
 </footer>
@@ -90,13 +80,13 @@ if (!empty($mob_footer_block)) {
 <div class="sub-footer bg-white py-3 border-top color2">
     <div class="container">
         <div class="row justify-content-end align-items-center">
-            <div class="col-md-6 text-center text-md-left">
+            <div class="col-md-12 text-center ">
                 <div class="copy"><?php if ($Web_settings[0]['footer_text']) {
-                                        echo htmlspecialchars_decode($Web_settings[0]['footer_text']);
-                                    } ?></div>
+                                        echo 'developed by ';
+                                    } ?><a href="http://212solutions.net/"> 212 Solutions</a></div>
             </div>
             <div class="col-md-6">
-                <?php if (1 == $Web_settings[0]['pay_with_status']) {
+                <!-- <?php if (1 == $Web_settings[0]['pay_with_status']) {
                     if ($pay_withs) {
                 ?>
                         <ul class="list-unstyled text-center text-md-right mb-0">
@@ -115,7 +105,7 @@ if (!empty($mob_footer_block)) {
                             ?>
                         </ul>
                 <?php }
-                } ?>
+                } ?> -->
             </div>
         </div>
     </div>

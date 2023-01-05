@@ -437,7 +437,7 @@ $theme = $CI->Themes->get_theme();
 <!-- Advertisement 2 -->
 <?php $this->load->view('adv/details_adv1', array('adv_position' => 2)); ?>
 
-<div class="container">
+<div class="container" style="padding-bottom: 70px;">
     <ul class="nav nav-tabs justify-content-center mb-4 border-bottom" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link active" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="true"><?php echo display('reviews') ?></a>

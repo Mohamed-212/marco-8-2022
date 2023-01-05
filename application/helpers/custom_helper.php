@@ -132,6 +132,14 @@ if ( ! function_exists('get_amount')){
             $currency1 = $cur_info->currency_icon;
         }
 
+        $currency_new_id = $CI->session->userdata('currency_new_id');
+        $cur = $CI->db->select('*')->from('currency_info')->where('currency_id', $currency_new_id)->get()->row();
+        if ($cur) {
+            $r = (float) $cur->convertion_rate;
+        } else {
+            $r = 1;
+        }
+
         if ($target_con_rate > 1) {
             $amount = $amount * $target_con_rate;
             $con_amount = (($position1 == 0) ? $currency1 . " " . number_format($amount, 2, '.', ',') : number_format($amount, 2, '.', ',') . " " . $currency1);

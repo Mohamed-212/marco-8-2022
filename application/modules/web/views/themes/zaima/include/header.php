@@ -137,10 +137,10 @@ if (!empty($currency_new_id)) {
             <i data-feather="headphones" class="mr-2"></i>
             <span class="mr-1"><?php echo display('have_a_question') ?> <?php echo display('call_us') ?></span>
             <a class="topbar-link"
-                href="tel:<?php echo html_escape($company_info[0]['mobile']) ?>"><?php echo html_escape($company_info[0]['mobile']) ?></a>
+                href="tel:<?php echo html_escape($company_info[0]['mob2']) ?>"><?php echo html_escape($company_info[0]['mob2']) ?></a>
         </div>
         <div class="d-flex justify-content-between justify-content-md-end w-100">
-            <a class="topbar-link d-flex align-items-center" href="#" data-toggle="modal" data-target="#trackingModal">
+            <a class="topbar-link d-flex align-items-center" style="display: none !important;" href="#" data-toggle="modal" data-target="#trackingModal">
                 <i data-feather="user" class="mr-2"></i><?php echo display('track_my_order') ?></a> &nbsp;
             <?php
             if ($this->session->userdata('customer_name')) { ?>
@@ -746,7 +746,7 @@ if (!empty($currency_new_id)) {
                     <span aria-hidden="true">&times;</span>
                 </button>
 
-                <div class="form-title_wrap mb-3">
+                <div class="form-title_wrap mb-3" >
                     <h4 class="form-title mb-0"><?php echo display('track_my_order') ?></h4>
                 </div>
                 <!--Login Form-->
