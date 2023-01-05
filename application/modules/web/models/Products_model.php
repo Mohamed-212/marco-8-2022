@@ -405,6 +405,7 @@ class Products_model extends CI_Model {
 
         $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
         $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
+        $this->db->where('a.assembly', 0);
 
         $query = $this->db->get();
         $brand_pro =  $query->result_array();

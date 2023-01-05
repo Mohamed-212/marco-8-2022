@@ -38,6 +38,7 @@ class Product extends MX_Controller
         ->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC')
         ->where("(product_name like '%$search_item%' or variants in (" . implode(',', $vArr) . "))", null, false)
         ->where('status', 1)
+        ->where('assembly', 0)
              ->limit(10)
         ->get()->result();
 

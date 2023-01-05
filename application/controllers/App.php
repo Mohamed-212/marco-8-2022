@@ -219,6 +219,7 @@ class App extends CI_Controller
 		$this->db->join('product_category b', 'a.category_id=b.category_id');
 		$this->db->where_in('a.is_assemble', array(0, null));
 		$this->db->where_in('a.category_id', $category_ids);
+		$this->db->where('a.assembly', 0);
 		$this->db->limit($per_page, $page);
 		$this->db->order_by('product_name');
 		$this->db->group_by('a.product_id');
@@ -432,6 +433,7 @@ class App extends CI_Controller
 		$productlist = $this->db->select('*')
 			->from('product_information')
 			->where('is_assemble IS NULL')
+			->where('assembly', 0)
 			->where('best_sale', 1)
 			->order_by('id', 'desc')
 			->limit(4)
@@ -529,6 +531,7 @@ class App extends CI_Controller
 				->like('product_name', $keyword)
 				->or_like('product_model', $keyword)
 				->where('is_assemble IS NULL')
+				->where('assembly', 0)
 				->limit($per_page, $page_number)
 				->get()
 				->result();
