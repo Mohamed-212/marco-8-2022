@@ -560,7 +560,7 @@
 
                               <?php if (!empty($payment_gateways)) {
                                     foreach ($payment_gateways as $paygateway) { ?>
-                                      <div class="form-group paymethod_item">
+                                      <div class="form-group paymethod_item" style="display: none;">
                                           <div class="radio">
                                               <label>
                                                   <input type="radio" name="payment_method" value="<?php echo $paygateway['used_id']; ?>" <?php echo (($this->session->userdata('payment_method') == $paygateway['used_id']) ? "checked = 'checked'" : ""); ?>>

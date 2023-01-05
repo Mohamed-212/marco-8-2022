@@ -833,7 +833,7 @@ class Homes extends CI_Model
             ->get()
             ->row();
 
-        $empId = $this->db->select('id')->from('employee_history')->where('first_name', 'Website')->limit(1)->get()->row();
+        $empId = $this->db->select('id')->from('employee_history')->where('is_website', 1)->limit(1)->get()->row();
 
         $payment_method = $this->session->userdata('payment_method');
         if ($payment_method == 1) {
