@@ -1407,12 +1407,6 @@
                     </a>
                 </li>
                 <?php }
-                        if ($this->permission->check_label('our_location')->access()) { ?>
-                <li class="<?php echo (($this->uri->segment(2) == 'Cour_location' ? 'active' : '')) ?>">
-                    <a href="<?php echo base_url('dashboard/Cour_location/manage_our_location') ?>"><?php echo display('our_location') ?>
-                    </a>
-                </li>
-                <?php }
                         if ($this->permission->check_label('shipping_method')->access()) { ?>
                 <li class="<?php echo (($this->uri->segment(2) == 'Cshipping_method' ? 'active' : '')) ?>">
                     <a href="<?php echo base_url('dashboard/Cshipping_method/manage_shipping_method') ?>"><?php echo display('shipping_method') ?>
