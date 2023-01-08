@@ -170,9 +170,10 @@ if (!empty($currency_new_id)) {
                     } else {
                         $language_id = 'english';
                     }
+                    // var_dump($language_id);
                     ?>
 
-                    <?php echo display($language_id); ?> / <?php
+                    <?php echo display($language_id.'22'); ?> / <?php
 
                                                             $currency_new_id = $this->session->userdata('currency_new_id');
                                                             if ($currency_info) {
@@ -222,7 +223,7 @@ if (!empty($currency_new_id)) {
                         foreach ($languages as $lkey => $lvalue) {
                     ?>
                     <li><a class="dropdown-item pb-1" id="change_language" href="#"
-                            data-lang="<?php echo $lkey; ?>"><?php echo display($lvalue); ?></a></li>
+                            data-lang="<?php echo $lkey; ?>"><?php echo display($lkey.'22'); ?></a></li>
                     <?php
                         }
                     }

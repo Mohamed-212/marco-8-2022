@@ -1602,7 +1602,7 @@ class Cproduct extends MX_Controller
 
             foreach ($items as $item) {
 
-                $select_box .= '<option value="' . $item->pri_type_id . '">' . $item->pri_type_name . '</option>';
+                $select_box .= '<option value="' . $item->pri_type_id . '">' . display($item->pri_type_name) . '</option>';
             }
 
             echo json_encode($select_box);
@@ -1652,7 +1652,7 @@ class Cproduct extends MX_Controller
                                 $selected = '';
                             }
                             $table .= ' <option ' . $selected . ' value="' . $price['pri_type_id'] . '">
-                                    ' . $price['pri_type_name'] . '
+                                    ' . display($price['pri_type_name']) . '
                                     </option>';
                         }
                     }
@@ -1687,7 +1687,7 @@ class Cproduct extends MX_Controller
                     foreach ($pricingtypes as $key => $price) {
 
                         $table .= ' <option value="' . $price['pri_type_id'] . '">
-                                    ' . $price['pri_type_name'] . '
+                                    ' . display($price['pri_type_name']) . '
                                     </option>';
                     }
                 }

@@ -633,7 +633,7 @@
                                                 <option value=""><?php echo display('select_one') ?></option>
                                                 <?php foreach ($unit_list as $unit) { ?>
                                                     <option value="<?php echo html_escape($unit['unit_id']); ?>">
-                                                        <?php echo html_escape($unit['unit_name']); ?></option>
+                                                        <?php echo display($unit['unit_name']); ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>

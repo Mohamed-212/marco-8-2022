@@ -50,7 +50,7 @@
                             <h4><?php echo display('csv_file_informaion')?></h4>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body" style="display: none;">
                        <a href="<?php echo base_url('assets/data/csv/category_csv_sample.csv') ?>" class="btn color4 color5 pull-right"   download="category_csv_sample.csv"><i class="fa fa-download"></i>
                         <?php echo display('download_sample_file')?>
                        </a>

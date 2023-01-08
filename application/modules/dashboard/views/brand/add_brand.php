@@ -86,7 +86,7 @@
                                         <div class="col-sm-6">
                                             <input class="form-control" name="brand_image" id="brand_image" type="file"
                                                 placeholder="<?php echo display('brand_image') ?>" required>
-                                            <p class="help-block">Recommend Size (100*80)</p>
+                                            <p class="help-block"><?php echo display('Recommend Size')?> (100*80)</p>
                                         </div>
                                     </div>
                                     <div class="form-group row">

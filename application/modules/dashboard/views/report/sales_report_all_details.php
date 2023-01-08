@@ -214,7 +214,7 @@
 										<select name="pri_type" id="pri_type" class="form-control select3">
 											<option value=""></option>
 											<?php foreach ($all_pri_type as $pri_type) : ?>
-												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?= $pri_type['pri_type_id'] == $_GET['pri_type'] ? 'selected' : '' ?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+												<option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?= $pri_type['pri_type_id'] == $_GET['pri_type'] ? 'selected' : '' ?>><?php echo display($pri_type['pri_type_name']) ?></option>
 											<?php
 											endforeach;
 											?>

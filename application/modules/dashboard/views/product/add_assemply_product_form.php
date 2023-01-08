@@ -505,7 +505,7 @@
                                                 <tr>
                                                     <th class="col-sm-6 text-center">
                                                         <div class="btn btn-success" id="addassemblyprorow">
-                                                            Add <i class="ti-plus"></i>
+                                                            <?php echo display('Add')?> <i class="ti-plus"></i>
                                                         </div>
                                                         <?php echo display('product_name') ?>
                                                     </th>
@@ -584,7 +584,7 @@
                                                 <option value=""><?php echo display('select_one') ?></option>
                                                 <?php foreach ($unit_list as $unit) { ?>
                                                     <option value="<?php echo html_escape($unit['unit_id']); ?>">
-                                                        <?php echo html_escape($unit['unit_name']); ?></option>
+                                                        <?php echo display($unit['unit_name']); ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>

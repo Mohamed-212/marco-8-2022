@@ -147,7 +147,7 @@
                                                     class="form-control " required="">
                                                 <option value="0"><?=display('sell_price')?></option>
                                                 <?php foreach ($all_pri_type as $pri_type) : ?>
-                                                    <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+                                                    <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>"><?php echo display($pri_type['pri_type_name']) ?></option>
                                                 <?php
                                                 endforeach;
                                                 ?>

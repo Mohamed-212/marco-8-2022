@@ -298,7 +298,9 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Admin_dashboard/latest_search_keywords')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i>View All</a></th>
+                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Admin_dashboard/latest_search_keywords')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i>
+                                                <?php echo display('View All');?>
+                                                </a></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -342,7 +344,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Cproduct_review')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i>View All</a></th>
+                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Cproduct_review')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i><?php echo display('View All');?></a></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -384,7 +386,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Admin_dashboard/all_category_products')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i>View All</a></th>
+                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Admin_dashboard/all_category_products')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i><?php echo display('View All');?></a></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -427,7 +429,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Admin_dashboard/best_sale_products')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i>View All</a></th>
+                                                <th colspan="3"><a href="<?php echo base_url('dashboard/Admin_dashboard/best_sale_products')?>" class="btn btn-success align-right"><i class="fa fa-eye"></i><?php echo display('View All');?></a></th>
                                             </tr>
                                         </tfoot>
                                     </table>

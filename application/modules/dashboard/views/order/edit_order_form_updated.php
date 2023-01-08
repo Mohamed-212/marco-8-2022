@@ -150,7 +150,7 @@
                                     <div class="col-sm-8">
                                         <select name="pri_type" id="pri_type" onchange="get_pri_type_rate()" class="form-control " required="" data-val="<?= $pricing_type ?>">
                                             <?php foreach ($all_pri_type as $pri_type) : ?>
-                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?= $pricing_type == $pri_type['pri_type_id'] ? 'selected' : '' ?>><?php echo html_escape($pri_type['pri_type_name']) ?></option>
+                                                <option value="<?php echo html_escape($pri_type['pri_type_id']) ?>" <?= $pricing_type == $pri_type['pri_type_id'] ? 'selected' : '' ?>><?php echo display($pri_type['pri_type_name']) ?></option>
                                             <?php
                                             endforeach;
                                             ?>
