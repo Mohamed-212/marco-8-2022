@@ -91,9 +91,29 @@ class Product extends MX_Controller
             $result[2] = get_amount($price['regular_price']);
             $result[3] = (($price['regular_price']>$price['price'])?ceil((($price['regular_price']-$price['price'])/$price['regular_price'])*100):0);
             $result[4] = $stock;
+            $p = get_amount($price['regular_price']);
+            if ($cur) {
+                $p = str_replace($cur->currency_icon, '', $p);
+            } else {
+                $p = str_replace('EGP', '', $p);
+            }
+            $result[5] = (float)str_replace(',', '', $p);
 
         } else {
             $result[0] = 'no';
+
+            $price = $this->Products_model->check_variant_wise_price($product_id, $variant_id, $variant_color);
+            $result[1] = get_amount($price['price']);
+            $result[2] = get_amount($price['regular_price']);
+            $result[3] = (($price['regular_price']>$price['price'])?ceil((($price['regular_price']-$price['price'])/$price['regular_price'])*100):0);
+            $result[4] = $stock;
+            $p = get_amount($price['regular_price']);
+            if ($cur) {
+                $p = str_replace($cur->currency_icon, '', $p);
+            } else {
+                $p = str_replace('EGP', '', $p);
+            }
+            $result[5] = (float)str_replace(',', '', $p);
         }
         echo json_encode($result);
     }

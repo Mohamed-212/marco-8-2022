@@ -70,7 +70,7 @@
 										<th class="text-center"><?php echo display('brand_id') ?></th>
 										<th class="text-center"><?php echo display('brand_name') ?></th>
 										<th class="text-center"><?php echo display('brand_image') ?></th>
-										<th class="text-center"><?php echo display('website') ?></th>
+										<!-- <th class="text-center"><?php echo display('website') ?></th> -->
 										<th class="text-center"><?php echo display('action') ?></th>
 									</tr>
 								</thead>
@@ -83,7 +83,7 @@
 										<td class="text-center">{brand_id}</td>
 										<td class="text-center">{brand_name}</td>
 										<td class="text-center"><img src="<?php echo base_url();?>{brand_image}" height="60" width="100"></td>
-										<td class="text-center">{website}</td>
+										<!-- <td class="text-center">{website}</td> -->
 										<td>
 											<center>
 										<?php echo form_open()?>

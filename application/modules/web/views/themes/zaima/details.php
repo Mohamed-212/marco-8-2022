@@ -51,7 +51,7 @@ $theme = $CI->Themes->get_theme();
                             </div>
                             <a href="#" class="review-link text-muted font-weight-400 fs-14">
                                 (<span class="count"><?php echo (!empty($result->t_reviewer) ? $result->t_reviewer : 0); ?></span>
-                                <?php echo display('review'); ?>)
+                                <?php echo display('rev22'); ?>)
                             </a>
                         </div>
                     </li>
@@ -351,7 +351,7 @@ $theme = $CI->Themes->get_theme();
 
                                     <h5 class="fs-16 font-weight-500 mb-2"><?php echo display('color') ?>:</h5>
                                     <?php foreach ($varients as $product) : $vt = $product['color']; ?>
-                                        <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?= $product['size_id'] ?>', '<?= $product['size_id'] ?>', '<?= $product['whole_price'] ?>', '<?= (($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1) ?>')" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
+                                        <input class="d-none product_variants" type="radio" name="select_color" data-product="color-<?= $product['product_id'] ?>" id="id<?php echo html_escape($product['product_id']) ?>" value="<?php echo html_escape($product['product_id']) ?>" onclick="select_color_variant2d('<?php echo html_escape($product['product_id']) ?>', '<?= $product['size_id'] ?>', '<?= $product['size_id'] ?>', '<?= $product['whole_price'] ?>', '<?= (($position1 == 0) ? $currency1 . ' ' . number_format($getWholePrice->product_price, 2, '.', ',') : number_format($getWholePrice->product_price, 2, '.', ',') . ' ' . $currency1) ?>', 25)" <?php echo (($product['color'] == $product_color) ? 'checked="checked"' : '') ?>>
                                         <label class="mr-1" for="id<?php echo html_escape($product['product_id']) ?>"><span class="size d-block bg-transparent border text-uppercase font-weight-500 fs-13 text-muted rounded"><?php echo html_escape($product['color']) ?></span></label>
                                     <?php endforeach ?>
                                 </div>
@@ -637,8 +637,8 @@ $theme = $CI->Themes->get_theme();
                             <div id="rating" class="ml-2"></div>
                         </div>
                         <div class="form-group">
-                            <label class="font-weight-500"><?php echo display('review') ?> *</label>
-                            <textarea class="form-control" placeholder="<?php echo display('review') ?>" name="review_msg" id="review_msg" rows="5"></textarea>
+                            <label class="font-weight-500"><?php echo display('rev22') ?> *</label>
+                            <textarea class="form-control" placeholder="<?php echo display('rev22') ?>" name="review_msg" id="review_msg" rows="5"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary submit_review  color4 color46"><?php echo display('send_your_review') ?></button>
                         <?php echo form_close(); ?>
@@ -776,7 +776,7 @@ $theme = $CI->Themes->get_theme();
         $('.thumb-nav li').click(function() {
             var p = $(this).attr('id').substr(8);
 
-            console.log(p);
+            // console.log(p);
 
 
             $('#id' + p).click();
@@ -790,7 +790,7 @@ $theme = $CI->Themes->get_theme();
 
             var p = $(a).attr('id').substr(8);
 
-            console.log(p);
+            // console.log(p);
 
 
             $('#id' + p).click();

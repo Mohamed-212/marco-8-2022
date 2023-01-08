@@ -218,7 +218,7 @@ function select_color_variant(product_id, variant_color, default_variant) {
   });
 }
 var busy = false;
-function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr) {
+function select_color_variant2d(product_id, variant_color, default_variant, wholePrice, wholePriceAsStr, r) {
   if (busy) return;
   busy = true;
   var customElement = $('<div class="loadingio-spinner-dual-ring-835g8lpwslg"><div class="ldio-ikxvcclzv1"><div></div><div><div></div></div></div></div>', {
@@ -269,8 +269,8 @@ function select_color_variant2d(product_id, variant_color, default_variant, whol
       $('#variant_id').val(variant_id);
       $('#color_variant_id').val(default_variant);
 
-      $('.amount.var_amount').text(wholePriceAsStr);
-      $('#price').val(wholePrice);
+      $('.amount.var_amount').text(result[2]);
+      $('#price').val(parseFloat(result[5]));
 
       if (result[0] == "yes") {
 

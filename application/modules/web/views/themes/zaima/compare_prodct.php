@@ -138,7 +138,14 @@ if (check_module_status('affiliate_products') == 1) {
                         foreach ($comparison_products as $comparison) :
                     ?>
                     <td>
-                        <?php echo (($position == 0) ? $currency . ' ' . $this->cart->format_number($comparison['price']) : $this->cart->format_number($comparison['price']) . ' ' . $currency) ?>
+                        <?php 
+                        $currency_new_id = $this->session->userdata('currency_new_id');
+                        $cur = $this->db->select('*')->from('currency_info')->where('currency_id', $currency_new_id)->get()->row();
+                        if ($cur) {
+                            $currency = $cur->currency_icon;
+                        }
+                        echo (($position == 0) ? $currency . ' ' . $this->cart->format_number($comparison['price']) : $this->cart->format_number($comparison['price']) . ' ' . $currency) 
+                        ?>
                     </td>
                     <?php endforeach;
                     } ?>

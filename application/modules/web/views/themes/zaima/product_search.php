@@ -219,11 +219,14 @@ $cats = $this->db->select('*')->from('product_category')->get()->result_array();
                                         }
                                         ?>
                             </div>
-                            <div class="product-price font-weight-bolder font-italic" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
+                            <!-- <pre>
+                                <?php print_r($product->whole_price);?>
+                            </pre> -->
+                            <div class="product-price font-weight-bolder font-italic" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' . $product->whole_price ?>>
                                 <?php
 
-                                        if ($product->onsale == 1 && !empty($product->onsale_price)) {
-                                            $price_val = $product->onsale_price * $target_con_rate;
+                                        if ($product->onsale == 1 && !empty($product->price)) {
+                                            $price_val = $product->price * $target_con_rate;
                                         } else {
                                             // $price_val = $product->price * $target_con_rate;
                                             $price_val = $product->whole_price * $target_con_rate;

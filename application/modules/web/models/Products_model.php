@@ -502,7 +502,28 @@ class Products_model extends CI_Model {
             $this->db->join('brand c', 'c.brand_id=a.brand_id','left');
             $this->db->where_in('a.product_id', $comparisons);
             $this->db->group_by('a.product_id');
-            $result = $this->db->get()->result_array();
+            $prods = $this->db->get()->result_array();
+            $result = [];
+
+            foreach ($prods as $p) {
+                $w = $this->db->select('*')->from('pricing_types_product')->where('product_id', $p['product_id'])->where('pri_type_id', 1)->get()->row();
+                if ($w) {
+                    $p['price'] = $w->product_price;
+                }
+
+                $currency_new_id = $this->session->userdata('currency_new_id');
+                $cur = $this->db->select('*')->from('currency_info')->where('currency_id', $currency_new_id)->get()->row();
+                if ($cur) {
+                    $r = (float) $cur->convertion_rate;
+                } else {
+                    $r = 1;
+                }
+
+                $p['price'] = (float)$p['price'] * (float)$r;
+
+                $result[] = $p;
+            }            
+            
             
             return $result;
         }

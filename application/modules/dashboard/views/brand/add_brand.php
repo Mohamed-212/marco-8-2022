@@ -90,14 +90,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="website"
-                                            class="col-sm-3 col-form-label"><?php echo display('website') ?> </label>
-                                        <div class="col-sm-6">
-                                            <input class="form-control" name="website" id="website" type="url"
-                                                placeholder="<?php echo display('website') ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
                                         <label for="example-text-input" class="col-sm-4 col-form-label"></label>
                                         <div class="col-sm-6">
                                             <input type="submit" id="add-brand" class="btn btn-success  btn-large"

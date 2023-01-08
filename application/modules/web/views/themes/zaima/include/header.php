@@ -172,18 +172,18 @@ if (!empty($currency_new_id)) {
                     }
                     ?>
 
-                    <?php echo ucfirst($language_id); ?> / <?php
+                    <?php echo display($language_id); ?> / <?php
 
                                                             $currency_new_id = $this->session->userdata('currency_new_id');
                                                             if ($currency_info) {
                                                                 foreach ($currency_info as $currency) {
                                                                     if (!empty($currency_new_id)) {
                                                                         if ($currency->currency_id == $currency_new_id) {
-                                                                            echo html_escape($currency->currency_name);
+                                                                            echo display($currency->currency_name);
                                                                         }
                                                                     } else {
                                                                         if ($currency->currency_id == $selected_cur_id) {
-                                                                            echo html_escape($currency->currency_name);
+                                                                            echo display($currency->currency_name);
                                                                         }
                                                                     }
                                                                 }
@@ -210,7 +210,7 @@ if (!empty($currency_new_id)) {
                                                                                                 }
                                                                                             }
                                                                                             ?>>
-                                <?php echo html_escape($currency->currency_name) ?></option>
+                                <?php echo display($currency->currency_name) ?></option>
                             <?php
                                 }
                             }
@@ -222,7 +222,7 @@ if (!empty($currency_new_id)) {
                         foreach ($languages as $lkey => $lvalue) {
                     ?>
                     <li><a class="dropdown-item pb-1" id="change_language" href="#"
-                            data-lang="<?php echo $lkey; ?>"><?php echo $lvalue; ?></a></li>
+                            data-lang="<?php echo $lkey; ?>"><?php echo display($lvalue); ?></a></li>
                     <?php
                         }
                     }
@@ -238,7 +238,7 @@ if (!empty($currency_new_id)) {
                     }
                     ?>
 
-                    <?php echo ucfirst($language_id2); ?> </a>
+                    <?php echo display($language_id2); ?> </a>
                 <ul id="dropdown2" class="dropdown-menu dropdown-menu-right">
                 <li><a class="dropdown-item pb-1" href="https://itrplanet.com/Marco/"><?php echo display('Egypt');?></a></li>
                 <li><a class="dropdown-item pb-1" href="https://itrplanet.com/Morocco/Marco"><?php echo display('Morocco');?></a></li>
@@ -361,7 +361,15 @@ if (!empty($currency_new_id)) {
                                 <span class="dropdown-product-details fs-14 text-muted" <?=empty($this->session->userdata('customer_id')) ? 'style="display: none;"' : '' ?>>
                                     <?php
                                             // $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->price, 2, '.', ',') : number_format($comparison->price, 2, '.', ',') . ' ' . $currency1);
-                                            $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($comparison->whole_price, 2, '.', ',') : number_format($comparison->whole_price, 2, '.', ',') . ' ' . $currency1);
+
+                                            if (!empty($target_con_rate) && $target_con_rate > 1) {
+                                                $pr = $comparison->whole_price * $target_con_rate;
+                                            } else {
+                                                $pr = $comparison->whole_price;
+                                            }
+
+
+                                            $comparison_price = (($position == 0) ? $currency1 . ' ' . number_format($pr, 2, '.', ',') : number_format($pr, 2, '.', ',') . ' ' . $currency1);
                                             echo $comparison_price;
                                             ?>
 
@@ -421,7 +429,15 @@ if (!empty($currency_new_id)) {
                                 <a class="dropdown-product-title  cart-product-item fs-15"
                                     href="<?php echo base_url() . 'product_details/' . remove_space($wishlist->product_name) . '/' . $wishlist->product_id ?>"><?php echo html_escape($wishlist->product_name); ?></a>
                                 <span
-                                    class="dropdown-product-details fs-14 text-muted"><?php echo html_escape($wishlist->whole_price); ?></span>
+                                    class="dropdown-product-details fs-14 text-muted"><?php 
+                                    if (!empty($target_con_rate) && $target_con_rate > 1) {
+                                        $pr = $comparison->whole_price * $target_con_rate;
+                                    } else {
+                                        $pr = $comparison->whole_price;
+                                    }
+                                    
+                                    echo html_escape($pr); 
+                                    ?></span>
                             </div>
                             <span class="dropdown-product-remove align-self-center text-primary"> <a href="#"
                                     class="remove_wishlist" name="<?php echo  html_escape($wishlist->product_id); ?>"><i

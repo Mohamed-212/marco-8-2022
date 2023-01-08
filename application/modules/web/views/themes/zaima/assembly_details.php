@@ -60,7 +60,7 @@ $theme = $CI->Themes->get_theme();
                             <a href="#" class="review-link text-muted font-weight-400 fs-14">
                                 (<span
                                     class="count"><?php echo (!empty($result->t_reviewer)?$result->t_reviewer:0); ?></span>
-                                <?php echo display('review'); ?>)
+                                <?php echo display('rev22'); ?>)
                             </a>
                         </div>
                     </li>

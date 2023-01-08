@@ -120,7 +120,7 @@ class Cbrand extends MX_Controller
         $this->permission->check_label('manage_brand')->update()->redirect();
 
         $this->form_validation->set_rules('brand_name', display('brand_name'), 'trim|required');
-        $this->form_validation->set_rules('website', display('website'), 'trim|valid_url');
+        // $this->form_validation->set_rules('website', display('website'), 'trim|valid_url');
 
         if ($this->form_validation->run() == FALSE) {
             $data = array(
