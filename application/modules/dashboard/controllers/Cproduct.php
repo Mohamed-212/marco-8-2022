@@ -696,7 +696,7 @@ class Cproduct extends MX_Controller
             if (!empty($variant_colors)) {
                 $full_variant = array_merge($variant, $variant_colors);
             } else {
-                $full_variant = $variant;
+                $full_variant = $variant; 
             }
 
 
