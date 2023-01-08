@@ -194,7 +194,7 @@ class Cproduct extends MX_Controller
                 $new_brand_id = $this->auth->generator(15);
                 $brand_data = array(
                     'brand_id'   => $new_brand_id,
-                    'brand_name' => $brand_id,
+                    'brand_name' => str_replace('-', '.', $brand_id),
                     'brand_image' => null,
                     'website'    => '',
                     'status'     => 1
@@ -224,7 +224,7 @@ class Cproduct extends MX_Controller
 
             $model_and_color = explode('-', ' - ');
             $product_model_only = trim($this->input->post('product_model_only', TRUE));
-            $product_model_only = str_replace('-', ' ', $product_model_only);
+            $product_model_only = str_replace('-', '.', $product_model_only);
             $product_color = trim($this->input->post('pcolor', TRUE));
             $product_color = str_replace('-','.', $product_color);
 
@@ -243,7 +243,7 @@ class Cproduct extends MX_Controller
 
             $data = array(
                 'product_id' => $product_id,
-                'product_name' => $br->brand_name . ' - ' . $product_model_only . ' - ' . $product_color . $x,
+                'product_name' => str_replace('-', '.', $br->brand_name) . ' - ' . $product_model_only . ' - ' . $product_color . $x,
                 'supplier_id' => $this->input->post('supplier_id', TRUE),
                 'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
@@ -681,7 +681,7 @@ class Cproduct extends MX_Controller
                 $new_brand_id = $this->auth->generator(15);
                 $brand_data = array(
                     'brand_id'   => $new_brand_id,
-                    'brand_name' => $brand_id,
+                    'brand_name' => str_replace('-', ',', $brand_id),
                     'brand_image' => null,
                     'website'    => '',
                     'status'     => 1
@@ -765,7 +765,7 @@ class Cproduct extends MX_Controller
 
             $model_and_color = explode('-', $this->input->post('model', TRUE));
             $product_model_only = trim($this->input->post('product_model_only', TRUE));
-            $product_model_only = str_replace('-', ' ', $product_model_only);
+            $product_model_only = str_replace('-', '.', $product_model_only);
             $product_color = trim($this->input->post('pcolor', TRUE));
             $product_color = str_replace('-','.', $product_color);
 
@@ -784,7 +784,7 @@ class Cproduct extends MX_Controller
             }
 
             $data = array(
-                'product_name' => $br->brand_name . ' - ' . $product_model_only . ' - ' . $product_color . $x,
+                'product_name' => str_replace('-','.',$br->brand_name) . ' - ' . $product_model_only . ' - ' . $product_color . $x,
                 'supplier_id' => empty($this->input->post('supplier_id', TRUE)) ? null : $this->input->post('supplier_id', TRUE),
                 'category_id' => $category_id,
                 'warrantee' => $this->input->post('warrantee', TRUE),
@@ -2460,9 +2460,9 @@ class Cproduct extends MX_Controller
                 $cogs_price = 0;
                 $price_types_list = [];
                 $filter_list = [];
-                $brand_id = trim($sheetdata[$i][0]);
-                $product_model = str_replace('-', ' ', trim($sheetdata[$i][1])) . ' - ' . str_replace('-', '.', trim($sheetdata[$i][2]));
-                $product_model_only = str_replace('-', ' ', trim($sheetdata[$i][1]));
+                $brand_id = str_replace('-', '.', trim($sheetdata[$i][0]));
+                $product_model = str_replace('-', '.', trim($sheetdata[$i][1])) . ' - ' . str_replace('-', '.', trim($sheetdata[$i][2]));
+                $product_model_only = str_replace('-', '.', trim($sheetdata[$i][1]));
                 $product_color = str_replace('-', '.', trim($sheetdata[$i][2]));
                 $category_id = trim($sheetdata[$i][3]);
                 $filter_1 = trim($sheetdata[$i][4]); // gender or any other name
@@ -2751,6 +2751,7 @@ class Cproduct extends MX_Controller
                     ->get()->result_array();
 
                 if (count($exists)) {
+                    continue;
                     // product is found then update
                     $product_details['product_id'] = $exists[0]['product_id'];
                     $this->db->set($product_details);
