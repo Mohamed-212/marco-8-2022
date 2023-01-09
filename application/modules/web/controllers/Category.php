@@ -67,7 +67,7 @@ class Category extends MX_Controller
         #pagination starts
         #
         $config["base_url"]    = base_url('web/Category/category_product/'.$cat_id);
-        $config["total_rows"]  = $this->Categories->category_product_count($cat_id,[],$config["per_page"],0,$price_range,$size, $brand,$rate,$filter_item);
+        $config["total_rows"]  = $this->Categories->category_product_count($cat_id,[],20,0,$price_range,$size, $brand,$rate,$filter_item);
         $config["per_page"]    = 20;
         $config["uri_segment"] = 5;
         $config["num_links"]   = 5;
