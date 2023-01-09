@@ -253,7 +253,7 @@ class Categories extends CI_Model
         if(empty($rate)){
             // $this->db->limit($per_page, $page);
         }
-        echo "<pre>";var_dump($this->db->get()->result_array());exit;
+        // echo "<pre>";var_dump($this->db->get()->result_array());exit;
         $query = $this->db->get();
         $w_cat_pro = $query->result();
         // return $query;
