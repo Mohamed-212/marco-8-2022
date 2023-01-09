@@ -23,7 +23,7 @@ class Lcategory
         $max_value = 0;
         $min_value = 0;
         $category_product = $CI->Categories->category_product($cat_id, $per_page, $page, $price_range, $size, $brand, $rate,$filter_item);
-        echo "<pre>";var_dump($category_product);exit;
+        // echo "<pre>";var_dump($category_product);exit;
         $category = $CI->Categories->select_single_category($cat_id);
 
         $categoryList = $CI->Homes->parent_category_list();
