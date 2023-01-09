@@ -237,13 +237,14 @@ class Categories extends CI_Model
             $this->db->where('pr.product_price >=', $from);
             $this->db->where('pr.product_price <=', $to);
         }
-        echo "<pre>";var_dump($this->db->get()->result_array());exit;
+        
         if ($size) {
             $this->db->like('a.variants', $size);
         }
         if ($all_brand) {
             $this->db->where_in('a.brand_id', $all_brand);
         }
+        echo "<pre>";var_dump($this->db->get()->result_array());exit;
         if($filter_item){
             $this->db->join('filter_product x','x.product_id = a.product_id','left');
             $this->db->where_in('x.filter_item_id', $filter_item);
