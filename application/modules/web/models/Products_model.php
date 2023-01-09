@@ -358,7 +358,7 @@ class Products_model extends CI_Model {
         $language = $Soft_settings[0]['language'];
         if($_SESSION["language"] != $language){
             $this->db->select('a.*,b.*,e.brand_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price');
-            $this->db->from('website_product_information a');
+            $this->db->from('product_information a');
             $this->db->join('product_category b','a.category_id = b.category_id','left');
             $this->db->join('brand e','a.brand_id = e.brand_id','left');
             $this->db->where('a.brand_id',$brand_id);
@@ -366,12 +366,19 @@ class Products_model extends CI_Model {
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         }else{
             $this->db->select('a.*,b.*,e.brand_name, pr.product_price as whole_price');
-            $this->db->from('website_product_information a');
+            $this->db->from('product_information a');
             $this->db->join('product_category b','a.category_id = b.category_id','left');
             $this->db->join('brand e','a.brand_id = e.brand_id','left');
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
             $this->db->where('a.brand_id',$brand_id);
+            
+            // $this->db->having();
         }
+        $this->db->where('a.image_thumb !=', null);
+        $this->db->group_by('a.product_model_only');
+        // $this->db->where('a.category_id', '9UGMPV82B742VYU');
+        $this->db->order_by('a.product_name','desc');
+        // echo "<pre>";var_dump($this->db->get()->result_array());exit;
         if ($price_range) {
             $ex = explode("-", $price_range);
             $from = $ex[0];
@@ -381,19 +388,20 @@ class Products_model extends CI_Model {
             $this->db->where('pr.product_price >=', $from);
             $this->db->where('pr.product_price <=', $to);
         }
-        if ($sort) {
-            if ($sort == 'new') {
-                $this->db->order_by('a.id','desc');
-            }elseif ($sort == 'discount') {
-                $this->db->order_by('a.offer_price','desc');
-            }elseif ($sort == 'low_to_high') {
-                $this->db->order_by('a.price','asc');
-            }elseif ($sort == 'high_to_low') {
-                $this->db->order_by('a.price','desc');
-            }
-        }else{
-            $this->db->order_by('a.id','desc');
-        }
+        // if ($sort) {
+        //     if ($sort == 'new') {
+        //         $this->db->order_by('a.id','desc');
+        //     }elseif ($sort == 'discount') {
+        //         $this->db->order_by('a.offer_price','desc');
+        //     }elseif ($sort == 'low_to_high') {
+        //         $this->db->order_by('a.price','asc');
+        //     }elseif ($sort == 'high_to_low') {
+        //         $this->db->order_by('a.price','desc');
+        //     }
+        // }else{
+        //     $this->db->order_by('a.id','desc');
+        // }
+        
         if ($size) {
             $this->db->like('a.variants', $size,'both');
         }
