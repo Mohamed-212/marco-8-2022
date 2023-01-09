@@ -223,6 +223,7 @@ class Categories extends CI_Model
             $this->db->where_in('a.category_id', $category_ids);
         }
         $this->db->where('a.image_thumb !=', null);
+        $this->db->where('a.image_thumb !=', '');
         $this->db->group_by('a.product_model_only');
         $this->db->order_by('a.product_name','desc');
         
@@ -279,6 +280,7 @@ class Categories extends CI_Model
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
             $this->db->where_in('a.category_id', $category_ids);
         $this->db->where('a.image_thumb !=', null);
+        $this->db->where('a.image_thumb !=', '');
         $this->db->group_by('a.product_model_only');
         $this->db->order_by('a.product_name','desc');
         
