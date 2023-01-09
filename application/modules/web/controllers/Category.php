@@ -98,7 +98,7 @@ class Category extends MX_Controller
         #
 
 
-        $content = $this->lcategory->category_product($cat_id,$config["per_page"],$page,$price_range,$size, $brand,$rate,$filter_item);
+        $content = $this->lcategory->category_product($cat_id,$links,$config["per_page"],$page,$price_range,$size, $brand,$rate,$filter_item);
         $this->template_lib->full_website_html_view($content);
 
     }
