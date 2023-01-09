@@ -140,6 +140,8 @@ class CI_Session {
 			unset($_COOKIE[$this->_config['cookie_name']]);
 		}
 
+		# Session lifetime of 3 hours
+ini_set('session.gc_maxlifetime', 10800 * 3);
 		session_start();
 
 		// Is session ID auto-regeneration configured? (ignoring ajax requests)

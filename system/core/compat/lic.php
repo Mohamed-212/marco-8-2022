@@ -25,6 +25,8 @@ class Lic
         date_default_timezone_set($timezone);
         // confirm session
         if(session_id() == '' || !isset($_SESSION)) {
+            # Session lifetime of 3 hours
+ini_set('session.gc_maxlifetime', 10800 * 3);
             session_start();
         }
 
