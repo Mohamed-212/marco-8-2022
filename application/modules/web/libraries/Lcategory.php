@@ -74,6 +74,8 @@ class Lcategory
         // echo "<pre>";
         // var_dump($CI->session->userdata());
         // exit;
+
+        
         
         $data = array(
             'title' => $category[0]['category_name'],

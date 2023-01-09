@@ -226,9 +226,7 @@ class Categories extends CI_Model
         $this->db->group_by('a.product_model_only');
         $this->db->order_by('a.product_name','desc');
         // echo "<pre>";var_dump($this->db->get()->result_array());exit;
-        if(empty($rate)){
-            $this->db->limit($per_page, $page);
-        }
+        
         $this->db->order_by('product_name');
         if ($price_range) {
             $ex = explode("-", $price_range);
@@ -250,8 +248,13 @@ class Categories extends CI_Model
             $this->db->where_in('x.filter_item_id', $filter_item);
         }
         $this->db->group_by('a.product_id');
+        if(empty($rate)){
+            // $this->db->limit($per_page, $page);
+        }
         $query = $this->db->get();
         $w_cat_pro = $query->result();
+        // return $query;
+        
 
         // echo "<pre>";var_dump($w_cat_pro)
         if ($rate) {
