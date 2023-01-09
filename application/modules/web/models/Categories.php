@@ -225,7 +225,7 @@ class Categories extends CI_Model
         $this->db->where('a.image_thumb !=', null);
         $this->db->group_by('a.product_model_only');
         $this->db->order_by('a.product_name','desc');
-        // echo "<pre>";var_dump($this->db->get()->result_array());exit;
+        echo "<pre>";var_dump($this->db->get()->result_array());exit;
         
         $this->db->order_by('product_name');
         if ($price_range) {
@@ -247,7 +247,7 @@ class Categories extends CI_Model
             $this->db->join('filter_product x','x.product_id = a.product_id','left');
             $this->db->where_in('x.filter_item_id', $filter_item);
         }
-        $this->db->group_by('a.product_id');
+        // $this->db->group_by('a.product_id');
         if(empty($rate)){
             // $this->db->limit($per_page, $page);
         }
