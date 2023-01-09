@@ -251,7 +251,7 @@ class Categories extends CI_Model
         }
         // $this->db->group_by('a.product_id');
         if(empty($rate)){
-            // $this->db->limit($per_page, $page);
+            $this->db->limit($per_page, $page);
         }
         // echo "<pre>";var_dump($this->db->get()->result_array());exit;
         $query = $this->db->get();
@@ -264,6 +264,62 @@ class Categories extends CI_Model
             $w_cat_pro = $this->get_rating_product($w_cat_pro, $rate);
         }
         return $w_cat_pro;
+    }
+
+    public function category_product_count($cat_id, $per_page, $page, $price_range = null, $size = null, $brand=null, $rate=null,$filter_item=null)
+    {
+        $Soft_settings = $this->retrieve_setting_editdata();
+        $language = $Soft_settings[0]['language'];
+        $category_ids = $this->all_child_category($cat_id);
+        $all_brand = (explode("--", $brand));
+        array_shift($all_brand);
+        $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
+            $this->db->from('product_information a');
+            $this->db->join('product_category b', 'a.category_id=b.category_id');
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+            $this->db->where_in('a.category_id', $category_ids);
+        $this->db->where('a.image_thumb !=', null);
+        $this->db->group_by('a.product_model_only');
+        $this->db->order_by('a.product_name','desc');
+        
+        
+        $this->db->order_by('product_name');
+        if ($price_range) {
+            $ex = explode("-", $price_range);
+            $from = $ex[0];
+            $to = $ex[1];
+            // $this->db->where('a.price >=', $from);
+            // $this->db->where('a.price <=', $to);
+            $this->db->where('pr.product_price >=', $from);
+            $this->db->where('pr.product_price <=', $to);
+        }
+        
+        if ($size) {
+            $this->db->like('a.variants', $size);
+        }
+        if ($all_brand) {
+            $this->db->where_in('a.brand_id', $all_brand);
+        }
+        
+        if($filter_item){
+            $this->db->join('filter_product x','x.product_id = a.product_id','left');
+            $this->db->where_in('x.filter_item_id', $filter_item);
+        }
+        // $this->db->group_by('a.product_id');
+        if(empty($rate)){
+            // $this->db->limit($per_page, $page);
+        }
+        // echo "<pre>";var_dump($this->db->get()->result_array());exit;
+        $query = $this->db->get();
+        $w_cat_pro = $query->result();
+        // return $query;
+        
+
+        // echo "<pre>";var_dump($w_cat_pro)
+        if ($rate) {
+            $w_cat_pro = $this->get_rating_product($w_cat_pro, $rate);
+        }
+        return count($w_cat_pro);
     }
 
     //Get rating product by rate
