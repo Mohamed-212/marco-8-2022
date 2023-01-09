@@ -69,6 +69,7 @@ class Category extends MX_Controller
         $config["base_url"]    = base_url('web/Category/category_product/'.$cat_id);
         $config["total_rows"]  = $this->Categories->category_product_count($cat_id,[],20,0,$price_range,$size, $brand,$rate,$filter_item);
         $config["per_page"]    = 20;
+        var_dump($config['total_rows']);exit;
         $config["uri_segment"] = 5;
         $config["num_links"]   = 5;
         /* This Application Must Be Used With BootStrap 3 * */
