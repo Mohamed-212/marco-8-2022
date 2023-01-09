@@ -317,7 +317,7 @@ class Categories extends CI_Model
         // return $query;
         
 
-        // echo "<pre>";var_dump($w_cat_pro)
+        echo "<pre>";var_dump($w_cat_pro);exit;
         if ($rate) {
             $w_cat_pro = $this->get_rating_product($w_cat_pro, $rate);
         }
