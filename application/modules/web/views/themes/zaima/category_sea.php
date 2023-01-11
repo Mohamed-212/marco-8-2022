@@ -95,42 +95,79 @@
                         } else {
                             $lastElementKey = 0;
                         }
+                        $url = str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+                        $qs = !empty($_SERVER['QUERY_STRING']) ? explode('&', $_SERVER['QUERY_STRING']) : [];
+                        
+
+                        // echo "<pre>";var_dump($qstr, $hasBrands);echo "</pre>";
+                        
                         foreach ($brand_info as $brand_in) {
                             if ($brand_in['brand_id']) {
+                                $q = [];
+                        $qstr = '';
+                        $hasBrands = false;
+                        $allbrands = [];
+                        foreach ($qs as $k){
+                            $k = explode('=', $k);
+                            if ($k[0] == 'per_page') continue;
+                            if ($k[0] == 'br') {
+                                $hasBrands = true;
+                                $allbrands = explode(',', $k[1]);
+                                continue;
+                            }
+                            $q[$k[0]] = $k[1];
+                        }
+
+                        foreach ($q as $key => $val) {
+                            $qstr .= "$key=$val&";
+                        }
+                        $qstr = substr($qstr, 0, -1);
+                                $br = '';
+                                if ($hasBrands) {
+                                    
+                                    foreach ($qs as $kk){
+                                        [$ky, $v] = explode('=', $kk);
+                                        // var_dump($ky, $v);
+                                        if ($ky == 'br') {
+                                            $brq = explode(',', $v);
+                                            
+                                            $br .= $v;
+                                            
+                                            // echo "<pre>";var_dump($v);echo "</pre>";
+                                                                                        // echo "<pre>";var_dump($brand_in['brand_id']);echo "</pre>";
+
+                                            if (!in_array($brand_in['brand_id'], $brq)) {
+                                                if (substr($br, strlen($br)-1) == ',') {
+                                                    $br = substr($br, 0, -1);
+                                                }
+                                                $br .= ',' . $brand_in['brand_id'];
+                                            } else {
+                                                $br = str_replace(',' . $brand_in['brand_id'], '', $br);
+                                                $br = str_replace($brand_in['brand_id'] . ',', '', $br);
+                                                $br = str_replace($brand_in['brand_id'], '', $br);
+                                                if (substr($br, strlen($br)-1) == ',') {
+                                                    $br = substr($br, 0, -1);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    
+                                } else {
+                                    $br .= $brand_in['brand_id'];
+                                }
+                                $qstr .= !empty($br) && strlen($br) > 1 ?  '&br=' . $br : '';
+                                // echo "<pre>";var_dump($url . $qstr , $br);echo "</pre>";
+
                         ?>
                                 <div class="custom-control custom-checkbox mb-2">
 
-                                    <input id="brand<?php echo $i ?>" type="checkbox" class="brand_class custom-control-input" name="brand" value="<?php
-                                                                                                                                                    $target_id = $brand_in['brand_id'];
-                                                                                                                                                    if (strpos($brand_url_ids, $target_id) !== false) {
-                                                                                                                                                        if ($lastElementKey == 1) {
-                                                                                                                                                            $output = preg_replace('/' . $target_id . '/', '', $brand_url_ids);
-                                                                                                                                                            echo base_url('category') . '/' . $category_id . $query_string;
-                                                                                                                                                        } else {
-                                                                                                                                                            if (strpos($brand_url_ids, $target_id . '--') !== false) {
-                                                                                                                                                                $output = preg_replace('/' . $target_id . '--/', '', $brand_url_ids);
-                                                                                                                                                            } else {
-                                                                                                                                                                $output = preg_replace('/--' . $target_id . '/', '', $brand_url_ids);
-                                                                                                                                                            }
-                                                                                                                                                            echo base_url('category') . '/' . $category_id . '/' . $output . $query_string;
-                                                                                                                                                        }
-                                                                                                                                                    } else {
-                                                                                                                                                        if ($lastElementKey == 0) {
-                                                                                                                                                            echo base_url('category') . '/' . $category_id . '/' . $brand_url_ids . $target_id . $query_string;
-                                                                                                                                                        } else {
-                                                                                                                                                            echo base_url('category') . '/' . $category_id . '/' . $brand_url_ids . '--' . $target_id . $query_string;
-                                                                                                                                                        }
-                                                                                                                                                    }
-                                                                                                                                                    ?>" <?php
-                                                                                                                                                        if (strpos($brand_url_ids, $target_id) !== false) {
-                                                                                                                                                            echo 'checked';
-                                                                                                                                                        }
-                                                                                                                                                        ?>>
-
+                                <input id="brand<?php echo $i ?>" type="checkbox" class="brand_class custom-control-input" name="brand" value="<?=base_url($url . $qstr)?>" <?php if (in_array($brand_in['brand_id'], $allbrands)) {echo 'checked';}?> />
                                     <label class="custom-control-label" for="brand<?php echo $i ?>">
                                         <?php echo html_escape($brand_in['brand_name']) ?><span class="count text-muted fs-12 ml-1"></span>
                                     </label>
-                                </div>
+                            </div>
+                                
                         <?php
                                 $i++;
                             }

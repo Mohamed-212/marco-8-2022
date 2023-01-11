@@ -235,7 +235,7 @@ class Lcategory
     }
 
     //Category product search
-    public function category_product_search($product_name, $filter = [])
+    public function category_product_search($product_name, $links, $per_page,$page, $filter = [], $total)
     {
 
         $CI =& get_instance();
@@ -249,7 +249,9 @@ class Lcategory
         $CI->load->model('dashboard/Search_history');
         $theme = $CI->Themes->get_theme();
 
-        $category_product = $CI->Categories->retrieve_category_product($product_name,$filter);
+        // var_dump($per_page, $page);
+
+        $category_product = $CI->Categories->retrieve_category_product($product_name, $per_page, $page,$filter);
         $brand_list = $CI->Categories->get_filter_brand_list($product_name);
 
         $categoryList = $CI->Homes->parent_category_list();
@@ -266,11 +268,11 @@ class Lcategory
         $select_category_adds = $CI->Homes->select_category_adds();
 
         $selected_default_currency_info = $CI->Homes->selected_default_currency_info();
-        if (empty($category_product)) {
-            $total = 0;
-        } else {
-            $total = count($category_product);
-        }
+        // if (empty($category_product)) {
+        //     $total = 0;
+        // } else {
+        //     $total = count($category_product);
+        // }
         $search_data = array(
             'keyword' => $product_name,
             'results' => $total,
@@ -291,7 +293,7 @@ class Lcategory
             'category_name' => $category_name = '',
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
-            'links' => '',
+            'links' => $links,
             'Soft_settings' => $Soft_settings,
             'languages' => $languages,
             'currency_info' => $currency_info,
@@ -309,7 +311,7 @@ class Lcategory
     }
     
     //Category product search
-    public function search_catproduct_lib($filter = [])
+    public function search_catproduct_lib($filter = [], $links, $per_page = null, $page = 0, $total = 20)
     {
 
         $CI =& get_instance();
@@ -323,7 +325,7 @@ class Lcategory
         $product_name = $filter['product_name'];
         $category_id = $filter['category_id'];
 
-        $category_product = $CI->Categories->get_category_product($filter);
+        $category_product = $CI->Categories->get_category_product($filter, $per_page, $page);
         $categoryList = $CI->Homes->parent_category_list();
         $footer_block = $CI->Homes->footer_block();
         $currency_details = $CI->Soft_settings->retrieve_currency_info();
@@ -337,9 +339,9 @@ class Lcategory
 
         $selected_default_currency_info = $CI->Homes->selected_default_currency_info();
         if (empty($category_product)) {
-            $total = 0;
+            // $total = 0;
         } else {
-            $total = count($category_product);
+            // $total = count($category_product);
         }
 
         $data = array(
@@ -355,7 +357,7 @@ class Lcategory
             'category_name' => $category_name = '',
             'currency' => $currency_details[0]['currency_icon'],
             'position' => $currency_details[0]['currency_position'],
-            'links' => '',
+            'links' => $links,
             'Soft_settings' => $Soft_settings,
             'languages' => $languages,
             'currency_info' => $currency_info,
@@ -367,9 +369,10 @@ class Lcategory
             'default_currency_icon' => $selected_default_currency_info->currency_icon,
             'selected_cur_id' => (($selected_currency_info->currency_id) ? $selected_currency_info->currency_id : ""),
         );
-        $categoryList = $CI->parser->parse('web/themes/' . $theme . '/category', $data, true);
+        $categoryList = $CI->parser->parse('web/themes/' . $theme . '/category_sea', $data, true);
         return $categoryList;
     }
+    
 }
 
 ?>

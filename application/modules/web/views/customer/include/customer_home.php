@@ -48,7 +48,7 @@
                 <div class="panel panel-bd">
                     <div class="panel-body">
                         <div class="statistic-box">
-                            <h2><span class="count-number"><?php echo html_escape($total_invoice)?></span><span class="slight"><i class="fa fa-play fa-rotate-270 text-warning"> </i></span></h2>
+                            <h2><span class="count-numbe"><?php echo html_escape($total_invoice)?></span><span class="slight"><i class="fa fa-play fa-rotate-270 text-warning"> </i></span></h2>
                             <div class="small"><?php echo display('total_invoice')?></div>
                             <div class="sparkline1 text-center"></div>
                         </div>
@@ -59,7 +59,7 @@
                 <div class="panel panel-bd">
                     <div class="panel-body">
                         <div class="statistic-box">
-                            <h2><span class="count-number"><?php echo html_escape($total_order)?></span> <span class="slight"><i class="fa fa-play fa-rotate-270 text-warning"> </i></span></h2>
+                            <h2><span class="count-numbe"><?php echo html_escape($total_order)?></span> <span class="slight"><i class="fa fa-play fa-rotate-270 text-warning"> </i></span></h2>
                             <div class="small"><?php echo display('total_order')?></div>
                             <div class="sparkline1 text-center"></div>
                         </div>

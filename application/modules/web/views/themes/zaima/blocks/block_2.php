@@ -36,7 +36,14 @@
                                     <div class="img-area position-relative bg-white border p-4 p-lg-5 mb-3 mb-md-0">
                                         <div class="img-area_header mb-2">
                                             <p class="mb-1"><?php echo html_escape($cat_pro[0]->category_name) ?></p>
-                                            <h3 class="img-area_header--title fs-27 mb-0"><?php echo html_escape($product->product_name) ?></h3>
+                                            <h3 class="img-area_header--title fs-27 mb-0"><?php 
+                                            
+                                            $color_pos = strpos($product->product_name, $product->product_color);
+                                                                                                                                                                            // var_dump($color_pos);
+
+                                                                                                                                                                            echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos-2) : $product->product_name);
+                                            
+                                            ?></h3>
                                             <?php
                                             $offer_pertge = 0;
                                             if ($product->onsale == 1 && !empty($product->onsale_price)) {
@@ -92,10 +99,10 @@
                                                 <div class="model-name">
                                                     <a href="<?php echo $prodlink; ?>">
                                                         <?php
-                                                        $color_pos = strpos($product->product_name, '- CO');
+                                                        $color_pos = strpos($product->product_name, $product->product_color);
                                                         // var_dump($color_pos);
 
-                                                        echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos) : $product->product_name);
+                                                        echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos-2) : $product->product_name);
                                                         ?></a>
                                                 </div>
                                                 <div class="star-rating justify-content-center mt-3">

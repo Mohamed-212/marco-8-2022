@@ -155,7 +155,59 @@ class Product extends MX_Controller
         $sort        = $this->input->get('sort',TRUE);
         $rate        = $this->input->get('rate',TRUE);
         $cat        = $this->input->get('cat',TRUE);
-        $content = $this->lproduct->brand_product($brand_id,$price_range,$size,$sort,$rate, $cat);
+
+        $url = str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+        $qs = !empty($_SERVER['QUERY_STRING']) ? explode('&', $_SERVER['QUERY_STRING']) : [];
+        $q = [];
+        $qstr = '';
+        foreach ($qs as $k){
+            $k = explode('=', $k);
+            if ($k[0] == 'per_page') continue;
+            $q[$k[0]] = $k[1];
+        }
+
+        foreach ($q as $key => $val) {
+            $qstr .= "$key=$val&";
+        }
+        $qstr = substr($qstr, 0, -1);
+
+// echo "<pre>";
+// var_dump($q, $qstr, $url, $_SERVER);
+// exit;
+        #
+        #pagination starts
+        #
+        $config["base_url"]    = base_url($url . $qstr);
+        $config["total_rows"]  = $this->Products_model->retrieve_brand_productcount($brand_id,$price_range,$size,$sort,$rate, $cat);
+        // var_dump($this->Products_model->retrieve_brand_productcount($brand_id,$price_range,$size,$sort,$rate, $cat));exit;
+        $config["per_page"]    = 20;
+        $config["uri_segment"] = 5;
+        $config["num_links"]   = 5;
+        /* This Application Must Be Used With BootStrap 3 * */
+        $config['full_tag_open']  = "<ul class='pagination justify-content-center'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open']   = "<li class='page-item'>";
+        $config['num_tag_close']  = '</li>';
+        $config['cur_tag_open']   = "<li class='page-item active'><a href='#'>";
+        $config['cur_tag_close']  = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open']  = "<li class='page-item'>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open']  = "<li class='page-item'>";
+        $config['prev_tagl_close']= "</li>";
+        $config['first_tag_open'] = "<li class='page-item'>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li class='page-item'>";
+        $config['last_tagl_close'] = "</li>";
+        $config['prev_link'] = display('Previous');
+        $config['next_link'] = display('Next');
+        // $config['reuse_query_string'] = false;
+        $config['page_query_string'] = true;
+        /* ends of bootstrap */
+        $this->pagination->initialize($config);
+        $page = $_GET['per_page'] ?? 0;
+        $links = $this->pagination->create_links();
+
+        $content = $this->lproduct->brand_product($brand_id,$links,$config["per_page"],$page,$price_range,$size,$sort,$rate, $cat);
         $this->template_lib->full_website_html_view($content);
     }
 

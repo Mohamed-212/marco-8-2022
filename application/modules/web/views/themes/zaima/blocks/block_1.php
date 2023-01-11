@@ -39,10 +39,10 @@
                                 <h3 class="product-name fs-15 font-weight-600 overflow-hidden mt-2">
                                     <a href="<?php echo $prodlink; ?>" class="text-black">
                                         <?php
-                                        $color_pos = strpos($product->product_name, '- CO');
+                                        $color_pos = strpos($product->product_name, $product->product_color);
                                         // var_dump($color_pos);
 
-                                        echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos) : $product->product_name); ?>
+                                        echo html_escape($color_pos ? substr($product->product_name, 0, $color_pos-2) : $product->product_name);?>
                                     </a>
                                 </h3>
 

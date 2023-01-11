@@ -31,6 +31,8 @@ class Customer_dashboard extends MX_Controller
         if(check_module_status('loyalty_points') == 1){
             $this->load->model('loyalty_points/loyalty_points_model');
             $available_points = $this->loyalty_points_model->available_points($customer_id);
+
+            
             
             $data = array(
                 'title'           => display('dashboard'),
@@ -49,6 +51,7 @@ class Customer_dashboard extends MX_Controller
                 'position'     => $currency_details[0]['currency_position'],
             );
         }
+        // var_dump($total_invoice, $total_order);exit;
         $content = $this->parser->parse('web/customer/include/customer_home', $data, true);
         $this->template_lib->full_customer_html_view($content);
     }

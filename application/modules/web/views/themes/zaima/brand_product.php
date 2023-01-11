@@ -168,7 +168,7 @@ $cats = $this->db->select('*')->from('product_category')->get()->result_array();
                 $offset = ($page - 1) * $limit;
                 if ($offset < 0) $offset = 0;
 
-                $brand_product = array_slice($brand_product, $offset, $limit);
+                // $brand_product = array_slice($brand_product, $offset, $limit);
 
                 if ($brand_product) {
                     foreach ($brand_product as $product) {
@@ -193,7 +193,10 @@ $cats = $this->db->select('*')->from('product_category')->get()->result_array();
 
                                                                                                                                                                                         // echo html_escape($color_pos ? substr($product['product_name'], 0, $color_pos) : $product['product_name']);
 
-                                                                                                                                                                           echo $product['product_name'];
+                                                                                                                                                                                        $color_pos = strpos($product['product_name'], $product['product_color']);
+                                                                                                                                                                                        // var_dump($color_pos);
+            
+                                                                                                                                                                                        echo html_escape($color_pos ? substr($product['product_name'], 0, $color_pos-2) : $product['product_name']);
                                                                                                                                                                                         ?></a>
                                     </h3>
                                     <div class="star-rating">
@@ -269,13 +272,25 @@ $cats = $this->db->select('*')->from('product_category')->get()->result_array();
                             $class = ($page == $totalPages) ? "disabled" : "";
                             $html .= '<li class="' . $class . '"><a href="' . $currurl . '?page=' . ($page + 1) . '">⇾</a></li>';
 
-                            echo $html .= '</ul>';
+                            // echo $html .= '</ul>';
+
+                            
                             ?>
                         </div>
-                        <div class="column text-right hidden-xs-down"><a class="btn btn-primary btn-sm" href="<?php echo $currurl . '?page=' . ($page + 1); ?>">Next&nbsp;<i class="icon-arrow-right"></i></a></div>
+                        <!-- <div class="column text-right hidden-xs-down"><a class="btn btn-primary btn-sm" href="<?php echo $currurl . '?page=' . ($page + 1); ?>">Next&nbsp;<i class="icon-arrow-right"></i></a></div> -->
                     </nav>
+                    
                 </div>
             <?php } ?>
+            <div class="pt-2">
+                        <!-- Pagination-->
+                        <div class="pagination d-flex align-items-center">
+                            <div class="column">
+
+                                <?php echo htmlspecialchars_decode($links); ?>
+                            </div>
+                        </div>
+                    </div>
         </div>
     </div>
 </div>

@@ -203,6 +203,7 @@ class Categories extends CI_Model
     //Category product
     public function category_product($cat_id, $per_page, $page, $price_range = null, $size = null, $brand=null, $rate=null,$filter_item=null)
     {
+        
         $Soft_settings = $this->retrieve_setting_editdata();
         $language = $Soft_settings[0]['language'];
         $category_ids = $this->all_child_category($cat_id);
@@ -228,7 +229,7 @@ class Categories extends CI_Model
         $this->db->order_by('a.product_name','desc');
         
         
-        $this->db->order_by('product_name');
+        // $this->db->order_by('product_name');
         if ($price_range) {
             $ex = explode("-", $price_range);
             $from = $ex[0];
@@ -275,10 +276,10 @@ class Categories extends CI_Model
         $all_brand = (explode("--", $brand));
         array_shift($all_brand);
         $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
-            $this->db->from('product_information a');
-            $this->db->join('product_category b', 'a.category_id=b.category_id');
-            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
-            $this->db->where_in('a.category_id', $category_ids);
+        $this->db->from('product_information a');
+        $this->db->join('product_category b', 'a.category_id=b.category_id');
+        $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+        $this->db->where_in('a.category_id', $category_ids);
         $this->db->where('a.image_thumb !=', null);
         $this->db->where('a.image_thumb !=', '');
         $this->db->group_by('a.product_model_only');
@@ -317,7 +318,7 @@ class Categories extends CI_Model
         // return $query;
         
 
-        // echo "<pre>";var_dump($w_cat_pro);exit;
+        // echo "<pre>";var_dump(count($w_cat_pro));exit;
         if ($rate) {
             $w_cat_pro = $this->get_rating_product($w_cat_pro, $rate);
         }
@@ -767,7 +768,7 @@ class Categories extends CI_Model
     }
     
     //Get category product
-    public function get_category_product($filter = [])
+    public function get_category_product($filter = [], $per_page, $page)
     {
 
         $v = $this->db->select('*')->from('variant')->like('variant_name', $filter['product_name'], 'both')->get()->result();
@@ -787,12 +788,24 @@ class Categories extends CI_Model
         $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
         $this->db->where('a.assembly', 0);
 
+        $this->db->where('a.image_thumb !=', null);
+        $this->db->where('a.image_thumb !=', '');
+        $this->db->group_by('a.product_model_only');
+        $this->db->order_by('a.product_name','desc');
+
+        $this->db->limit($per_page, $page);
+
         if(!empty($filter['category_id'])){
             $this->db->where('a.category_id', $filter['category_id']);
         }
         if(!empty($filter['product_name'])){
             $n = $filter['product_name'];
             $this->db->where("(product_name like '%$n%' or variants in (" . implode(',', $vArr) . "))", null, false);
+        }
+
+        if(!empty($filter['br'])){
+            $br = explode(',', $filter['br']);
+            $this->db->where_in('a.brand_id', $br);
         }
         
         $query = $this->db->get();
@@ -802,8 +815,53 @@ class Categories extends CI_Model
         return false;
     }
 
+    public function get_category_productcount($filter = [])
+    {
+
+        $v = $this->db->select('*')->from('variant')->like('variant_name', $filter['product_name'], 'both')->get()->result();
+        $vArr = ['"22"'];
+        if ($v && is_array($v) && count($v) > 0) {
+            foreach ($v as $value) {
+                $vArr[] = '"' . $value->variant_id . '"';
+            }
+        }
+
+        $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
+        $this->db->from('product_information a');
+        $this->db->join('product_category b', 'a.category_id=b.category_id','left');
+        $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+
+        $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
+        $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
+        $this->db->where('a.assembly', 0);
+
+        $this->db->where('a.image_thumb !=', null);
+        $this->db->where('a.image_thumb !=', '');
+        $this->db->group_by('a.product_model_only');
+        $this->db->order_by('a.product_name','desc');
+
+        if(!empty($filter['category_id'])){
+            $this->db->where('a.category_id', $filter['category_id']);
+        }
+        if(!empty($filter['product_name'])){
+            $n = $filter['product_name'];
+            $this->db->where("(product_name like '%$n%' or variants in (" . implode(',', $vArr) . "))", null, false);
+        }
+
+        if(!empty($filter['br'])){
+            $br = explode(',', $filter['br']);
+            $this->db->where_in('a.brand_id', $br);
+        }
+        
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return count($query->result());
+        }
+        return 0;
+    }
+
     //Retrive category product
-    public function retrieve_category_product($product_name, $filter = [])
+    public function retrieve_category_product($product_name,$per_page, $page, $filter = [])
     {
         $Soft_settings = $this->retrieve_setting_editdata();
         $language = $Soft_settings[0]['language'];
@@ -818,7 +876,7 @@ class Categories extends CI_Model
 
         if($_SESSION["language"] != $language){
             $this->db->select('a.*,b.category_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price');
-            $this->db->from('website_product_information a');
+            $this->db->from('product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->where("(product_name like '%$product_name%' or variants in (" . implode(',', $vArr) . "))", null, false);
             $this->db->join('product_translation c', 'a.product_id = c.product_id', 'left');
@@ -826,11 +884,76 @@ class Categories extends CI_Model
             // $this->db->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC');
         }else{
             $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
-            $this->db->from('website_product_information a');
+            $this->db->from('product_information a');
             $this->db->join('product_category b', 'a.category_id=b.category_id');
             $this->db->where("(product_name like '%$product_name%' or variants in (" . implode(',', $vArr) . "))", null, false);
             $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
         }
+
+        $this->db->where('a.image_thumb !=', null);
+        $this->db->where('a.image_thumb !=', '');
+        $this->db->group_by('a.product_model_only');
+        $this->db->order_by('a.product_name','desc');
+
+        if(!empty($filter['brand'])){
+            $all_brand = (explode("--", $filter['brand']));
+            $this->db->where_in('a.brand_id', $all_brand);
+        }
+
+        if(!empty($filter['cat'])){
+            $all_brand = (explode("--", $filter['cat']));
+            $this->db->where_in('a.category_id', $all_brand);
+        }
+        
+        $this->db->limit($per_page, $page);
+
+        // 
+
+        $this->db->where('a.category_id !=', 'DPCIHH462YEXA24');
+        $this->db->where('a.category_id !=', '7OYMIICEX171GYC');
+        $this->db->where('a.assembly', 0);
+
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        }
+        return false;
+    }
+
+    //Retrive category product
+    public function retrieve_category_productcount($product_name, $filter = [])
+    {
+        $Soft_settings = $this->retrieve_setting_editdata();
+        $language = $Soft_settings[0]['language'];
+
+        $v = $this->db->select('*')->from('variant')->like('variant_name', $product_name, 'both')->get()->result();
+        $vArr = ['"22"'];
+        if ($v && is_array($v) && count($v) > 0) {
+            foreach ($v as $value) {
+                $vArr[] = '"' . $value->variant_id . '"';
+            }
+        }
+
+        if($_SESSION["language"] != $language){
+            $this->db->select('a.*,b.category_name,IF(c.trans_name IS NULL OR c.trans_name = "",a.product_name,c.trans_name) as product_name, pr.product_price as whole_price');
+            $this->db->from('product_information a');
+            $this->db->join('product_category b', 'a.category_id=b.category_id');
+            $this->db->where("(product_name like '%$product_name%' or variants in (" . implode(',', $vArr) . "))", null, false);
+            $this->db->join('product_translation c', 'a.product_id = c.product_id', 'left');
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+            // $this->db->where('category_id !=', 'DPCIHH462YEXA24')->where('category_id !=', '7OYMIICEX171GYC');
+        }else{
+            $this->db->select('a.*,b.category_name, pr.product_price as whole_price');
+            $this->db->from('product_information a');
+            $this->db->join('product_category b', 'a.category_id=b.category_id');
+            $this->db->where("(product_name like '%$product_name%' or variants in (" . implode(',', $vArr) . "))", null, false);
+            $this->db->join('pricing_types_product pr', 'pr.product_id = a.product_id AND pr.pri_type_id = 1', 'left');
+        }
+
+        $this->db->where('a.image_thumb !=', null);
+        $this->db->where('a.image_thumb !=', '');
+        $this->db->group_by('a.product_model_only');
+        $this->db->order_by('a.product_name','desc');
 
         if(!empty($filter['brand'])){
             $all_brand = (explode("--", $filter['brand']));
@@ -847,9 +970,7 @@ class Categories extends CI_Model
         $this->db->where('a.assembly', 0);
 
         $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            return $query->result();
-        }
+        return count($query->result());
         return false;
     }
 

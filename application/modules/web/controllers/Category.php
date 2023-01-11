@@ -59,15 +59,29 @@ class Category extends MX_Controller
 
         $cat_name = $this->db->select('category_name')->from('product_category')->where('category_id',$cat_id)->get()->row();
 
+        $url = str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+        $qs = !empty($_SERVER['QUERY_STRING']) ? explode('&', $_SERVER['QUERY_STRING']) : [];
+        $q = [];
+        $qstr = '';
+        foreach ($qs as $k){
+            $k = explode('=', $k);
+            if ($k[0] == 'per_page') continue;
+            $q[$k[0]] = $k[1];
+        }
 
+        foreach ($q as $key => $val) {
+            $qstr .= "$key=$val&";
+        }
+        $qstr = substr($qstr, 0, -1);
 
-
-
+// echo "<pre>";
+// var_dump($q, $qstr, $url, $_SERVER);
+// exit;
         #
         #pagination starts
         #
-        $config["base_url"]    = base_url('web/Category/category_product/'.$cat_id);
-        $config["total_rows"]  = $this->Categories->category_product_count($cat_id,[],20,0,$price_range,$size, $brand,$rate,$filter_item);
+        $config["base_url"]    = base_url($url . $qstr);
+        $config["total_rows"]  = $this->Categories->category_product_count($cat_id,20,0,$price_range,$size, $brand,$rate,$filter_item);
         $config["per_page"]    = 20;
         $config["uri_segment"] = 5;
         $config["num_links"]   = 5;
@@ -86,15 +100,19 @@ class Category extends MX_Controller
         $config['first_tagl_close'] = "</li>";
         $config['last_tag_open'] = "<li class='page-item'>";
         $config['last_tagl_close'] = "</li>";
-        $config['prev_link'] = 'Previous';
-        $config['next_link'] = 'Next';
+        $config['prev_link'] = display('Previous');
+        $config['next_link'] = display('Next');
+        // $config['reuse_query_string'] = false;
+        $config['page_query_string'] = true;
         /* ends of bootstrap */
         $this->pagination->initialize($config);
-        $page = ($this->uri->segment(5)) ? $this->uri->segment(5) : 0;
+        $page = $_GET['per_page'] ?? 0;
         $links = $this->pagination->create_links();
         #
         #pagination ends
         #
+//  echo "<pre>";var_dump($cat_id,$links,$config["per_page"],$page,$price_range,$size, $brand,$rate,$filter_item);
+//         return [];
 
 
         $content = $this->lcategory->category_product($cat_id,$links,$config["per_page"],$page,$price_range,$size, $brand,$rate,$filter_item);
@@ -128,8 +146,8 @@ class Category extends MX_Controller
         $config['first_tagl_close'] = "</li>";
         $config['last_tag_open'] = "<li class='page-item'>";
         $config['last_tagl_close'] = "</li>";
-        $config['prev_link'] = 'Previous';
-        $config['next_link'] = 'Next';
+        $config['prev_link'] = display('Previous');
+        $config['next_link'] = display('Next');
         /* ends of bootstrap */
         $this->pagination->initialize($config);
         $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
@@ -333,7 +351,61 @@ class Category extends MX_Controller
             'brand' => $this->input->get('brand',TRUE),
             'cat' => $this->input->get('cat',TRUE)
         );
-        $content = $this->lcategory->category_product_search($product_name, $filter);
+
+        $url = str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+        $qs = !empty($_SERVER['QUERY_STRING']) ? explode('&', $_SERVER['QUERY_STRING']) : [];
+        $q = [];
+        $qstr = '';
+        foreach ($qs as $k){
+            $k = explode('=', $k);
+            if ($k[0] == 'per_page') continue;
+            $q[$k[0]] = $k[1];
+        }
+
+        foreach ($q as $key => $val) {
+            $qstr .= "$key=$val&";
+        }
+        $qstr = substr($qstr, 0, -1);
+
+// echo "<pre>";
+// var_dump($q, $qstr, $url, $_SERVER);
+// exit;
+        #
+        #pagination starts
+        #
+        $config["base_url"]    = base_url($url . $qstr);
+        $config["total_rows"]  = $this->Categories->retrieve_category_productcount($product_name, $filter);
+        // var_dump($this->Categories->retrieve_category_productcount($product_name, $filter));exit;
+        $config["per_page"]    = 20;
+        $config["uri_segment"] = 5;
+        $config["num_links"]   = 5;
+        /* This Application Must Be Used With BootStrap 3 * */
+        $config['full_tag_open']  = "<ul class='pagination justify-content-center'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open']   = "<li class='page-item'>";
+        $config['num_tag_close']  = '</li>';
+        $config['cur_tag_open']   = "<li class='page-item active'><a href='#'>";
+        $config['cur_tag_close']  = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open']  = "<li class='page-item'>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open']  = "<li class='page-item'>";
+        $config['prev_tagl_close']= "</li>";
+        $config['first_tag_open'] = "<li class='page-item'>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li class='page-item'>";
+        $config['last_tagl_close'] = "</li>";
+        $config['prev_link'] = display('Previous');
+        $config['next_link'] = display('Next');
+        // $config['reuse_query_string'] = false;
+        $config['page_query_string'] = true;
+        /* ends of bootstrap */
+        $this->pagination->initialize($config);
+        $page = $_GET['per_page'] ?? 0;
+        $links = $this->pagination->create_links();
+
+        // var_dump($config["per_page"], $page);
+
+        $content = $this->lcategory->category_product_search($product_name, $links, $config["per_page"], $page, $filter, $config["total_rows"]);
         
         $this->template_lib->full_website_html_view($content);
 
@@ -352,9 +424,67 @@ class Category extends MX_Controller
             $product_name = $this->input->get('product_name',TRUE);
             $filter = array(
                 'category_id' => $category_id,
-                'product_name' => $product_name
+                'product_name' => $product_name,
+                'br' => $this->input->get('br',TRUE)
             );
-            $content = $this->lcategory->search_catproduct_lib($filter);
+
+            if ($filter['br'] == ',') {
+                unset($filter['br']);
+            }
+            $filter['br'] = str_replace(',,', ',', $filter['br']);
+
+            $url = str_replace($_SERVER['QUERY_STRING'], '', $_SERVER['REQUEST_URI']);
+        $qs = !empty($_SERVER['QUERY_STRING']) ? explode('&', $_SERVER['QUERY_STRING']) : [];
+        $q = [];
+        $qstr = '';
+        foreach ($qs as $k){
+            $k = explode('=', $k);
+            if ($k[0] == 'per_page') continue;
+            $q[$k[0]] = $k[1];
+        }
+
+        foreach ($q as $key => $val) {
+            $qstr .= "$key=$val&";
+        }
+        $qstr = substr($qstr, 0, -1);
+
+// echo "<pre>";
+// var_dump($q, $qstr, $url, $_SERVER);
+// exit;
+        #
+        #pagination starts
+        #
+        $config["base_url"]    = base_url($url . $qstr);
+        $config["total_rows"]  = $this->Categories->get_category_productcount($filter);
+        // var_dump($this->Products_model->retrieve_brand_productcount($brand_id,$price_range,$size,$sort,$rate, $cat));exit;
+        $config["per_page"]    = 20;
+        $config["uri_segment"] = 5;
+        $config["num_links"]   = 5;
+        /* This Application Must Be Used With BootStrap 3 * */
+        $config['full_tag_open']  = "<ul class='pagination justify-content-center'>";
+        $config['full_tag_close'] = "</ul>";
+        $config['num_tag_open']   = "<li class='page-item'>";
+        $config['num_tag_close']  = '</li>';
+        $config['cur_tag_open']   = "<li class='page-item active'><a href='#'>";
+        $config['cur_tag_close']  = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open']  = "<li class='page-item'>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open']  = "<li class='page-item'>";
+        $config['prev_tagl_close']= "</li>";
+        $config['first_tag_open'] = "<li class='page-item'>";
+        $config['first_tagl_close'] = "</li>";
+        $config['last_tag_open'] = "<li class='page-item'>";
+        $config['last_tagl_close'] = "</li>";
+        $config['prev_link'] = display('Previous');
+        $config['next_link'] = display('Next');
+        // $config['reuse_query_string'] = false;
+        $config['page_query_string'] = true;
+        /* ends of bootstrap */
+        $this->pagination->initialize($config);
+        $page = $_GET['per_page'] ?? 0;
+        $links = $this->pagination->create_links();
+
+            $content = $this->lcategory->search_catproduct_lib($filter, $links, $config['per_page'], $page, $config["total_rows"]);
             $this->template_lib->full_website_html_view($content);
         }else{
             redirect(base_url());

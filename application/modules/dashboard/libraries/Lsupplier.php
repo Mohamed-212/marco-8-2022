@@ -112,7 +112,7 @@ class Lsupplier {
 		$total_amount = 0;
 		if(!empty($purchase_info)){
 			foreach($purchase_info as $k=>$v){
-				$purchase_info[$k]['final_date'] = $CI->occational->dateConvert($purchase_info[$k]['purchase_date']);
+				$purchase_info[$k]['final_date'] = date('d-m-Y', strtotime($v['created_at']));
 				$total_amount = $total_amount+$purchase_info[$k]['grand_total_amount'];
 			}
 		}
