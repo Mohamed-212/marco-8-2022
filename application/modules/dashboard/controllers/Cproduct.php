@@ -3648,4 +3648,23 @@ class Cproduct extends MX_Controller
         echo 'The script is now using: <strong>' . round($mem_usage / 1024) . 'KB</strong> of memory.<br>';
         echo 'Peak usage: <strong>' . round($mem_peak / 1024) . 'KB</strong> of memory.<br><br>';
     }
+
+    public function vat_vat()
+    {
+        $prods = $this->db->select('*')->from('product_information')->where('category_id', '3D8ELDWLSMLAAZL')->get()->result();
+
+        foreach ($prods as $p) {
+            $exis = $this->db->select('*')->from('tax_product_service')->where('product_id', $p->product_id)->limit(1)->get()->row();
+            if (!$exis) {
+                $data = array(
+                    't_p_s_id' => $this->auth->generator(15),
+                    'product_id' => $p->product_id,
+                    'tax_id' => '52C2SKCKGQY6Q9J',
+                    'tax_percentage' => '14',
+                );
+
+                $this->db->insert('tax_product_service', $data);
+            }
+        }
+    }
 }
