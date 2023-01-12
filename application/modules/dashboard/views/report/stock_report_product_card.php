@@ -88,7 +88,7 @@
                                 <select class="form-control" name="store_id" id="store_id" required="">
                                     <option value=""></option>
                                     <?php foreach ($store_list as $single_store) :
-                                        if (1 == $single_store['default_status']) {
+                                        if ($single_store['store_id'] == $this->input->get('store_id')) {
                                     ?>
 
                                             <option selected value="<?php echo html_escape($single_store['store_id']) ?>">
@@ -234,6 +234,8 @@
                                                             echo str_replace('CHH', $stock['customer_name'], str_replace('NHH', $stock['invoice_id'], display('invoice_id_with_cus_ret')));
                                                         } elseif (isset($stock['invoice_id'])) {
                                                                 echo str_replace('CHH', $stock['customer_name'], str_replace('NHH', $stock['invoice_id'], display('invoice_id_with_cus')));
+                                                            } elseif (isset($stock['purchase_return_id'])) {
+                                                                echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus_ret')));
                                                             } elseif (isset($stock['purchase_id'])) {
                                                                 // echo display('purchase_id_with_cus');
                                                                 echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus')));
@@ -241,15 +243,47 @@
                                                                 echo str_replace('NHH', $stock['adjustment_id'], display('adjustment_id_with_cus'));
                                                             } elseif (isset($stock['adjustment_id']) && $stock['adjustment_type'] == 'increase') {
                                                                 echo str_replace('NHH', $stock['adjustment_id'], display('adjustment_id_with_cus_increase'));
-                                                            } elseif (isset($stock['purchase_return_id'])) {
-                                                                echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus_ret')));
                                                             } elseif (isset($stock['transfer_id'])) {
                                                                 echo str_replace('NHH', $stock['id'], display('transfer_id_with_cus'));
                                                             }
                                                         ?>
                                                     </td>
                                                     <td align="center">
-                                                            <?php echo $stock['id_me']; ?>
+                                                            <!-- <?php echo $stock['id_me']; ?> -->
+                                                            <?php
+                                                        if (isset($stock['return_invoice_id'])) {
+                                                            // echo str_replace('CHH', $stock['customer_name'], str_replace('NHH', $stock['invoice_id'], display('invoice_id_with_cus_ret')));
+                                                            $invr = $this->db->select('*')->from('invoice_return i')->where('id', $stock['id_me'])->get()->row();
+                                                            echo "<a href='" . base_url('/dashboard/Crefund/return_invoice/' . $invr->return_invoice_id) ."'>SalRe-" . $stock['id_me'] . "</a>";
+                                                        } elseif (isset($stock['invoice_id'])) {
+
+                                                                // echo str_replace('CHH', $stock['customer_name'], str_replace('NHH', $stock['invoice_id'], display('invoice_id_with_cus')));
+                                                                $inv = $this->db->select('*')->from('invoice')->where('invoice_id', $stock['id_me'])->get()->row();
+                                                                echo "<a href='".base_url('/dashboard/Cinvoice/invoice_inserted_data/'. $stock['id_me'])."'>" . $inv->invoice . " </a>";
+                                                            } elseif (isset($stock['purchase_return_id'])) {
+                                                                // echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus_ret')));
+                                                                $invt = $this->db->select('*')->from('product_purchase_return')->where('purchase_return_id', $stock['id_me'])->get()->row();
+                                                                $invpt = $this->db->select('*')->from('product_purchase')->where('purchase_id', $invt->purchase_id)->get()->row();
+                                                                echo "<a href='".base_url('/dashboard/Cpurchase_return/purchase_return_details_data/'. $stock['id_me'])."'>" . $invpt->invoice . " </a>";
+                                                            } elseif (isset($stock['purchase_id'])) {
+                                                                // echo display('purchase_id_with_cus');
+                                                                // echo str_replace('CHH', $stock['supplier_name'], str_replace('NHH', $stock['purchase_id'], display('purchase_with_cus')));
+                                                                $invp = $this->db->select('*')->from('product_purchase')->where('purchase_id', $stock['id_me'])->get()->row();
+                                                                echo "<a href='".base_url('/dashboard/Cpurchase/purchase_details_data/'. $stock['id_me'])."'>" . $invp->invoice . " </a>";
+                                                            } elseif (isset($stock['adjustment_id']) && $stock['adjustment_type'] == 'decrease') {
+                                                                // echo str_replace('NHH', $stock['adjustment_id'], display('adjustment_id_with_cus'));
+                                                                $invp = $this->db->select('*')->from('stock_adjustment_table')->where('adjustment_id', $stock['id_me'])->get()->row();
+                                                                echo "<a href='".base_url('/dashboard/Cstock_adjustment/adjustment_details/'. $stock['id_me'])."'># " . $stock['id_me'] . " </a>";
+                                                            } elseif (isset($stock['adjustment_id']) && $stock['adjustment_type'] == 'increase') {
+                                                                // echo str_replace('NHH', $stock['adjustment_id'], display('adjustment_id_with_cus_increase'));
+                                                                $invp = $this->db->select('*')->from('stock_adjustment_table')->where('adjustment_id', $stock['id_me'])->get()->row();
+                                                                echo "<a href='".base_url('/dashboard/Cstock_adjustment/adjustment_details/'. $stock['id_me'])."'># " . $stock['id_me'] . " </a>";
+                                                            } elseif (isset($stock['transfer_id'])) {
+                                                                // echo str_replace('NHH', $stock['id'], display('transfer_id_with_cus'));
+                                                                $invt = $this->db->select('*')->from('transfer')->where('transfer_id', $stock['id_me'])->get()->row();
+                                                                echo "<a href='".base_url('/dashboard/Cstock_adjustment/adjustment_details/'. $stock['id_me'])."'>" . !empty($invt->voucher_no) ? $invt->voucher_no : ('#' . $invt->transfer_id) . " </a>";
+                                                            }
+                                                        ?>
                                                             <i class="fa fa-shopping-bag pull-right" aria-hidden="true"></i>
                                                     </td>
 

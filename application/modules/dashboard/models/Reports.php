@@ -2153,31 +2153,34 @@ class Reports extends CI_Model
 
         $get_details = [];
 
-        $invs = $this->db->select('a.*, a.invoice_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as minus, c.customer_name')->from('invoice a')->join('invoice_details b', 'b.invoice_id = a.invoice_id AND b.product_id = ' . $product_id)->join('customer_information c', 'c.customer_id = a.customer_id', 'left')->get()->result_array();
+        $invs = $this->db->select('a.*, a.invoice_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as minus, c.customer_name')->from('invoice a')->join('invoice_details b', 'b.invoice_id = a.invoice_id AND b.product_id = ' . $product_id)->join('customer_information c', 'c.customer_id = a.customer_id', 'left')->where('a.store_id', $store_id)->get()->result_array();
 
-        $adjus = $this->db->select('a.*, a.adjustment_id as id_me, b.*, b.adjustment_quantity as qty, a.created_at as date_to_format, a.created_at as minus')->from('stock_adjustment_table a')->join('stock_adjustment_details b', 'b.adjustment_id = a.adjustment_id AND a.adjustment_status = 1 AND b.adjustment_type = "decrease" AND b.product_id = ' . $product_id)->get()->result_array();
+        $adjus_dec = $this->db->select('a.*, a.adjustment_id as id_me, b.*, b.adjustment_quantity as qty, a.created_at as date_to_format, a.created_at as minus')->from('stock_adjustment_table a')->join('stock_adjustment_details b', 'b.adjustment_id = a.adjustment_id AND a.adjustment_status = 1 AND b.adjustment_type = "decrease" AND b.product_id = ' . $product_id)->where('a.store_id', $store_id)->get()->result_array();
 
-        $pur_ret = $this->db->select('a.*, a.purchase_return_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as minus, c.supplier_name')->from('product_purchase_return a')->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = ' . $product_id)->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left')->get()->result_array();
+        $pur_ret = $this->db->select('a.*, a.purchase_return_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as minus, c.supplier_name')->from('product_purchase_return a')->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = ' . $product_id)->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left')->where('a.store_id', $store_id)->get()->result_array();
+
+        // $pur_ret = $this->db->select('a.*, a.purchase_return_id as id_me')->from('product_purchase_return a')->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = ' . $product_id)->get()->result_array();
+
+        // var_dump($pur_ret);exit;
 
         // $pur_ret = $this->db->select('a.*, b.*')->from('product_purchase_return a')->join('product_purchase_return_details b', 'b.return_id = a.purchase_return_id AND b.product_id = ' . $product_id)->get()->result_array();
 
-        $trans_from = $this->db->select('a.*, a.id as id_me, b.*, b.quantity as qty, b.created_at as date_to_format, b.created_at as minus')->from('transfer a')->join('transfer_details b', 'b.transfer_id = a.transfer_id AND b.store_id = "'. $store_id  .'" AND b.product_id = ' . $product_id)->get()->result_array();
+        $trans_from = $this->db->select('a.*, a.id as id_me, b.*, b.quantity as qty, b.created_at as date_to_format, b.created_at as minus')->from('transfer a')->join('transfer_details b', 'b.transfer_id = a.transfer_id AND b.store_id = "'. $store_id  .'" AND b.product_id = ' . $product_id)->where('a.store_id', $store_id)->get()->result_array();
 
-        
 
         /**
          * 
          */
 
-        $purs = $this->db->select('a.*, a.purchase_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as plus, c.supplier_name')->from('product_purchase a')->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = ' . $product_id)->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left')->get()->result_array();
+        $purs = $this->db->select('a.*, a.purchase_id as id_me, b.*, b.quantity as qty, a.created_at as date_to_format, a.created_at as plus, c.supplier_name')->from('product_purchase a')->join('product_purchase_details b', 'b.purchase_id = a.purchase_id AND b.product_id = ' . $product_id)->join('supplier_information c', 'c.supplier_id = a.supplier_id', 'left')->where('a.store_id', $store_id)->get()->result_array();
 
-        $adjus = $this->db->select('a.*, a.adjustment_id as id_me, b.*, b.adjustment_quantity as qty, a.created_at as date_to_format, a.created_at as plus')->from('stock_adjustment_table a')->join('stock_adjustment_details b', 'b.adjustment_id = a.adjustment_id AND a.adjustment_status = 1 AND b.adjustment_type = "increase" AND b.product_id = ' . $product_id)->get()->result_array();
+        $adjus = $this->db->select('a.*, a.adjustment_id as id_me, b.*, b.adjustment_quantity as qty, a.created_at as date_to_format, a.created_at as plus')->from('stock_adjustment_table a')->join('stock_adjustment_details b', 'b.adjustment_id = a.adjustment_id AND a.adjustment_status = 1 AND b.adjustment_type = "increase" AND b.product_id = ' . $product_id)->where('a.store_id', $store_id)->get()->result_array();
 
-        $inv_ret = $this->db->select('b.*, b.id as id_me, b.return_quantity as qty, b.created_at as date_to_format, b.created_at as plus, c.customer_name')->from('invoice_return b')->join('customer_information c', 'c.customer_id = b.customer_id', 'left')->where('b.product_id', $product_id)->get()->result_array();
+        $inv_ret = $this->db->select('b.*, b.id as id_me, b.return_quantity as qty, b.created_at as date_to_format, b.created_at as plus, c.customer_name')->from('invoice_return b')->join('customer_information c', 'c.customer_id = b.customer_id', 'left')->join('invoice inv', 'inv.invoice_id = b.invoice_id and inv.store_id = "' . $store_id . '"', 'left')->where('b.product_id', $product_id)->get()->result_array();
 
         $trans_to = $this->db->select('a.*, a.purchase_id as id_me, b.*, b.quantity as qty, b.created_at as date_to_format, b.created_at as plus')->from('transfer a')->join('transfer_details b', 'b.transfer_id = a.transfer_id AND b.t_store_id = "'. $store_id  .'" AND b.product_id = ' . $product_id)->get()->result_array();
 
-        $get_details = array_merge($get_details, $invs, $adjus, $pur_ret, $trans_from, $purs, $adjus, $inv_ret, $trans_to);
+        $get_details = array_merge($get_details, $invs, $adjus_dec, $pur_ret, $trans_from, $purs, $adjus, $inv_ret, $trans_to);
 
         usort($get_details, function ($a, $b) {
             return strtotime($a['date_to_format']) - strtotime($b['date_to_format']);

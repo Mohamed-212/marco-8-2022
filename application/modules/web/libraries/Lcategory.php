@@ -55,6 +55,8 @@ class Lcategory
             $to_price = $ex[1];
         }
 
+        // var_dump($from_price, $to_price, $price_range);
+
         if (empty($category_product)) {
             $total = 0;
         } else {
