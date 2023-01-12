@@ -2752,7 +2752,7 @@ class Cproduct extends MX_Controller
 
                 if (count($exists)) {
                     // var_dump($exists);exit;
-                    continue;
+                    //continue;
                     // // product is found then update
                     $product_details['product_id'] = $exists[0]['product_id'];
                     $this->db->set($product_details);
