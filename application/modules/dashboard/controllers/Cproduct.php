@@ -2751,8 +2751,9 @@ class Cproduct extends MX_Controller
                     ->get()->result_array();
 
                 if (count($exists)) {
+                    // var_dump($exists);exit;
                     continue;
-                    // product is found then update
+                    // // product is found then update
                     $product_details['product_id'] = $exists[0]['product_id'];
                     $this->db->set($product_details);
                     $this->db->where('product_id', $exists[0]['product_id']);

@@ -514,6 +514,7 @@ class Products extends CI_Model
         $this->db->order_by('a.invoice', 'desc');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
+            // echo "<pre>";var_dump($query->result_array());exit;
             return $query->result_array();
         }
         return false;
