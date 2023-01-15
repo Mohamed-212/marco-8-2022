@@ -493,10 +493,9 @@ class Invoices extends CI_Model {
 //                $inv_disc_rate  = ($inv_disc+(((float)$percentage_disc/100)*(float)$total_with_discount_inv))/(float)$total_price_vat;
 
                 $total_with_discount_inv=array_sum($total_amount)-(float)$this->input->post('total_discount', TRUE);
-
                 $inv_disc_rate = ($inv_disc+(((float)$percentage_disc/100) * $total_with_discount_inv))/(float)$total_with_discount_inv;
 
-                // echo "<pre>";var_dump($inv_disc_rate);exit;
+                // echo "<pre>";var_dump($inv_disc_rate);
 
                 $variants = $this->input->post('variant_id', TRUE);
                 // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
@@ -555,9 +554,9 @@ class Invoices extends CI_Model {
                             $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
                             $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));
                         } else {
-                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate));
-                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
-                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));    
+                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) - $cgst[$i]);
+                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);
+                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);    
                         }
 
                         $i_disc = $without_price - $without_price_after_disc;
@@ -730,9 +729,9 @@ class Invoices extends CI_Model {
                             $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
                             $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));
                         } else {
-                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) + $cgst[$i]);
-                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);
-                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);    
+                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) - $cgst[$i]);
+                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);
+                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);    
                         }
                         
 
