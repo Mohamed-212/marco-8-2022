@@ -253,6 +253,7 @@ class Products extends CI_Model
 
     public function website_product_entry($data)
     {
+        return true;
         $product_model = explode('-', $data['product_model']);
         $model_only = '';
         if (is_array($product_model)) {
@@ -309,13 +310,13 @@ class Products extends CI_Model
         $this->db->where('product_id', $product_id);
         $this->db->update('product_information', $data);
 
-        var_dump($product_id);
+        // var_dump($product_id);
 
-        // website
-        $this->db->reset_query();
-        $this->db->where('product_id', $product_id);
-        $this->db->update('website_product_information', $data);
-        $this->db->reset_query();
+        // // website
+        // $this->db->reset_query();
+        // $this->db->where('product_id', $product_id);
+        // $this->db->update('website_product_information', $data);
+        // $this->db->reset_query();
 
         $this->db->select('*');
         $this->db->from('product_information');

@@ -728,7 +728,7 @@ class Categories extends CI_Model
         array_shift($all_brand);
 
         $this->db->select('a.*');
-        $this->db->from('website_product_information a');
+        $this->db->from('product_information a');
 
         $this->db->where_in('a.category_id', $category_ids);
         if(!empty($filter['size'])){
