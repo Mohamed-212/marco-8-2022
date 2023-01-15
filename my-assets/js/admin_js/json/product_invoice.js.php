@@ -51,7 +51,75 @@ function invoice_productList(cName) {
                         product_name: product_name,
                     },
                     success: function (data) {
-                        response(data);
+                        if (product_name.length > 8 && product_name.match(/^[0-9]+$/i) > 0) {
+                            if (!data || !data[0]) {
+                                response(data);
+                            } else {
+                                var val = data[0].value;
+                                var label = data[0].label;
+
+                                var th = $('input#product_name_' + cName);
+
+                                // console.log(th);
+
+                                th.parent().find(".autocomplete_hidden_value").val(val);
+                                th.val(label);
+
+                                var id = val;
+                                var dataString = 'csrf_test_name=' + csrf_test_name + '&product_id=' + id;
+                                var base_url = $('.baseUrl').val();
+                                $.ajax
+                                ({
+                                    type: "POST",
+                                    url: base_url + "dashboard/Cinvoice/retrieve_product_data",
+                                    data: dataString,
+                                    cache: false,
+                                    success: function (data) {
+
+                                        var obj = jQuery.parseJSON(data);
+                                        // console.log(obj);
+                                        $('.' + qnttClass).val(obj.cartoon_quantity);
+                                        $('.' + priceClass).val(obj.price);
+                                        $('.' + total_tax_price).val(obj.tax);
+                                        $('.' + unit).val(obj.unit);
+                                        $('#' + cgst).val(obj.cgst_tax);
+                                        $('#' + sgst).val(obj.sgst_tax);
+                                        $('#' + igst).val(obj.igst_tax);
+                                        $('#' + variant).val(obj.variant_id);
+                                        $('#' + cgst_id).val(obj.cgst_id);
+                                        $('#' + sgst_id).val(obj.sgst_id);
+                                        $('#' + igst_id).val(obj.igst_id);
+                                        $('#' + variant_id).html(obj.variant);
+                                        $('#' + variant_color).html(obj.colorhtml);
+                //$('#'+pricing).html(obj.pricinghtml);
+                                        $('#' + discount).val(obj.discount);
+                                        $('#' + category_id).val(obj.category_id);
+                                        $('#' + product_model).val(obj.product_model);
+                                        $("#" + size).val(obj.size);
+                                        $("#" + color).val(obj.color);
+                                        $("#" + assembly).val(obj.assembly);
+                                        var assemplyvalue = obj.assembly;
+
+                //This Function Stay on others.js page
+
+                                        // stock_by_product_variant_id(cName);
+                                        stock_by_product_variant_color(cName);
+                //quantity_calculate(cName);
+                                        if (assemplyvalue == 1) {
+                                            $("#" + viewassembly).removeClass("hidden");
+                                        } else {
+                                            $("#" + viewassembly).addClass("hidden");
+                                        }
+                                        get_pri_type_rate1(cName);
+                                    }
+                                });
+
+                                th.unbind("change");
+                                return false;
+                            }
+                        } else {
+                            response(data);
+                        }
                     },
                 });
             },
@@ -62,6 +130,8 @@ function invoice_productList(cName) {
                 return false;
             },
             select: function (event, ui) {
+                console.log($(this));
+
                 $(this).parent().find(".autocomplete_hidden_value").val(ui.item.value);
                 $(this).val(ui.item.label);
 

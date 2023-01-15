@@ -51,6 +51,9 @@ function invoice_productList(cName) {
                     },
                     success: function (data) {
                         response(data);
+                        if (product_name.length > 8 && product_name.match(/^[0-9]+$/i) > 0 && data[0]) {
+                            $('.ui-autocomplete .ui-menu-item:eq(0)').trigger('click');
+                        }
                     },
                 });
             },

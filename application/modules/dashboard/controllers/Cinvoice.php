@@ -1619,6 +1619,10 @@ class Cinvoice extends MX_Controller
         $product_name = $this->input->post('product_name', TRUE);
         $searchByCategoryName = (bool)$this->input->post('by_category', TRUE);
 
+        if (strlen($product_name) > 8 && preg_match("/^[0-9]+$/i", $product_name)) {
+            $product_name = str_replace(2023, '', $product_name);
+        }
+
         $query = $this->db->query("SELECT * FROM `product_information` WHERE (`product_name` LIKE '%" . $product_name . "%' OR `product_id` = '" . $product_name . "')");
         $product_info = $query->result_array();
         $json_product = [];

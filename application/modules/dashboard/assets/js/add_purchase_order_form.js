@@ -156,6 +156,12 @@ function product_pur_or_list(sl) {
                 },
                 success: function (data) {
                     response(data);
+
+                    console.log(product_name, request.term);
+
+                    if (request.term.length > 8 && request.term.match(/^[0-9]+$/i) > 0 && data[0]) {
+                        $('.ui-autocomplete .ui-menu-item:eq(0)').trigger('click');
+                    }
                 },
             });
         },
@@ -171,6 +177,9 @@ function product_pur_or_list(sl) {
                     .val(ui.item.value);
             var sl = $(this).parent().parent().find(".sl").val();
             var id = ui.item.value;
+            if (product_name.match(/^[0-9]+$/i) > 0) {
+                $(this).val(ui.item.label);
+            }
             var store_id_tt = $("#store_id").val();
             var dataString = "csrf_test_name=" + csrf_test_name + "&product_id=" + id + "&store_id=" + store_id_tt;
             var avl_qntt = "avl_qntt_" + sl;

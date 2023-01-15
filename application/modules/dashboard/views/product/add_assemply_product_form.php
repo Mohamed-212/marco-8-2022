@@ -845,6 +845,11 @@ if ($all_filter_items) {
                     },
                     success: function(data) {
                         response(data);
+
+                        // console.log();
+                        if (product_name.length > 8 && product_name.match(/^[0-9]+$/i) > 0 && data.length) {
+                            $('.ui-autocomplete .ui-menu-item:eq(0)').trigger('click');
+                        }
                     },
                 });
             },

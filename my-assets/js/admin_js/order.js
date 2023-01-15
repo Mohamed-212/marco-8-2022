@@ -178,7 +178,8 @@ function submit_form(e) {
     e.preventDefault();
     var valid = false;
 
-    if (parseFloat($('#dueAmmount').val()) > 0 && $('#is_installment').val() == '0') {
+    if (typeof noinstallErr == 'undefined') {
+        if (parseFloat($('#dueAmmount').val()) > 0 && $('#is_installment').val() == '0') {
         alert(installErr);
         return;
     }
@@ -186,6 +187,8 @@ function submit_form(e) {
     if (parseFloat($('#paidAmount').val()) > 0 && !($('#payment_id').val())) {
         alert(payment_bank_not_selected);
         return;
+    }
+
     }
 
     if (parseFloat($('#dueAmmount').val()) < 0) {
