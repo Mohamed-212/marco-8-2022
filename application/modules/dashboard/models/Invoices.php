@@ -493,9 +493,10 @@ class Invoices extends CI_Model {
 //                $inv_disc_rate  = ($inv_disc+(((float)$percentage_disc/100)*(float)$total_with_discount_inv))/(float)$total_price_vat;
 
                 $total_with_discount_inv=array_sum($total_amount)-(float)$this->input->post('total_discount', TRUE);
+
                 $inv_disc_rate = ($inv_disc+(((float)$percentage_disc/100) * $total_with_discount_inv))/(float)$total_with_discount_inv;
 
-                // echo "<pre>";var_dump($inv_disc_rate);
+                // echo "<pre>";var_dump($inv_disc_rate);exit;
 
                 $variants = $this->input->post('variant_id', TRUE);
                 // var_dump($inv_disc, $total_price_vat, $total_with_discount_inv, $percentage_disc, $inv_disc_rate);
@@ -512,7 +513,7 @@ class Invoices extends CI_Model {
                     $product_assembly = $assembly[$i];
                     $prices = $this->db->select('a.price, b.*')->from('product_information a')->join('pricing_types_product b', 'b.product_id = a.product_id')->where('a.product_id', $p_id[$i])->get()->result_array();
 
-                    $without_price = $prices[0]['price'];
+                    $without_price =  $prices[0]['price'];
                     $whole_price = 0;
                     $customer_price = 0;
                     foreach ($prices as $p) {
@@ -526,6 +527,13 @@ class Invoices extends CI_Model {
                             $customer_price = $p['product_price'];
                         }
                     }
+
+                    // if  (!$this->input->post('is_quotation', TRUE)) {
+                    //     $without_price += $cgst[$i];
+                    //     // var_dump($whole_price , $cgst[$i]);exit;
+                    //     $whole_price += $cgst[$i];
+                    //     $customer_price += $cgst[$i];
+                    // }
 
                     if ($product_assembly == 1) {
                         $product_quantity = $quantity[$i];
@@ -547,9 +555,9 @@ class Invoices extends CI_Model {
                             $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
                             $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));
                         } else {
-                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) + $cgst[$i]);
-                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);
-                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) + $cgst[$i]);    
+                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate));
+                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
+                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));    
                         }
 
                         $i_disc = $without_price - $without_price_after_disc;

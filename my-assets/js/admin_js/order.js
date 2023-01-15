@@ -89,7 +89,7 @@ function quantity_calculate(item) {
     $("#all_discount_" + item).val(all_discount);
 
     //Tax calculation
-    var net_price = (quantity * price_item) - all_discount;
+    var net_price = (quantity * price_item);
     // console.log('-- ' + net_price + ' ' + quantity , price_item, all_discount);
     var cgst_tax = (net_price * cgst);
     var sgst_tax = (net_price * sgst);
