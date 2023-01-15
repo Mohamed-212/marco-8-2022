@@ -554,9 +554,9 @@ class Invoices extends CI_Model {
                             $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
                             $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));
                         } else {
-                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) - $cgst[$i]);
-                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);
-                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);    
+                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) );
+                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) );
+                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) );    
                         }
 
                         $i_disc = $without_price - $without_price_after_disc;
@@ -729,9 +729,9 @@ class Invoices extends CI_Model {
                             $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
                             $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));
                         } else {
-                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate) - $cgst[$i]);
-                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);
-                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate) - $cgst[$i]);    
+                            $without_price_after_disc = (($without_price - $discount_rate) - (($without_price - $discount_rate)  * $inv_disc_rate));
+                            $whole_price_after_disc = (($whole_price - $discount_rate) - (($whole_price - $discount_rate) * $inv_disc_rate));
+                            $customer_price_after_disc = (($customer_price - $discount_rate) - (($customer_price - $discount_rate) * $inv_disc_rate));    
                         }
                         
 
