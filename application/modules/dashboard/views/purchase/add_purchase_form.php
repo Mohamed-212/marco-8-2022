@@ -268,16 +268,22 @@
                             </script>
                         <?php } ?>
                         <div class="table-responsive mt_10">
+                            <style>
+table#purchaseTable tr, tr th, tr td, td input {
+    font-size: 12px !important;
+}
+                                </style>
+
+                                
                             <table class="table table-bordered table-hover" id="purchaseTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><?php echo display('item_information') ?> <i
+                                        <th class="text-center" style="width: 255px;"><?php echo display('item_information') ?> <i
                                                 class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('size') ?> <i
+                                        <th class="text-center" style="width: 130px;"><?php echo display('size') ?> <i
                                                 class="text-danger">*</i></th>
                                         <th hidden="" class="text-center" width="130"><?php echo display('batch_no') ?><i
                                                 class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('expire_date') ?></th>
                                         <th class="text-center"><?php echo display('available_quantity') ?> </th>
                                         <th class="text-center"><?php echo display('quantity') ?> <i
                                                 class="text-danger">*</i></th>
@@ -287,12 +293,12 @@
                                         <th hidden="" class="text-center"><?php echo display('vat') . ' (%)' ?> </th>
                                         <th hidden="" class="text-center"><?php echo display('product_vat') ?> </th>
                                         <th class="text-center"><?php echo display('total') ?> </th>
-                                        <th class="text-center" colspan="2"><?php echo display('delete') ?> </th>
+                                        <th class="text-center" colspan="" style="font-size: 9px;"><?php echo display('delete') ?> </th>
                                     </tr>
                                 </thead>
                                 <tbody id="addPurchaseItem">
                                     <tr>
-                                        <td>
+                                        <td >
                                             <input type="text" name="product_name" required
                                                    class="form-control product_name productSelection"
                                                    onkeyup="product_pur_or_list(1);"
@@ -330,7 +336,7 @@
                                                    placeholder="0" readonly />
                                             <input type="hidden" id="generated_batch" value="<?php echo $batch_no ?>">
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right" hidden>
                                             <input type="text" id="expiry_date_1" name="expiry_date[1]"
                                                    class="form-control datepicker2"
                                                    placeholder="<?php echo display('enter_expire_date') ?>" />
@@ -391,14 +397,21 @@
                                                    name="total_price[1]" id="total_price_1" placeholder="0.00"
                                                    readonly="readonly" />
                                         </td>
-                                        <td class="text-center" colspan="2">
-                                            <button class="btn btn-danger text-right" type="button"
+                                        <td class="text-center" style="font-size: 10px;">
+                                            <button class="btn btn-danger text-right btn-sm" type="button"
                                                     value="<?php echo display('delete') ?>"
-                                                    onclick="deleteRow(this)"><?php echo display('delete') ?></button>
+                                                    onclick="deleteRow(this)">
+                                                        <i class="fas fa fa-trash fa-trash-o"></i>
+                                                </button>
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot>
+                                
+                            </table>
+
+                            <table class="table table-bordered table-hover">
+                                
+                            <tbody>
                                     <tr>
                                         <td>
                                             <input type="button" id="add-invoice-item"
@@ -433,10 +446,8 @@
                                             <input type="text" id="total_vat" class="text-right form-control"
                                                    name="total_purchase_vat" placeholder="0.00" readonly="readonly" />
                                         </td>
-                                        <td class="text-right">
-                                            <b><?php echo display('total_dis') ?>:</b>
-                                        </td>
                                         <td>
+                                        <b><?php echo display('total_dis') ?>:</b>
                                             <input type="number" id="total_dis2" class="text-right form-control" value=""
                                                    onkeyup="calculate_total();"
                                                    onchange="calculate_total();"
@@ -447,9 +458,7 @@
                                                    name="total_purchase_dis" placeholder="0.00" readonly=""  />
                                         </td>
                                         <td class="text-right">
-                                            <b><?php echo display('grand_total') ?>:</b>
-                                        </td>
-                                        <td class="text-right">
+                                        <b><?php echo display('grand_total') ?>:</b>
                                             <input type="text" id="grandTotal2" class="text-right form-control"
                                                    name="grand_total_price2" placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="grandTotal" class="text-right form-control"
@@ -458,12 +467,12 @@
 
                                     </tr>
                                     <tr>
-                                        <td class="text-center" colspan="12">
+                                        <td class="text-center" colspan="7">
                                             <b><?php echo display('proof_of_purchase_expences') ?></b>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="text-right" colspan="12">
+                                        <td class="text-right" colspan="7">
                                             <table class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
@@ -545,7 +554,7 @@
                                             </table>
                                         </td>
                                     </tr>
-                                </tfoot>
+                                </tbody>
                             </table>
                         </div>
                         <div class="form-group row">

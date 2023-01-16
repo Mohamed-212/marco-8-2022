@@ -2455,7 +2455,7 @@ class Cproduct extends MX_Controller
             return;
         }
         if ($datacount > 1) {
-            // echo "<pre>";print_r($sheetdata);exit;
+            $IDS = [];
             for ($i = 1; $i < $datacount; $i++) {
                 $cogs_price = 0;
                 $price_types_list = [];
@@ -2475,6 +2475,19 @@ class Cproduct extends MX_Controller
                 $product_rate = (float)$sheetdata[$i][11]; // supplier price
 
                 if (empty($brand_id) && empty($product_model_only) && empty($category_id)) continue;
+
+                            // echo "<pre>";print_r($sheetdata);exit;
+
+                            $CO = str_split($sheetdata[$i][3]);
+
+                            $pn = $brand_id . ' - ' . $product_model;
+                            // var_dump($sheetdata[$i][2], $CO[0] . ' ' . $CO[1]);
+                            // $p = $this->db->select('*')->from('product_information')->where('product_model_only LIKE', $sheetdata[$i][2])->where('product_color LIKE', $CO[0] . ' ' . $CO[1])->limit(1)->get()->row();
+
+                            // var_dump($p); exit;
+                            // $ids[] = $p->product_id;
+                            // continue;
+
 
                 // if category is accessories then color and model only is not needed
                 if ($category_id == 'ACCESSORIES') {
@@ -2903,6 +2916,10 @@ class Cproduct extends MX_Controller
                     }
                 }
             }
+            // var_dump(count($ids));
+
+            // echo json_encode($ids);
+            // exit;
 
             // $this->print_mem();
             $this->session->set_userdata(array('message' => display('successfully_added')));

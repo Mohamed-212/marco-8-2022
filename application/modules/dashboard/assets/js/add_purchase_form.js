@@ -276,7 +276,7 @@ function addPurchaseOrderField(divName) {
                 ']" value="' +
                 batch_no +
                 count +
-                '" class="form-control text-right" placeholder="0" readonly /></td><td class="text-right"><input type="text" id="expiry_date_' +
+                '" class="form-control text-right" placeholder="0" readonly /></td><td class="text-right" hidden><input type="text" id="expiry_date_' +
                 count +
                 '" name="expiry_date[' +
                 count +
@@ -356,10 +356,9 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="total_price_' +
                 count +
-                '" placeholder="0.00" readonly="readonly" /> </td><td class="text-center" colspan="2"><button  class="btn btn-danger text-right" type="button" value="' +
+                '" placeholder="0.00" readonly="readonly" /> </td><td class="text-center" colspan="2"><button  class="btn btn-danger text-right btn-sm" type="button" value="' +
                 display("delete") +
-                '" onclick="deleteRow(this)">' +
-                display("delete") +
+                '" onclick="deleteRow(this)">' + '<i class="fas fa fa-trash fa-trash-o"></i>' +
                 "</button></td>";
         document.getElementById(divName).appendChild(newdiv);
         document.getElementById(tabin).focus();
