@@ -521,7 +521,7 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                                 <td class='hide-me'>
                                                                                     <?php
                                                                                     if (!empty($item_tax)) {
-                                                                                        echo (($position == 0) ? $currency . " " . ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100) : ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100) . " " . $currency);
+                                                                                        echo (($position == 0) ? $currency . " " . ($item_tax->tax_percentage * ($invoice['total_price']) / 100) : ($item_tax->tax_percentage * ($invoice['total_price']) / 100) . " " . $currency);
                                                                                     } else {
                                                                                         echo (($position == 0) ? $currency . " " . 0 : 0 . " " . $currency);
                                                                                     }
