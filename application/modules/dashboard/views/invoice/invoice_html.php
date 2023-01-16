@@ -532,11 +532,28 @@ $acc_cate_id = $this->db->select('category_id')->from('product_category')->where
                                                                             <?php } ?>
 
                                                                             <td><?php if (!empty($invoice['total_price'])) {
+
+                                                                                if ($isTaxed == 0) {
                                                                                     echo (($position == 0) ?
-                                                                                        $currency . " " .
-                                                                                        ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
-                                                                                        : ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
-                                                                                        . " " . $currency);
+                                                                                    $currency . " " .
+                                                                                    ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
+                                                                                    : ($invoice['total_price'] - (($invoice['discount'] * $invoice['quantity']) - ($item_tax->tax_percentage * ($invoice['total_price'] - ($invoice['discount'] * $invoice['quantity'])) / 100)))
+                                                                                    . " " . $currency);
+                                                                                } else {
+
+                                                                                    $pt = 0;
+                                                                                    $prv = ($item_tax->tax_percentage /100) * $invoice['total_price'];
+                                                                                    // var_dump($prv);
+                                                                                    $prtt = $invoice['total_price'] - ($invoice['discount'] * $invoice['quantity']);
+                                                                                    // var_dump($prtt);
+                                                                                    $pt = $prv + $prtt;
+                                                                                    echo (($position == 0) ?
+                                                                                    $currency . " " .
+                                                                                    $pt
+                                                                                    : $pt
+                                                                                    . " " . $currency);
+                                                                                }
+                                                                                    
                                                                                 } ?></td>
                                                                         </tr>
                                                                         <?php
