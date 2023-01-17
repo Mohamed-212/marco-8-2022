@@ -286,7 +286,7 @@ else {
                                             </div>
                                         </td>
                                         <td class="text-right">
-                                            <input type="text" name="batch_no[<?php echo $row ?>]" id="batch_no_1"
+                                            <input type="text" id="batch_no_1"
                                                 class="form-control text-right"
                                                 value="<?php echo html_escape($return['batch_no']) ?>" placeholder="0"
                                                 readonly />

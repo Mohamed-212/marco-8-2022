@@ -337,7 +337,7 @@
                                                    name="product_id[1]" id="SchoolHiddenId" />
 
                                             <input type="hidden" class="sl" value="1">
-                                            <input type="hidden" name="colorv[1]" id="color1" value="">
+                                            <input type="hidden" id="color1" value="">
                                             <input type="hidden" name="sizev[1]" id="size1" value="">
 
                                         </td>
@@ -360,7 +360,10 @@
 
                                         </td>
                                         <td class="text-right">
-                                            <input type="text" id="expiry_date_1" name="expiry_date[1]"
+<!--                                            <input type="text" id="expiry_date_1" name="expiry_date[1]"-->
+<!--                                                   class="form-control datepicker2"-->
+<!--                                                   placeholder="--><?php //echo display('enter_expire_date') ?><!--" />-->
+                                            <input type="text" id="expiry_date_1"
                                                    class="form-control datepicker2"
                                                    placeholder="<?php echo display('enter_expire_date') ?>" />
                                         </td>
@@ -413,8 +416,11 @@
                                                    readonly />
                                         </td>
                                         <td class="text-right">
+<!--                                            <input class="total_price2 text-right form-control" type="text"-->
+<!--                                                   name="total_price2[1]" id="total_price2_1" placeholder="0.00"-->
+<!--                                                   readonly="readonly" />-->
                                             <input class="total_price2 text-right form-control" type="text"
-                                                   name="total_price2[1]" id="total_price2_1" placeholder="0.00"
+                                                    id="total_price2_1" placeholder="0.00"
                                                    readonly="readonly" />
                                              <input class="total_price text-right form-control" type="text"
                                                    name="total_price[1]" id="total_price_1" placeholder="0.00"
@@ -436,8 +442,10 @@
                                             <b><?php echo display('sub_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
+<!--                                            <input type="text" id="subTotal2" class="text-right form-control"-->
+<!--                                                   name="sub_total_price2" placeholder="0.00" readonly="readonly" />-->
                                             <input type="text" id="subTotal2" class="text-right form-control"
-                                                   name="sub_total_price2" placeholder="0.00" readonly="readonly" />
+                                                    placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="subTotal" class="text-right form-control"
                                                    name="sub_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>
@@ -472,8 +480,10 @@
                                             <b><?php echo display('grand_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
+<!--                                            <input type="text" id="grandTotal2" class="text-right form-control"-->
+<!--                                                   name="grand_total_price2" placeholder="0.00" readonly="readonly" />-->
                                             <input type="text" id="grandTotal2" class="text-right form-control"
-                                                   name="grand_total_price2" placeholder="0.00" readonly="readonly" />
+                                                   placeholder="0.00" readonly="readonly" />
                                              <input type="text" id="grandTotal" class="text-right form-control"
                                                    name="grand_total_price" placeholder="0.00" readonly="readonly" />
                                         </td>

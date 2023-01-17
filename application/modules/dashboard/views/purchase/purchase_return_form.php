@@ -364,10 +364,14 @@ else {
                                             <input type="hidden" id="generated_batch" value="">
                                         </td>
                                         <td class="text-right">
-                                            <input type="text" id="expiry_date_1" name="expiry_date[<?php echo $row ?>]"
-                                                value="<?php echo html_escape($purchase['expiry_date']) ?>"
-                                                class="form-control datepicker"
-                                                placeholder="<?php echo display('enter_expire_date') ?>" readonly />
+<!--                                            <input type="text" id="expiry_date_1" name="expiry_date[--><?php //echo $row ?><!--]"-->
+<!--                                                value="--><?php //echo html_escape($purchase['expiry_date']) ?><!--"-->
+<!--                                                class="form-control datepicker"-->
+<!--                                                placeholder="--><?php //echo display('enter_expire_date') ?><!--" readonly />-->
+                                            <input type="text" id="expiry_date_1"
+                                                   value="<?php echo html_escape($purchase['expiry_date']) ?>"
+                                                   class="form-control datepicker"
+                                                   placeholder="<?php echo display('enter_expire_date') ?>" readonly />
                                         </td>
                                         <td class="text-right">
                                             <input type="number" id="avl_qntt_<?php echo $purchase['sl'] ?>"

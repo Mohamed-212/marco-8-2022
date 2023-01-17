@@ -334,17 +334,21 @@ else {
                                             </div>
                                         </td>
                                         <td class="text-right">
-                                            <input type="text" name="batch_no[]" id="batch_no_1"
+                                            <input type="text" id="batch_no_1"
                                                 class="form-control text-right"
                                                 value="<?php echo html_escape($purchase['batch_no']) ?>" placeholder="0"
                                                 readonly />
                                             <input type="hidden" id="generated_batch" value="">
                                         </td>
                                         <td class="text-right">
-                                            <input type="text" id="expiry_date_1" name="expiry_date[]"
-                                                value="<?php echo html_escape($purchase['expiry_date']) ?>"
-                                                class="form-control datepicker"
-                                                placeholder="<?php echo display('enter_expire_date') ?>" />
+<!--                                            <input type="text" id="expiry_date_1" name="expiry_date[]"-->
+<!--                                                value="--><?php //echo html_escape($purchase['expiry_date']) ?><!--"-->
+<!--                                                class="form-control datepicker"-->
+<!--                                                placeholder="--><?php //echo display('enter_expire_date') ?><!--" />-->
+                                            <input type="text" id="expiry_date_1"
+                                                   value="<?php echo html_escape($purchase['expiry_date']) ?>"
+                                                   class="form-control datepicker"
+                                                   placeholder="<?php echo display('enter_expire_date') ?>" />
                                         </td>
                                         <td class="text-right">
                                             <input type="number" id="avl_qntt_<?php echo $purchase['sl'] ?>"

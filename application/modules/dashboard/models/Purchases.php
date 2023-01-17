@@ -136,8 +136,8 @@ class Purchases extends CI_Model
                 //Generator purchase id
                 $purchase_id = $this->auth->generator(15);
                 $p_id = $this->input->post('product_id', TRUE);
-                $batch = $this->input->post('batch_no', true);
-                $expiry = $this->input->post('expiry_date', true);
+//                $batch = $this->input->post('batch_no', true);
+//                $expiry = $this->input->post('expiry_date', true);
                 $supplier_id = $this->input->post('supplier_id', TRUE);
                 $quantity = $this->input->post('product_quantity', TRUE);
                 $variant_id = $this->input->post('variant_id', TRUE);
@@ -146,7 +146,7 @@ class Purchases extends CI_Model
                 $pur_order_no = $this->input->post('purchase_order', TRUE);
                 $vat_rate = $this->input->post('vat_rate', TRUE);
                 $vat = $this->input->post('vat', TRUE);
-                $color = $this->input->post('colorv', TRUE);
+//                $color = $this->input->post('colorv', TRUE);
                 $size = $this->input->post('sizev', TRUE);
                 $cat_id = $this->input->post('category_id', TRUE);
                 //start for total discount
@@ -226,41 +226,41 @@ class Purchases extends CI_Model
                 //                    }
                 //                }
                 //proof of purchase expense 
-//                $cost_sectors = $this->input->post('bank_id', TRUE);
-//                if (!empty($cost_sectors)) {
-//                    $purchase_costs = array();
-//                    foreach ($cost_sectors as $key => $sector) {
-//                        $expense_title = $this->input->post('purchase_expences_title_' . ($key + 1));
-//                        $purchase_expense = $this->input->post('purchase_expences_' . ($key + 1));
-//                        if (!empty($purchase_expense)) {
-//                            $purchase_costs[] = array(
-//                                'purchase_id' => $purchase_id,
-//                                'expense_title' => $expense_title,
-//                                'purchase_expense' => $purchase_expense,
-//                                'payment_method' => $sector,
-//                            );
-//                        }
-//                    }
-//                    if (!empty($purchase_costs)) {
-//                        $this->db->insert_batch('proof_of_purchase_expese', $purchase_costs);
-//                    }
-//                }
+                $cost_sectors = $this->input->post('bank_id', TRUE);
+                if (!empty($cost_sectors)) {
+                    $purchase_costs = array();
+                    foreach ($cost_sectors as $key => $sector) {
+                        $expense_title = $this->input->post('purchase_expences_title_' . ($key + 1));
+                        $purchase_expense = $this->input->post('purchase_expences_' . ($key + 1));
+                        if (!empty($purchase_expense)) {
+                            $purchase_costs[] = array(
+                                'purchase_id' => $purchase_id,
+                                'expense_title' => $expense_title,
+                                'purchase_expense' => $purchase_expense,
+                                'payment_method' => $sector,
+                            );
+                        }
+                    }
+                    if (!empty($purchase_costs)) {
+                        $this->db->insert_batch('proof_of_purchase_expese', $purchase_costs);
+                    }
+                }
 
                 // upload attachment file
                 // load upload library for file uploading
-//                $config['upload_path']          = './my-assets/attachments/';
-//                $config['allowed_types']        = '*';
-//                $config['encrypt_name'] = true;
-//                $this->load->library('upload');
-//                $this->upload->initialize($config);
-//                $upload_data = ['file' => null];
-//
-//                if (!$this->upload->do_upload('file')) {
-//                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
-//                    redirect(base_url('dashboard/Cpurchase'));
-//                } else {
-//                    $upload_data = array('file' => $this->upload->data());
-//                }
+                $config['upload_path']          = './my-assets/attachments/';
+                $config['allowed_types']        = '*';
+                $config['encrypt_name'] = true;
+                $this->load->library('upload');
+                $this->upload->initialize($config);
+                $upload_data = ['file' => null];
+
+                if (!$this->upload->do_upload('file')) {
+                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
+                    redirect(base_url('dashboard/Cpurchase'));
+                } else {
+                    $upload_data = array('file' => $this->upload->data());
+                }
 
                 //Add Product To Purchase Table
                 echo $this->input->post('supplier_id', TRUE);
@@ -320,13 +320,13 @@ class Purchases extends CI_Model
                         $product_quantity = $quantity[$i];
                         $product_rate = $rate[$i];
                         $product_id = $p_id[$i];
-                        $batch_no = $batch[$i];
-                        $expiry_date = $expiry[$i];
+//                        $batch_no = $batch[$i];
+//                        $expiry_date = $expiry[$i];
                         $total_price = $t_price[$i];
                         // $variant = $variant_id[$i];
                         $variant = $size[$i];
                         // $variant_color = @$color_variant[$i];
-                        $variant_color = $color[$i];
+//                        $variant_color = $color[$i];
                         $product_discount = $discount[$i];
                         $total_price_without_discount += ($rate[$i] * $quantity[$i]);
                         $category_id = $cat_id[$i];
@@ -370,8 +370,8 @@ class Purchases extends CI_Model
                             'purchase_detail_id' => $this->auth->generator(15),
                             'purchase_id' => $purchase_id,
                             'product_id' => $product_id,
-                            'batch_no' => $batch_no,
-                            'expiry_date' => !empty($expiry_date) && (date('Y-m-d', strtotime($expiry_date)) != '1970-01-01') ? date('Y-m-d', strtotime($expiry_date)) : '',
+//                            'batch_no' => $batch_no,
+                            'expiry_date' => '',
                             'wearhouse_id' => '',
                             'store_id' => $this->input->post('store_id', TRUE),
                             'quantity' => $product_quantity,
@@ -386,7 +386,7 @@ class Purchases extends CI_Model
                             'total_amount' => $total_price,
                             'variant_id' => $variant,
                             // 'variant_color' => (!empty($variant_color) ? $variant_color : NULL),
-                            'variant_color' => $variant_color,
+//                            'variant_color' => $variant_color,
                             'status' => 1
                         );
 
@@ -433,7 +433,7 @@ class Purchases extends CI_Model
                             'store_id' => $this->input->post('store_id', TRUE),
                             'product_id' => $product_id,
                             'variant_id' => $variant,
-                            'variant_color' => $variant_color,
+//                            'variant_color' => $variant_color,
                             'date_time' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
                             'quantity' => $product_quantity,
                             'status' => 3
@@ -449,7 +449,7 @@ class Purchases extends CI_Model
                                     'store_id' => $store_id,
                                     'product_id' => $product_id,
                                     'variant_id' => $variant,
-                                    'variant_color' => $variant_color,
+//                                    'variant_color' => $variant_color,
                                     'quantity' => $product_quantity,
                                     'warehouse_id' => '',
                                     'created_at' => date('Y-m-d H:i:s', strtotime($this->input->post('purchase_date', TRUE))),
@@ -470,9 +470,9 @@ class Purchases extends CI_Model
                                 if (!empty($variant)) {
                                     $this->db->where('variant_id', $variant);
                                 }
-                                if (!empty($variant_color)) {
-                                    $this->db->where('variant_color', $variant_color);
-                                }
+//                                if (!empty($variant_color)) {
+//                                    $this->db->where('variant_color', $variant_color);
+//                                }
                                 $this->db->update('purchase_stock_tbl', $stock);
                                 //update
                             }

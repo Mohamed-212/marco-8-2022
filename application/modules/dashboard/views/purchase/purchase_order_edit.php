@@ -237,7 +237,7 @@
                                                     <input type="hidden" class="autocomplete_hidden_value product_id_<?php echo $sl ?>" name="product_id[<?php echo $sl ?>]" id="" value="<?php echo html_escape($purchase['product_id']) ?>" />
 
                                                     <input type="hidden" class="sl" value="<?php echo $sl ?>">
-                                                    <input type="hidden" name="colorv[<?php echo $sl ?>]" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
+                                                    <input type="hidden" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
                                                     <input type="hidden" name="sizev[<?php echo $sl ?>]" id="size<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_id']) ?>">
                                                 </td>
 
@@ -295,7 +295,8 @@
 
 
                                                 <td class="text-right">
-                                                    <input type="text" id="expiry_date_<?php echo $sl ?>" name="expiry_date[<?php echo $sl ?>]" value="<?php echo (empty($purchase['expiry_date']) || strlen($purchase['expiry_date']) < 2) ? '' : html_escape(date('d-m-Y', strtotime($purchase['expiry_date']))) ?>" class="form-control datepicker2" placeholder="<?php echo display('enter_expire_date') ?>" />
+<!--                                                    <input type="text" id="expiry_date_--><?php //echo $sl ?><!--" name="expiry_date[--><?php //echo $sl ?><!--]" value="--><?php //echo (empty($purchase['expiry_date']) || strlen($purchase['expiry_date']) < 2) ? '' : html_escape(date('d-m-Y', strtotime($purchase['expiry_date']))) ?><!--" class="form-control datepicker2" placeholder="--><?php //echo display('enter_expire_date') ?><!--" />-->
+                                                    <input type="text" id="expiry_date_<?php echo $sl ?>" value="<?php echo (empty($purchase['expiry_date']) || strlen($purchase['expiry_date']) < 2) ? '' : html_escape(date('d-m-Y', strtotime($purchase['expiry_date']))) ?>" class="form-control datepicker2" placeholder="<?php echo display('enter_expire_date') ?>" />
                                                 </td>
 
 

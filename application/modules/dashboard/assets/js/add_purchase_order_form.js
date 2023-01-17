@@ -246,9 +246,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="SchoolHiddenId"/><input type="hidden" class="sl" value="' +
                 count +
-                '"><input type="hidden" name="colorv[' +
-                count +
-                ']" id="color' +
+                '"><input type="hidden"  id="color' +
                 count +
                 '" value=""><input type="hidden" name="sizev[' +
                 count +
@@ -264,9 +262,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 '" class="form-control variant_id width_100p" disabled=""><option value=""></option></select></div></td><td class="text-right"><input type="text" id="expiry_date_' +
                 count +
-                '" name="expiry_date[' +
-                count +
-                ']" class="form-control datepicker" placeholder="' +
+                '" class="form-control datepicker" placeholder="' +
                 display("enter_expire_date") +
                 '"/></td><td class="text-right"><input type="number" id="avl_qntt_' +
                 count +
@@ -334,9 +330,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="item_vat_' +
                 count +
-                '"class="form-control text-right item_vat" placeholder="0.00" min="0" readonly /></td><td class="text-right"><input class="total_price2 text-right form-control" type="text" name="total_price2[' +
-                count +
-                ']" id="total_price2_' +
+                '"class="form-control text-right item_vat" placeholder="0.00" min="0" readonly /></td><td class="text-right"><input class="total_price2 text-right form-control" type="text" id="total_price2_' +
                 count +
                 '" placeholder="0.00" readonly="readonly" /><input class="total_price text-right form-control" type="text" name="total_price[' +
                 count +

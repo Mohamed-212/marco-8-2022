@@ -276,7 +276,7 @@
                                                            value="<?php echo html_escape($purchase['product_id']) ?>" />
 
                                                     <input type="hidden" class="sl" value="<?php echo $sl ?>">
-                                                    <input type="hidden" name="colorv[<?php echo $sl ?>]" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
+                                                    <input type="hidden" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
                                                     <input type="hidden" name="sizev[<?php echo $sl ?>]" id="size<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_id']) ?>">
                                                 </td>
 
@@ -341,7 +341,11 @@
 
 
                                                 <td class="text-right">
-                                                    <input type="text" id="expiry_date_<?php echo $sl ?>" name="expiry_date[<?php echo $sl ?>]"
+<!--                                                    <input type="text" id="expiry_date_--><?php //echo $sl ?><!--" name="expiry_date[--><?php //echo $sl ?><!--]"-->
+<!--                                                           value="--><?php //echo html_escape($purchase['expiry_date']) ?><!--"-->
+<!--                                                           class="form-control datepicker2"-->
+<!--                                                           placeholder="--><?php //echo display('enter_expire_date') ?><!--" />-->
+                                                    <input type="text" id="expiry_date_<?php echo $sl ?>"
                                                            value="<?php echo html_escape($purchase['expiry_date']) ?>"
                                                            class="form-control datepicker2"
                                                            placeholder="<?php echo display('enter_expire_date') ?>" />
