@@ -130,6 +130,9 @@ class Purchases extends CI_Model
     public function purchase_entry()
     {
         if (check_module_status('accounting') == 1) {
+            ini_set('memory_limit', '6G');
+            ini_set('post_max_size', '5G');
+            ini_set('upload_max_filesize', '4G');
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
 
