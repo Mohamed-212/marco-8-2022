@@ -226,43 +226,44 @@ class Purchases extends CI_Model
                 //                    }
                 //                }
                 //proof of purchase expense 
-                $cost_sectors = $this->input->post('bank_id', TRUE);
-                if (!empty($cost_sectors)) {
-                    $purchase_costs = array();
-                    foreach ($cost_sectors as $key => $sector) {
-                        $expense_title = $this->input->post('purchase_expences_title_' . ($key + 1));
-                        $purchase_expense = $this->input->post('purchase_expences_' . ($key + 1));
-                        if (!empty($purchase_expense)) {
-                            $purchase_costs[] = array(
-                                'purchase_id' => $purchase_id,
-                                'expense_title' => $expense_title,
-                                'purchase_expense' => $purchase_expense,
-                                'payment_method' => $sector,
-                            );
-                        }
-                    }
-                    if (!empty($purchase_costs)) {
-                        $this->db->insert_batch('proof_of_purchase_expese', $purchase_costs);
-                    }
-                }
+//                $cost_sectors = $this->input->post('bank_id', TRUE);
+//                if (!empty($cost_sectors)) {
+//                    $purchase_costs = array();
+//                    foreach ($cost_sectors as $key => $sector) {
+//                        $expense_title = $this->input->post('purchase_expences_title_' . ($key + 1));
+//                        $purchase_expense = $this->input->post('purchase_expences_' . ($key + 1));
+//                        if (!empty($purchase_expense)) {
+//                            $purchase_costs[] = array(
+//                                'purchase_id' => $purchase_id,
+//                                'expense_title' => $expense_title,
+//                                'purchase_expense' => $purchase_expense,
+//                                'payment_method' => $sector,
+//                            );
+//                        }
+//                    }
+//                    if (!empty($purchase_costs)) {
+//                        $this->db->insert_batch('proof_of_purchase_expese', $purchase_costs);
+//                    }
+//                }
 
                 // upload attachment file
                 // load upload library for file uploading
-                $config['upload_path']          = './my-assets/attachments/';
-                $config['allowed_types']        = '*';
-                $config['encrypt_name'] = true;
-                $this->load->library('upload');
-                $this->upload->initialize($config);
-                $upload_data = ['file' => null];
-
-                if (!$this->upload->do_upload('file')) {
-                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
-                    redirect(base_url('dashboard/Cpurchase'));
-                } else {
-                    $upload_data = array('file' => $this->upload->data());
-                }
+//                $config['upload_path']          = './my-assets/attachments/';
+//                $config['allowed_types']        = '*';
+//                $config['encrypt_name'] = true;
+//                $this->load->library('upload');
+//                $this->upload->initialize($config);
+//                $upload_data = ['file' => null];
+//
+//                if (!$this->upload->do_upload('file')) {
+//                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
+//                    redirect(base_url('dashboard/Cpurchase'));
+//                } else {
+//                    $upload_data = array('file' => $this->upload->data());
+//                }
 
                 //Add Product To Purchase Table
+                echo $this->input->post('supplier_id', TRUE);exit();
                 $data = array(
                     'purchase_id' => $purchase_id,
                     'invoice_no' => $this->input->post('invoice_no', TRUE),
