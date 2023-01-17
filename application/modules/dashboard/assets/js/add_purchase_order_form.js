@@ -290,9 +290,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ')" onchange="calculate_add_purchase(' +
                 count +
-                ')" readonly/></td><td hidden=""><input type="number" name="discount2[' +
-                count +
-                ']" onkeyup="calculate_add_purchase(' +
+                ')" readonly/></td><td hidden=""><input type="number" onkeyup="calculate_add_purchase(' +
                 count +
                 ');"onchange="calculate_add_purchase(' +
                 count +

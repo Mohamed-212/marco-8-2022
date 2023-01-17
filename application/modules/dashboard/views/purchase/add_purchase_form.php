@@ -368,7 +368,7 @@ table#purchaseTable tr, tr th, tr td, td input {
                                         </td>
                                         <!-- Discount -->
                                         <td hidden="">
-                                            <input type="number" name="discount2[1]" onkeyup="calculate_add_purchase(1);"
+                                            <input type="number" onkeyup="calculate_add_purchase(1);"
                                                    onchange="calculate_add_purchase(1);" id="discount2_1"
                                                    class="form-control text-right" placeholder="0.00" min="0" />
                                             <input type="number" name="discount[1]" onkeyup="calculate_add_purchase(1);"
