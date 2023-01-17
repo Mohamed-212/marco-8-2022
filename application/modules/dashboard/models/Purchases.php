@@ -264,7 +264,8 @@ class Purchases extends CI_Model
 
                 //Add Product To Purchase Table
                 echo $this->input->post('supplier_id', TRUE);
-                echo $this->input->post('grand_total_price', TRUE);exit();
+                echo 'grand_total_price' .  $this->input->post('grand_total_price', TRUE);
+                print_r($this->input->post());exit();
                 $data = array(
                     'purchase_id' => $purchase_id,
                     'invoice_no' => $this->input->post('invoice_no', TRUE),
