@@ -21,7 +21,6 @@ class Cpurchase extends MX_Controller {
 
     //Default index function loading
     public function index() {
-        phpinfo();exit();
         if (check_module_status('accounting') == 1) {
             $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
             if (!empty($find_active_fiscal_year)) {
