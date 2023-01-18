@@ -142,16 +142,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group row">
-                                    <label for="date" class="col-sm-4 col-form-label"><?php echo display('expire_date') ?>
-                                        <i class="text-danger">*</i>
-                                    </label>
-                                    <div class="col-sm-8">
-                                        <input type="text" tabindex="3" class="form-control datepicker2" value="<?php echo html_escape($purchase_info[0]['expire_date'] == '0000-00-00' ? $purchase_info[0]['expire_date'] : date('d-m-Y', strtotime($purchase_info[0]['expire_date']))) ?>" name="expire_date" id="expire_date" placeholder="<?php echo display('enter_expire_date'); ?>" required autocomplete="off" />
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
 
                         <div class="row">
@@ -171,9 +162,9 @@
                             <table class="table table-bordered table-hover" id="purchaseTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
+                                        <th class="text-center" style="width: 250px;"><?php echo display('item_information') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center" width="130"><?php echo display('variant') ?> <i class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('expire_date') ?></th>
+                                        <th class="text-center" hidden width="130"><?php echo display('expire_date') ?></th>
                                         <th class="text-center"><?php echo display('available_quantity') ?> </th>
                                         <th class="text-center"><?php echo display('quantity') ?> <i class="text-danger">*</i></th>
                                         <th class="text-center"><?php echo display('rate') ?> <i class="text-danger">*</i></th>
@@ -294,7 +285,7 @@
                                                 </td>
 
 
-                                                <td class="text-right">
+                                                <td class="text-right" hidden>
 <!--                                                    <input type="text" id="expiry_date_--><?php //echo $sl ?><!--" name="expiry_date[--><?php //echo $sl ?><!--]" value="--><?php //echo (empty($purchase['expiry_date']) || strlen($purchase['expiry_date']) < 2) ? '' : html_escape(date('d-m-Y', strtotime($purchase['expiry_date']))) ?><!--" class="form-control datepicker2" placeholder="--><?php //echo display('enter_expire_date') ?><!--" />-->
                                                     <input type="text" id="expiry_date_<?php echo $sl ?>" value="<?php echo (empty($purchase['expiry_date']) || strlen($purchase['expiry_date']) < 2) ? '' : html_escape(date('d-m-Y', strtotime($purchase['expiry_date']))) ?>" class="form-control datepicker2" placeholder="<?php echo display('enter_expire_date') ?>" />
                                                 </td>
@@ -327,7 +318,9 @@
                                                     <input type="hidden" name="purchase_detail_id[<?php echo $sl ?>]" value="<?php echo html_escape($purchase['pur_order_detail_id']) ?>" />
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-danger text-right" type="button" value="<?php echo display('delete') ?>" onclick="deleteRow(this)"><?php echo display('delete') ?></button>
+                                                    <button class="btn btn-danger text-right btn-sm" type="button" value="<?php echo display('delete') ?>" onclick="deleteRow(this)">
+                                                                <i class="fas fa fa-trash"></i>
+                                                </button>
                                                 </td>
                                             </tr>
                                     <?php
@@ -337,7 +330,13 @@
                                     ?>
                                 </tbody>
                                 <tfoot>
-                                    <tr>
+                                    
+                                </tfoot>
+                            </table>
+
+                            <table class="table table-bordered table-hover" id="purchaseTable">
+                                <tbody>
+                                <tr>
                                         <td>
                                             <input type="button" id="add-invoice-item" class="btn -btn-info color4 color5" name="add-invoice-item" onClick="addPurchaseOrderField('addPurchaseItem');" value="<?php echo display('add_new_item') ?>" />
                                             <input type="hidden" name="baseUrl" class="baseUrl" value="<?php echo base_url(); ?>" />
@@ -372,7 +371,7 @@
                                         </td>
 
                                     </tr>
-                                </tfoot>
+                                </tbody>
                             </table>
                         </div>
 

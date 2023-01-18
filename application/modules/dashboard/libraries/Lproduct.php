@@ -91,6 +91,7 @@ class Lproduct {
         $CI->load->model('dashboard/Products');
         $CI->load->library('dashboard/occational');
         $CI->load->model('dashboard/Soft_settings');
+        $CI->load->model('dashboard/Purchases');
         $products_list_all = $CI->Products->product_list($filter, $per_page, $page);
         $products_list = [];
         foreach ($products_list_all as $p) {
@@ -126,12 +127,17 @@ class Lproduct {
 
             // echo "<pre>";var_dump($p);exit;
 
+            // if ($p['assembly'] == 1) {
+            //     $stockData = $CI->Purchases->check_variant_wise_stock2($p['product_id'], null, $size_id);
+            // } else {
+            //     $stockData = $CI->Purchases->check_variant_wise_stock($p['product_id'], null, $size_id);
+            // }
             if ($p['assembly'] == 1) {
-                $stockData = $CI->Products->check_variant_wise_stock2($p['product_id'], null, $size_id);
+                $stock = $CI->Purchases->check_variant_wise_stock2($p['product_id'], null, $size_id,null);
             } else {
-                $stockData = $CI->Products->check_variant_wise_stock($p['product_id'], null, $size_id);
+                $stock = $CI->Purchases->check_variant_wise_stock($p['product_id'], null, $size_id,null);
             }
-            $p['stock'] = $stockData[0] - $stockData[1];
+            $p['stock'] = $stock;
             $products_list[] = $p;
 
         }

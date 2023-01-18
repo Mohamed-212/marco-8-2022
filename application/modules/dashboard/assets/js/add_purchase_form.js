@@ -269,9 +269,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 '" class="form-control color_variant width_100p" disabled="" ><option value=""></option></select></div></td><td hidden="" class="text-right"><input type="text" id="batch_no_' +
                 count +
-                '" name="batch_no[' +
-                count +
-                ']" value="' +
+                '" value="' +
                 batch_no +
                 count +
                 '" class="form-control text-right" placeholder="0" readonly /></td><td class="text-right" hidden><input type="text" id="expiry_date_' +
@@ -318,9 +316,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ');" id="discount_' +
                 count +
-                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td hidden=""><input type="number" name="vat_rate2[' +
-                count +
-                ']" onkeyup="calculate_add_purchase(' +
+                '"class="form-control text-right" placeholder="0.00" min="0" readonly/></td><td hidden=""><input type="number" onkeyup="calculate_add_purchase(' +
                 count +
                 ');"onchange="calculate_add_purchase(' +
                 count +
