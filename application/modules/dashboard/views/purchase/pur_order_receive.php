@@ -245,13 +245,13 @@
                             <table class="table table-bordered table-hover" id="purchaseTable">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" width="180"><?php echo display('item_information') ?> <i
+                                        <th class="text-center" width="250"><?php echo display('item_information') ?> <i
                                                 class="text-danger">*</i></th>
-                                        <th class="text-center" width="130"><?php echo display('size') ?> <i
+                                        <th class="text-center" width="120"><?php echo display('size') ?> <i
                                                 class="text-danger">*</i></th>
 <!--                                        <th class="text-center" width="130"><?php echo display('batch_no') ?><i
                                                 class="text-danger">*</i></th>-->
-                                        <th class="text-center" width="130"><?php echo display('expire_date') ?></th>
+                                        <!-- <th class="text-center" width="130"><?php echo display('expire_date') ?></th> -->
                                         <th class="text-center"><?php echo display('available_quantity') ?> </th>
                                         <th class="text-center"><?php echo display('quantity') ?> <i
                                                 class="text-danger">*</i></th>
@@ -262,7 +262,7 @@
                                         <th class="text-center"><?php echo display('product_vat') ?> </th>-->
                                         <th class="text-center"><?php echo display('total') ?> <i
                                                 class="text-danger">*</i></th>
-                                        <th class="text-center" colspan="2"><?php echo display('delete') ?> </th>
+                                        <th class="text-center" style="font-size: 10px;"><?php echo display('delete') ?> </th>
                                     </tr>
                                 </thead>
                                 <tbody id="addPurchaseItem">
@@ -328,7 +328,7 @@
                                                            value="<?php echo html_escape($purchase['pur_order_detail_id']) ?>" />
                                                     <input type="hidden" class="sl" value="<?php echo $sl ?>">
                                                     <input type="hidden" name="category_id[<?php echo $sl ?>]" id="category_id<?php echo $sl ?>" value="<?php echo html_escape($purchase['category_id']) ?>">
-                                                    <input type="hidden" name="colorv[<?php echo $sl ?>]" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
+                                                    <input type="hidden" id="color<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_color']) ?>">
                                                     <input type="hidden" name="sizev[<?php echo $sl ?>]" id="size<?php echo $sl ?>" value="<?php echo html_escape($purchase['variant_id']) ?>">
                                                 </td>
                                                 <td class="text-center">
@@ -386,13 +386,13 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-right" hidden="">
-                                                    <input type="text" name="batch_no[<?php echo $sl ?>]" id="batch_no_1" required
+                                                    <input type="text" id="batch_no_1" required
                                                            class="form-control text-right" value="<?php echo $batch_no . $sl ?>"
                                                            placeholder="0" readonly />
                                                     <input type="hidden" id="generated_batch" value="<?php echo $batch_no ?>">
                                                 </td>
-                                                <td class="text-right">
-                                                    <input type="text" id="expiry_date_<?php echo $sl ?>" name="expiry_date[<?php echo $sl ?>]"
+                                                <td class="text-right" hidden>
+                                                    <input type="text" id="expiry_date_<?php echo $sl ?>"
                                                            value="<?php echo html_escape($purchase['expiry_date']) ?>"
                                                            class="form-control datepicker"
                                                            placeholder="<?php echo display('enter_expire_date') ?>" />
@@ -429,7 +429,7 @@
                                                 </td>
                                                 <!-- Discount -->
                                                 <td hidden="">
-                                                    <input type="number" name="discount2[<?php echo $sl ?>]"
+                                                    <input type="number"
                                                            value="<?php echo html_escape($purchase['discount']) ?>"
                                                            onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
                                                            onchange="calculate_add_purchase(<?php echo $sl ?>);"
@@ -443,7 +443,7 @@
                                                            placeholder="0.00" min="0" />
                                                 </td>
                                                 <td hidden="">
-                                                    <input type="number" name="vat_rate2[<?php echo $sl ?>]"
+                                                    <input type="number" 
                                                            value="<?php echo html_escape($purchase['vat_rate']) ?>"
                                                            onkeyup="calculate_add_purchase(<?php echo $sl ?>);"
                                                            onchange="calculate_add_purchase(<?php echo $sl ?>);"
@@ -469,7 +469,7 @@
                                                 <td class="text-right">
                                                     <input class="total_price2 text-right form-control"
                                                            value="<?php echo html_escape($purchase['total_amount'] / $purchase['conversion_rate']) ?>" type="text"
-                                                           name="total_price2[<?php echo $sl ?>]" id="total_price2_<?php echo $sl ?>"
+                                                            id="total_price2_<?php echo $sl ?>"
                                                            readonly="readonly" />
                                                     <input class="total_price text-right form-control"
                                                            value="<?php echo html_escape($purchase['total_amount']) ?>" type="text"
@@ -478,10 +478,10 @@
                                                     <input type="hidden" name="purchase_detail_id[<?php echo $sl ?>]"
                                                            value="<?php echo html_escape($purchase['pur_order_detail_id']) ?>" />
                                                 </td>
-                                                <td class="text-center" colspan="2">
-                                                    <button class="btn btn-danger text-right" type="button"
+                                                <td class="text-center">
+                                                    <button class="btn btn-danger text-right btn-sm" type="button"
                                                             value="<?php echo display('delete') ?>" onclick="deleteRow(this)">
-                                                                <?php echo display('delete') ?>
+                                                            <i class="fas fa fa-trash fa-trash-o"></i>
                                                     </button>
                                                 </td>
                                             </tr>
@@ -492,6 +492,14 @@
                                     ?>
                                 </tbody>
                                 <tfoot>
+                                    
+                                </tfoot>
+                            </table>
+
+                            <table class="table table-bordered table-hover" id="purchaseTable">
+                                        <tbody>
+
+                                        
                                     <tr>
 
                                         <td class="text-right">
@@ -499,7 +507,7 @@
                                         </td>
                                         <td class="text-right">
                                             <input type="text" id="subTotal2" value="<?php echo html_escape($purchase['sub_total_price'] / $purchase['conversion_rate']) ?>"
-                                                   class="text-right form-control" name="sub_total_price2"
+                                                   class="text-right form-control"
                                                    placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="subTotal" value="{sub_total_price}"
                                                    class="text-right form-control" name="sub_total_price"
@@ -648,8 +656,8 @@
                                             </table>
                                         </td>
                                     </tr>
-                                </tfoot>
-                            </table>
+                                    </tbody>
+                                        </table>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">

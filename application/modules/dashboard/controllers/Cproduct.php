@@ -4094,7 +4094,7 @@ class Cproduct extends MX_Controller
 
                 $dm = (int)$sheetdata[$i][15];
                 // $p = $this->db->select('*')->from('product_information')->where('product_model', $product_model)->get()->row();
-                $vno = 'StockOP-' . $voucher_no;
+                $vno = 'StockOP-9272727';
                 $this->insert_stock_opening($product_model, $dm, $vno);
 
                 continue;
@@ -4608,11 +4608,13 @@ class Cproduct extends MX_Controller
                 $rate              = [$p->supplier_price];
                 $t_price           = [($p->supplier_price * $qty)];
                 $sub_total_price   = [$qty];
-                $grand_total_price = [($p->supplier_price * $qty)];
+                $grand_total_price = $p->supplier_price * $qty;
 
                 if (!empty($voucher_date) && strlen($voucher_date) > 2) {
                     $voucher_date = date('Y-m-d', strtotime($voucher_date));
                 }
+
+                // var_dump($grand_total_price);
 
                 //Stock opening Details
                 $cogs_price = 0;
@@ -4671,12 +4673,12 @@ class Cproduct extends MX_Controller
                             'open_rate' => $product_rate,
                         );
 
-                        $this->Products->update_product($supplier_price, $product_id);
+                        // $this->Products->update_product($supplier_price, $product_id);
 
                         // $this->db->where('product_id', $product_id);
                         // $this->db->update('product_information', $supplier_price);
 
-                        $this->db->insert('transfer', $store);
+                        // $this->db->insert('transfer', $store);
                         // stock 
                         $check_stock = $this->Stock_opening_model->check_stock($store_id, $product_id, $variant, $variant_color);
                         // echo "<pre>";var_dump(compact('product_quantity', 'product_rate', 'product_id', 'check_stock'));
@@ -4691,7 +4693,7 @@ class Cproduct extends MX_Controller
                                 'quantity'     => $product_quantity,
                                 'warehouse_id' => '',
                             );
-                            $this->db->insert('purchase_stock_tbl', $stock);
+                            // $this->db->insert('purchase_stock_tbl', $stock);
                             // insert
                         } else {
                             //update
@@ -4710,7 +4712,7 @@ class Cproduct extends MX_Controller
                             if (!empty($variant_color)) {
                                 $this->db->where('variant_color', $variant_color);
                             }
-                            $this->db->update('purchase_stock_tbl', $stock);
+                            // $this->db->update('purchase_stock_tbl', $stock);
                             //update
                         }
                         // stock
@@ -4756,7 +4758,7 @@ class Cproduct extends MX_Controller
                     'IsAppove'  => 1
                 );
                 $this->db->insert('acc_transaction', $store_debit);
-                $this->db->insert('acc_transaction', $COGSCredit);
+                // $this->db->insert('acc_transaction', $COGSCredit);
                 $this->session->set_userdata(array('message' => display('successfully_added')));
                 // redirect('dashboard/cstock_opening/add_stock_opening');
             } else {

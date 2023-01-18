@@ -224,7 +224,7 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="variant_id_' +
                 count +
-                '" class="form-control variant_id width_100p" disabled="" ><option value=""></option></select></div></td><td class="text-right"><input type="text" id="expiry_date_' +
+                '" class="form-control variant_id width_100p" disabled="" ><option value=""></option></select></div></td><td hidden  class="text-right"><input type="text" id="expiry_date_' +
                 count +
                 '" value="" class="form-control datepicker" placeholder="' +
                 display("enter_expire_date") +
@@ -270,10 +270,10 @@ function addPurchaseOrderField(divName) {
                 count +
                 ']" id="total_price_' +
                 count +
-                '" placeholder="0.00" readonly="readonly" /> </td><td><button class="btn btn-danger text-right" type="button" value="' +
+                '" placeholder="0.00" readonly="readonly" /> </td><td><button class="btn btn-danger text-right btn-sm" type="button" value="' +
                 display("delete") +
                 '" onclick="deleteRow(this)">' +
-                display("delete") +
+                '<i class="fas fa fa-trash fa-trash-o"></i>' +
                 "</button></td>";
         document.getElementById(divName).appendChild(newdiv);
         document.getElementById(tabin).focus();

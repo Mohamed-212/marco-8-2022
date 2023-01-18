@@ -376,7 +376,7 @@ table#purchaseTable tr, tr th, tr td, td input {
                                                    class="form-control text-right" placeholder="0.00" min="0" readonly=""/>
                                         </td>
                                         <td hidden="">
-                                            <input type="number" name="vat_rate2[1]" onkeyup="calculate_add_purchase(1);"
+                                            <input type="number" onkeyup="calculate_add_purchase(1);"
                                                    onchange="calculate_add_purchase(1);" id="item_vat_rate2_1"
                                                    class="form-control text-right" placeholder="0.00" min="0" />
                                             <input type="number" name="vat_rate[1]" onkeyup="calculate_add_purchase(1);"
@@ -432,8 +432,8 @@ table#purchaseTable tr, tr th, tr td, td input {
                                             <b><?php echo display('sub_total') ?>:</b>
                                         </td>
                                         <td class="text-right">
-<!--                                            <input type="text" id="subTotal2" class="text-right form-control"-->
-<!--                                                   name="sub_total_price2" placeholder="0.00" readonly="readonly" />-->
+                                           <input type="text" id="subTotal2" class="text-right form-control"
+                                                   placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="subTotal2" class="text-right form-control"
                                                     placeholder="0.00" readonly="readonly" />
                                             <input type="text" id="subTotal" class="text-right form-control"
