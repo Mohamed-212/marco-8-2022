@@ -1085,6 +1085,8 @@ class Cproduct extends MX_Controller
         $product_id = urldecode($product_id);
         $details_info = $this->Products->product_details_info($product_id);
         $purchaseData = $this->Products->product_purchase_info($product_id);
+        
+        // echo "<pre>";var_dump($purchaseData);exit;
 
         $totalPurchase = 0;
         $totalPrcsAmnt = 0;
@@ -1094,6 +1096,7 @@ class Cproduct extends MX_Controller
                 $purchaseData[$k]['final_date'] = $this->occational->dateConvert($purchaseData[$k]['purchase_date']);
                 $totalPrcsAmnt = ($totalPrcsAmnt + $purchaseData[$k]['total_amount']);
                 $totalPurchase = ($totalPurchase + $purchaseData[$k]['quantity']);
+                // var_dump($purchaseData[$k]);
             }
         }
         $salesData = $this->Products->invoice_data($product_id);
@@ -1111,6 +1114,9 @@ class Cproduct extends MX_Controller
                 $salesData[$k]['total_price_after_discount'] = round(((float)$salesData[$k]['t_total_price']) - (float)$salesData[$k]['item_discount'], 2);
             }
         }
+
+        // var_dump($totalSales, $totaSalesAmt);
+
 
         // echo "<pre>";print_r($salesData);exit;
 
@@ -1130,10 +1136,12 @@ class Cproduct extends MX_Controller
         $size_id = $details_info[0]['variants'];
 
         if ($details_info[0]['assembly'] == 1) {
-            $stockData = $this->Products->check_variant_wise_stock2($product_id, $store_id, $size_id);
+            $stockData = $this->Products->check_variant_wise_stock2($product_id, null, null);
         } else {
-            $stockData = $this->Products->check_variant_wise_stock($product_id, $store_id, $size_id);
+            $stockData = $this->Products->check_variant_wise_stock($product_id, null, null);
         }
+
+        // var_dump($stockData);exit;
 
         $total_return = 0;
         foreach ($returnData as $return) {

@@ -135,15 +135,21 @@
 									</tr>
 								</thead>
 								<tbody>
-									<?php if ($purchaseData) { 
+									<?php $t_pr = 0;
+									if ($purchaseData) { 
 										$sunGlasses = $this->db->select('category_id')->from('product_category')->where('category_name', 'SUNGLASSES')->get()->row();
 										?>
 
-										<?php foreach ($purchaseData as $pur) { 
+										<?php 
+										
+											
+										foreach ($purchaseData as $pur) { 
 											$pur_rate = $pur['rate_after_exp'];
 											if ($pur['category_id'] == $sunGlasses->category_id) {
 												$pur_rate = $pur['rate_after_sunvat'];
 											}
+											$t_pr += (float) ($pur_rate * $pur['quantity']);
+											// var_dump($t_pr);
 											?>
 											<tr>
 												<td><?=date('d-m-Y', strtotime($pur['created_at']))?></td>
@@ -167,7 +173,7 @@
 										<td colspan="4" class="text-right"><b><?php echo display('grand_total') ?></b></td>
 										<td>{total_purchase}</td>
 										<td></td>
-										<td class="text-right"><b> <?php echo (($position == 0) ? "$currency {purchaseTotalAmount}" : "{purchaseTotalAmount} $currency") ?></b></td>
+										<td class="text-right"><b> <?php echo (($position == 0) ? "$currency " . $t_pr : $t_pr . " $currency") ?></b></td>
 									</tr>
 								</tfoot>
 							</table>
