@@ -637,7 +637,9 @@ class Products extends CI_Model
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
         $this->db->where('product_id', $product_id);
-        $this->db->where('variant_id', $variant_id);
+        if (!empty($variant_id)) {
+            $this->db->where('variant_id', $variant_id);
+        }
         if (!empty($variant_color)) {
             $this->db->where('variant_color', $variant_color);
         }
@@ -654,6 +656,7 @@ class Products extends CI_Model
         }
 
         $purchase = $this->db->get()->row();
+        // var_dump($product_id);
 
         // var_dump($date_from, $date_to, $purchase, $store_id, $product_id);exit;
 
@@ -662,7 +665,9 @@ class Products extends CI_Model
         $this->db->select("SUM(quantity) as totalSalesQnty");
         $this->db->from('invoice_stock_tbl');
         $this->db->where('product_id', $product_id);
-        $this->db->where('variant_id', $variant_id);
+        if (!empty($variant_id)) {
+            $this->db->where('variant_id', $variant_id);
+        }
         if (!empty($variant_color)) {
             $this->db->where('variant_color', $variant_color);
         }

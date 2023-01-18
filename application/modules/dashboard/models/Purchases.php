@@ -2879,7 +2879,10 @@ class Purchases extends CI_Model
         $this->db->select("SUM(quantity) as totalPurchaseQnty");
         $this->db->from('purchase_stock_tbl');
         $this->db->where('product_id', $product_id);
-        $this->db->where('variant_id', $variant_id);
+        // $this->db->where('variant_id', $variant_id);
+        if (!empty($variant_id)) {
+            $this->db->where('variant_id', $variant_id);
+        }
         if (!empty($variant_color)) {
             $this->db->where('variant_color', $variant_color);
         }
@@ -2911,7 +2914,9 @@ class Purchases extends CI_Model
         $this->db->select("SUM(quantity) as totalSalesQnty");
         $this->db->from('invoice_stock_tbl');
         $this->db->where('product_id', $product_id);
-        $this->db->where('variant_id', $variant_id);
+        if (!empty($variant_id)) {
+            $this->db->where('variant_id', $variant_id);
+        }
         if (!empty($variant_color)) {
             $this->db->where('variant_color', $variant_color);
         }

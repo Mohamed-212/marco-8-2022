@@ -133,9 +133,9 @@ class Lproduct {
             //     $stockData = $CI->Purchases->check_variant_wise_stock($p['product_id'], null, $size_id);
             // }
             if ($p['assembly'] == 1) {
-                $stock = $CI->Purchases->check_variant_wise_stock2($p['product_id'], null, $size_id,null);
+                $stock = $CI->Purchases->check_variant_wise_stock2($p['product_id'], null, null,null);
             } else {
-                $stock = $CI->Purchases->check_variant_wise_stock($p['product_id'], null, $size_id,null);
+                $stock = $CI->Purchases->check_variant_wise_stock($p['product_id'], null, null,null);
             }
             $p['stock'] = $stock;
             $products_list[] = $p;
@@ -287,6 +287,8 @@ class Lproduct {
         $purchaseData = $CI->Products->product_purchase_info($product_id);
         $totalPurchase = 0;
         $totalPrcsAmnt = 0;
+
+        // var_dump($purchaseData);exit;
 
         if (!empty($purchaseData)) {
             foreach ($purchaseData as $k => $v) {
