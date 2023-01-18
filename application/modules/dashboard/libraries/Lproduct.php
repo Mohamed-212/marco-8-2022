@@ -141,7 +141,6 @@ class Lproduct {
             $products_list[] = $p;
 
         }  
-        // echo "<pre>";var_dump($products_list);exit;
         $all_supplier_list = $CI->Products->all_supplier_list();
         $all_category_list = $CI->Products->all_category_list();
         $all_unit_list = $CI->Products->all_unit_list();
