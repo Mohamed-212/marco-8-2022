@@ -1078,6 +1078,18 @@ class Cproduct extends MX_Controller
     //Retrieve Single Item  By Search
     public function product_details($product_id)
     {
+
+        // $no = [];
+        // $prds = $this->db->select('*')->from('product_information')->get()->result();
+        // foreach ($prds as $prd) {
+        //     $v = $this->db->select('*')->from('variant')->where('variant_id', $prd->variants)->get()->row();
+        //     if (!$v) {
+        //         $no[] = $prd->product_id;
+        //     }
+        // }
+
+        // echo "<pre>";var_dump($no);exit;
+
         $this->load->model('dashboard/Stock_adjustment_model');
 
         $this->permission->check_label('manage_product')->read()->redirect();
