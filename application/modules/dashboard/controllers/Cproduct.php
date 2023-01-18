@@ -4099,7 +4099,8 @@ class Cproduct extends MX_Controller
 
                 continue;
 
-
+                // sadas d asd sad
+                // sadasjkdh asjkhd
                 // if category is accessories then color and model only is not needed
                 if ($category_id == 'ACCESSORIES') {
                     $product_model_only = null;
