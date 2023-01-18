@@ -139,7 +139,6 @@ class Lproduct {
             }
             $p['stock'] = $stock;
             $products_list[] = $p;
-
         }  
         $all_supplier_list = $CI->Products->all_supplier_list();
         $all_category_list = $CI->Products->all_category_list();
