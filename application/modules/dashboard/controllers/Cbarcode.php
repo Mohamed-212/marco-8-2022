@@ -94,7 +94,9 @@ class Cbarcode extends MX_Controller
         $sizefactor = "1";
 
         // This function call can be copied into your project and can be made from anywhere in your code
-        $this->barcode_create($filepath, $year . $product_id, $size, $orientation, $code_type, $print, $sizefactor);
+        // $this->barcode_create($filepath, $year . $product_id, $size, $orientation, $code_type, $print, $sizefactor);
+        $generator = new \Picqer\Barcode\BarcodeGeneratorHTML();
+        echo $generator->getBarcode('081231723897', $generator::TYPE_CODE_128);
     }
 
     //Barcode create

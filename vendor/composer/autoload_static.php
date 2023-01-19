@@ -90,6 +90,7 @@ class ComposerStaticInit8d23c9fc4293289eeea34c52e59f1bc3
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Http\\Client\\' => 16,
+            'Picqer\\Barcode\\' => 15,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
         ),
         'M' => 
@@ -150,6 +151,10 @@ class ComposerStaticInit8d23c9fc4293289eeea34c52e59f1bc3
         'Psr\\Http\\Client\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
+        ),
+        'Picqer\\Barcode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/picqer/php-barcode-generator/src',
         ),
         'PhpOffice\\PhpSpreadsheet\\' => 
         array (
