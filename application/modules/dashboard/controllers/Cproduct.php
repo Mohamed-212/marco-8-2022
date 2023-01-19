@@ -3561,8 +3561,8 @@ class Cproduct extends MX_Controller
         }
         if ($datacount > 1) {
             $IDS = [];
-            // echo "<pre>";
-            // var_dump($sheetdata);
+            echo "<pre>";
+            var_dump($datacount);
             for ($i = 1; $i < $datacount; $i++) {
                 $cogs_price = 0;
                 $price_types_list = [];
@@ -4043,7 +4043,7 @@ class Cproduct extends MX_Controller
                     }
                 }
             }
-            // var_dump(count($ids));
+            var_dump(count($IDS));
 
             // echo json_encode($ids);
             // exit;

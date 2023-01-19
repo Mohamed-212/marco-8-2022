@@ -93,7 +93,7 @@
                                             $totalQuantity += (int)$return_report['quantity'];
                                     ?>
                                             <tr>
-                                                <td><?php echo ++$sl;echo $return_report['pid'] ?></td>
+                                                <td><?php echo ++$sl; ?></td>
                                                 <td><?php echo html_escape($return_report['product_name']); ?></td>
                                                 <td><?php echo html_escape($return_report['variant_name']); ?></td>
                                                 <!-- <td><?php echo ($return_report['status'] == 1) ? display('damaged') : display('no warranty') ?></td> -->
