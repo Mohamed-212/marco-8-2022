@@ -421,7 +421,32 @@ class Lproduct {
 		$CI->load->model('dashboard/Soft_settings');
 		$CI->load->library('dashboard/occational');
 
+        $CI->db->select('*');
+        $CI->db->from('product_return pr');
+        $ps = $CI->db->get()->result();
+
+        // echo "<pre>";
+
+        // // var_dump($ps);exit;
+
+        // $r = [];
+
+        // foreach ($ps as $p) {
+        //     $pp = $CI->db->select('*')->from('product_information')->where('product_id', $p->product_id)->get()->row();
+
+        //     var_dump($p->product_id);
+        //     if ($pp) {
+        //         $r[] = $pp;
+        //     }
+        // }
+
+        // var_dump(count($r));
+
+        // exit;
+        
+
 		$return_product_report =$CI->Products->return_product_report($from_date,$to_date,$status);
+        // echo "<pre>";var_dump($return_product_report);exit;
 		$currency_details = $CI->Soft_settings->retrieve_currency_info();
 		$data=array(
 			'title'    =>display('return_product_report'),

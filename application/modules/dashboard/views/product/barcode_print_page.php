@@ -108,7 +108,7 @@
                                                             <tbody>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <p style="font-size: 8px;font-weight: 600;margin: 0px">
+                                                                    <p style="font-size: 10px;font-weight: 600;margin: 0px">
                                                                         {product_name_only}
                                                                     </p>
                                                                 </td>
@@ -124,7 +124,7 @@
                                                             </tr>
                                                             <tr>
 
-                                                                <td style="font-size: 6px;font-weight: 500;"><?= $size ?></td>
+                                                                <td style="font-size: 10px;font-weight: 500;"><?= $size ?></td>
 <!--                                                                --><?php //if ($is_sunglasses_category) : ?>
 <!--                                                                    <td style="text-align: end;">Polarized</td>-->
 <!--                                                                --><?php //endif ?>

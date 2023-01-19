@@ -609,10 +609,10 @@ class Products extends CI_Model
 
     public function return_product_report($from_date = null, $to_date = null, $status = null)
     {
-        $this->db->select('p.product_name,d.variant_name,pr.product_id,pr.variant_id,SUM(pr.quantity) as quantity,pr.status,pr.created_at');
+        $this->db->select('pr.id as pid, p.product_name,d.variant_name,pr.product_id,pr.variant_id,SUM(pr.quantity) as quantity,pr.status,pr.created_at');
         $this->db->from('product_return pr');
-        $this->db->join('variant d', 'd.variant_id = pr.variant_id', 'left');
         $this->db->join('product_information p', 'p.product_id = pr.product_id', 'left');
+        $this->db->join('variant d', 'd.variant_id = pr.variant_id', 'left');
         if (!empty($from_date)) {
             $time1 = strtotime($from_date);
             $newformat1 = date('Y-m-d', $time1);
