@@ -5113,6 +5113,530 @@ class Cproduct extends MX_Controller
         }
     }
 
+    public function product_excel_insert99()
+    {
+        ini_set('memory_limit', '5000000000M');
+        set_time_limit(5000000000);
+
+        $upload_file = $_FILES["upload_excel_file"]["name"];
+        $extension = pathinfo($upload_file, PATHINFO_EXTENSION);
+
+        if ($extension == 'csv') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        } elseif ($extension == 'xls') {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        } else {
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }
+        $spreadsheet = $reader->load($_FILES["upload_excel_file"]["tmp_name"]);
+        $sheetdata = $spreadsheet->getActiveSheet()->toArray();
+        $datacount = count($sheetdata);
+        $voucher_no        = 'StockOP-' . $this->generator_voucher(7);
+        $voucher_date      = date('Y-m-d H:i:s');
+        $store_id = "SDMQ4TIBSH6LAJ1";
+
+
+        if ($datacount > 500) {
+            $this->session->set_userdata(array('error_message' => display('excel_sheet_max_num')));
+            redirect(base_url() . '/dashboard/Cproduct/product_excel_import');
+            return;
+        }
+        if ($datacount > 1) {
+            $IDS = [];
+            // echo "<pre>";
+            // var_dump($sheetdata);
+            for ($i = 1; $i < $datacount; $i++) {
+                $cogs_price = 0;
+                $price_types_list = [];
+                $filter_list = [];
+                $brand_id = str_replace('-', '.', trim($sheetdata[$i][0]));
+                $product_model = str_replace('-', '.', trim($sheetdata[$i][1])) . ' - ' . str_replace('-', '.', trim($sheetdata[$i][2]));
+                $product_model_only = str_replace('-', '.', trim($sheetdata[$i][1]));
+                $product_color = str_replace('-', '.', trim($sheetdata[$i][2]));
+                $category_id = trim($sheetdata[$i][3]);
+                $filter_1 = trim($sheetdata[$i][4]); // gender or any other name
+                $filter_2 = trim($sheetdata[$i][5]);  // material or any other name
+                $variants = trim($sheetdata[$i][6]); //size
+                $price = (float)$sheetdata[$i][7]; // sell price
+                $g_price = (float)$sheetdata[$i][8]; // whole price
+                $s_price = (float)$sheetdata[$i][9]; // customer price
+                $product_quantity = (int)$sheetdata[$i][10];
+                $product_rate = (float)$sheetdata[$i][11]; // supplier price
+
+                if (empty($brand_id) && empty($product_model_only) && empty($category_id)) continue;
+
+                            // echo "<pre>";print_r($sheetdata);exit;
+
+                            $CO = str_split($sheetdata[$i][3]);
+
+                            $pn = $brand_id . ' - ' . $product_model;
+                            // var_dump($sheetdata[$i][2], $CO[0] . ' ' . $CO[1]);
+                            // $p = $this->db->select('*')->from('product_information')->where('product_model_only LIKE', $sheetdata[$i][2])->where('product_color LIKE', $CO[0] . ' ' . $CO[1])->limit(1)->get()->row();
+
+                            // var_dump($p); exit;
+                            // $ids[] = $p->product_id;
+                            // continue;
+
+
+                // if (!isset($sheetdata[$i][16])) continue;
+
+                // $dm = (int)$sheetdata[$i][16];
+                // $p = $this->db->select('*')->from('product_information')->where('product_model', $product_model)->get()->row();
+                
+
+                // $this->db->reset_query();
+                // $dddd = [
+                //     'product_id' => $p->product_id,
+                //     'variant_id' => $p->variants,
+                //     'quantity' => $dm,
+                //     'status' => 1,
+                // ];
+                // $ins = $this->db->insert('product_return', $dddd);
+
+                // $IDS[] = ;
+
+                continue;
+
+
+                // if category is accessories then color and model only is not needed
+                if ($category_id == 'ACCESSORIES') {
+                    $product_model_only = null;
+                    $product_color = null;
+                }
+
+                if ($category_id != 'ACCESSORIES' && empty($product_color)) {
+                    $product_color = 'Default';
+                    $product_model .= $product_color;
+                }
+
+                // echo "<pre>";var_dump($variants);exit;
+
+                //GET BRAND NAME
+                $this->db->select('brand_id');
+                $this->db->from('brand');
+                $this->db->where('brand_name', $brand_id);
+                $brandName = $brand_id;
+                $brandIsFound = $this->db->get()->row();
+                if (!$brandIsFound) {
+                    // check if brand name is empty
+                    if (empty($brand_id)) {
+                        // check if there is a brand with the name Default
+                        $defaultBrand = $this->db->select('brand_id')->from('brand')->where('brand_name', 'Default')->get()->row();
+                        if (!$defaultBrand) {
+                            // create a new brand with the name Default
+                            $brand_id = 'Default';
+                        } else {
+                            $brand_id = $defaultBrand->brand_id;
+                            $brandIsFound = true;
+                        }
+                    }
+                    if (!$brandIsFound) {
+                        // create new brand with that name
+                        $new_brand_id = $this->auth->generator(15);
+                        $brand_data = array(
+                            'brand_id'   => $new_brand_id,
+                            'brand_name' => $brand_id,
+                            'brand_image' => null,
+                            'website'    => '',
+                            'status'     => 1
+                        );
+                        $this->Brands->brand_entry($brand_data);
+                        $brand_id = $new_brand_id;
+                    }
+                } else {
+                    $brand_id = $brandIsFound->brand_id;
+                }
+
+                // check if category_id is not found
+                $category_name = $category_id;
+                $categoryIsFound = $this->db->select('category_id')->from('product_category')->where('category_name', $category_id)->get()->row();
+                if (!$categoryIsFound) {
+                    // check if new category name is empty
+                    if (empty($category_id)) {
+                        // check if there is a category with the name Default
+                        $defaultCategory = $this->db->select('category_id')->from('product_category')->where('category_name', 'Default')->get()->row();
+                        if (!$defaultCategory) {
+                            // create a new category with the name default
+                            $category_id = 'Default';
+                        } else {
+                            $category_id = $defaultCategory->category_id;
+                            $categoryIsFound = true;
+                        }
+                    }
+
+                    if (!$categoryIsFound) {
+                        // create new category with that name
+                        $new_category_id = generator(15);
+                        $category_data = array(
+                            'category_id' => $new_category_id,
+                            'category_name' => $category_id,
+                            'top_menu' => 1,
+                            'menu_pos' => 1,
+                            'cat_favicon' => 'my-assets/image/category.png',
+                            'parent_category_id' => '',
+                            'cat_image' => 'my-assets/image/category.png',
+                            'cat_type' => 1,
+                            'status' => 1
+                        );
+                        $this->Categories->category_entry($category_data);
+                        $category_id = $new_category_id;
+                    }
+                } else {
+                    $category_id = $categoryIsFound->category_id;
+                }
+
+                // check if size variant is exists
+                $variantIsFound = $this->db->select('variant_id')->from('variant')->where('variant_name', $variants)->get()->row();
+                if (!$variantIsFound) {
+                    // check if new variant name is empty
+                    if (empty($variants)) {
+                        // check if there is a variant with the name Default
+                        $defaultVariant = $this->db->select('variant_id')->from('variant')->where('variant_name', 'Default')->get()->row();
+                        if (!$defaultVariant) {
+                            // create a new variant with the name default
+                            $variants = 'Default';
+                        } else {
+                            $variants = $defaultVariant->variant_id;
+                            $variantIsFound = true;
+                        }
+                    }
+
+                    if (!$variantIsFound) {
+                        // create new varient size and then attach it`s id to product
+                        $variant_id = $this->auth->generator(15);
+                        $variant_data = array(
+                            'variant_id' => $variant_id,
+                            'variant_name' => $variants,
+                            'variant_type' => 'size',
+                            'color_code' => '#000000',
+                            'status' => 1
+                        );
+
+                        $result = $this->Variants->variant_entry($variant_data);
+                        $variants = $variant_id;
+                    }
+
+                    if ($result) {
+                        // add this size variant to only current category
+                        // check if varient was added to category before
+                        $variant_category_added = $this->db->select('variant_id')->from('category_variant')->where('category_id', $category_id)->where('variant_id', $variants)->get()->num_rows();
+                        if (!$variant_category_added) {
+                            $this->db->query("INSERT INTO `category_variant` (`category_id`, `variant_id`, `created_at`, `updated_at`) VALUES (" . $this->db->escape($category_id) . ", " . $this->db->escape($variants) . ", now(), now())");
+                        }
+                    }
+                } else {
+                    $variants = $variantIsFound->variant_id;
+                }
+
+                // get first filter and material filter id
+                $filter_1_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', 'GENDER')->get()->row();
+                if (!$filter_1_type_id) {
+                    // first filter type is not found
+                    // then create one
+                    $filter_type_data = array(
+                        'fil_type_name' => 'GENDER'
+                    );
+                    $this->db->insert('filter_types', $filter_type_data);
+                    $filter_1_type_id = $this->db->insert_id();
+                } else {
+                    $filter_1_type_id = $filter_1_type_id->fil_type_id;
+                }
+
+                // check for filter_1 item
+                $filter_1_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', $filter_1)->get()->row();
+
+                if (!$filter_1_item_id) {
+                    // check if name is empty then set as default
+                    if (empty($filter_1)) {
+                        $defaultFilter_1 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_1_type_id)->where('item_name', 'Default')->get()->row();
+                        if (!$defaultFilter_1) {
+                            // if not found then create one
+                            $filter_1 = 'Default';
+                        } else {
+                            $filter_1 = $defaultFilter_1->item_id;
+                            $filter_1_item_id = $defaultFilter_1->item_id;
+                        }
+                    }
+
+                    if (!$filter_1_item_id) {
+                        // // delete old one first
+                        // if (count($exists)) {
+                        //     $this->db->where('product_id', $exists[0]['product_id'])->where('filter_type_id', 1)->delete('filter_product');
+                        // }
+                        // create new filter item
+                        $filter_item_data = [
+                            'item_name' => $filter_1,
+                            'type_id' => $filter_1_type_id,
+                        ];
+                        $this->db->insert('filter_items', $filter_item_data);
+                        $filter_1 = $this->db->insert_id();
+                    }
+                } else {
+                    $filter_1 = $filter_1_item_id->item_id;
+                }
+
+                // echo"<pre>";var_dump($filter_1_type_id, $filter_1, $filter_1_item_id);exit;
+
+                // get second filter and material filter id
+                $filter_2_type_id = $this->db->select('*')->from('filter_types')->where('fil_type_name', 'MATERIAL')->get()->row();
+                if (!$filter_2_type_id) {
+                    // second filter type is not found
+                    // then create one
+                    $filter_type_data_2 = array(
+                        'fil_type_name' => 'MATERIAL'
+                    );
+                    $this->db->insert('filter_types', $filter_type_data_2);
+                    $filter_2_type_id = $this->db->insert_id();
+                } else {
+                    $filter_2_type_id = $filter_2_type_id->fil_type_id;
+                }
+                // check for filter_2 item
+                $filter_2_item_id = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', $filter_2)->get()->row();
+                if (!$filter_2_item_id) {
+                    // check if name is empty then set as default
+                    if (empty($filter_2)) {
+                        $defaultFilter_2 = $this->db->select('*')->from('filter_items')->where('type_id', $filter_2_type_id)->where('item_name', 'Default')->get()->row();
+                        if (!$defaultFilter_2) {
+                            // if not found then create one
+                            $filter_2 = 'Default';
+                        } else {
+                            $filter_2 = $defaultFilter_2->item_id;
+                            $filter_2_item_id = $defaultFilter_2->item_id;
+                        }
+                    }
+
+                    if (!$filter_2_item_id) {
+                        // // delete old one first
+                        // if (count($exists)) {
+                        //     $this->db->where('product_id', $exists[0]['product_id'])->where('filter_type_id', 2)->delete('filter_product');
+                        // }
+                        // create new filter item
+                        $filter_item_data_2 = [
+                            'item_name' => $filter_2,
+                            'type_id' => $filter_2_type_id,
+                        ];
+                        $this->db->insert('filter_items', $filter_item_data_2);
+                        $filter_2 = $this->db->insert_id();
+                    }
+                } else {
+                    $filter_2 = $filter_2_item_id->item_id;
+                }
+
+                $product_name = $brandName . ' - ' . $product_model;
+                //$product_name .= ' - Full'; //for assembly
+
+                $excel = array(
+                    'brand_id' => $brand_id,
+                    'product_model' => $product_model,
+                    'category_id' => $category_id,
+                    'price' => $price,
+                    'g_price' => $g_price,
+                    's_price' => $s_price,
+                    'filter_1' => $filter_1,
+                    'filter_2' => $filter_2,
+                    'product_name' => $product_name,
+                    'variants' => $variants,
+                );
+
+
+                $product_id = $this->generator(8);
+                $product_details = array(
+                    'product_id' => $product_id,
+                    'brand_id' => $excel['brand_id'],
+                    'product_model' => $excel['product_model'],
+                    'category_id' => $excel['category_id'],
+                    'price' => $excel['price'],
+                    'product_name' => $excel['product_name'],
+                    'variants' => $excel['variants'],
+                    'open_quantity' => $product_quantity,
+                    'open_rate' => $product_rate,
+                    'supplier_price' => $product_rate,
+                    'pricing' => 1,
+                    'product_model_only' => $product_model_only,
+                    'product_color' => $product_color,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    //'assembly' => 1, //for assembly
+                );
+                // echo "<pre>";
+                // var_dump('si => ' . $variants, 'cat => ' . $category_id, 'bra => ' . $brand_id, 'gen => ' . $filter_1_type_id. ' -- itm => ' . $filter_1, 'mat => ' .$filter_2_type_id . '  -- itm => ' . $filter_2);
+                // print_r($sheetdata[0]);
+                // print_r($sheetdata[$i]);
+                // print_r($product_details);
+                // exit;
+
+
+                // check if product is already exists
+                $exists = $this->db->select('product_id')
+                    ->from('product_information')
+                    ->where('product_name', $product_details['product_name'])
+                    ->where('category_id', $product_details['category_id'])
+                    ->get()->result_array();
+
+                if (count($exists)) {
+                    // var_dump($exists);exit;
+                    continue;
+                    // // product is found then update
+                    $product_details['product_id'] = $exists[0]['product_id'];
+                    $this->db->set($product_details);
+                    $this->db->where('product_id', $exists[0]['product_id']);
+                    $this->db->update('product_information');
+                    $product_id = $exists[0]['product_id'];
+                } else {
+                    $this->db->insert('product_information', $product_details);
+                    $this->Products->website_product_entry($product_details);
+                }
+                //opening balance
+                if ($product_quantity > 0 && $product_rate > 0) {
+                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+                    if (!empty($find_active_fiscal_year)) {
+                        //Stock opening Details
+                        $cogs_price       += ($product_rate * $product_quantity);
+                        $store = array(
+                            'transfer_id'   => $this->auth->generator(15),
+                            'voucher_no'    => $voucher_no,
+                            'store_id'      => $store_id,
+                            'product_id'    => $product_id,
+                            'variant_id'    => $variants,
+                            'variant_color' => NULL,
+                            'date_time'     => $voucher_date,
+                            'quantity'      => $product_quantity,
+                            'status'        => 3
+                        );
+                        $this->db->insert('transfer', $store);
+                        // stock
+                        $stock = array(
+                            'store_id'     => $store_id,
+                            'product_id'   => $product_id,
+                            'variant_id'   => $variants,
+                            'variant_color' => NULL,
+                            'quantity'     => $product_quantity,
+                            'warehouse_id' => '',
+                        );
+                        $this->db->insert('purchase_stock_tbl', $stock);
+                    }
+                }
+                if ($category_name == 'SUNGLASSES') {
+                    $data = array(
+                        't_p_s_id' => $this->auth->generator(15),
+                        'product_id' => $product_id,
+                        'tax_id' => '52C2SKCKGQY6Q9J',
+                        'tax_percentage' => '14',
+                    );
+
+                    $this->db->insert('tax_product_service', $data);
+                }
+
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 1,
+                    'product_price' => $excel['g_price'],
+                );
+                $price_types_list[] = array(
+                    'product_id' => $product_id,
+                    'pri_type_id' => 2,
+                    'product_price' => $excel['s_price'],
+                );
+                $this->db->reset_query();
+                $this->db->where('product_id', $product_id);
+                $this->db->delete('pricing_types_product');
+                $this->db->reset_query();
+                $this->db->insert_batch('pricing_types_product', $price_types_list);
+                // delete old
+                $this->db->reset_query();
+                // echo "<pre>";
+                // var_dump($category_id,$product_id, $exists);
+                // $this->db->query("DELETE FROM filter_product WHERE category_id = '" . $category_id."' AND product_id = '" . $product_id . "'");
+                if (count($exists)) {
+                    $this->db->where('category_id', $category_id)->where('product_id', $product_id)->delete('filter_product');
+                }
+                $this->db->reset_query();
+                //GENDER
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 1,
+                    'filter_item_id' => $filter_1
+                );
+                //MATERIAL
+                $filter_list[] = array(
+                    'category_id' => $category_id,
+                    'product_id' => $product_id,
+                    'filter_type_id' => 2,
+                    'filter_item_id' => $filter_2
+                );
+                $this->db->insert_batch('filter_product', $filter_list);
+
+                $this->db->select('*');
+                $this->db->from('product_information');
+                $this->db->where('status', 1);
+                $query = $this->db->get();
+                foreach ($query->result() as $row) {
+                    //$json_product[] = array('label' => $row->product_name . "-(" . $row->product_model . ")", 'value' => $row->product_id);
+                    $json_product[] = array('label' => $row->product_name, 'value' => $row->product_id);
+                }
+                $cache_file = './my-assets/js/admin_js/json/product.json';
+                $productList = json_encode($json_product);
+                file_put_contents($cache_file, $productList);
+                if ($product_quantity > 0 && $product_rate > 0) {
+                    $find_active_fiscal_year = $this->db->select('*')->from('acc_fiscal_year')->where('status', 1)->get()->row();
+                    if (!empty($find_active_fiscal_year)) {
+                        $this->load->model('accounting/account_model');
+                        //$store_head   = $this->db->select('HeadCode,HeadName')->from('acc_coa')->where('store_id', $store_id)->get()->row();
+                        $createdate   = date('Y-m-d H:i:s');
+                        $receive_by   = $this->session->userdata('user_id');
+                        $date         = $createdate;
+                        //1st Inventory-Openning total price debit
+                        $store_debit = array(
+                            'fy_id'     => $find_active_fiscal_year->id,
+                            'VNo'       => $voucher_no,
+                            'Vtype'     => 'Inventory-Openning',
+                            'VDate'     => $date,
+                            'COAID' => 1141, //Main Warehouse
+                            'Narration' => 'Inventory-Openning total price debited at Main warehouse',
+                            //                    'COAID'     => $store_head->HeadCode, //Main Warehouse
+                            //                    'Narration' => 'Inventory-Openning total price debited at ' . $store_head->HeadName,
+                            'Debit'     => $cogs_price,
+                            'Credit'    => 0, //purchase price asbe
+                            'IsPosted'  => 1,
+                            'CreateBy'  => $receive_by,
+                            'CreateDate' => $createdate,
+                            'store_id'  => $store_id,
+                            'IsAppove'  => 1
+                        );
+
+                        //2nd Inventory-Openning COGS Credit
+                        $COGSCredit = array(
+                            'fy_id'     => $find_active_fiscal_year->id,
+                            'VNo'       => $voucher_no,
+                            'Vtype'     => 'Inventory-Openning',
+                            'VDate'     => $date,
+                            'COAID'     => 4111,
+                            'Narration' => 'Inventory-Openning total price credited at COGS',
+                            'Debit'     => 0,
+                            'Credit'    => $cogs_price,
+                            'IsPosted'  => 1,
+                            'CreateBy'  => $receive_by,
+                            'CreateDate' => $createdate,
+                            'store_id'  => $store_id,
+                            'IsAppove'  => 1
+                        );
+                        $this->db->insert('acc_transaction', $store_debit);
+                        $this->db->insert('acc_transaction', $COGSCredit);
+                    }
+                }
+            }
+            // var_dump(count($ids));
+
+            // echo json_encode($ids);
+            // exit;
+
+            // $this->print_mem();
+            $this->session->set_userdata(array('message' => display('successfully_added')));
+            // $this->Products->copy_products_to_website_products();
+            // redirect('dashboard/Cproduct/manage_product');
+        }
+    }
+
     public function return_quantity_adjustment($product_id, $quantity, $stock)
     {
 

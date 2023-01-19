@@ -1104,7 +1104,7 @@ class Lreport
         $CI->load->model('dashboard/Invoices');
         $CI->load->model('dashboard/Categories');
         $CI->load->library('dashboard/occational');
-
+// return;
         $stock_reports = $CI->Reports->sales_report_all_details_sum_all_count(
             $product_id,
             $pricing_type,
