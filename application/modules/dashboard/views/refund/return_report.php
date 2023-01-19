@@ -105,7 +105,7 @@
 								</tbody>
 								<tfoot>
 									<tr>
-                                        <td><?php echo $totalSl; ?></td>
+                                        <td><?php echo $sl; ?></td>
                                         <td align="center">
                                             <b><?= display('grand_total') ?></b>
                                         </td>
