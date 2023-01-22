@@ -349,6 +349,79 @@ class Admin_dashboard extends MX_Controller
         $this->template_lib->full_admin_html_view($content);
     }
 
+    #============Invoice wise sales report==============#
+    public function sales_report_graph_wise()
+    {
+        $this->load->model(array(
+            'dashboard/Invoices',
+        ));
+
+        // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $all_pri_type = $this->Invoices->select_all_pri_type();
+
+        $data = [
+            'title' => display('sales_report_graph_wise'),
+            'all_pri_type' => $all_pri_type
+        ];
+
+        $content = $this->parser->parse('dashboard/report/sales_report_graph_wise', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
+    public function retrieve_sales_report_graph_wise()
+    {
+        $this->load->model(array(
+            'dashboard/Invoices',
+        ));
+        // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $start_date = $this->input->get('start_date', TRUE);
+        $end_date = $this->input->get('end_date', TRUE);
+        $pri_type = $this->input->get('pri_type', TRUE);
+
+        $all_pri_type = $this->Invoices->select_all_pri_type();
+
+        $content = $this->lreport->retrieve_sales_report_graph_wise($start_date, $end_date, $pri_type ?? 1, $all_pri_type);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
+    #============Invoice wise sales report==============#
+    public function purchase_report_graph_wise()
+    {
+        $this->load->model(array(
+            'dashboard/Invoices',
+        ));
+        // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $all_pri_type = $this->Invoices->select_all_pri_type();
+
+        $data = [
+            'title' => display('purchase_report_graph_wise'),
+            'all_pri_type' => $all_pri_type
+        ];
+
+        $content = $this->parser->parse('dashboard/report/purchase_report_graph_wise', $data, true);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
+    public function retrieve_purchase_report_graph_wise()
+    {
+        $this->load->model(array(
+            'dashboard/Invoices',
+        ));
+        // $this->permission->check_label('stock_report_store_wise')->read()->redirect();
+
+        $start_date = $this->input->get('start_date', TRUE);
+        $end_date = $this->input->get('end_date', TRUE);
+        $pri_type = $this->input->get('pri_type', TRUE);
+
+        $all_pri_type = $this->Invoices->select_all_pri_type();
+
+        $content = $this->lreport->retrieve_purchase_report_graph_wise($start_date, $end_date, $pri_type ?? 1, $all_pri_type);
+        $this->template_lib->full_admin_html_view($content);
+    }
+
     #============customer wise sales report==============#
     public function sales_report_customer_wise()
     {

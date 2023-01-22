@@ -1420,6 +1420,154 @@ class Lreport
         return $reportList;
     }
 
+    public function retrieve_sales_report_graph_wise($start_date = null, $end_date = null, $pri_type = 1, $all_pri_type = [])
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Stores');
+        // $sales_reports = $CI->Reports->retrieve_sales_report_graph_wise($start_date, $end_date);
+        // $return_reports = $CI->Reports->retrieve_return_report_invoice_wise($start_date, $end_date);
+
+        $addon = 'p.price';
+        if ($pri_type == 1 || $pri_type == 2) {
+            $addon = 'p.product_price';
+        }
+
+        $repo =  $CI->db->select('SUM(quantity) as tqty, (SUM(quantity) * ' . $addon . ') as sprice, il.created_at')->from('invoice_stock_tbl il')->group_by('month(il.created_at)');
+
+        if ($pri_type == 1) {
+            $repo->join('pricing_types_product p', 'p.product_id = il.product_id and p.pri_type_id = 1', 'inner');
+        } elseif ($pri_type == 2) {
+            $repo->join('pricing_types_product p', 'p.product_id = il.product_id and p.pri_type_id = 2', 'inner');
+        } else {
+            $repo->join('product_information p', 'p.product_id = il.product_id', 'inner');
+        }
+
+        if ($start_date && $end_date) {
+            $dateRangePurchase = "DATE(il.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+            $repo->where($dateRangePurchase, null, true);
+        }
+
+        $repo = $repo->order_by('il.created_at', 'asc')->get()->result();
+
+        $t_qty = 0;
+        $t_price = 0;
+        if ($repo) {
+            
+            foreach ($repo as $r) {
+                // if (!$r->total_price) {
+                //     $r->total_price = 0;
+                // }
+                // if (!$r->t_qty) {
+                //     $r->t_qty = 0;
+                // }
+                if (!$pri_type || $pri_type == 0) {
+                    $r->t_price = (float) $r->sprice;
+                } elseif ($pri_type == 1) {
+                    $r->t_price = (float) $r->sprice;
+                } elseif ($pri_type == 2) {
+                    $r->t_price = (float) $r->sprice;
+                } else {
+                    $r->t_price = (float) $r->sprice;
+                }
+
+                $t_price += (float) $r->t_price;
+                $t_qty += (int) $r->tqty;
+            }
+        }
+
+        // echo "<pre>";var_dump($repo);exit;
+
+        $data = [
+            // 'sales_reports' => $sales_reports,
+            // 'return_reports' => $return_reports,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'pri_type' => $pri_type,
+            'all_pri_type' => $all_pri_type,
+            'repos' => $repo,
+            't_qty' => $t_qty,
+            't_price' => $t_price,
+        ];
+        // echo "<pre>";var_dump($sales_reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/sales_report_graph_wise', $data, true);
+        return $reportList;
+    }
+
+    public function retrieve_purchase_report_graph_wise($start_date = null, $end_date = null, $pri_type = 1, $all_pri_type = [])
+    {
+        $CI = &get_instance();
+        $CI->load->model('dashboard/Reports');
+        $CI->load->model('dashboard/Stores');
+        // $purchase_reports = $CI->Reports->retrieve_purchase_report_graph_wise($start_date, $end_date);
+        // $return_reports = $CI->Reports->retrieve_return_report_invoice_wise($start_date, $end_date);
+
+        $addon = 'p.price';
+        if ($pri_type == 1 || $pri_type == 2) {
+            $addon = 'p.product_price';
+        }
+
+        $repo =  $CI->db->select('SUM(quantity) as tqty, (SUM(quantity) * ' . $addon . ') as sprice, il.created_at')->from('purchase_stock_tbl il')->group_by('month(il.created_at)');
+
+        if ($pri_type == 1) {
+            $repo->join('pricing_types_product p', 'p.product_id = il.product_id and p.pri_type_id = 1', 'inner');
+        } elseif ($pri_type == 2) {
+            $repo->join('pricing_types_product p', 'p.product_id = il.product_id and p.pri_type_id = 2', 'inner');
+        } else {
+            $repo->join('product_information p', 'p.product_id = il.product_id', 'inner');
+        }
+
+        if ($start_date && $end_date) {
+            $dateRangePurchase = "DATE(il.created_at) BETWEEN DATE('" . date('Y-m-d', strtotime($start_date)) . "') AND DATE('" . date('Y-m-d', strtotime($end_date)) . "')";
+            $repo->where($dateRangePurchase, null, true);
+        }
+
+        $repo = $repo->order_by('il.created_at', 'asc')->get()->result();
+
+        $t_qty = 0;
+        $t_price = 0;
+        if ($repo) {
+            
+            foreach ($repo as $r) {
+                // if (!$r->total_price) {
+                //     $r->total_price = 0;
+                // }
+                // if (!$r->t_qty) {
+                //     $r->t_qty = 0;
+                // }
+                if (!$pri_type || $pri_type == 0) {
+                    $r->t_price = (float) $r->sprice;
+                } elseif ($pri_type == 1) {
+                    $r->t_price = (float) $r->sprice;
+                } elseif ($pri_type == 2) {
+                    $r->t_price = (float) $r->sprice;
+                } else {
+                    $r->t_price = (float) $r->sprice;
+                }
+
+                $t_price += (float) $r->t_price;
+                $t_qty += (int) $r->tqty;
+            }
+        }
+
+        // echo "<pre>";var_dump($repo);exit;
+
+        $data = [
+            // 'purchase_reports' => $purchase_reports,
+            // 'return_reports' => $return_reports,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'pri_type' => $pri_type,
+            'all_pri_type' => $all_pri_type,
+            'repos' => $repo,
+            't_qty' => $t_qty,
+            't_price' => $t_price,
+        ];
+        // echo "<pre>";var_dump($purchase_reports);exit;
+        $reportList = $CI->parser->parse('dashboard/report/purchase_report_graph_wise', $data, true);
+        return $reportList;
+    }
+
     public function retrieve_purchase_report_customer_wise($start_date = null, $end_date = null)
     {
         $CI = &get_instance();

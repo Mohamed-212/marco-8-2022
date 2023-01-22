@@ -979,6 +979,10 @@
                 <li class="<?php echo (($this->uri->segment(3) == 'sales_report_all_details' ? 'active' : '')) ?>">
                     <a
                         href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_all_details') ?>"><?php echo display('sales_report_all_details') ?></a>
+                </li>
+                <li class="<?php echo (($this->uri->segment(3) == 'sales_report_graph_wise' ? 'active' : '')) ?>">
+                    <a
+                        href="<?php echo base_url('dashboard/Admin_dashboard/sales_report_graph_wise') ?>"><?php echo display('sales_report_graph_wise') ?></a>
                 </li>    
                 <?php if ($this->permission->check_label('sales_report')->access()) { ?>
                 <li
