@@ -159,7 +159,7 @@ function product_pur_or_list(sl) {
 
                     console.log(product_name, request.term);
 
-                    if (request.term.length > 8 && request.term.match(/^[0-9]+$/i) > 0 && data[0]) {
+                    if (request.term.length > 6 && request.term.match(/^[0-9]+$/i) > 0 && data[0]) {
                         $('.ui-autocomplete .ui-menu-item:eq(0)').trigger('click');
                     }
                 },

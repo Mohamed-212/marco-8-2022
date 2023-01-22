@@ -51,7 +51,8 @@ function invoice_productList(cName) {
                         product_name: product_name,
                     },
                     success: function (data) {
-                        if (product_name.length > 8 && product_name.match(/^[0-9]+$/i) > 0) {
+                        if (product_name.length > 6 && product_name.match(/^[0-9]+$/i) > 0) {
+                            console.log(product_name);
                             if (!data || !data[0]) {
                                 response(data);
                             } else {

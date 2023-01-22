@@ -1619,7 +1619,7 @@ class Cinvoice extends MX_Controller
         $product_name = $this->input->post('product_name', TRUE);
         $searchByCategoryName = (bool)$this->input->post('by_category', TRUE);
 
-        if (strlen($product_name) > 8 && preg_match("/^[0-9]+$/i", $product_name)) {
+        if (strlen($product_name) > 6 && preg_match("/^[0-9]+$/i", $product_name)) {
             $product_name = str_replace(2023, '', $product_name);
         }
 

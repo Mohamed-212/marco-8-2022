@@ -67,7 +67,7 @@ class Suppliers extends CI_Model {
 
         //$query = $this->db->query("SELECT * FROM `product_information` WHERE `assembly` = '0' AND `supplier_id` = '".$supplier_id."' AND  (`product_name` LIKE '%".$product_name."%' ESCAPE '!' OR `product_model` LIKE '%".$product_name."%')");
 
-        if (strlen($product_name) > 8 && preg_match("/^[0-9]+/i", $product_name)) {
+        if (strlen($product_name) > 6 && preg_match("/^[0-9]+/i", $product_name)) {
             $product_name = str_replace(2023, '', $product_name);
         }
 
