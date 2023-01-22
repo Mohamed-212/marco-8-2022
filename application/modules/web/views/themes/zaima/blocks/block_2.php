@@ -27,6 +27,7 @@
                     $counter = 1;
                     foreach ($cat_pro as $product) {
                         if ($counter <= 4) {
+                            if (@getimagesize($product->image_thumb) === false) continue;
 
                             $prodlink =  base_url('/product/' . remove_space($product->product_name) . '/' . $product->product_id);
                             if ($counter == 1) {

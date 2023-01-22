@@ -11,6 +11,9 @@
                     $counter=0;
                     $totalitems=count($best_sales);
                      foreach ($best_sales as $product) {
+
+                        if (@getimagesize($product->image_thumb) === false) continue;
+
                         echo (($counter%5==0)?'<div class="feature-item widget">':'');
                      ?>
                     <div class="media mb-3">
@@ -87,6 +90,7 @@
                     $counter=0;
                     $totalitems=count($latest_products);
                     foreach ($latest_products as $product) {
+                        if (@getimagesize($product->image_thumb) === false) continue;
                     echo (($counter%5==0)?'<div class="feature-item widget">':'');
                      ?>
                     <div class="media mb-3">
@@ -149,6 +153,7 @@
                     $counter=0;
                     $totalitems=count($most_popular_product);
                     foreach ($most_popular_product as $product) {
+                        if (@getimagesize($product->image_thumb) === false) continue;
                     echo (($counter%5==0)?'<div class="feature-item widget">':'');
                      ?>
                     <?php $prodlink = base_url('/product_details/' . remove_space($product->product_name) . '/' . $product->product_id) ?>

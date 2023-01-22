@@ -24,6 +24,8 @@
             $bpro = 1;
             foreach ($cat_pro as $product) {
                 if ($bpro < 12) {
+
+                if (@getimagesize($product->image_thumb) === false) continue;
             ?>
                     <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
                         <div class="feature-card card border-0 border">
