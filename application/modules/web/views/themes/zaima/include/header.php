@@ -709,7 +709,7 @@ if (!empty($currency_new_id)) {
                             $c = $this->db->select('*')->from('product_category')->where('category_id', $k)->get()->row();
                             if ($c->category_name == 'ACCESSORIES' || $c->category_name == 'CLIP ON - BOX') continue;
                         ?>
-                                    <li><a class="dropdown-item" href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>"><?php echo $c->category_name; ?></a></li>
+                                    <li><a class="dropdown-item" href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>?filter_item=<?php echo $fi->item_id ?>"><?php echo $c->category_name; ?></a></li>
                         <?php
                         }
                     ?>

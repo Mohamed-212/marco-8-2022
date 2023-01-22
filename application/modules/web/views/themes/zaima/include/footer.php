@@ -200,7 +200,7 @@ if (!empty($mob_footer_block)) {
                                         if ($c->category_name == 'ACCESSORIES' || $c->category_name == 'CLIP ON - BOX') continue;
                                     ?>
                                         <li>
-                                            <a href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>"><?php echo $c->category_name; ?></a>
+                                            <a href="<?php echo base_url() ?>/category/p/<?php echo $c->category_name; ?>/<?php echo $c->category_id; ?>?filter_item=<?php echo $fi->item_id ?>"><?php echo $c->category_name; ?></a>
                                         </li>
                                     <?php
                                     }
