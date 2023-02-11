@@ -286,14 +286,14 @@
                                                                             <div>
                                                                                 <?php echo display('vat_for_supplier') ?> :<?php echo html_escape($vat_no) ?>
                                                                             </div>
-                                                                            <!-- <div>
-                                                                                <?php echo display('supplier_invoice_date') ?>
-                                                                                :<?php echo html_escape($purchase_date); ?>
-                                                                            </div> -->
-                                                                            <div>
+                                                                             <div>
                                                                                 <?php echo display('invoice_creation_date') ?>
-                                                                                :<?php echo html_escape(date('d-m-Y', strtotime($created_date))) ?>
+                                                                                :<?php echo html_escape($purchase_date); ?>
                                                                             </div>
+<!--                                                                            <div>-->
+<!--                                                                                --><?php //echo display('invoice_creation_date') ?>
+<!--                                                                                :--><?php //echo html_escape(date('d-m-Y', strtotime($created_date))) ?>
+<!--                                                                            </div>-->
                                                                             <!-- <div class="m-b-15">
                                                                                 <?php echo display('invoice_time') ?> :<?php echo html_escape($created_time) ?>
                                                                             </div> -->
