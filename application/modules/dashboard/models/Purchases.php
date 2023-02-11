@@ -255,10 +255,13 @@ class Purchases extends CI_Model
                 $this->upload->initialize($config);
                 $upload_data = ['file' => null];
 
-                if (!$this->upload->do_upload('file')) {
-                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
-                    redirect(base_url('dashboard/Cpurchase'));
-                } else {
+//                if (!$this->upload->do_upload('file')) {
+//                    $this->session->set_userdata(array('error_message' => $this->upload->display_errors()));
+//                    redirect(base_url('dashboard/Cpurchase'));
+//                } else {
+//                    $upload_data = array('file' => $this->upload->data());
+//                }
+                if ($this->upload->do_upload('file')) {
                     $upload_data = array('file' => $this->upload->data());
                 }
 
@@ -439,7 +442,7 @@ class Purchases extends CI_Model
                             $this->db->insert('transfer', $store);
                             // stock 
                             $store_id = $this->input->post('store_id', TRUE);
-                            $check_stock = $this->check_stock($store_id, $product_id, $variant, $variant_color);
+                            $check_stock = $this->check_stock($store_id, $product_id, $variant, null);
                             if (empty($check_stock)) {
                                 // insert
                                 $stock = array(

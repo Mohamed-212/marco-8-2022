@@ -570,7 +570,7 @@ table#purchaseTable tr, tr th, tr td, td input {
                         <div class="form-group row">
                             <div class="col-sm-6 offset-sm-6">
                                 <label for="attachment_file"><?=display('attach_file')?></label>
-                                <input type="file" id="attachment_file" name="file" required />
+                                <input type="file" id="attachment_file" name="file" />
                             </div>
                         </div>
                         <div class="form-group row">
